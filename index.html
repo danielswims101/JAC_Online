@@ -252,7 +252,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .legend-item{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:0.65rem;letter-spacing:0.5px;color:var(--white3);text-transform:uppercase}
 .legend-dot{width:12px;height:12px;border-radius:50%}
 /* AI SECTION */
-#ai-section{max-width:1000px;margin:0 auto;padding:0 2rem 5rem}
+#ai-section{max-width:1200px;margin:0 auto;padding:0 2rem 3rem}
 .ai-wrapper{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);overflow:hidden;box-shadow:0 0 80px rgba(0,212,255,0.07)}
 .ai-header{background:var(--card2);border-bottom:1px solid var(--border);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .ai-header-left{display:flex;align-items:center;gap:12px}
@@ -262,7 +262,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .ai-mode-btns{display:flex;gap:5px;flex-wrap:wrap}
 .ai-mode-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:5px 11px;font-family:var(--fm);font-size:0.63rem;letter-spacing:0.8px;transition:all 0.2s;text-transform:uppercase;cursor:pointer}
 .ai-mode-btn.active,.ai-mode-btn:hover{background:var(--cyan-dim);color:var(--cyan);border-color:rgba(0,212,255,0.3)}
-.ai-messages{height:440px;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;scroll-behavior:smooth}
+.ai-messages{height:calc(100vh - 400px);min-height:340px;max-height:1100px;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;scroll-behavior:smooth}
 .ai-messages::-webkit-scrollbar{width:4px}.ai-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .msg{display:flex;gap:10px;align-items:flex-start;animation:fadeUp 0.3s ease}.msg.user{flex-direction:row-reverse}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -354,8 +354,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 @media(max-width:768px){
   nav{height:52px}
   .section-wrap{padding:3rem 1.25rem}
-  .ai-messages{height:300px}
-  #ai-section{padding:0 1rem 3rem}
+  .ai-messages{height:calc(100vh - 330px);min-height:280px}
+  #ai-section{padding:0 1rem 2rem}
   #viz3d-container{height:380px}
   .viz-overlay-stats{grid-template-columns:1fr 1fr;top:8px;right:8px}
   .vos-item{padding:6px 8px}
@@ -490,9 +490,9 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 <!-- 3D VISUALIZER PAGE -->
 <div class="page" id="page-visualizer">
 <div class="section-wrap narrow">
-  <div class="section-eyebrow">Real 3D Biomechanics Engine</div>
+  <div class="section-eyebrow">3D Biomechanical Reconstruction Engine</div>
   <div class="section-title">3D STROKE <span>VISUALIZER</span></div>
-  <p class="section-intro">A fully modeled 3D swimmer with smooth-shaded anatomy, motion timed to elite stroke-phase research. Drag to orbit, scroll to zoom, or jump to a preset angle — see every technique from any side.</p>
+  <p class="section-intro">An anatomical 3D swimmer reconstructing model technique — joint-by-joint motion timed to elite stroke-phase research. Pick a stroke, or describe any movement and the AI will reconstruct it as an animation. Drag to orbit, scroll to zoom.</p>
   <div class="viz-canvas-wrap" style="position:relative">
     <div id="viz3d-container"></div>
     <div class="viz-overlay-stats">
@@ -510,6 +510,11 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <button class="viz-btn" onclick="setStroke3D('butterfly',this)">🦋 Butterfly</button>
     <button class="viz-btn" onclick="setStroke3D('dolphin',this)">🌊 Dolphin Kick</button>
   </div>
+  <div class="viz-controls" style="margin-top:10px;align-items:stretch">
+    <input class="form-input" id="motion-prompt" placeholder='✦ Describe any movement — e.g. "breaststroke pullout off the wall" or "backstroke start"' style="flex:1;min-width:230px" onkeydown="if(event.key==='Enter')generateMotion()">
+    <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple);font-weight:600">✦ AI Reconstruct</button>
+  </div>
+  <div id="motion-status" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px"></div>
   <div class="viz-controls" style="margin-top:8px">
     <span style="font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px">View:</span>
     <button class="viz-btn" onclick="setView3D('side')">Side</button>
@@ -704,28 +709,28 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <button class="tab-btn" onclick="switchTab(this,'v-race')">Race Analysis</button>
   </div>
   <div class="tab-panel active" id="v-fr"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/GKuOkMSFGUg" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Full Stroke</span><h4>FREESTYLE TECHNIQUE BREAKDOWN</h4><p>Complete breakdown of elite freestyle mechanics.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/cvtg0vweMTo" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Catch</span><h4>HIGH ELBOW CATCH MASTERCLASS</h4><p>The single most impactful freestyle skill.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/yUaGhzjMuV0" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Kick</span><h4>6-BEAT KICK MECHANICS</h4><p>Hip-initiated kick mechanics and ankle plantarflexion.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/Q0vq-34dWF0" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Full Stroke</span><h4>FREESTYLE STROKE BREAKDOWN</h4><p>A Division I swim coach breaks down front crawl technique step by step.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/omkBPOvAuu8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Catch</span><h4>HIGH ELBOW SWIMMING — 4 TIPS</h4><p>Global Triathlon Network on the single most impactful freestyle skill.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/MC9m8wp1dqs" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Kick</span><h4>FRONT CRAWL 6-BEAT KICK</h4><p>Step-by-step guide to the 6-beat kick rhythm and mechanics.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-bk"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/ZmBMFpqRuOY" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Full Stroke</span><h4>BACKSTROKE COMPLETE BREAKDOWN</h4><p>Body position, pinky-first entry, S-curve pull.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/YkjOvxHsY1g" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Full Stroke</span><h4>BACKSTROKE WITH PERFECT TECHNIQUE</h4><p>Six elements of backstroke: body position, rotation, entry, pull, kick, and timing.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-br"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/7Ys21rJAWvE" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Full Stroke</span><h4>BREASTSTROKE TIMING & MECHANICS</h4><p>The pull-breathe-kick-glide sequence.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/RbgiTaVUqMk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Timing</span><h4>BREASTSTROKE TIMING & COORDINATION</h4><p>The pull-breathe-kick-glide sequence explained clearly.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-fly"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/KJLsYoq2pbY" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Full Stroke</span><h4>BUTTERFLY WAVE & UNDULATION</h4><p>The chest-down initiation and hip rise.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/o6Pnv10wyHk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Undulation</span><h4>MASTER BUTTERFLY UNDULATION</h4><p>Olympic Channel: Olympian Dylan Carter on the chest-down wave that drives butterfly.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-uw"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/JxFOoRNX_gg" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Dolphin Kick</span><h4>UNDERWATER DOLPHIN KICK</h4><p>The 5th stroke mechanics.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/wl3oB-6GDQM" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Turns</span><h4>FLIP TURN COMPLETE GUIDE</h4><p>Every component broken down.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/bjDfI0NMVY8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Dolphin Kick</span><h4>GRETCHEN WALSH'S UNDERWATER DOLPHIN KICK</h4><p>Breakdown of one of the fastest underwaters in the world — the 5th stroke.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/GoyXk3xMfKY" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Turns</span><h4>HOW TO FLIP TURN</h4><p>Every component of the freestyle flip turn broken down.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-dry"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/1F3BqhWMTAA" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Dryland · Strength</span><h4>STRENGTH TRAINING FOR SWIMMERS</h4><p>Exercises that directly transfer to in-water performance.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/IKWGF4kP8Cs" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Dryland · Strength</span><h4>30-MINUTE DRYLAND WORKOUT</h4><p>Complete no-equipment dryland session built for swimmers.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-race"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/B_h8lKAu7cA" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Race · Analysis</span><h4>ELITE RACE BREAKDOWN</h4><p>Split analysis, pacing strategy, turn mechanics.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/3oZo0I4oLfU" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Race · Analysis</span><h4>POPOVICI WORLD-RECORD ANALYSIS</h4><p>Technique analysis of David Popovici's world-record 100m freestyle.</p></div></div>
   </div></div>
 </div>
 <footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
@@ -1345,10 +1350,11 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 </div>
 <!-- AI COACH PAGE -->
 <div class="page" id="page-ai">
-<div class="section-wrap narrow" style="padding-bottom:1rem">
-  <div class="section-eyebrow">AI Coaching · Streaming</div>
-  <div class="section-title">AI SWIM <span>COACH</span></div>
-  <p class="section-intro">Your personal expert-level coach — 24/7. Responses stream in real time, word by word. Free account required · 20 messages per 5 hours.</p>
+<div class="section-wrap narrow" style="padding:1.75rem 2rem 0.75rem;max-width:1200px">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+    <div class="section-title" style="font-size:2.2rem;margin-bottom:0.5rem">AI SWIM <span>COACH</span></div>
+    <span style="font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase">Streaming · Free account · 20 msgs / 5 hrs</span>
+  </div>
 </div>
 <div id="ai-section">
   <div class="ai-wrapper">
@@ -1611,13 +1617,14 @@ function closeAuthGate() {
 <script>
 // ─── NAVIGATION ───────────────────────────────
 function showPage(name){
+  const page=document.getElementById('page-'+name);
+  const alreadyActive=page&&page.classList.contains('active');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-links li a').forEach(a=>a.classList.remove('active'));
-  const page=document.getElementById('page-'+name);
   const nav=document.getElementById('nav-'+name);
   if(page) page.classList.add('active');
   if(nav) nav.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
+  if(!alreadyActive) window.scrollTo({top:0,behavior:'smooth'});
   initReveal();
   if (name === 'visualizer' && typeof ensureViz3DReady === 'function') {
     setTimeout(ensureViz3DReady, 30);
@@ -1676,6 +1683,8 @@ function initViz3D() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
   renderer.setClearColor(0x040d18, 1);
   container.appendChild(renderer.domElement);
   controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -1695,6 +1704,14 @@ function initViz3D() {
   const rimLight = new THREE.DirectionalLight(0x00d4ff, 0.5);
   rimLight.position.set(-3, 1, -3);
   scene.add(rimLight);
+  // Soft fill from below — mimics light bouncing off the pool floor
+  const bounceLight = new THREE.DirectionalLight(0x2288cc, 0.35);
+  bounceLight.position.set(0, -3, 2);
+  scene.add(bounceLight);
+  // Warm front fill so the body reads with depth instead of flat shading
+  const fillLight = new THREE.PointLight(0xffeedd, 0.4, 12);
+  fillLight.position.set(0, 1.6, 3.5);
+  scene.add(fillLight);
   // Water surface plane (semi-transparent, animated ripple via vertex shader)
   const waterGeo = new THREE.PlaneGeometry(14, 14, 80, 80);
   const waterMat = new THREE.ShaderMaterial({
@@ -1731,6 +1748,37 @@ function initViz3D() {
   grid.material.opacity = 0.25;
   grid.material.transparent = true;
   scene.add(grid);
+  // Pool floor with a lane line stripe (competition pool feel)
+  const floorMat = new THREE.MeshStandardMaterial({ color: 0x0a2035, roughness: 0.9 });
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), floorMat);
+  floor.rotation.x = -Math.PI/2;
+  floor.position.y = -1.11;
+  floor.receiveShadow = true;
+  scene.add(floor);
+  const stripe = new THREE.Mesh(new THREE.PlaneGeometry(14, 0.25),
+    new THREE.MeshStandardMaterial({ color: 0x061525, roughness: 0.85 }));
+  stripe.rotation.x = -Math.PI/2;
+  stripe.position.y = -1.105;
+  scene.add(stripe);
+  // Lane ropes at the water line — alternating discs like real anti-wave ropes
+  function addLaneRope(z) {
+    const rope = new THREE.Group();
+    const colors = [0xdd3333, 0xf5f5f5, 0x2255cc, 0xf5f5f5];
+    for (let x = -7; x <= 7; x += 0.28) {
+      const c = colors[Math.abs(Math.round(x/0.28)) % colors.length];
+      const disc = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.045, 0.045, 0.22, 10),
+        new THREE.MeshStandardMaterial({ color: c, roughness: 0.6 })
+      );
+      disc.rotation.z = Math.PI/2;
+      disc.position.set(x, 0, 0);
+      rope.add(disc);
+    }
+    rope.position.set(0, 0.55, z);
+    scene.add(rope);
+  }
+  addLaneRope(-1.9);
+  addLaneRope(1.9);
   // Force-vector arrow group (added/removed from scene as needed)
   vizForceGroup = new THREE.Group();
   scene.add(vizForceGroup);
@@ -1771,6 +1819,19 @@ function buildSwimmer(baseColor) {
   const spine = makeSegment(0.42, 0.155, 0.19, mat, 16);
   spine.position.set(0, 0.10, 0);
   hips.add(spine);
+  // Anatomical shaping: chest/ribcage ellipsoid + upper-back (lat) taper
+  const chestGeo = new THREE.SphereGeometry(0.185, 20, 16);
+  chestGeo.scale(1.12, 1.28, 0.72);
+  const chest = new THREE.Mesh(chestGeo, mat);
+  chest.position.set(0, 0.30, 0.005);
+  chest.castShadow = true;
+  spine.add(chest);
+  const latGeo = new THREE.SphereGeometry(0.16, 18, 14);
+  latGeo.scale(1.25, 0.95, 0.6);
+  const lats = new THREE.Mesh(latGeo, mat);
+  lats.position.set(0, 0.16, -0.02);
+  lats.castShadow = true;
+  spine.add(lats);
   // ── Neck -> head ──
   const neck = makeSegment(0.10, 0.06, 0.075, mat, 10);
   neck.position.set(0, 0.42, 0);
@@ -1798,6 +1859,12 @@ function buildSwimmer(baseColor) {
     const shoulder = new THREE.Group();
     shoulder.position.set(side * 0.20, 0.36, 0);
     spine.add(shoulder);
+    // Deltoid cap — rounds the shoulder into the torso
+    const deltGeo = new THREE.SphereGeometry(0.068, 14, 12);
+    deltGeo.scale(1.15, 1.2, 1.0);
+    const deltoid = new THREE.Mesh(deltGeo, mat);
+    deltoid.castShadow = true;
+    shoulder.add(deltoid);
     const upperArm = makeSegment(0.30, 0.052, 0.044, mat, 12);
     shoulder.add(upperArm);
     const elbow = new THREE.Group();
@@ -1830,6 +1897,13 @@ function buildSwimmer(baseColor) {
     thigh.add(knee);
     const shin = makeSegment(0.38, 0.07, 0.05, mat, 14);
     knee.add(shin);
+    // Calf bulge — gives the lower leg an anatomical profile
+    const calfGeo = new THREE.SphereGeometry(0.062, 12, 10);
+    calfGeo.scale(0.95, 1.6, 1.0);
+    const calf = new THREE.Mesh(calfGeo, mat);
+    calf.position.set(0, -0.12, -0.02);
+    calf.castShadow = true;
+    shin.add(calf);
     const ankle = new THREE.Group();
     ankle.position.set(0, -0.38, 0);
     shin.add(ankle);
@@ -2267,6 +2341,92 @@ function ensureViz3DReady() {
   s.onerror = function(){ threeLoading = false; };
   document.head.appendChild(s);
 }
+// ─── AI MOTION DIRECTOR — text prompt → reconstructed 3D animation ──────
+// The AI returns joint keyframes in the same schema as the built-in strokes;
+// they're validated/clamped here, then played by the existing engine.
+function validateMotion(obj){
+  if(!obj || !Array.isArray(obj.phases) || obj.phases.length < 2) throw new Error('bad phases');
+  const clamp = (v,lo,hi)=>Math.max(lo,Math.min(hi,Number(v)||0));
+  const fixSide = (s)=>({
+    sh:[clamp(s&&s.sh&&s.sh[0],-180,180), clamp(s&&s.sh&&s.sh[1],-90,90), clamp(s&&s.sh&&s.sh[2],-110,110)],
+    el:[clamp(s&&s.el&&s.el[0],0,140)],
+    hi:[clamp(s&&s.hi&&s.hi[0],-45,60), 0, clamp(s&&s.hi&&s.hi[2],-30,30)],
+    kn:[clamp(s&&s.kn&&s.kn[0],0,130)]
+  });
+  const phases = obj.phases.slice(0,8).map(p=>({
+    name: String(p.name||'Phase').slice(0,40),
+    dur: clamp(p.dur,0.05,0.5)||0.2,
+    drag: clamp(p.drag,0,200), thrust: clamp(p.thrust,0,250), lift: clamp(p.lift,0,120),
+    vel: clamp(p.vel,0,3.5), eff: clamp(p.eff,0,100),
+    desc: String(p.desc||'').slice(0,400),
+    L: fixSide(p.L), R: fixSide(p.R)
+  }));
+  return {
+    color: 0xa855f7,
+    rollAmp: clamp(obj.rollAmp,0,40),
+    undulate: !!obj.undulate,
+    name: String(obj.name||'Custom Motion').slice(0,50),
+    phases
+  };
+}
+async function generateMotion(){
+  const inp=document.getElementById('motion-prompt');
+  const statusEl=document.getElementById('motion-status');
+  const btn=document.getElementById('motion-btn');
+  const desc=(inp.value||'').trim();
+  if(!desc){ statusEl.textContent='Describe a movement first — e.g. "breaststroke pullout off the wall".'; return; }
+  if(!currentUser){ statusEl.textContent='AI reconstruction needs a free account — log in to continue.'; openAuthGate('login'); return; }
+  ensureViz3DReady();
+  btn.disabled=true;
+  statusEl.textContent='✦ Reconstructing — the AI is computing joint keyframes for "'+desc+'"…';
+  try{
+    const { data: sessionData } = await sb.auth.getSession();
+    const accessToken=sessionData?.session?.access_token;
+    if(!accessToken){ statusEl.textContent='Session expired — please log in again.'; btn.disabled=false; return; }
+    const resp=await fetch(SUPABASE_URL+'/functions/v1/ask-ai',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+accessToken},
+      body:JSON.stringify({mode:'motion',messages:[{role:'user',content:desc}]})
+    });
+    if(!resp.ok){
+      const err=await resp.json().catch(()=>({}));
+      statusEl.textContent=err.error||(resp.status===429?'You\'ve reached the limit of 20 AI messages per 5 hours.':'Error: HTTP '+resp.status);
+      btn.disabled=false; return;
+    }
+    const reader=resp.body.getReader();
+    const decoder=new TextDecoder();
+    let fullText='', buffer='';
+    while(true){
+      const {done,value}=await reader.read();
+      if(done) break;
+      buffer+=decoder.decode(value,{stream:true});
+      const lines=buffer.split('\n'); buffer=lines.pop()||'';
+      for(const line of lines){
+        if(!line.startsWith('data: ')) continue;
+        const data=line.slice(6).trim();
+        if(data==='[DONE]') continue;
+        try{
+          const parsed=JSON.parse(data);
+          if(parsed.type==='content_block_delta'&&parsed.delta?.type==='text_delta') fullText+=parsed.delta.text;
+        }catch(e){}
+      }
+    }
+    const jsonStart=fullText.indexOf('{'), jsonEnd=fullText.lastIndexOf('}');
+    if(jsonStart<0||jsonEnd<=jsonStart) throw new Error('no JSON in response');
+    const motion=validateMotion(JSON.parse(fullText.slice(jsonStart,jsonEnd+1)));
+    STROKES.custom=motion;
+    currentStroke='custom'; clockT=0;
+    document.querySelectorAll('.viz-btn').forEach(b=>{
+      if((b.getAttribute('onclick')||'').includes('setStroke3D')) b.classList.remove('active');
+    });
+    if(viz3DInitialized) rebuildSwimmer('custom');
+    buildPhaseBar3D('custom');
+    statusEl.textContent='✓ Reconstructed: '+motion.name+' ('+motion.phases.length+' phases). Orbit it, slow to 0.3×, or tap a phase under the canvas.';
+  }catch(e){
+    statusEl.textContent='Couldn\'t build that motion — try rephrasing, e.g. "freestyle with breathing to the right".';
+  }
+  btn.disabled=false;
+}
 // ─── SEASON & MEET CALENDAR — time-aware (reads the real device date) ────
 // Meet dates below reflect the published 2025-26 USA Swimming national
 // events calendar. The page never invents specific cut times -- it links
@@ -2434,9 +2594,11 @@ function addMsg(text,type){
   return div;
 }
 function usePrompt(el){
-  document.getElementById('ai-input').value=el.textContent;
-  document.getElementById('ai-input').focus();
-  showPage('ai');
+  // Quick prompts live inside the AI page — fill the input in place,
+  // never scroll the page.
+  const inp=document.getElementById('ai-input');
+  inp.value=el.textContent;
+  inp.focus({preventScroll:true});
 }
 function clearChat(){
   conversationHistory=[];
