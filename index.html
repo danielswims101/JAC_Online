@@ -2173,9 +2173,11 @@ function applyFlutterKick(u) {
   const legs = [ [swimmer.legL, 0], [swimmer.legR, Math.PI] ];
   for (const [leg, off] of legs) {
     const s = Math.sin(kp + off);
-    leg.hipJ.quaternion.setFromEuler(new THREE.Euler(s * 0.22, 0, 0));
+    // Compact amplitude: heels just break the surface, kick stays inside
+    // the body's shadow — never a splashy air-kick.
+    leg.hipJ.quaternion.setFromEuler(new THREE.Euler(s * 0.13, 0, 0));
     // Knee flexes as the leg sweeps posteriorly (whip comes from the hip)
-    leg.knee.rotation.set(0.12 + Math.max(0, Math.sin(kp + off + 0.7)) * 0.55, 0, 0);
+    leg.knee.rotation.set(0.10 + Math.max(0, Math.sin(kp + off + 0.7)) * 0.30, 0, 0);
   }
 }
 let physState = { drag:0, thrust:0, lift:0, vel:0, eff:0 };
