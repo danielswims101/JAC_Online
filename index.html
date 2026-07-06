@@ -4,13 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SwimIQ Pro — Elite Swimming Platform</title>
+<meta name="description" content="Free swimming training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition, and mental performance.">
+<meta property="og:title" content="SwimIQ Pro — Elite Swimming Platform">
+<meta property="og:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator, race strategy, nutrition, and mental performance — free for competitive swimmers.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://danielswims101.github.io/JAC_Online/">
+<link rel="canonical" href="https://danielswims101.github.io/JAC_Online/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // Minimal OrbitControls implementation compatible with THREE r128 (UMD global build).
 // Supports: left-drag orbit, scroll-wheel zoom, damping. No pan (not needed here).
+// NOTE: Three.js is lazy-loaded the first time the 3D Visualizer page opens
+// (saves ~600KB on initial page load). This installer runs after that load.
+function installOrbitControls() {
 THREE.OrbitControls = function (camera, domElement) {
   this.camera = camera;
   this.domElement = domElement;
@@ -24,20 +32,17 @@ THREE.OrbitControls = function (camera, domElement) {
   this.maxPolarAngle = Math.PI;
   this.rotateSpeed = 1.0;
   this.zoomSpeed = 1.0;
-
   var self = this;
   var spherical = new THREE.Spherical();
   var sphericalDelta = new THREE.Spherical(0, 0, 0);
   var scale = 1;
   var rotating = false;
   var lastX = 0, lastY = 0;
-
   function updateSpherical() {
     var offset = new THREE.Vector3().copy(self.camera.position).sub(self.target);
     spherical.setFromVector3(offset);
   }
   updateSpherical();
-
   function onPointerDown(e) {
     if (!self.enabled) return;
     rotating = true;
@@ -74,7 +79,6 @@ THREE.OrbitControls = function (camera, domElement) {
     sphericalDelta.phi   -= 2 * Math.PI * dy / el.clientHeight * self.rotateSpeed;
   }
   function onTouchEnd() { rotating = false; }
-
   this.domElement.addEventListener('mousedown', onPointerDown);
   window.addEventListener('mousemove', onPointerMove);
   window.addEventListener('mouseup', onPointerUp);
@@ -82,7 +86,6 @@ THREE.OrbitControls = function (camera, domElement) {
   this.domElement.addEventListener('touchstart', onTouchStart, { passive: true });
   this.domElement.addEventListener('touchmove', onTouchMove, { passive: false });
   this.domElement.addEventListener('touchend', onTouchEnd);
-
   this.update = function () {
     updateSpherical();
     spherical.theta += sphericalDelta.theta;
@@ -91,11 +94,9 @@ THREE.OrbitControls = function (camera, domElement) {
     spherical.makeSafe();
     spherical.radius *= scale;
     spherical.radius = Math.max(self.minDistance, Math.min(self.maxDistance, spherical.radius));
-
     var offset = new THREE.Vector3().setFromSpherical(spherical);
     self.camera.position.copy(self.target).add(offset);
     self.camera.lookAt(self.target);
-
     if (self.enableDamping) {
       sphericalDelta.theta *= (1 - self.dampingFactor);
       sphericalDelta.phi *= (1 - self.dampingFactor);
@@ -106,7 +107,6 @@ THREE.OrbitControls = function (camera, domElement) {
     }
     return true;
   };
-
   this.dispose = function () {
     self.domElement.removeEventListener('mousedown', onPointerDown);
     window.removeEventListener('mousemove', onPointerMove);
@@ -117,7 +117,7 @@ THREE.OrbitControls = function (camera, domElement) {
     self.domElement.removeEventListener('touchend', onTouchEnd);
   };
 };
-
+}
 </script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -142,7 +142,6 @@ a{color:var(--cyan);text-decoration:none}
 button{cursor:pointer;font-family:var(--fb)}
 input,textarea,select{font-family:var(--fb)}
 .noise{position:fixed;inset:0;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");z-index:9999}
-
 /* NAV */
 nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;gap:8px}
 .nav-brand{font-family:var(--fh);font-size:1.45rem;letter-spacing:3px;color:var(--cyan);cursor:pointer;flex-shrink:0;white-space:nowrap}
@@ -157,9 +156,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .nav-ai-btn:hover{background:var(--cyan2)}
 .nav-key-btn{background:var(--navy3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--white3);font-size:0.8rem;cursor:pointer;transition:all 0.2s;flex-shrink:0}
 .nav-key-btn:hover{color:var(--cyan);border-color:var(--cyan)}
-
 .page{display:none}.page.active{display:block}
-
 /* HERO */
 .hero{position:relative;padding:7rem 2rem 5rem;text-align:center;overflow:hidden;min-height:85vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 120% 80% at 50% -5%,rgba(0,212,255,0.08) 0%,transparent 60%)}
@@ -177,7 +174,6 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .btn-hero-ghost:hover{background:var(--cyan-dim);transform:translateY(-3px);border-color:var(--cyan)}
 .hero-stats{display:flex;gap:3rem;justify-content:center;flex-wrap:wrap;position:relative}
 .hstat{text-align:center}.hstat-val{font-family:var(--fh);font-size:2.6rem;color:var(--cyan);display:block;line-height:1;letter-spacing:1px}.hstat-lbl{font-family:var(--fm);font-size:0.56rem;letter-spacing:3px;color:var(--white3);text-transform:uppercase;margin-top:5px;display:block}
-
 /* LAYOUT */
 .section-wrap{max-width:1240px;margin:0 auto;padding:5rem 2rem}.section-wrap.narrow{max-width:960px}
 .section-eyebrow{font-family:var(--fm);font-size:0.6rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.75rem;opacity:0.85}
@@ -188,7 +184,6 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
 .grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem}
-
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;transition:border-color 0.3s,transform 0.25s,box-shadow 0.3s}
 .card:hover{border-color:var(--border);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.35)}
@@ -197,18 +192,15 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .card p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.85rem}
 .card ul{list-style:none}.card ul li{font-size:0.83rem;color:var(--white2);padding:6px 0;border-bottom:1px solid var(--border2);display:flex;align-items:flex-start;gap:10px;line-height:1.6}
 .card ul li:before{content:'→';color:var(--cyan);flex-shrink:0;font-size:0.75rem;margin-top:2px}.card ul li:last-child{border-bottom:none}
-
 /* BADGES */
 .badge{display:inline-block;font-family:var(--fm);font-size:0.58rem;letter-spacing:2px;padding:4px 11px;border-radius:4px;text-transform:uppercase;margin-bottom:1rem}
 .badge.cyan{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,212,255,0.25)}.badge.gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(245,166,35,0.25)}.badge.green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,229,153,0.25)}.badge.red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,82,82,0.25)}.badge.purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,0.25)}
-
 /* TABS */
 .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2.5rem;overflow-x:auto;gap:0;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--white3);font-family:var(--fb);font-size:0.78rem;font-weight:500;letter-spacing:0.3px;text-transform:uppercase;padding:11px 16px;cursor:pointer;margin-bottom:-1px;transition:color 0.2s,border-color 0.2s;white-space:nowrap}
 .tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}.tab-btn:hover:not(.active){color:var(--white)}
 .tab-panel{display:none}.tab-panel.active{display:block}
-
 /* ACCORDION */
 .accordion{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);margin-bottom:1rem;overflow:hidden;transition:border-color 0.2s}.accordion:hover{border-color:var(--border)}
 .acc-header{padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:1rem;transition:background 0.2s}.acc-header:hover{background:var(--card2)}
@@ -216,7 +208,6 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .acc-body{padding:1.75rem;border-top:1px solid var(--border2);display:none}.acc-body.open{display:block}
 .acc-body p{font-size:0.9rem;color:var(--white2);line-height:1.9;margin-bottom:1rem;font-weight:300}.acc-body p:last-child{margin-bottom:0}
 .chevron{transition:transform 0.25s;font-size:1rem;color:var(--cyan);flex-shrink:0}.chevron.open{transform:rotate(180deg)}
-
 /* COACHING CUES */
 .cue-box{background:rgba(0,212,255,0.06);border-left:3px solid var(--cyan);border-radius:0 var(--r8) var(--r8) 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.87rem;color:var(--cyan);line-height:1.75}
 .key-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0.85rem;margin:1.25rem 0}
@@ -224,33 +215,28 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .info-box{background:var(--cyan-dim);border:1px solid rgba(0,212,255,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.info-box strong{color:var(--cyan)}
 .warn-box{background:var(--gold-dim);border:1px solid rgba(245,166,35,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.warn-box strong{color:var(--gold)}
 .success-box{background:var(--green-dim);border:1px solid rgba(0,229,153,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.success-box strong{color:var(--green)}
-
 /* TABLES */
 .table-wrap{overflow-x:auto;border-radius:var(--r12);border:1px solid var(--border2);margin:1.25rem 0}
 .data-table{width:100%;border-collapse:collapse;font-size:0.84rem}.data-table th{background:var(--navy3);color:var(--cyan);font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--white2);vertical-align:top;line-height:1.6}.data-table tr:hover td{background:rgba(0,212,255,0.03)}.data-table td:first-child{color:var(--white);font-weight:500}
 .ptag{font-family:var(--fm);font-size:0.58rem;letter-spacing:1px;color:var(--cyan);display:block;margin-bottom:3px}
-
 /* METRICS */
 .metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:1rem;margin-bottom:3rem}
 .metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border);transform:translateY(-3px)}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4}
-
 /* VIDEO */
 .video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
 .video-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);overflow:hidden;transition:border-color 0.3s,transform 0.25s}.video-card:hover{border-color:var(--border);transform:translateY(-3px)}
 .video-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}.video-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 .video-info{padding:1.25rem}.video-info h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;margin-bottom:0.5rem}.video-info p{font-size:0.84rem;color:var(--white2);line-height:1.75;font-weight:300}.video-tag{font-family:var(--fm);font-size:0.58rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem;display:block}
-
 /* TECH IMAGE CARDS */
 .tech-img-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);overflow:hidden;transition:border-color 0.3s,transform 0.25s}.tech-img-card:hover{border-color:var(--border);transform:translateY(-3px)}
 .tech-img-wrap{position:relative;overflow:hidden;height:180px;background:var(--navy3);display:flex;align-items:center;justify-content:center}
 .tech-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(4,13,24,0.85) 0%,transparent 50%);display:flex;align-items:flex-end;padding:1rem}.tech-img-overlay span{font-family:var(--fh);font-size:1rem;letter-spacing:1px;color:var(--white)}
 .tech-img-body{padding:1.1rem}.tech-img-body p{font-size:0.85rem;color:var(--white2);line-height:1.75;font-weight:300}
-
 /* ============================================================
-   3D VISUALIZER — REVAMPED
+   3D VISUALIZER
    ============================================================ */
 .viz-canvas-wrap{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r16);overflow:hidden;position:relative}
-#viz3d{display:block;width:100%;height:520px}
+#viz3d-container{display:block;width:100%;height:520px;border-radius:var(--r16);overflow:hidden;cursor:grab}
 .viz-overlay-stats{position:absolute;top:12px;right:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px;pointer-events:none}
 .vos-item{background:rgba(4,13,24,0.85);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center;backdrop-filter:blur(8px)}
 .vos-val{font-family:var(--fm);font-size:1.1rem;color:var(--cyan);display:block;line-height:1;letter-spacing:0.5px}
@@ -265,7 +251,6 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .force-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:1rem;padding:1rem;background:var(--navy3);border-radius:var(--r8);border:1px solid var(--border2)}
 .legend-item{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:0.65rem;letter-spacing:0.5px;color:var(--white3);text-transform:uppercase}
 .legend-dot{width:12px;height:12px;border-radius:50%}
-
 /* AI SECTION */
 #ai-section{max-width:1000px;margin:0 auto;padding:0 2rem 5rem}
 .ai-wrapper{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);overflow:hidden;box-shadow:0 0 80px rgba(0,212,255,0.07)}
@@ -296,7 +281,6 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .ai-input-row{border-top:1px solid var(--border);padding:1rem 1.25rem;display:flex;gap:10px;align-items:center}
 .ai-input{flex:1;background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:11px 14px;color:var(--white);font-size:0.88rem;outline:none;transition:border-color 0.2s}.ai-input::placeholder{color:var(--white4)}.ai-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
 .ai-send{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px 22px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.ai-send:hover:not(:disabled){background:var(--cyan2);box-shadow:0 4px 18px rgba(0,212,255,0.3)}.ai-send:disabled{opacity:0.4;cursor:not-allowed}
-
 /* WORKOUT GENERATOR */
 .gen-form{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2rem}
 .gen-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin-bottom:1.25rem}
@@ -304,13 +288,11 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .workout-phase{margin-bottom:1.75rem}.workout-phase h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;color:var(--cyan);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border2)}
 .workout-set{background:var(--navy3);border-radius:var(--r8);padding:0.85rem 1rem;margin-bottom:0.5rem;border:1px solid var(--border2);font-size:0.85rem;color:var(--white2);line-height:1.75}
 .loading-state{display:flex;align-items:center;gap:12px;color:var(--white3);padding:2.5rem 0;font-size:0.88rem}
-
 /* FORM ELEMENTS */
 .form-group{display:flex;flex-direction:column;gap:6px}.form-group label{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}
 .form-select,.form-input,.form-textarea{background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:10px 12px;color:var(--white);font-size:0.875rem;outline:none;transition:border-color 0.2s;appearance:none;-webkit-appearance:none}
 .form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300d4ff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
 .form-select:focus,.form-input:focus,.form-textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}.form-select option{background:var(--navy2)}.form-textarea{resize:vertical;min-height:80px;line-height:1.6}
-
 /* CALCULATOR */
 .calc-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 @media(max-width:700px){.calc-wrapper{grid-template-columns:1fr}}
@@ -318,7 +300,6 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .calc-result{background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:1.25rem;margin-top:1.25rem;text-align:center;display:none}.calc-result.show{display:block}
 .calc-result .big{font-family:var(--fh);font-size:3rem;color:var(--cyan);letter-spacing:2px;line-height:1}.calc-result .sub{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px}
 .calc-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:all 0.2s;text-transform:uppercase;width:100%;margin-top:0.5rem;cursor:pointer}.calc-btn:hover{background:var(--cyan2)}
-
 /* ZONE BARS */
 .zone-bars{display:flex;flex-direction:column;gap:12px;margin-top:1.5rem}
 .zone-row{display:flex;align-items:center;gap:14px}.zone-name{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--white3);text-transform:uppercase;min-width:95px;text-align:right}
@@ -326,35 +307,29 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .zone-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 12px;font-family:var(--fm);font-size:0.6rem;color:var(--navy);font-weight:700}
 .zone-fill.z1{background:linear-gradient(90deg,#00e599,#00c27d);width:18%}.zone-fill.z2{background:linear-gradient(90deg,#00d4ff,#00a8cc);width:42%}.zone-fill.z3{background:linear-gradient(90deg,#f5a623,#d4891a);width:64%}.zone-fill.z4{background:linear-gradient(90deg,#ff7043,#e64a19);width:82%}.zone-fill.z5{background:linear-gradient(90deg,#ff5252,#c62828);width:100%}
 .zone-info{font-family:var(--fm);font-size:0.62rem;color:var(--white3);min-width:140px}
-
 /* PR TRACKER */
 .pr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.85rem;margin-bottom:1.25rem}
 .pr-item{background:var(--card);border-radius:var(--r8);padding:0.9rem;border:1px solid var(--border2);text-align:center;transition:border-color 0.2s}.pr-item:hover{border-color:var(--border)}
 .pr-event{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:7px;display:block}
 .pr-input{background:var(--navy2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.6rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s}.pr-input:focus{border-color:var(--cyan)}.pr-input::placeholder{color:var(--white4);font-size:1rem}
-
 /* DRYLAND */
 .dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem}
 .dl-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.4rem;transition:border-color 0.3s,transform 0.2s}.dl-card:hover{border-color:var(--border);transform:translateY(-2px)}
 .dl-card h4{font-family:var(--fh);font-size:1.15rem;letter-spacing:1px;margin-bottom:0.4rem;color:var(--gold)}.dl-day{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-bottom:0.85rem}
 .dl-card ul{list-style:none}.dl-card ul li{font-size:0.82rem;color:var(--white2);padding:5px 0;display:flex;gap:9px;align-items:flex-start;border-bottom:1px solid var(--border2);line-height:1.6}.dl-card ul li:last-child{border-bottom:none}
 .reps{font-family:var(--fm);color:var(--gold);font-size:0.71rem;flex-shrink:0;min-width:48px}
-
 /* TRAINING LOG */
 .log-entry{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;margin-bottom:0.75rem;display:flex;gap:1rem;align-items:flex-start;transition:border-color 0.2s}.log-entry:hover{border-color:var(--border)}
 .log-date{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--cyan);text-transform:uppercase;min-width:70px;flex-shrink:0}
 .log-content{flex:1}.log-title{font-family:var(--fh);font-size:1.1rem;letter-spacing:1px;margin-bottom:0.25rem}.log-meta{font-size:0.8rem;color:var(--white3);font-family:var(--fm)}.log-notes{font-size:0.83rem;color:var(--white2);margin-top:0.5rem;line-height:1.6}
-
 /* NUTRITION */
 .nutr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem}
 .nutr-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.4rem;transition:border-color 0.3s}.nutr-card:hover{border-color:var(--border)}
 .nutr-card h4{font-family:var(--fh);font-size:1.15rem;letter-spacing:1px;margin-bottom:0.4rem;color:var(--green)}.nutr-time{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-bottom:0.85rem}
 .nutr-card ul{list-style:none}.nutr-card ul li{font-size:0.82rem;color:var(--white2);padding:5px 0;border-bottom:1px solid var(--border2);line-height:1.6}.nutr-card ul li:last-child{border-bottom:none}
-
 /* CONTENT BLOCKS */
 .content-block{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;margin-bottom:1.25rem}.content-block h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1rem;color:var(--white)}.content-block p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.85rem}.content-block p:last-child{margin-bottom:0}
 .content-block ul{list-style:none}.content-block ul li{font-size:0.85rem;color:var(--white2);padding:7px 0;border-bottom:1px solid var(--border2);display:flex;gap:10px;align-items:flex-start;line-height:1.6}.content-block ul li:before{content:'→';color:var(--cyan);flex-shrink:0;font-size:0.75rem;margin-top:2px}.content-block ul li:last-child{border-bottom:none}
-
 /* FOOTER */
 footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2rem}
 .footer-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:2rem;margin-bottom:2rem}
@@ -363,7 +338,6 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .footer-col ul{list-style:none}.footer-col ul li{font-size:0.83rem;color:var(--white3);padding:4px 0;cursor:pointer;transition:color 0.2s}.footer-col ul li:hover{color:var(--cyan)}
 .footer-bottom{max-width:1240px;margin:0 auto;padding-top:1.5rem;border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 .footer-bottom p{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white4);text-transform:uppercase}
-
 /* IMGGEN */
 .imggen-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2rem}
 .imggen-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
@@ -371,21 +345,18 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .imggen-result{background:var(--navy3);border:1px solid var(--border2);border-radius:var(--r12);min-height:280px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .imggen-placeholder{text-align:center;color:var(--white3);padding:2rem}.imggen-placeholder .icon{font-size:2.5rem;opacity:0.3;margin-bottom:1rem;display:block}
 .imggen-controls{display:flex;flex-direction:column;gap:1rem}
-
 /* REVEAL ANIMATION */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}.reveal.visible{opacity:1;transform:none}
-
 /* MISC BUTTONS */
 .btn-sm{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:8px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;font-weight:600;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.btn-sm:hover{background:var(--cyan2)}
 .btn-ghost-sm{background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.35);border-radius:6px;padding:7px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.btn-ghost-sm:hover{background:var(--cyan-dim)}
-
 /* RESPONSIVE */
 @media(max-width:768px){
   nav{height:52px}
   .section-wrap{padding:3rem 1.25rem}
   .ai-messages{height:300px}
   #ai-section{padding:0 1rem 3rem}
-  #viz3d{height:380px}
+  #viz3d-container{height:380px}
   .viz-overlay-stats{grid-template-columns:1fr 1fr;top:8px;right:8px}
   .vos-item{padding:6px 8px}
   .vos-val{font-size:0.95rem}
@@ -395,15 +366,23 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .hero h1{font-size:3.5rem}
   .metrics-row{grid-template-columns:repeat(2,1fr)}
   .viz-phase-bar{display:none}
-  #viz3d{height:320px}
+  #viz3d-container{height:320px}
   .ai-mode-btns{gap:4px}
   .ai-mode-btn{padding:4px 8px;font-size:0.58rem}
+}
+/* PRINT — clean workout printouts, no dark theme ink waste */
+@media print{
+  nav,footer,.noise,.hero,#access-gate,.viz-controls,.quick-prompts,.ai-input-row,.gen-form,#gen-actions,.hero-particles{display:none!important}
+  body{background:#fff!important;color:#000!important}
+  .page{display:none}.page.active{display:block}
+  .gen-output,.workout-set,.card,.content-block,.section-wrap{background:#fff!important;color:#000!important;border-color:#bbb!important;box-shadow:none!important}
+  .workout-set,.card p,.content-block p,.section-intro{color:#000!important}
+  .workout-phase h4,.section-title,.section-title span{color:#000!important}
 }
 </style>
 </head>
 <body>
 <div class="noise"></div>
-
 <!-- NAV -->
 <nav>
   <div class="nav-brand" onclick="showPage('home')">SWIM<span>IQ</span> <span style="font-size:0.65rem;color:var(--gold);font-family:var(--fm);letter-spacing:2px">PRO</span></div>
@@ -430,18 +409,17 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   </div>
   <div class="nav-right">
     <button class="nav-ai-btn" onclick="showPage('ai')">AI Coach ✦</button>
-    <span id="current-username-display" style="font-family:var(--fm);font-size:0.65rem;color:var(--cyan);letter-spacing:0.5px;white-space:nowrap;padding:0 4px">—</span>
-    <button class="nav-key-btn" onclick="doLogout()" title="Log out">⎋</button>
+    <button class="nav-ai-btn" id="nav-login-btn" onclick="openAuthGate('login')" style="background:var(--navy3);color:var(--cyan);border:1px solid var(--border)">Log In</button>
+    <span id="current-username-display" style="font-family:var(--fm);font-size:0.65rem;color:var(--cyan);letter-spacing:0.5px;white-space:nowrap;padding:0 4px"></span>
+    <button class="nav-key-btn" id="nav-logout-btn" onclick="doLogout()" title="Log out" style="display:none">⎋</button>
   </div>
 </nav>
-
-
 <!-- HOME PAGE -->
 <div class="page active" id="page-home">
 <div class="hero">
   <div class="hero-bg"></div>
   <div class="hero-particles" id="hero-particles"></div>
-  <p class="hero-eyebrow">The World's Most Complete Elite Swimming Platform</p>
+  <p class="hero-eyebrow">A Complete Platform for Competitive Swimmers</p>
   <h1><span class="l1">TRAIN</span><span class="l2">ELITE.</span><span class="l3">SWIM FAST.</span></h1>
   <p class="hero-desc">AI coaching, 3D biomechanics visualizer, technique library, workout generator, race strategy, nutrition, mental performance, taper protocols — everything a competitive swimmer needs.</p>
   <div class="hero-btns">
@@ -465,19 +443,19 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <div class="metric-card"><span class="val">6</span><span class="lbl">New Sections</span><span class="sub">Race, Nutrition, Mental…</span></div>
   </div>
   <div class="section-eyebrow">Everything You Need</div>
-  <div class="section-title">THE MOST COMPLETE<br><span>ELITE PLATFORM</span></div>
-  <p class="section-intro">Built from Olympic-level programming and sports science. No paywalls, no ads — ever.</p>
+  <div class="section-title">A COMPLETE<br><span>TRAINING PLATFORM</span></div>
+  <p class="section-intro">Built on established sports science and competitive programming. Free forever.</p>
   <div class="grid-3 reveal">
     <div class="card" onclick="showPage('visualizer')" style="cursor:pointer;border-color:rgba(168,85,247,0.3)">
       <span class="card-icon">🎯</span><div class="card-tag" style="color:var(--purple)">Rebuilt — 3D Biomechanics</div>
       <h3>3D FORCE VISUALIZER</h3>
-      <p>Fully articulated anatomical swimmer with real joint positions, muscle lines, and physics-accurate force vectors. Every stroke phase animated in real time.</p>
-      <ul><li>Articulated skeleton with 12 joints</li><li>Realistic drag, thrust & lift vectors</li><li>All 4 strokes + dolphin kick</li><li>Phase-by-phase physics breakdown</li></ul>
+      <p>Fully articulated anatomical swimmer with real joint positions, muscle lines, and physics-inspired force vectors. Every stroke phase animated in real time.</p>
+      <ul><li>Articulated skeleton with 12 joints</li><li>Illustrative drag, thrust & lift vectors</li><li>All 4 strokes + dolphin kick</li><li>Phase-by-phase physics breakdown</li></ul>
     </div>
     <div class="card" onclick="showPage('ai')" style="cursor:pointer;border-color:rgba(0,212,255,0.2)">
       <span class="card-icon">🤖</span><div class="card-tag" style="color:var(--gold)">Streaming AI ✦</div>
       <h3>AI SWIM COACH</h3>
-      <p>Olympic-level coaching powered by Claude AI — now with streaming responses so you see answers word by word, instantly.</p>
+      <p>Expert-level coaching powered by AI — with streaming responses so you see answers word by word, instantly. Free account required.</p>
       <ul><li>Real-time streaming output</li><li>Full program knowledge</li><li>Race prep & taper advice</li><li>Physiology with real numbers</li></ul>
     </div>
     <div class="card" onclick="showPage('technique')" style="cursor:pointer">
@@ -501,23 +479,22 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 </div>
 <footer>
   <div class="footer-inner">
-    <div class="footer-brand"><h3>SWIM<span>IQ</span></h3><p>The most complete free swimming platform. Olympic-level science, AI coaching, 3D visualizer — free forever.</p></div>
+    <div class="footer-brand"><h3>SWIM<span>IQ</span></h3><p>A complete free swimming platform. Sports science, AI coaching, 3D visualizer — free forever.</p></div>
     <div class="footer-col"><h4>Learn</h4><ul><li onclick="showPage('technique')">Technique Library</li><li onclick="showPage('videos')">Video Library</li><li onclick="showPage('sets')">Training Sets</li><li onclick="showPage('zones')">Training Zones</li></ul></div>
     <div class="footer-col"><h4>Train</h4><ul><li onclick="showPage('workouts')">Workout Generator</li><li onclick="showPage('dryland')">Dryland</li><li onclick="showPage('log')">Training Log</li><li onclick="showPage('profile')">My PRs</li></ul></div>
-    <div class="footer-col"><h4>Compete</h4><ul><li onclick="showPage('race')">Race Strategy</li><li onclick="showPage('taper')">Taper Protocol</li><li onclick="showPage('mental')">Mental Performance</li><li onclick="showPage('nutrition')">Nutrition</li></ul></div>
+    <div class="footer-col"><h4>Compete</h4><ul><li onclick="showPage('race')">Race Strategy</li><li onclick="showPage('nutrition')">Nutrition</li><li onclick="showPage('mental')">Mental Performance</li><li onclick="showPage('taper')">Taper Protocol</li></ul></div>
   </div>
-  <div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro — Free Forever. No Ads.</p><p>Powered by Claude AI · Built for serious swimmers</p></div>
+  <div class="footer-bottom"><p>SwimIQ Pro — Free Forever</p><p>AI-powered · Built for serious swimmers</p><p>Informational only — not medical advice</p></div>
 </footer>
 </div>
-
-<!-- 3D VISUALIZER PAGE - FULLY REBUILT -->
+<!-- 3D VISUALIZER PAGE -->
 <div class="page" id="page-visualizer">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Real 3D Biomechanics Engine</div>
   <div class="section-title">3D STROKE <span>VISUALIZER</span></div>
   <p class="section-intro">A fully modeled 3D swimmer with smooth-shaded anatomy, motion timed to elite stroke-phase research. Drag to orbit, scroll to zoom, or jump to a preset angle — see every technique from any side.</p>
   <div class="viz-canvas-wrap" style="position:relative">
-    <div id="viz3d-container" style="width:100%;height:520px;border-radius:var(--r16);overflow:hidden;cursor:grab"></div>
+    <div id="viz3d-container"></div>
     <div class="viz-overlay-stats">
       <div class="vos-item"><span class="vos-val" id="stat-drag">—</span><span class="vos-lbl">Drag (N)</span></div>
       <div class="vos-item"><span class="vos-val" id="stat-thrust">—</span><span class="vos-lbl">Thrust (N)</span></div>
@@ -554,6 +531,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <div class="legend-item"><div class="legend-dot" style="background:#4488ff"></div>Lift</div>
     <div class="legend-item"><div class="legend-dot" style="background:#ffaa00"></div>Net Force</div>
   </div>
+  <p style="font-size:0.7rem;color:var(--white4);margin-top:0.5rem;font-family:var(--fm)">Force and velocity values are illustrative teaching approximations, not measured data.</p>
   <div id="viz-info-panel" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r12);padding:1.5rem">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
       <div id="viz-phase-name" style="font-family:var(--fh);font-size:1.4rem;letter-spacing:1px;color:var(--cyan)">Select a stroke</div>
@@ -562,11 +540,10 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <div id="viz-phase-text" style="font-size:0.9rem;color:var(--white2);line-height:1.8;font-weight:300">The visualizer renders a real 3D swimmer with joint motion timed to elite stroke-phase research. Orbit freely or use the view buttons to inspect technique from any angle.</div>
     <div id="viz-physics-row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-top:1rem"></div>
   </div>
-
   <div class="divider"></div>
   <div class="section-eyebrow">AI Technique Analysis</div>
   <div class="section-title" style="font-size:2.5rem">ASK THE <span>VISUALIZER</span></div>
-  <p class="section-intro" style="margin-bottom:1.5rem">Ask the AI to explain any biomechanical concept with detailed force analysis, phases, and coaching cues — streamed in real time.</p>
+  <p class="section-intro" style="margin-bottom:1.5rem">Ask the AI to explain any biomechanical concept with detailed force analysis, phases, and coaching cues — streamed in real time. Free account required.</p>
   <div class="imggen-wrap">
     <div class="imggen-grid">
       <div class="imggen-controls">
@@ -612,10 +589,9 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro — Free Forever</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro — Free Forever</p></div></footer>
 </div>
-
-<!-- TECHNIQUE PAGE (unchanged content) -->
+<!-- TECHNIQUE PAGE -->
 <div class="page" id="page-technique">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Olympic-Level Execution</div>
@@ -711,9 +687,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </div></div></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
-
 <!-- VIDEOS PAGE -->
 <div class="page" id="page-videos">
 <div class="section-wrap">
@@ -753,9 +728,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/B_h8lKAu7cA" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Race · Analysis</span><h4>ELITE RACE BREAKDOWN</h4><p>Split analysis, pacing strategy, turn mechanics.</p></div></div>
   </div></div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
-
 <!-- SETS PAGE -->
 <div class="page" id="page-sets">
 <div class="section-wrap">
@@ -814,9 +788,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </tbody></table></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
-
 <!-- DRYLAND PAGE -->
 <div class="page" id="page-dryland">
 <div class="section-wrap">
@@ -836,15 +809,14 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
       <li><span class="reps">5 min</span>Ankle plantarflexion loading</li><li><span class="reps">2 min</span>Thoracic rotation</li><li><span class="reps">3 min</span>Shoulder CARs</li><li><span class="reps">2 min</span>Hip 90/90 switches</li></ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
-
 <!-- WORKOUT GENERATOR PAGE -->
 <div class="page" id="page-workouts">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">AI-Powered · Streaming</div>
   <div class="section-title">WORKOUT <span>GENERATOR</span></div>
-  <p class="section-intro">Configure your session and the AI builds a complete, printable workout — streaming in real time as it writes.</p>
+  <p class="section-intro">Configure your session and the AI builds a complete, printable workout — streaming in real time as it writes. Free account required.</p>
   <div class="gen-form">
     <div class="gen-row">
       <div class="form-group"><label>Session Focus</label><select class="form-select" id="gen-focus"><option value="aerobic">Aerobic Threshold (AeT)</option><option value="threshold">Threshold</option><option value="technique">Technique & Drill</option><option value="kick">Kick Focus</option><option value="speed">Speed & Sprint</option><option value="recovery">Recovery / Easy</option><option value="race-prep">Race Preparation</option><option value="im">Individual Medley (IM)</option></select></div>
@@ -873,9 +845,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
-
 <!-- CALCULATOR PAGE -->
 <div class="page" id="page-calculator">
 <div class="section-wrap narrow">
@@ -937,9 +908,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
-
 <!-- ZONES PAGE -->
 <div class="page" id="page-zones">
 <div class="section-wrap narrow">
@@ -960,15 +930,14 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX & SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · 3–8 min intervals · 48–72 hr recovery. <strong>Zone 5:</strong> 8.0+ mmol/L · 10–30 sec reps · full rest only.</p></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
-
 <!-- MY PRs PAGE -->
 <div class="page" id="page-profile">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Personal Records</div>
   <div class="section-title">MY <span>PRs</span></div>
-  <p class="section-intro">Click any time field and type your personal record. All data saved locally — never sent anywhere.</p>
+  <p class="section-intro">Click any time field and type your personal record. All data saved locally in your browser — never sent anywhere.</p>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:1.75rem;margin-bottom:2rem">
     <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
       <div style="width:58px;height:58px;border-radius:50%;background:var(--cyan-dim);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0">🏊</div>
@@ -986,9 +955,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <button class="btn-sm" onclick="showPage('calculator')">Calculate Pace Zones →</button>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
-
 <!-- TRAINING LOG PAGE -->
 <div class="page" id="page-log">
 <div class="section-wrap narrow">
@@ -1025,10 +993,9 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
-
-<!-- NUTRITION, RACE, TAPER, MENTAL, INJURY (condensed) -->
+<!-- NUTRITION PAGE -->
 <div class="page" id="page-nutrition">
 <div class="section-wrap">
   <div class="section-eyebrow">Fuel to Perform</div>
@@ -1061,13 +1028,13 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <div class="content-block"><h4>THE 30-MINUTE RECOVERY WINDOW</h4><p>Glycogen resynthesis rate is highest in the first 30–45 minutes after training. Target: 1–1.2 g/kg carbs + 0.3–0.4 g/kg protein. Best options: chocolate milk, rice + protein, yogurt + banana.</p></div>
   </div>
   <div class="tab-panel" id="n-hydration">
-    <div class="info-box"><strong>Even 2% dehydration reduces performance by 10–20%.</strong> Swimmers underestimate fluid loss — you sweat just as much in the pool.</div>
-    <div class="content-block"><h4>DAILY HYDRATION</h4><ul><li>Baseline: 35–45ml per kg bodyweight</li><li>Add 400–600ml per hour of training</li><li>Urine target: pale yellow</li><li>Electrolytes mandatory on 90+ min sessions</li></ul></div>
+    <div class="info-box"><strong>Even 2% dehydration measurably reduces performance.</strong> Swimmers underestimate fluid loss — you sweat just as much in the pool.</div>
+    <div class="content-block"><h4>DAILY HYDRATION</h4><ul><li>Baseline: 35–45ml per kg bodyweight</li><li>Add 400–600ml per hour of training</li><li>Urine target: pale yellow</li><li>Electrolytes recommended on 90+ min sessions</li></ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not medical or dietetic advice</p></div></footer>
 </div>
-
+<!-- RACE PAGE -->
 <div class="page" id="page-race">
 <div class="section-wrap">
   <div class="section-eyebrow">Compete at Your Best</div>
@@ -1116,9 +1083,9 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <div class="content-block"><h4>PACING SCIENCE</h4><p>100m target: front half no more than 2% faster than back half. 200m target: back half 1–3% faster than front. 400m+: descending 100m splits throughout.</p></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
-
+<!-- TAPER PAGE -->
 <div class="page" id="page-taper">
 <div class="section-wrap">
   <div class="section-eyebrow">Peak for Competition</div>
@@ -1159,9 +1126,9 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not medical advice</p></div></footer>
 </div>
-
+<!-- MENTAL PAGE -->
 <div class="page" id="page-mental">
 <div class="section-wrap">
   <div class="section-eyebrow">The Psychological Edge</div>
@@ -1173,7 +1140,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <button class="tab-btn" onclick="switchTab(this,'m-routine')">Pre-Race Routine</button>
   </div>
   <div class="tab-panel active" id="m-viz">
-    <div class="content-block"><h4>VISUALIZATION — MENTAL REHEARSAL</h4><p>Visualization activates 60–70% of the same motor cortex activity as physical practice. 10–15 min daily — morning after waking or evening before sleep. Full race visualization should match real race time.</p><ul>
+    <div class="content-block"><h4>VISUALIZATION — MENTAL REHEARSAL</h4><p>Visualization activates much of the same motor cortex activity as physical practice. 10–15 min daily — morning after waking or evening before sleep. Full race visualization should match real race time.</p><ul>
       <li>Both first-person AND third-person perspectives</li>
       <li>Include sensory detail: chlorine, water feel, starter signal</li>
       <li>Visualize the process more than the outcome</li>
@@ -1205,9 +1172,9 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not psychological or medical advice</p></div></footer>
 </div>
-
+<!-- INJURY PAGE -->
 <div class="page" id="page-injury">
 <div class="section-wrap">
   <div class="section-eyebrow">Stay in the Water</div>
@@ -1319,16 +1286,14 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not medical advice. See a physician for symptoms.</p></div></footer>
 </div>
-
 <!-- SEASON & CUTS PAGE — time-aware: knows today's date, current season, meet calendar -->
 <div class="page" id="page-season">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Time-Aware</div>
   <div class="section-title">SEASON & <span>MEET CALENDAR</span></div>
   <p class="section-intro">Reads today's date to tell you where you are in the swim season — short course or long course, and what's coming up on the national calendar.</p>
-
   <div id="season-now-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:1.75rem;margin-bottom:1.5rem">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1rem">
       <div>
@@ -1339,13 +1304,11 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </div>
     <p id="season-blurb" style="font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300">—</p>
   </div>
-
   <div class="section-eyebrow" style="margin-top:0">2025–26 National Meet Calendar</div>
   <div class="table-wrap"><table class="data-table" id="season-meet-table"><thead><tr><th>Meet</th><th>Dates</th><th>Course</th><th>Status</th></tr></thead><tbody>
     <!-- filled by JS using real dates, with live countdown/status -->
   </tbody></table></div>
-  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;line-height:1.6">Dates reflect the published 2025–26 USA Swimming national events calendar as of mid-2026 and are subject to official updates — always confirm with usaswimming.org before planning travel.</p>
-
+  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;line-height:1.6">Dates reflect the published 2025–26 USA Swimming national events calendar and are subject to official updates — always confirm with usaswimming.org before planning travel.</p>
   <div class="divider"></div>
   <div class="section-eyebrow">Cuts & Motivational Standards</div>
   <div class="section-title" style="font-size:2.2rem">FUTURES, JUNIORS<span>, & NATIONAL CUTS</span></div>
@@ -1355,46 +1318,44 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
       <div class="card-tag" style="color:var(--gold)">National (Zoned) Meet</div>
       <h3>FUTURES</h3>
       <p>Entry point to the national meet pipeline — between Sectionals and Speedo Junior Nationals. Zoned, so the qualifying time depends on your zone.</p>
-      <a href="https://www.usaswimming.org/times/time-standards" target="_blank" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Futures standards →</a>
+      <a href="https://www.usaswimming.org/times/time-standards" target="_blank" rel="noopener" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Futures standards →</a>
     </div>
     <div class="card">
       <div class="card-tag" style="color:var(--cyan)">18 & Under</div>
       <h3>SPEEDO JUNIOR NATIONALS</h3>
-      <p>Summer (LCM) and Winter (SCY) editions. Summer Juniors 2026 is set for August 3–7 in Irvine, CA. Standards differ by edition and are faster than Futures.</p>
-      <a href="https://www.usaswimming.org/times/time-standards" target="_blank" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Juniors standards →</a>
+      <p>Summer (LCM) and Winter (SCY) editions. Standards differ by edition and are faster than Futures.</p>
+      <a href="https://www.usaswimming.org/times/time-standards" target="_blank" rel="noopener" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Juniors standards →</a>
     </div>
     <div class="card">
       <div class="card-tag" style="color:var(--purple)">Open / Senior</div>
       <h3>TOYOTA NATIONALS & U.S. OPEN</h3>
-      <p>The deepest domestic senior fields. 2026 Toyota Nationals run July 28–Aug 1 in Irvine, CA. U.S. Open cuts are faster than Nationals cuts.</p>
-      <a href="https://www.usaswimming.org/times/time-standards" target="_blank" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Nationals standards →</a>
+      <p>The deepest domestic senior fields. U.S. Open cuts are faster than Nationals cuts.</p>
+      <a href="https://www.usaswimming.org/times/time-standards" target="_blank" rel="noopener" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Nationals standards →</a>
     </div>
     <div class="card">
       <div class="card-tag" style="color:var(--green)">Age Group Goal-Setting</div>
       <h3>MOTIVATIONAL TIMES (B → AAAA)</h3>
       <p>The 2024–2028 National Age Group Motivational Standards — six tiers from B to AAAA, used to set and track season goals at any age.</p>
-      <a href="https://www.usaswimming.org/times/time-standards" target="_blank" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Motivational standards →</a>
+      <a href="https://www.usaswimming.org/times/time-standards" target="_blank" rel="noopener" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Motivational standards →</a>
     </div>
   </div>
   <div class="info-box" style="margin-top:1.5rem"><strong>Want your specific cut?</strong> Ask the AI Coach for help interpreting the standard once you've pulled your event, age, and gender from the official PDF — it can help you build a season plan around it, but it won't guess at the number itself.</div>
 </div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
-
-
 <!-- AI COACH PAGE -->
 <div class="page" id="page-ai">
 <div class="section-wrap narrow" style="padding-bottom:1rem">
-  <div class="section-eyebrow">Powered by Claude AI · Streaming</div>
+  <div class="section-eyebrow">AI Coaching · Streaming</div>
   <div class="section-title">AI SWIM <span>COACH</span></div>
-  <p class="section-intro">Your personal Olympic-level coach — 24/7. Responses stream in real time, word by word.</p>
+  <p class="section-intro">Your personal expert-level coach — 24/7. Responses stream in real time, word by word. Free account required · 20 messages per 5 hours.</p>
 </div>
 <div id="ai-section">
   <div class="ai-wrapper">
     <div class="ai-header">
       <div class="ai-header-left">
         <div class="ai-dot"></div>
-        <div class="ai-header-text"><h3>COACH AI</h3><p>Olympic-level intelligence · Streaming · Always online</p></div>
+        <div class="ai-header-text"><h3>COACH AI</h3><p>Expert coaching knowledge · Streaming · Always online</p></div>
       </div>
       <div class="ai-mode-btns">
         <button class="ai-mode-btn active" id="mode-coach" onclick="setMode('coach',this)">🏊 Coaching</button>
@@ -1409,7 +1370,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <div class="ai-messages" id="ai-messages">
       <div class="msg">
         <div class="msg-avatar ai-av">AI</div>
-        <div class="msg-bubble">Welcome. I'm your AI swim coach — trained on Olympic-level swimming science, complete meso-cycle programming, technique biomechanics, race strategy, nutrition, mental performance, and competitive physiology.<br><br>Responses stream in real time as I think. Ask me anything.</div>
+        <div class="msg-bubble">Welcome. I'm your AI swim coach — covering swimming science, meso-cycle programming, technique biomechanics, race strategy, nutrition, mental performance, and competitive physiology.<br><br>Responses stream in real time. Ask me anything. (AI answers can be wrong — always confirm health or injury questions with a coach or physician.)</div>
       </div>
     </div>
     <div class="quick-prompts">
@@ -1431,22 +1392,34 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   </div>
 </div>
 <div style="height:4rem"></div>
-<footer><div class="footer-bottom"><p>&copy; 2025 SwimIQ Pro — Free Forever. No Ads.</p><p>Powered by Claude AI · Streaming · Built for serious swimmers</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro — Free Forever</p><p>AI-powered · Streaming · Built for serious swimmers</p></div></footer>
 </div>
-
-<!-- AUTH GATE — real Supabase email/password accounts, username of the user's choosing -->
+<!-- AUTH — real Supabase email/password accounts. Content is public; an
+     account is only required for AI features (chat, generator, visualizer
+     analysis). The auth overlay is hidden by default and opened on demand. -->
 <script>
 var SUPABASE_URL = 'https://gzqovsffnziumfbmqdes.supabase.co';
 var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6cW92c2ZmbnppdW1mYm1xZGVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNTgyMTksImV4cCI6MjA5NzgzNDIxOX0.26E4yXVMAjaq_mg4R0BGqRy2adYlG8mgRkbEn3SU36Y';
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// AI calls now route through the ask-ai Edge Function (see sendToAI,
-// generateWorkout, generateVisualization below) -- the server holds the
-// Anthropic key, never the browser.
-
+// AI calls route through the ask-ai Edge Function -- the server holds the
+// Anthropic key and enforces the rate limit (20 messages per 5 hours).
 var currentUser = null;   // Supabase auth user object once logged in
 var currentProfile = null; // row from the profiles table (username, preferences)
-
+function updateNavAuth() {
+  var loginBtn = document.getElementById('nav-login-btn');
+  var logoutBtn = document.getElementById('nav-logout-btn');
+  var nameEl = document.getElementById('current-username-display');
+  var loggedIn = !!currentUser;
+  if (loginBtn) loginBtn.style.display = loggedIn ? 'none' : 'inline-block';
+  if (logoutBtn) logoutBtn.style.display = loggedIn ? 'inline-block' : 'none';
+  if (nameEl) nameEl.textContent = loggedIn ? (currentProfile ? currentProfile.username : (currentUser.email || 'Swimmer')) : '';
+}
+function openAuthGate(screen) {
+  var g = document.getElementById('access-gate');
+  g.style.display = 'flex';
+  g.style.opacity = '1';
+  showAuthScreen(screen || 'login');
+}
 function showAuthScreen(name) {
   ['screen-login','screen-signup','screen-forgot'].forEach(function(id){
     var el = document.getElementById(id);
@@ -1457,20 +1430,18 @@ function showAuthScreen(name) {
     if (el) el.style.display = 'none';
   });
 }
-
 function showAuthError(screenPrefix, message) {
   var el = document.getElementById(screenPrefix + '-error');
   if (!el) return;
   el.textContent = message;
   el.style.display = 'block';
 }
-
 async function doSignup() {
   var username = document.getElementById('signup-username').value.trim();
   var email = document.getElementById('signup-email').value.trim();
   var password = document.getElementById('signup-password').value;
+  var ageOk = document.getElementById('signup-age').checked;
   var btn = document.getElementById('signup-btn');
-
   if (username.length < 3 || !/^[a-zA-Z0-9_]+$/.test(username)) {
     showAuthError('signup', 'Username must be 3+ characters, letters/numbers/underscore only.');
     return;
@@ -1483,24 +1454,26 @@ async function doSignup() {
     showAuthError('signup', 'Password must be at least 8 characters.');
     return;
   }
-
+  if (!ageOk) {
+    showAuthError('signup', 'You must confirm you are 13 or older to create an account.');
+    return;
+  }
   btn.disabled = true; btn.textContent = 'Creating account…';
-
-  // Check the username isn't already taken before creating the auth user
+  // Check the username isn't already taken before creating the auth user.
+  // (The database also enforces a unique constraint -- see setup.sql -- so a
+  // race here can't create duplicates; it just gives a friendlier message.)
   var existing = await sb.from('profiles').select('username').eq('username', username).maybeSingle();
   if (existing.data) {
     showAuthError('signup', 'That username is already taken — pick another.');
     btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
     return;
   }
-
   var { data, error } = await sb.auth.signUp({ email: email, password: password });
   if (error) {
     showAuthError('signup', error.message);
     btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
     return;
   }
-
   // Create the profile row (username) linked to the new auth user
   if (data.user) {
     var { error: profErr } = await sb.from('profiles').insert({
@@ -1513,13 +1486,11 @@ async function doSignup() {
       return;
     }
   }
-
   // Fire the signup notification (best-effort; doesn't block account creation
   // if the function isn't deployed yet)
   try {
     await sb.functions.invoke('notify-signup', { body: { username: username, email: email } });
   } catch (e) { /* not deployed yet -- fine, signup still succeeded */ }
-
   if (data.session) {
     // No email confirmation required -- log straight in
     await onAuthSuccess(data.user);
@@ -1530,7 +1501,6 @@ async function doSignup() {
   }
   btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
 }
-
 async function doLogin() {
   var email = document.getElementById('login-email').value.trim();
   var password = document.getElementById('login-password').value;
@@ -1549,7 +1519,6 @@ async function doLogin() {
   await onAuthSuccess(data.user);
   btn.disabled = false; btn.textContent = 'LOG IN →';
 }
-
 async function doForgotPassword() {
   var email = document.getElementById('forgot-email').value.trim();
   var msg = document.getElementById('forgot-msg');
@@ -1559,42 +1528,39 @@ async function doForgotPassword() {
   msg.style.color = error ? 'var(--red)' : 'var(--green)';
   msg.textContent = error ? error.message : 'Check your email for a password reset link.';
 }
-
 async function doLogout() {
   await sb.auth.signOut();
   currentUser = null; currentProfile = null;
   location.reload();
 }
-
 async function onAuthSuccess(user) {
   currentUser = user;
   var { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).maybeSingle();
   currentProfile = profile;
-  var nameEl = document.getElementById('current-username-display');
-  if (nameEl) nameEl.textContent = profile ? profile.username : (user.email || 'Swimmer');
+  updateNavAuth();
   closeAuthGate();
 }
-
 function closeAuthGate() {
   var g = document.getElementById('access-gate');
+  if (g.style.display === 'none') return;
   g.style.opacity = '0';
   g.style.transition = 'opacity 0.4s ease';
   setTimeout(function(){ g.style.display = 'none'; }, 450);
 }
-
 // On load: check if there's already a valid Supabase session (so users don't
-// have to log in every visit)
+// have to log in every visit). Content is public either way.
 (async function checkExistingSession(){
   var { data } = await sb.auth.getSession();
   if (data.session && data.session.user) {
     await onAuthSuccess(data.session.user);
+  } else {
+    updateNavAuth();
   }
 })();
 </script>
-
-<div id="access-gate" style="position:fixed;inset:0;background:var(--navy);z-index:9998;display:flex;align-items:center;justify-content:center;padding:2rem">
+<div id="access-gate" style="position:fixed;inset:0;background:rgba(4,13,24,0.94);z-index:9998;display:none;align-items:center;justify-content:center;padding:2rem">
+  <button onclick="closeAuthGate()" title="Close" style="position:absolute;top:16px;right:22px;background:none;border:none;color:var(--white3);font-size:1.6rem;cursor:pointer;line-height:1">✕</button>
   <div style="max-width:440px;width:100%;">
-
   <!-- LOGIN -->
   <div id="screen-login" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2.75rem 2.25rem;width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)">
     <div style="font-size:2.6rem;margin-bottom:1rem">🏊</div>
@@ -1612,7 +1578,6 @@ function closeAuthGate() {
       <a onclick="showAuthScreen('signup')" style="cursor:pointer;color:var(--cyan)">Create an account</a>
     </p>
   </div>
-
   <!-- SIGNUP -->
   <div id="screen-signup" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2.75rem 2.25rem;width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)">
     <div style="font-size:2.6rem;margin-bottom:1rem">🏊</div>
@@ -1624,11 +1589,13 @@ function closeAuthGate() {
       <input id="signup-email" type="email" class="form-input" placeholder="you@example.com"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Choose a Password</label>
       <input id="signup-password" type="password" class="form-input" placeholder="8+ characters" onkeydown="if(event.key==='Enter')doSignup()"></div>
+    <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:1rem;font-size:0.78rem;color:var(--white3);text-align:left;cursor:pointer;line-height:1.5">
+      <input type="checkbox" id="signup-age" style="margin-top:2px;accent-color:var(--cyan)"> I confirm I am 13 years of age or older.
+    </label>
     <button id="signup-btn" onclick="doSignup()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">CREATE ACCOUNT →</button>
     <p id="signup-error" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p style="font-size:0.82rem;color:var(--white3)">Already have an account? <a onclick="showAuthScreen('login')" style="cursor:pointer;color:var(--cyan)">Log in</a></p>
   </div>
-
   <!-- FORGOT PASSWORD -->
   <div id="screen-forgot" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2.75rem 2.25rem;width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)">
     <div style="font-size:2.6rem;margin-bottom:1rem">🔑</div>
@@ -1639,10 +1606,8 @@ function closeAuthGate() {
     <p id="forgot-msg" style="font-family:var(--fm);font-size:0.78rem;letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p style="font-size:0.82rem;color:var(--white3)"><a onclick="showAuthScreen('login')" style="cursor:pointer;color:var(--cyan)">Back to login</a></p>
   </div>
-
   </div>
 </div>
-
 <script>
 // ─── NAVIGATION ───────────────────────────────
 function showPage(name){
@@ -1682,7 +1647,6 @@ function initReveal(){
   els.forEach(el=>obs.observe(el));
 }
 document.addEventListener('DOMContentLoaded',initReveal);
-
 // Hero particles
 (function(){
   const c=document.getElementById('hero-particles'); if(!c)return;
@@ -1692,26 +1656,20 @@ document.addEventListener('DOMContentLoaded',initReveal);
     c.appendChild(p);
   }
 })();
-
-// ─── 3D SWIMMER VISUALIZER (real Three.js, smooth-shaded humanoid) ────────
-// Lazy-initializes the first time the visualizer page is shown, so it
-// doesn't pay any cost while the user is elsewhere on the site.
+// ─── 3D SWIMMER VISUALIZER (Three.js, lazy-loaded) ───────────────────────
+// Three.js (~600KB) is fetched only the first time the visualizer page is
+// opened, so the rest of the site loads fast.
 let viz3DInitialized = false;
+let threeLoading = false;
 let scene, camera, renderer, controls;
-// SCENE SETUP — runs once, lazily, the first time the visualizer page opens
-// ═══════════════════════════════════════════════════════════════════════
 let water, grid; // referenced inside animate loop
-
 function initViz3D() {
   const container = document.getElementById('viz3d-container');
   if (!container) return;
-
   scene = new THREE.Scene();
   scene.fog = new THREE.Fog(0x040d18, 4, 12);
-
   camera = new THREE.PerspectiveCamera(42, container.clientWidth/container.clientHeight, 0.1, 100);
   camera.position.set(2.8, 1.4, 3.4);
-
   renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -1720,7 +1678,6 @@ function initViz3D() {
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.setClearColor(0x040d18, 1);
   container.appendChild(renderer.domElement);
-
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 0.9, 0);
   controls.enableDamping = true;
@@ -1728,7 +1685,6 @@ function initViz3D() {
   controls.minDistance = 1.5;
   controls.maxDistance = 8;
   controls.maxPolarAngle = Math.PI * 0.92;
-
   // Lighting
   scene.add(new THREE.HemisphereLight(0x88ccff, 0x081020, 0.55));
   const keyLight = new THREE.DirectionalLight(0xffffff, 1.3);
@@ -1739,7 +1695,6 @@ function initViz3D() {
   const rimLight = new THREE.DirectionalLight(0x00d4ff, 0.5);
   rimLight.position.set(-3, 1, -3);
   scene.add(rimLight);
-
   // Water surface plane (semi-transparent, animated ripple via vertex shader)
   const waterGeo = new THREE.PlaneGeometry(14, 14, 80, 80);
   const waterMat = new THREE.ShaderMaterial({
@@ -1770,26 +1725,20 @@ function initViz3D() {
   water.rotation.x = -Math.PI/2;
   water.position.y = 0.55;
   scene.add(water);
-
   // Floor grid (pool bottom feel)
   grid = new THREE.GridHelper(14, 28, 0x00d4ff, 0x0c2840);
   grid.position.y = -1.1;
   grid.material.opacity = 0.25;
   grid.material.transparent = true;
   scene.add(grid);
-
   // Force-vector arrow group (added/removed from scene as needed)
   vizForceGroup = new THREE.Group();
   scene.add(vizForceGroup);
-
   viz3DInitialized = true;
 }
-
 // ═══════════════════════════════════════════════════════════════════════
 // HUMANOID RIG BUILDER
 // ═══════════════════════════════════════════════════════════════════════
-// Helper: tapered limb segment with joint sphere at the pivot (top) end.
-// Returns { pivot, mesh } where pivot is a THREE.Group you rotate.
 function makeSegment(length, rTop, rBot, material, segments=14) {
   const pivot = new THREE.Group();
   const geo = new THREE.CylinderGeometry(rTop, rBot, length, segments, 1, false);
@@ -1805,14 +1754,11 @@ function makeSegment(length, rTop, rBot, material, segments=14) {
   pivot.userData.mesh = mesh;
   return pivot;
 }
-
 function buildSwimmer(baseColor) {
   const root = new THREE.Group(); // overall body translate/roll/undulate
-
   const mat = new THREE.MeshStandardMaterial({ color: baseColor, roughness: 0.38, metalness: 0.06 });
   const matDim = new THREE.MeshStandardMaterial({ color: baseColor, roughness: 0.5, metalness: 0.04 });
   matDim.color.multiplyScalar(0.72);
-
   // ── Pelvis / hips (root of skeleton) ──
   const hips = new THREE.Group();
   hips.position.set(0, 0, 0);
@@ -1821,12 +1767,10 @@ function buildSwimmer(baseColor) {
   const pelvisMesh = new THREE.Mesh(pelvisGeo, mat);
   pelvisMesh.castShadow = true;
   hips.add(pelvisMesh);
-
   // ── Spine -> chest ──
   const spine = makeSegment(0.42, 0.155, 0.19, mat, 16);
   spine.position.set(0, 0.10, 0);
   hips.add(spine);
-
   // ── Neck -> head ──
   const neck = makeSegment(0.10, 0.06, 0.075, mat, 10);
   neck.position.set(0, 0.42, 0);
@@ -1849,7 +1793,6 @@ function buildSwimmer(baseColor) {
   gL.position.set(-0.04, 0.155, 0.085); gL.scale.set(1,1,0.6);
   const gR = gL.clone(); gR.position.x = 0.04;
   neck.add(gL, gR);
-
   // ── Shoulders + arms ──
   function buildArm(side) {
     const shoulder = new THREE.Group();
@@ -1875,7 +1818,6 @@ function buildSwimmer(baseColor) {
   }
   const armL = buildArm(1);
   const armR = buildArm(-1);
-
   // ── Hips joints + legs ──
   function buildLeg(side) {
     const hipJ = new THREE.Group();
@@ -1901,27 +1843,17 @@ function buildSwimmer(baseColor) {
   }
   const legL = buildLeg(1);
   const legR = buildLeg(-1);
-
   return { root, hips, spine, neck, head, armL, armR, legL, legR, mat, matDim };
 }
-
 // ═══════════════════════════════════════════════════════════════════════
 // STROKE KEYFRAME DATA
 // Angles in degrees: { sh:[x,y,z], el:[x], hi:[x,y,z], kn:[x] }
-// x-rotation = flex forward/back, used for the main swing plane
+// Values are illustrative teaching approximations, not measured data.
 // ═══════════════════════════════════════════════════════════════════════
 const DEG = Math.PI/180;
-
 const STROKES = {
   freestyle: {
     color: 0x00d4ff, rollAmp: 24,
-    // R arm runs through the SAME poses as L, offset across the cycle, but
-    // MIRRORED across the body centerline: sh.y and sh.z are sign-flipped
-    // since L and R shoulders sit on opposite sides of X=0. sh.x, el, hi,
-    // kn stay the same (not side-dependent).
-    // Recovery is split into two sub-keyframes (elbow-up/out, then
-    // forward-reaching) so the arm visibly swings UP AND OVER the water
-    // instead of slerping the short way back through the pull.
     phases: [
       { name:'Entry & Extension', dur:0.16, drag:26, thrust:14, lift:7, vel:1.65, eff:55,
         desc:'Hand enters narrow at 10-15°, arm extends fully overhead to load the lat before the catch. Body rolls toward the entry side, around 45-50° at elite level.',
@@ -1951,11 +1883,6 @@ const STROKES = {
   },
   backstroke: {
     color: 0x00e599, rollAmp: 26,
-    // L poses verified against the rig's actual rotation math so the arm
-    // genuinely swings OUTWARD during Out-Sweep (positive sh.z = away from
-    // body for the L shoulder). R = L's pose shape, offset by half the cycle
-    // for alternating timing, with sh.z negated for a true mirror -- sh.x,
-    // sh.y, el, hi, kn are not side-dependent and stay identical.
     phases: [
       { name:'Pinky Entry', dur:0.18, drag:23, thrust:11, lift:5, vel:1.55, eff:51,
         desc:'Pinky-first entry directly above the shoulder, arm fully extended past the head. The hips stay high near the surface throughout — even a small hip drop costs real speed.',
@@ -2010,9 +1937,6 @@ const STROKES = {
   },
   butterfly: {
     color: 0xa855f7, rollAmp: 0, undulate: true,
-    // Recovery is split so the arms visibly LIFT CLEAR of the water (out and
-    // up to the sides, low sh.x / high |sh.z|) before swinging forward and
-    // down into the next entry -- the "coming out of the water" motion.
     phases: [
       { name:'Entry & Extension', dur:0.17, drag:38, thrust:44, lift:20, vel:1.72, eff:59,
         desc:'Both hands enter together at shoulder width as the chest presses down, initiating the undulation wave. The first dolphin kick fires here.',
@@ -2066,20 +1990,17 @@ const STROKES = {
     ]
   }
 };
-
 // ═══════════════════════════════════════════════════════════════════════
 // ANIMATION DRIVER — quaternion slerp between keyframes, per joint
 // ═══════════════════════════════════════════════════════════════════════
 function eulerQuat(xDeg, yDeg, zDeg) {
   return new THREE.Quaternion().setFromEuler(new THREE.Euler(xDeg*DEG, (yDeg||0)*DEG, (zDeg||0)*DEG, 'XYZ'));
 }
-
 let swimmer = null;
 let currentStroke = 'freestyle';
 let clockT = 0;
 let playing = true;
 let speed = 1;
-
 function rebuildSwimmer(strokeKey) {
   if (swimmer) scene.remove(swimmer.root);
   const sd = STROKES[strokeKey];
@@ -2087,20 +2008,16 @@ function rebuildSwimmer(strokeKey) {
   swimmer.root.position.set(0, 0.95, 0);
   scene.add(swimmer.root);
 }
-
 function easeInOut(t) { return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
-
 function applyPose(rig, sideObj, phaseAData, phaseBData, t) {
   const e = easeInOut(t);
   const qA_sh = eulerQuat(...phaseAData.sh);
   const qB_sh = eulerQuat(...phaseBData.sh);
   const qSh = qA_sh.clone().slerp(qB_sh, e);
   sideObj.shoulder.quaternion.copy(qSh);
-
   const elA = phaseAData.el[0]*DEG, elB = phaseBData.el[0]*DEG;
   sideObj.elbow.rotation.set(elA + (elB-elA)*e, 0, 0);
 }
-
 function applyLegPose(legObj, phaseAData, phaseBData, t) {
   const e = easeInOut(t);
   const qA = eulerQuat(...phaseAData.hi);
@@ -2109,16 +2026,13 @@ function applyLegPose(legObj, phaseAData, phaseBData, t) {
   const knA = phaseAData.kn[0]*DEG, knB = phaseBData.kn[0]*DEG;
   legObj.knee.rotation.set(-(knA + (knB-knA)*e), 0, 0);
 }
-
 let physState = { drag:0, thrust:0, lift:0, vel:0, eff:0 };
 let currentPhaseInfo = { name:'', desc:'', idx:0, total:0 };
-
 function updateSwimmer(dtPhase) {
   const sd = STROKES[currentStroke];
   const phases = sd.phases;
   const totalDur = phases.reduce((s,p)=>s+p.dur, 0);
   const cycleT = ((clockT % totalDur) + totalDur) % totalDur;
-
   let cum = 0, idx = 0, localT = 0;
   for (let i=0;i<phases.length;i++){
     if (cycleT < cum + phases[i].dur) { idx = i; localT = (cycleT-cum)/phases[i].dur; break; }
@@ -2126,16 +2040,10 @@ function updateSwimmer(dtPhase) {
   }
   const nextIdx = (idx+1) % phases.length;
   const A = phases[idx], B = phases[nextIdx];
-
   applyPose(swimmer, swimmer.armL, A.L, B.L, localT);
   applyPose(swimmer, swimmer.armR, A.R, B.R, localT);
   applyLegPose(swimmer.legL, A.L, B.L, localT);
   applyLegPose(swimmer.legR, A.R, B.R, localT);
-
-  // Body roll (freestyle/backstroke) — rotates around the swimmer's own long
-  // axis (Y, head-to-feet) so it reads as a swimming roll, not a sideways tip.
-  // One full smooth sine wave per stroke cycle (cycleT/totalDur), not re-anchored
-  // every phase, so it doesn't snap or wobble like a bobble-head.
   if (sd.rollAmp) {
     const rollPhase = (cycleT / totalDur) * Math.PI * 2;
     swimmer.root.rotation.y = Math.sin(rollPhase) * sd.rollAmp * DEG;
@@ -2152,10 +2060,7 @@ function updateSwimmer(dtPhase) {
     swimmer.spine.rotation.x = 0;
     swimmer.root.position.y = 0.95;
   }
-
   const e = easeInOut(localT);
-
-  // physics interpolation
   const drag = THREE.MathUtils.lerp(A.drag, B.drag, e);
   const thrust = THREE.MathUtils.lerp(A.thrust, B.thrust, e);
   const lift = THREE.MathUtils.lerp(A.lift, B.lift, e);
@@ -2164,7 +2069,6 @@ function updateSwimmer(dtPhase) {
   physState = { drag, thrust, lift, vel, eff };
   currentPhaseInfo = { name: A.name, desc: A.desc, idx, total: phases.length };
 }
-
 // ═══════════════════════════════════════════════════════════════════════
 // VIEW PRESETS (animated camera tween)
 // ═══════════════════════════════════════════════════════════════════════
@@ -2193,13 +2097,11 @@ function setView3D(name) {
   }
   tweenStep();
 }
-
 // ═══════════════════════════════════════════════════════════════════════
-// FORCE VECTOR ARROWS (rendered as real 3D objects beside the swimmer)
+// FORCE VECTOR ARROWS (illustrative)
 // ═══════════════════════════════════════════════════════════════════════
 let vizForceGroup = null;
 let vizShowForces3D = true;
-
 function makeArrow3D(color) {
   const grp = new THREE.Group();
   const mat = new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.5, roughness:0.4 });
@@ -2213,7 +2115,6 @@ function makeArrow3D(color) {
   grp.userData = { shaft, head, mat };
   return grp;
 }
-
 function buildForceArrows() {
   vizForceGroup.clear();
   vizForceGroup.userData.drag   = makeArrow3D(0xff4444);
@@ -2222,7 +2123,6 @@ function buildForceArrows() {
   vizForceGroup.userData.net    = makeArrow3D(0xffaa00);
   vizForceGroup.add(vizForceGroup.userData.drag, vizForceGroup.userData.thrust, vizForceGroup.userData.lift, vizForceGroup.userData.net);
 }
-
 function pointArrow(arrowGrp, originY, dirVec, magnitude, maxLen) {
   const len = Math.max(0.001, Math.min(maxLen, magnitude * 0.012));
   arrowGrp.visible = len > 0.04 && vizShowForces3D;
@@ -2233,11 +2133,9 @@ function pointArrow(arrowGrp, originY, dirVec, magnitude, maxLen) {
   const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1), target);
   arrowGrp.quaternion.copy(quat);
 }
-
 function toggleForces3D() { vizShowForces3D = !vizShowForces3D; }
-
 // ═══════════════════════════════════════════════════════════════════════
-// PHASE BAR + INFO PANEL SYNC (writes into the existing site DOM)
+// PHASE BAR + INFO PANEL SYNC
 // ═══════════════════════════════════════════════════════════════════════
 function buildPhaseBar3D(strokeKey) {
   const bar = document.getElementById('viz-phase-bar');
@@ -2256,7 +2154,6 @@ function jumpToPhase3D(i) {
 function updatePhaseBar3D(idx) {
   document.querySelectorAll('.phase-step').forEach((el,i) => el.classList.toggle('active', i===idx));
 }
-
 function syncInfoPanel3D() {
   const dragEl = document.getElementById('stat-drag');
   const thrustEl = document.getElementById('stat-thrust');
@@ -2266,7 +2163,6 @@ function syncInfoPanel3D() {
   if (thrustEl) thrustEl.textContent = physState.thrust.toFixed(0);
   if (veloEl) veloEl.textContent = physState.vel.toFixed(2);
   if (effEl) effEl.textContent = physState.eff.toFixed(0) + '%';
-
   const phaseName = document.getElementById('viz-phase-name');
   const phaseText = document.getElementById('viz-phase-text');
   const strokeName = document.getElementById('viz-stroke-name');
@@ -2301,7 +2197,6 @@ function syncInfoPanel3D() {
     </div>`;
   updatePhaseBar3D(currentPhaseInfo.idx);
 }
-
 // ═══════════════════════════════════════════════════════════════════════
 // PUBLIC UI API (called from buttons in the visualizer page)
 // ═══════════════════════════════════════════════════════════════════════
@@ -2320,7 +2215,6 @@ function togglePlay3D() {
   if (btn) btn.textContent = playing ? '⏸ Pause' : '▶ Play';
 }
 function setSpeed3D(s) { speed = s; }
-
 function resizeViz3D() {
   const container = document.getElementById('viz3d-container');
   if (!container || !renderer || !camera) return;
@@ -2331,7 +2225,6 @@ function resizeViz3D() {
   renderer.setSize(w, h);
 }
 window.addEventListener('resize', resizeViz3D);
-
 let lastTime3D = performance.now();
 function animate3D(){
   requestAnimationFrame(animate3D);
@@ -2341,8 +2234,6 @@ function animate3D(){
   if (playing) clockT += dt * 0.55 * speed;
   updateSwimmer(dt);
   water.material.uniforms.time.value += dt;
-
-  // Force vectors anchored near the swimmer's hips, pointing along world axes
   if (vizForceGroup && swimmer) {
     const hipY = swimmer.root.position.y;
     pointArrow(vizForceGroup.userData.drag,   hipY, new THREE.Vector3(-1,0,0), physState.drag,   1.1);
@@ -2351,27 +2242,35 @@ function animate3D(){
     const netDir = new THREE.Vector3(physState.thrust - physState.drag, physState.lift*0.4, 0);
     pointArrow(vizForceGroup.userData.net,    hipY, netDir.lengthSq()>0.001 ? netDir : new THREE.Vector3(1,0,0), netDir.length(), 1.3);
   }
-
   controls.update();
   renderer.render(scene, camera);
   syncInfoPanel3D();
 }
-
-// ─── LAZY INIT — only build the scene the first time the page is opened ──
-function ensureViz3DReady() {
-  if (viz3DInitialized) { resizeViz3D(); return; }
+// ─── LAZY INIT — loads Three.js from CDN the first time the page opens ──
+function startViz3D() {
   initViz3D();
   buildForceArrows();
   rebuildSwimmer(currentStroke);
   buildPhaseBar3D(currentStroke);
   resizeViz3D();
+  lastTime3D = performance.now();
   animate3D();
+}
+function ensureViz3DReady() {
+  if (viz3DInitialized) { resizeViz3D(); return; }
+  if (window.THREE) { startViz3D(); return; }
+  if (threeLoading) return;
+  threeLoading = true;
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  s.onload = function(){ installOrbitControls(); startViz3D(); };
+  s.onerror = function(){ threeLoading = false; };
+  document.head.appendChild(s);
 }
 // ─── SEASON & MEET CALENDAR — time-aware (reads the real device date) ────
 // Meet dates below reflect the published 2025-26 USA Swimming national
 // events calendar. The page never invents specific cut times -- it links
-// to the official standards instead, since those are large tables that
-// vary by event/age/gender/course and get revised.
+// to the official standards instead. Always confirm on usaswimming.org.
 const SEASON_MEETS = [
   { name: 'Toyota U.S. Open',                start: '2025-12-03', end: '2025-12-06', course: 'LCM', tag: 'Senior' },
   { name: 'Speedo Winter Junior Championships', start: '2025-12-10', end: '2025-12-13', course: 'SCY', tag: 'Junior' },
@@ -2381,33 +2280,26 @@ const SEASON_MEETS = [
   { name: 'Speedo Summer Junior Championships', start: '2026-08-03', end: '2026-08-07', course: 'LCM', tag: 'Junior' },
   { name: 'Pan Pacific Championships',       start: '2026-08-12', end: '2026-08-15', course: 'LCM', tag: 'International' },
 ];
-
 function seasonPhaseFor(d) {
-  // US club season: roughly Sept-March = short course (SCY) emphasis,
-  // April-August = long course (LCM) championship season.
   const m = d.getMonth() + 1; // 1-12
   if (m >= 4 && m <= 8) return { course: 'LCM — Long Course', phase: 'Long Course Season', blurb: 'You\'re in the long-course (50m) part of the year — the season that builds toward Futures, Junior Nationals, and Toyota Nationals. Most championship meets of the year land in this window.' };
   if (m === 9) return { course: 'SCY — Short Course', phase: 'Early Season', blurb: 'Short course season is just starting. This is base-building time — aerobic volume, technique work, and dryland foundations before championship season ramps up.' };
   if (m >= 10 && m <= 12) return { course: 'SCY — Short Course', phase: 'Mid Season', blurb: 'You\'re mid short-course season. U.S. Open and Winter Juniors fall in this window for the swimmers who qualify — for everyone else, it\'s a strong stretch for time trials and mid-season meets.' };
   return { course: 'SCY — Short Course', phase: 'Late Season / Taper Window', blurb: 'Late short-course season — Sectionals and Spring Championship season for many LSCs. A common taper window ahead of championship meets before the transition into long course.' };
 }
-
 function renderSeasonPage() {
   const todayEl = document.getElementById('season-today');
   const phaseEl = document.getElementById('season-phase');
   const courseEl = document.getElementById('season-course-badge');
   const blurbEl = document.getElementById('season-blurb');
   const tableBody = document.querySelector('#season-meet-table tbody');
-  if (!todayEl) return; // page not in DOM (shouldn't happen, but stay safe)
-
+  if (!todayEl) return;
   const now = new Date();
   todayEl.textContent = now.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-
   const info = seasonPhaseFor(now);
   phaseEl.textContent = info.phase;
   courseEl.textContent = info.course;
   blurbEl.textContent = info.blurb;
-
   if (tableBody) {
     tableBody.innerHTML = SEASON_MEETS.map(m => {
       const start = new Date(m.start + 'T00:00:00');
@@ -2425,18 +2317,11 @@ function renderSeasonPage() {
     }).join('');
   }
 }
-
 // ─── AI COACH — STREAMING ─────────────────────
+// System prompts live server-side in the ask-ai Edge Function. The client
+// only sends a mode name. The server also enforces the rate limit
+// (20 messages per rolling 5 hours per account).
 let currentMode='coach';
-const MODE_PROMPTS={
-  coach:`You are an elite competitive swimming coach with deep expertise in Olympic-level swimming science, periodization, training methodology, technique, dryland, nutrition, mental performance, taper, and sports physiology. Be direct, specific, give real numbers. Max 280 words unless complexity demands more.`,
-  technique:`You are a biomechanics expert and elite swimming technique coach. Give detailed coaching cues with exact measurements, angles, and positional checkpoints. Reference Dressel, Phelps, Murphy, Peaty where relevant.`,
-  race:`You are an elite swimming race strategist. Focus on race preparation, pacing strategy, split planning, taper, meet-day routines. Give specific pace targets and split sequences.`,
-  science:`You are a sports physiologist specializing in aquatic performance. Focus on physiology, biochemistry, biomechanics. Explain energy systems, lactate dynamics, VO2 max, neuromuscular adaptations.`,
-  nutrition:`You are a sports dietitian specializing in competitive swimmers. Focus on pre/post training nutrition, race day fueling, carbohydrate periodization, protein timing. Give specific amounts in g/kg bodyweight.`,
-  mental:`You are a sports psychologist specializing in competitive swimming. Focus on visualization protocols, arousal control, pre-race routines, focus techniques. Give specific, practical protocols.`
-};
-
 function setMode(mode,btn){
   currentMode=mode;
   document.querySelectorAll('.ai-mode-btn').forEach(b=>b.classList.remove('active'));
@@ -2444,26 +2329,25 @@ function setMode(mode,btn){
   const labels={coach:'Coaching',technique:'Technique',race:'Race Strategy',science:'Sports Science',nutrition:'Nutrition',mental:'Mental Performance'};
   addMsg('Mode: '+labels[mode]+'. Ask me anything.','ai');
 }
-
 let conversationHistory=[];
-
 async function sendToAI(){
   const input=document.getElementById('ai-input');
   const msg=input.value.trim();
   if(!msg) return;
-  if(!currentUser){ addMsg('Please log in to use the AI Coach.','ai'); return; }
+  if(!currentUser){
+    addMsg('The AI Coach needs a free account (it keeps the service free for everyone). Log in or sign up to continue.','ai');
+    openAuthGate('login');
+    return;
+  }
   const btn=document.getElementById('ai-send-btn');
   addMsg(msg,'user'); input.value=''; btn.disabled=true;
   conversationHistory.push({role:'user',content:msg});
-
   // Create streaming bubble
   const streamBubble=createStreamBubble();
-
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
     if(!accessToken){ finishStreamBubble(streamBubble, 'Your session expired -- please log in again.'); btn.disabled=false; return; }
-
     const resp=await fetch(SUPABASE_URL + '/functions/v1/ask-ai',{
       method:'POST',
       headers:{
@@ -2476,25 +2360,21 @@ async function sendToAI(){
         messages: conversationHistory
       })
     });
-
     if(!resp.ok){
       const err=await resp.json().catch(()=>({}));
-      finishStreamBubble(streamBubble, err.error || `Error: HTTP ${resp.status}`);
+      finishStreamBubble(streamBubble, err.error || (resp.status===429 ? 'You\'ve reached the limit of 20 AI messages per 5 hours. Take a break and come back soon.' : `Error: HTTP ${resp.status}`));
       btn.disabled=false; return;
     }
-
     const reader=resp.body.getReader();
     const decoder=new TextDecoder();
     let fullText='';
     let buffer='';
-
     while(true){
       const {done,value}=await reader.read();
       if(done) break;
       buffer+=decoder.decode(value,{stream:true});
       const lines=buffer.split('\n');
       buffer=lines.pop()||''; // keep incomplete line
-
       for(const line of lines){
         if(!line.startsWith('data: ')) continue;
         const data=line.slice(6).trim();
@@ -2511,11 +2391,10 @@ async function sendToAI(){
     finishStreamBubble(streamBubble, fullText||'No response.');
     conversationHistory.push({role:'assistant',content:fullText||''});
   }catch(e){
-    finishStreamBubble(streamBubble, 'Connection error — check your network and API key.');
+    finishStreamBubble(streamBubble, 'Connection error — check your network and try again.');
   }
   btn.disabled=false;
 }
-
 function createStreamBubble(){
   const msgs=document.getElementById('ai-messages');
   const div=document.createElement('div');
@@ -2539,7 +2418,6 @@ function finishStreamBubble(el,text){
   const msgs=document.getElementById('ai-messages');
   msgs.scrollTop=msgs.scrollHeight;
 }
-
 function addMsg(text,type){
   const msgs=document.getElementById('ai-messages');
   const div=document.createElement('div');
@@ -2555,7 +2433,6 @@ function addMsg(text,type){
   msgs.scrollTop=msgs.scrollHeight;
   return div;
 }
-
 function usePrompt(el){
   document.getElementById('ai-input').value=el.textContent;
   document.getElementById('ai-input').focus();
@@ -2572,10 +2449,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   const inp=document.getElementById('ai-input');
   if(inp) inp.addEventListener('keydown',e=>{if(e.key==='Enter')sendToAI();});
 });
-
 // ─── WORKOUT GENERATOR — STREAMING ────────────
 async function generateWorkout(){
-  if(!currentUser){alert('Please log in to use the Workout Generator.');return;}
+  if(!currentUser){ openAuthGate('login'); return; }
   const focus=document.getElementById('gen-focus').value;
   const stroke=document.getElementById('gen-stroke').value;
   const length=document.getElementById('gen-length').value;
@@ -2591,7 +2467,6 @@ async function generateWorkout(){
   loading.style.display='flex';
   result.innerHTML='';
   actions.style.display='none';
-
   const prompt=`Generate a complete, detailed swim training session:
 - Focus: ${focus}
 - Stroke: ${stroke}
@@ -2600,7 +2475,6 @@ async function generateWorkout(){
 - Equipment: ${equip}
 - Meso: ${meso}
 - Notes: ${notes||'none'}
-
 Use EXACTLY these section headers (capitalize them):
 WARM-UP (Xm):
 PRE-MAIN / DRILLS (Xm):
@@ -2608,14 +2482,11 @@ MAIN SET (Xm):
 COOL-DOWN (Xm):
 TOTAL: Xm
 COACH NOTES:
-
 Every set needs interval, equipment, HR targets on Golf scale. Volume targets: 45min=2500-3500m, 60min=3500-5000m, 75min=4500-6500m, 90min=5500-8000m.`;
-
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
     if(!accessToken){ loading.style.display='none'; result.innerHTML='<p style="color:var(--red)">Your session expired -- please log in again.</p>'; return; }
-
     const resp=await fetch(SUPABASE_URL + '/functions/v1/ask-ai',{
       method:'POST',
       headers:{
@@ -2628,21 +2499,17 @@ Every set needs interval, equipment, HR targets on Golf scale. Volume targets: 4
         messages: [{role:'user',content:prompt}]
       })
     });
-
     loading.style.display='none';
-
     if(!resp.ok){
       const err=await resp.json().catch(()=>({}));
-      result.innerHTML=`<p style="color:var(--red)">${err.error || `Error: HTTP ${resp.status}`}</p>`;
+      result.innerHTML=`<p style="color:var(--red)">${err.error || (resp.status===429 ? 'You\'ve reached the limit of 20 AI messages per 5 hours. Try again later.' : `Error: HTTP ${resp.status}`)}</p>`;
       return;
     }
-
     const reader=resp.body.getReader();
     const decoder=new TextDecoder();
     let fullText='', buffer='';
-    result.innerHTML='<div id="gen-stream" style="font-size:0.88rem;color:var(--white2);line-height:1.8;white-space:pre-wrap;font-family:var(--fm);font-size:0.82rem"></div>';
+    result.innerHTML='<div id="gen-stream" style="color:var(--white2);line-height:1.8;white-space:pre-wrap;font-family:var(--fm);font-size:0.82rem"></div>';
     const streamEl=document.getElementById('gen-stream');
-
     while(true){
       const {done,value}=await reader.read();
       if(done) break;
@@ -2670,7 +2537,6 @@ Every set needs interval, equipment, HR targets on Golf scale. Volume targets: 4
     result.innerHTML=`<p style="color:var(--red)">Connection error.</p>`;
   }
 }
-
 function formatWorkout(text){
   const lines=text.split('\n');
   let html='', inSec=false;
@@ -2690,7 +2556,6 @@ function formatWorkout(text){
   if(inSec) html+='</div></div>';
   return html||'<p>'+text+'</p>';
 }
-
 // ─── VISUALIZER AI ANALYSIS — STREAMING ───────
 const VIZ_CONCEPTS={
   'freestyle-catch':'Freestyle high elbow catch — exact body position, elbow angle, wrist position, hand depth, mechanical advantage, step-by-step from entry to full catch engagement.',
@@ -2705,9 +2570,8 @@ const VIZ_CONCEPTS={
   'propulsion':'Propulsion mechanics — Bernoulli lift vs Newtonian action/reaction, forearm paddle, why catch position determines efficiency.',
   'custom':''
 };
-
 async function generateVisualization(){
-  if(!currentUser){alert('Please log in to use the Visualizer Analysis.');return;}
+  if(!currentUser){ openAuthGate('login'); return; }
   const concept=document.getElementById('viz-concept').value;
   const custom=document.getElementById('viz-custom').value.trim();
   const detail=document.getElementById('viz-detail').value;
@@ -2722,7 +2586,6 @@ async function generateVisualization(){
   const prompt=`Create a detailed biomechanical breakdown for swimming coaching.
 Topic: ${basePrompt}
 Detail level: ${detailMap[detail]}
-
 Use these EXACT section headers with emoji:
 📐 BODY POSITION
 🔄 MOVEMENT SEQUENCE
@@ -2731,24 +2594,18 @@ Use these EXACT section headers with emoji:
 ❌ COMMON ERRORS
 🎯 COACHING CUE
 💪 DRILL PROGRESSION
-
 Use specific numbers (angles, distances, timing). Premium coaching quality.`;
-
   const resultDiv=document.getElementById('viz-result');
   const outputDiv=document.getElementById('viz-output');
   const contentDiv=document.getElementById('viz-content');
-
   resultDiv.innerHTML='<div style="display:flex;align-items:center;gap:12px;padding:2rem;color:var(--white3)"><div class="typing-indicator" style="padding:0"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div><span>Generating analysis…</span></div>';
   outputDiv.style.display='block';
   contentDiv.innerHTML='<div id="viz-stream" style="font-size:0.88rem;color:var(--white2);line-height:1.8;white-space:pre-wrap"></div>';
-
   const streamEl=document.getElementById('viz-stream');
-
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
     if(!accessToken){ contentDiv.innerHTML='<p style="color:var(--red)">Your session expired -- please log in again.</p>'; return; }
-
     const resp=await fetch(SUPABASE_URL + '/functions/v1/ask-ai',{
       method:'POST',
       headers:{
@@ -2761,19 +2618,15 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
         messages: [{role:'user',content:prompt}]
       })
     });
-
     resultDiv.innerHTML='<div style="padding:1.25rem;text-align:center"><div style="font-family:var(--fm);font-size:0.6rem;letter-spacing:3px;color:var(--green)">✓ STREAMING</div></div>';
-
     if(!resp.ok){
       const err=await resp.json().catch(()=>({}));
-      contentDiv.innerHTML=`<p style="color:var(--red)">${err.error || 'API error'}</p>`;
+      contentDiv.innerHTML=`<p style="color:var(--red)">${err.error || (resp.status===429 ? 'You\'ve reached the limit of 20 AI messages per 5 hours. Try again later.' : 'API error')}</p>`;
       return;
     }
-
     const reader=resp.body.getReader();
     const decoder=new TextDecoder();
     let fullText='', buffer='';
-
     while(true){
       const {done,value}=await reader.read();
       if(done) break;
@@ -2801,7 +2654,6 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
     contentDiv.innerHTML=`<p style="color:var(--red)">Connection error.</p>`;
   }
 }
-
 function formatVizOutput(text){
   const sections=text.split(/\n(?=📐|🔄|⚡|✅|❌|🎯|💪)/);
   return sections.map(s=>{
@@ -2815,7 +2667,6 @@ function formatVizOutput(text){
     </div>`;
   }).join('');
 }
-
 // ─── CALCULATORS ──────────────────────────────
 function parseTime(str){
   if(!str) return null;
@@ -2899,7 +2750,6 @@ function convertTime(){
   html+='</tbody></table></div>';
   document.getElementById('conv-result').innerHTML=html;
 }
-
 // ─── PR TRACKER ───────────────────────────────
 const PR_EVENTS={
   fr:['50 FR','100 FR','200 FR','400 FR','800 FR','1500 FR'],
@@ -2937,7 +2787,6 @@ function initProfile(){
   Object.keys(PR_EVENTS).forEach(s=>buildPRGrid(s));
 }
 initProfile();
-
 // ─── TRAINING LOG ─────────────────────────────
 function saveLogEntry(){
   const date=document.getElementById('log-date').value;
@@ -3004,7 +2853,6 @@ function clearLog(){if(!confirm('Clear all log entries?'))return; localStorage.r
 const todayInput=document.getElementById('log-date');
 if(todayInput) todayInput.value=new Date().toISOString().split('T')[0];
 renderLog();
-
 </script>
 </body>
 </html>
