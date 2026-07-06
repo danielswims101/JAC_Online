@@ -2076,12 +2076,12 @@ const STROKES = {
         R:{ sh:[-10,0,-6], el:[40], hi:[14,0,0], kn:[14] } },
       { name:'Clear the Water', dur:0.16, drag:46, thrust:32, lift:14, vel:1.78, eff:60,
         desc:'Straight arms sweep outward and lift clear of the surface — the hands clear the water to the sides of the hips before swinging forward, low drag throughout.',
-        L:{ sh:[-25,0,75], el:[12], hi:[20,0,0],  kn:[20] },
-        R:{ sh:[-25,0,-75], el:[12], hi:[20,0,0], kn:[20] } },
+        L:{ sh:[-90,0,80], el:[10], hi:[20,0,0],  kn:[20] },
+        R:{ sh:[-90,0,-80], el:[10], hi:[20,0,0], kn:[20] } },
       { name:'Recovery Wave', dur:0.27, drag:40, thrust:22, lift:9, vel:1.66, eff:54,
         desc:'Arms swing forward together over the water as the chest rises — the wave must travel continuously, since any stiffness in the torso breaks it before it reaches the feet.',
-        L:{ sh:[155,0,16], el:[14], hi:[20,0,0],  kn:[18] },
-        R:{ sh:[155,0,-16], el:[14], hi:[20,0,0], kn:[18] } }
+        L:{ sh:[170,0,16], el:[10], hi:[20,0,0],  kn:[18] },
+        R:{ sh:[170,0,-16], el:[10], hi:[20,0,0], kn:[18] } }
     ]
   },
   dolphin: {
@@ -2129,22 +2129,34 @@ function rebuildSwimmer(strokeKey) {
   swimmerOrient.add(swimmer.root);
 }
 function easeInOut(t) { return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
-function applyPose(rig, sideObj, phaseAData, phaseBData, t) {
+// NOTE on signs: keyframe data uses the convention "positive shoulder/hip x
+// sweeps toward the chest (anterior)". The rig's raw X rotation sweeps the
+// opposite way, so x-angles are negated here — this keeps the pull underwater
+// (chest side) and the recovery in the air (back side), elbows flexing like
+// real elbows and knees like real knees.
+function applyPose(rig, sideObj, phaseAData, phaseBData, t, supine) {
   const e = easeInOut(t);
-  const qA_sh = eulerQuat(...phaseAData.sh);
-  const qB_sh = eulerQuat(...phaseBData.sh);
+  // Prone strokes: negate x so the pull sweeps under the chest (into the
+  // water) and recovery swings over the back (into the air). Supine
+  // (backstroke) keeps the authored sign — the body is flipped, so the
+  // same rotation already puts the pull underwater and the arc overhead.
+  const sx = supine ? 1 : -1;
+  const qA_sh = eulerQuat(sx*phaseAData.sh[0], phaseAData.sh[1], phaseAData.sh[2]);
+  const qB_sh = eulerQuat(sx*phaseBData.sh[0], phaseBData.sh[1], phaseBData.sh[2]);
   const qSh = qA_sh.clone().slerp(qB_sh, e);
   sideObj.shoulder.quaternion.copy(qSh);
   const elA = phaseAData.el[0]*DEG, elB = phaseBData.el[0]*DEG;
-  sideObj.elbow.rotation.set(elA + (elB-elA)*e, 0, 0);
+  // Elbow flexes toward the water on the pulling side in both orientations
+  sideObj.elbow.rotation.set(sx*(elA + (elB-elA)*e), 0, 0);
 }
 function applyLegPose(legObj, phaseAData, phaseBData, t) {
   const e = easeInOut(t);
-  const qA = eulerQuat(...phaseAData.hi);
-  const qB = eulerQuat(...phaseBData.hi);
+  const qA = eulerQuat(-phaseAData.hi[0], phaseAData.hi[1], phaseAData.hi[2]);
+  const qB = eulerQuat(-phaseBData.hi[0], phaseBData.hi[1], phaseBData.hi[2]);
   legObj.hipJ.quaternion.copy(qA.clone().slerp(qB, e));
   const knA = phaseAData.kn[0]*DEG, knB = phaseBData.kn[0]*DEG;
-  legObj.knee.rotation.set(-(knA + (knB-knA)*e), 0, 0);
+  // Knees flex posteriorly — heels rise toward the surface, never forward
+  legObj.knee.rotation.set(knA + (knB-knA)*e, 0, 0);
 }
 let physState = { drag:0, thrust:0, lift:0, vel:0, eff:0 };
 let currentPhaseInfo = { name:'', desc:'', idx:0, total:0 };
@@ -2160,8 +2172,8 @@ function updateSwimmer(dtPhase) {
   }
   const nextIdx = (idx+1) % phases.length;
   const A = phases[idx], B = phases[nextIdx];
-  applyPose(swimmer, swimmer.armL, A.L, B.L, localT);
-  applyPose(swimmer, swimmer.armR, A.R, B.R, localT);
+  applyPose(swimmer, swimmer.armL, A.L, B.L, localT, !!sd.supine);
+  applyPose(swimmer, swimmer.armR, A.R, B.R, localT, !!sd.supine);
   applyLegPose(swimmer.legL, A.L, B.L, localT);
   applyLegPose(swimmer.legR, A.R, B.R, localT);
   if (sd.rollAmp) {
