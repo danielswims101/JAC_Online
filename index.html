@@ -1973,36 +1973,40 @@ function buildSwimmer(baseColor) {
 const DEG = Math.PI/180;
 const STROKES = {
   freestyle: {
-    color: 0x00d4ff, rollAmp: 24,
+    color: 0x00d4ff, rollAmp: 24, flutter: true,
+    breath: { type:'side', start:0.62, dur:0.30 },
+    // TRUE OPPOSITION TIMING: R runs the same pose sequence as L, exactly
+    // half a cycle behind (R[i] = mirror of L[i+3]) — when one hand enters,
+    // the other is finishing at the hip. No catch-up pause.
     phases: [
-      { name:'Entry & Extension', dur:0.16, drag:26, thrust:14, lift:7, vel:1.65, eff:55,
-        desc:'Hand enters narrow at 10-15°, arm extends fully overhead to load the lat before the catch. Body rolls toward the entry side, around 45-50° at elite level.',
-        L:{ sh:[170,0,8],    el:[8],  hi:[20,0,0],  kn:[10] },
-        R:{ sh:[-95,-55,70], el:[105], hi:[-18,0,0], kn:[28] } },
-      { name:'Catch', dur:0.12, drag:40, thrust:60, lift:24, vel:1.82, eff:67,
-        desc:'Elbow rises high and flares outward, wrist presses down — the forearm becomes a vertical paddle. This is the highest-leverage moment in the entire stroke.',
-        L:{ sh:[125,10,10], el:[58], hi:[24,0,0],  kn:[8]  },
-        R:{ sh:[150,20,15], el:[70], hi:[22,0,0],  kn:[34] } },
-      { name:'Pull', dur:0.18, drag:66, thrust:142, lift:42, vel:2.18, eff:76,
-        desc:'The hand accelerates from catch to hip along a gentle S-curve. Lat and pec fire maximally — hand speed at exit is 3-4x the speed at the catch.',
-        L:{ sh:[55,5,4],    el:[95], hi:[18,0,0],  kn:[30] },
-        R:{ sh:[170,0,-8],  el:[8],  hi:[20,0,0],  kn:[10] } },
-      { name:'Push & Finish', dur:0.13, drag:50, thrust:86, lift:20, vel:2.04, eff:71,
-        desc:'The hand pushes past the hip, thumb brushing the thigh. Stopping early at the belly button loses roughly 30% of this phase\'s propulsion.',
-        L:{ sh:[-12,0,2],   el:[20], hi:[12,0,0],  kn:[8]  },
-        R:{ sh:[125,-10,-10], el:[58], hi:[24,0,0], kn:[8]  } },
-      { name:'Recovery — Elbow Up', dur:0.16, drag:33, thrust:18, lift:6, vel:1.74, eff:58,
-        desc:'The elbow leads, bent and lifted clear of the water, swinging out and forward — relaxed, with minimal drag, while the opposite arm pulls and the kick maintains velocity.',
-        L:{ sh:[-95,55,-70], el:[105], hi:[22,0,0], kn:[34] },
-        R:{ sh:[55,-5,-4],  el:[95], hi:[18,0,0],  kn:[30] } },
-      { name:'Recovery — Reaching Forward', dur:0.16, drag:30, thrust:16, lift:6, vel:1.70, eff:57,
-        desc:'The arm straightens and reaches forward over the water, lining up for a narrow entry just inside the shoulder line.',
-        L:{ sh:[150,-20,-15], el:[70], hi:[20,0,0], kn:[10] },
-        R:{ sh:[-12,0,-2],  el:[20], hi:[12,0,0],  kn:[8]  } }
+      { name:'Entry & Extension', dur:0.16, drag:26, thrust:60, lift:14, vel:1.78, eff:62,
+        desc:'Hand enters narrow at 10-15° and extends overhead while the OTHER hand finishes its push past the hip — true opposition timing, never catch-up. Body roll ~45°.',
+        L:{ sh:[170,0,8],   el:[8],   hi:[8,0,0], kn:[8] },
+        R:{ sh:[-12,0,-2],  el:[20],  hi:[8,0,0], kn:[8] } },
+      { name:'Catch', dur:0.14, drag:40, thrust:64, lift:24, vel:1.84, eff:67,
+        desc:'Elbow rises high and flares outward, wrist presses down — the forearm becomes a vertical paddle while the opposite elbow lifts clear of the water behind.',
+        L:{ sh:[125,10,10],  el:[58],  hi:[8,0,0], kn:[8] },
+        R:{ sh:[-95,-55,70], el:[105], hi:[8,0,0], kn:[8] } },
+      { name:'Pull', dur:0.20, drag:66, thrust:142, lift:42, vel:2.18, eff:76,
+        desc:'The hand accelerates from catch to hip along a gentle S-curve while the opposite arm reaches forward over the water. Hand speed at exit is 3-4x catch speed.',
+        L:{ sh:[55,5,4],     el:[95],  hi:[8,0,0], kn:[8] },
+        R:{ sh:[150,20,15],  el:[70],  hi:[8,0,0], kn:[8] } },
+      { name:'Push & Finish', dur:0.16, drag:50, thrust:96, lift:20, vel:2.04, eff:71,
+        desc:'The hand pushes past the hip, thumb brushing the thigh, exactly as the opposite hand enters overhead — the propulsive engine never stops.',
+        L:{ sh:[-12,0,2],    el:[20],  hi:[8,0,0], kn:[8] },
+        R:{ sh:[170,0,-8],   el:[8],   hi:[8,0,0], kn:[8] } },
+      { name:'Recovery & Breath', dur:0.14, drag:33, thrust:70, lift:12, vel:1.86, eff:64,
+        desc:'The elbow leads the recovery, lifted clear of the water, while the head rotates with the body roll to breathe — chin stays low, one goggle in the water.',
+        L:{ sh:[-95,55,-70], el:[105], hi:[8,0,0], kn:[8] },
+        R:{ sh:[125,-10,-10],el:[58],  hi:[8,0,0], kn:[8] } },
+      { name:'Reach Forward', dur:0.20, drag:30, thrust:120, lift:16, vel:2.02, eff:70,
+        desc:'The recovering arm straightens and reaches forward for a narrow entry while the opposite arm drives through the middle of its pull.',
+        L:{ sh:[150,-20,-15],el:[70],  hi:[8,0,0], kn:[8] },
+        R:{ sh:[55,-5,-4],   el:[95],  hi:[8,0,0], kn:[8] } }
     ]
   },
   backstroke: {
-    color: 0x00e599, rollAmp: 26, supine: true,
+    color: 0x00e599, rollAmp: 26, supine: true, flutter: true,
     phases: [
       { name:'Pinky Entry', dur:0.18, drag:23, thrust:11, lift:5, vel:1.55, eff:51,
         desc:'Pinky-first entry directly above the shoulder, arm fully extended past the head. The hips stay high near the surface throughout — even a small hip drop costs real speed.',
@@ -2012,7 +2016,7 @@ const STROKES = {
         desc:'The lat engages as the arm extends and the elbow begins to bend, loading the pulling side as the hips counter-rotate.',
         L:{ sh:[-145, 10, 35], el:[35], hi:[22, 0, 0], kn:[10] },
         R:{ sh:[5, -5, 0], el:[10], hi:[10, 0, 0], kn:[8] } },
-      { name:'Out-Sweep', dur:0.16, drag:55, thrust:100, lift:30, vel:1.95, eff:66,
+      { name:'Out-Sweep', dur:0.19, drag:55, thrust:100, lift:30, vel:1.95, eff:66,
         desc:'The hand sweeps OUT to the side, well clear of the shoulder line, catching undisturbed water — the first half of the backstroke S-curve.',
         L:{ sh:[-100, 30, 85], el:[80], hi:[18, 0, 0], kn:[34] },
         R:{ sh:[-160, -10, 8], el:[8], hi:[20, 0, 0], kn:[10] } },
@@ -2024,14 +2028,15 @@ const STROKES = {
         desc:'The hand finishes past the hip toward the feet, thumb leading, at the swimmer\'s point of maximum rotation.',
         L:{ sh:[5, -5, 0], el:[10], hi:[10, 0, 0], kn:[8] },
         R:{ sh:[-145, 10, -35], el:[35], hi:[22, 0, 0], kn:[10] } },
-      { name:'Recovery Arc', dur:0.22, drag:28, thrust:14, lift:4, vel:1.6, eff:53,
+      { name:'Recovery Arc', dur:0.19, drag:28, thrust:14, lift:4, vel:1.6, eff:53,
         desc:'A straight-arm recovery passes over the water with hips held high while the kick maintains momentum and sets up the rotation for the next entry.',
         L:{ sh:[-160, -10, -8], el:[8], hi:[20, 0, 0], kn:[10] },
         R:{ sh:[-100, 30, -85], el:[80], hi:[18, 0, 0], kn:[34] } }
     ]
   },
   breaststroke: {
-    color: 0xf5a623, rollAmp: 0,
+    color: 0xf5a623, rollAmp: 0, hold: true,
+    breath: { type:'front', start:0.38, dur:0.30 },
     phases: [
       { name:'Glide & Streamline', dur:0.26, drag:16, thrust:4, lift:2, vel:1.80, eff:83,
         desc:'Full streamline immediately after the kick — drag at its absolute minimum and velocity at its peak. Begin the pull the instant velocity starts to decay.',
@@ -2057,6 +2062,7 @@ const STROKES = {
   },
   butterfly: {
     color: 0xa855f7, rollAmp: 0, undulate: true,
+    breath: { type:'front', start:0.44, dur:0.28 },
     phases: [
       { name:'Entry & Extension', dur:0.17, drag:38, thrust:44, lift:20, vel:1.72, eff:59,
         desc:'Both hands enter together at shoulder width as the chest presses down, initiating the undulation wave. The first dolphin kick fires here.',
@@ -2134,8 +2140,10 @@ function easeInOut(t) { return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
 // opposite way, so x-angles are negated here — this keeps the pull underwater
 // (chest side) and the recovery in the air (back side), elbows flexing like
 // real elbows and knees like real knees.
-function applyPose(rig, sideObj, phaseAData, phaseBData, t, supine) {
-  const e = easeInOut(t);
+// `e` arrives PRE-EASED from updateSwimmer: linear for continuous strokes
+// (no stop-start stutter at keyframes), eased only for strokes with a real
+// glide pause (breaststroke).
+function applyPose(rig, sideObj, phaseAData, phaseBData, e, supine) {
   // Prone strokes: negate x so the pull sweeps under the chest (into the
   // water) and recovery swings over the back (into the air). Supine
   // (backstroke) keeps the authored sign — the body is flipped, so the
@@ -2149,14 +2157,26 @@ function applyPose(rig, sideObj, phaseAData, phaseBData, t, supine) {
   // Elbow flexes toward the water on the pulling side in both orientations
   sideObj.elbow.rotation.set(sx*(elA + (elB-elA)*e), 0, 0);
 }
-function applyLegPose(legObj, phaseAData, phaseBData, t) {
-  const e = easeInOut(t);
+function applyLegPose(legObj, phaseAData, phaseBData, e) {
   const qA = eulerQuat(-phaseAData.hi[0], phaseAData.hi[1], phaseAData.hi[2]);
   const qB = eulerQuat(-phaseBData.hi[0], phaseBData.hi[1], phaseBData.hi[2]);
   legObj.hipJ.quaternion.copy(qA.clone().slerp(qB, e));
   const knA = phaseAData.kn[0]*DEG, knB = phaseBData.kn[0]*DEG;
   // Knees flex posteriorly — heels rise toward the surface, never forward
   legObj.knee.rotation.set(knA + (knB-knA)*e, 0, 0);
+}
+// Continuous 6-beat flutter kick (freestyle & backstroke) — driven by the
+// cycle clock, not keyframes: 3 full alternating oscillations per stroke
+// cycle = 6 beats, hip-driven with the knee flexing softly on the upbeat.
+function applyFlutterKick(u) {
+  const kp = u * Math.PI * 2 * 3; // 6-beat
+  const legs = [ [swimmer.legL, 0], [swimmer.legR, Math.PI] ];
+  for (const [leg, off] of legs) {
+    const s = Math.sin(kp + off);
+    leg.hipJ.quaternion.setFromEuler(new THREE.Euler(s * 0.22, 0, 0));
+    // Knee flexes as the leg sweeps posteriorly (whip comes from the hip)
+    leg.knee.rotation.set(0.12 + Math.max(0, Math.sin(kp + off + 0.7)) * 0.55, 0, 0);
+  }
 }
 let physState = { drag:0, thrust:0, lift:0, vel:0, eff:0 };
 let currentPhaseInfo = { name:'', desc:'', idx:0, total:0 };
@@ -2172,28 +2192,63 @@ function updateSwimmer(dtPhase) {
   }
   const nextIdx = (idx+1) % phases.length;
   const A = phases[idx], B = phases[nextIdx];
-  applyPose(swimmer, swimmer.armL, A.L, B.L, localT, !!sd.supine);
-  applyPose(swimmer, swimmer.armR, A.R, B.R, localT, !!sd.supine);
-  applyLegPose(swimmer.legL, A.L, B.L, localT);
-  applyLegPose(swimmer.legR, A.R, B.R, localT);
+  const u = cycleT / totalDur; // normalized cycle position 0..1
+  // Interpolation style: LINEAR keeps continuous strokes flowing with no
+  // pause at keyframes; strokes with a real glide (hold:true) keep easing.
+  const poseT = sd.hold ? easeInOut(localT) : localT;
+  applyPose(swimmer, swimmer.armL, A.L, B.L, poseT, !!sd.supine);
+  applyPose(swimmer, swimmer.armR, A.R, B.R, poseT, !!sd.supine);
+  if (sd.flutter) {
+    applyFlutterKick(u);
+  } else {
+    applyLegPose(swimmer.legL, A.L, B.L, poseT);
+    applyLegPose(swimmer.legR, A.R, B.R, poseT);
+  }
+  // ── Breathing ─────────────────────────────────────────────────────────
+  // b rises 0→1→0 across the breath window of the cycle.
+  let b = 0;
+  if (sd.breath) {
+    const bp = ((u - sd.breath.start) % 1 + 1) % 1;
+    if (bp < sd.breath.dur) b = Math.sin((bp / sd.breath.dur) * Math.PI);
+  }
+  // ── Body roll (freestyle/backstroke) about the long axis ─────────────
   if (sd.rollAmp) {
-    const rollPhase = (cycleT / totalDur) * Math.PI * 2;
-    swimmer.root.rotation.y = Math.sin(rollPhase) * sd.rollAmp * DEG;
+    const rollPhase = u * Math.PI * 2;
+    // Side-breath amplifies the roll while the head turns with it
+    const boost = (sd.breath && sd.breath.type === 'side') ? (1 + b * 0.45) : 1;
+    swimmer.root.rotation.y = Math.sin(rollPhase) * sd.rollAmp * DEG * boost;
     swimmer.root.rotation.z = 0;
   } else {
     swimmer.root.rotation.y = 0;
     swimmer.root.rotation.z = 0;
   }
+  // ── Spine wave, chest lift and head motion ────────────────────────────
+  let spineX = 0, bob = 0;
   if (sd.undulate) {
-    const wavePhase = (cycleT/totalDur) * Math.PI*2;
-    swimmer.spine.rotation.x = Math.sin(wavePhase) * 0.18;
-    // Bob happens in WORLD space on the orientation rig, so the body rises
-    // and sinks at the waterline instead of sliding along its own length.
-    swimmerOrient.position.y = 0.5 + Math.sin(wavePhase + 0.6) * 0.05;
-  } else {
-    swimmer.spine.rotation.x = 0;
-    swimmerOrient.position.y = 0.5;
+    const wavePhase = u * Math.PI * 2;
+    spineX += Math.sin(wavePhase) * 0.18;
+    bob += Math.sin(wavePhase + 0.6) * 0.05;
   }
+  if (sd.breath && sd.breath.type === 'front' && b > 0) {
+    // Breaststroke/butterfly breath: the chest LIFTS and the face comes
+    // forward out of the water, riding the body's own lift — then lowers.
+    spineX -= b * 0.38;                    // chest rises toward the surface
+    swimmer.neck.rotation.x = -b * 0.55;   // face rotates forward to breathe
+    swimmer.neck.rotation.y = 0;
+    bob += b * 0.055;                      // whole body rides up slightly
+  } else if (sd.breath && sd.breath.type === 'side' && b > 0) {
+    // Freestyle breath: head rotates WITH the body roll, chin low,
+    // one goggle still in the water — never lifted.
+    swimmer.neck.rotation.y = -b * 1.05;
+    swimmer.neck.rotation.x = 0;
+  } else {
+    swimmer.neck.rotation.x = 0;
+    swimmer.neck.rotation.y = 0;
+  }
+  swimmer.spine.rotation.x = spineX;
+  // Bob happens in WORLD space on the orientation rig, so the body rises
+  // and sinks at the waterline instead of sliding along its own length.
+  swimmerOrient.position.y = 0.5 + bob;
   const e = easeInOut(localT);
   const drag = THREE.MathUtils.lerp(A.drag, B.drag, e);
   const thrust = THREE.MathUtils.lerp(A.thrust, B.thrust, e);
@@ -2423,14 +2478,20 @@ function validateMotion(obj){
     desc: String(p.desc||'').slice(0,400),
     L: fixSide(p.L), R: fixSide(p.R)
   }));
-  return {
+  const out = {
     color: 0xa855f7,
     rollAmp: clamp(obj.rollAmp,0,40),
     undulate: !!obj.undulate,
     supine: !!obj.supine,
+    flutter: !!obj.flutter,
+    hold: !!obj.hold,
     name: String(obj.name||'Custom Motion').slice(0,50),
     phases
   };
+  if (obj.breath && (obj.breath.type==='side'||obj.breath.type==='front')) {
+    out.breath = { type: obj.breath.type, start: clamp(obj.breath.start,0,1), dur: clamp(obj.breath.dur,0.05,0.5) };
+  }
+  return out;
 }
 async function generateMotion(){
   const inp=document.getElementById('motion-prompt');
