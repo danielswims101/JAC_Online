@@ -444,18 +444,18 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   </div>
   <div class="section-eyebrow">Everything You Need</div>
   <div class="section-title">A COMPLETE<br><span>TRAINING PLATFORM</span></div>
-  <p class="section-intro">Built on established sports science and competitive programming. Free forever.</p>
+  <p class="section-intro">Built on established sports science and competitive programming.</p>
   <div class="grid-3 reveal">
     <div class="card" onclick="showPage('visualizer')" style="cursor:pointer;border-color:rgba(168,85,247,0.3)">
-      <span class="card-icon">🎯</span><div class="card-tag" style="color:var(--purple)">Rebuilt — 3D Biomechanics</div>
-      <h3>3D FORCE VISUALIZER</h3>
-      <p>Fully articulated anatomical swimmer with real joint positions, muscle lines, and physics-inspired force vectors. Every stroke phase animated in real time.</p>
-      <ul><li>Articulated skeleton with 12 joints</li><li>Illustrative drag, thrust & lift vectors</li><li>All 4 strokes + dolphin kick</li><li>Phase-by-phase physics breakdown</li></ul>
+      <span class="card-icon">🎯</span><div class="card-tag" style="color:var(--purple)">Video + 3D Biomechanics</div>
+      <h3>STROKE TECHNIQUE LAB</h3>
+      <p>Elite stroke demos on video, paired with an interactive 3D biomechanics model — slow any movement down, orbit any angle, isolate a single phase.</p>
+      <ul><li>Real elite technique video for every stroke</li><li>Joint-by-joint 3D reconstruction</li><li>AI: describe any movement, watch it rebuilt</li><li>Phase-by-phase coaching breakdown</li></ul>
     </div>
     <div class="card" onclick="showPage('ai')" style="cursor:pointer;border-color:rgba(0,212,255,0.2)">
       <span class="card-icon">🤖</span><div class="card-tag" style="color:var(--gold)">Streaming AI ✦</div>
       <h3>AI SWIM COACH</h3>
-      <p>Expert-level coaching powered by AI — with streaming responses so you see answers word by word, instantly. Free account required.</p>
+      <p>Expert-level coaching that streams its answers word by word, instantly — trained on race strategy, technique, and physiology. Free account required.</p>
       <ul><li>Real-time streaming output</li><li>Full program knowledge</li><li>Race prep & taper advice</li><li>Physiology with real numbers</li></ul>
     </div>
     <div class="card" onclick="showPage('technique')" style="cursor:pointer">
@@ -479,20 +479,36 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 </div>
 <footer>
   <div class="footer-inner">
-    <div class="footer-brand"><h3>SWIM<span>IQ</span></h3><p>A complete free swimming platform. Sports science, AI coaching, 3D visualizer — free forever.</p></div>
+    <div class="footer-brand"><h3>SWIM<span>IQ</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
     <div class="footer-col"><h4>Learn</h4><ul><li onclick="showPage('technique')">Technique Library</li><li onclick="showPage('videos')">Video Library</li><li onclick="showPage('sets')">Training Sets</li><li onclick="showPage('zones')">Training Zones</li></ul></div>
     <div class="footer-col"><h4>Train</h4><ul><li onclick="showPage('workouts')">Workout Generator</li><li onclick="showPage('dryland')">Dryland</li><li onclick="showPage('log')">Training Log</li><li onclick="showPage('profile')">My PRs</li></ul></div>
     <div class="footer-col"><h4>Compete</h4><ul><li onclick="showPage('race')">Race Strategy</li><li onclick="showPage('nutrition')">Nutrition</li><li onclick="showPage('mental')">Mental Performance</li><li onclick="showPage('taper')">Taper Protocol</li></ul></div>
   </div>
-  <div class="footer-bottom"><p>SwimIQ Pro — Free Forever</p><p>AI-powered · Built for serious swimmers</p><p>Informational only — not medical advice</p></div>
+  <div class="footer-bottom"><p>SwimIQ Pro</p><p>Built for serious swimmers</p><p>Informational only — not medical advice</p></div>
 </footer>
 </div>
 <!-- 3D VISUALIZER PAGE -->
 <div class="page" id="page-visualizer">
 <div class="section-wrap narrow">
-  <div class="section-eyebrow">3D Biomechanical Reconstruction Engine</div>
-  <div class="section-title">3D STROKE <span>VISUALIZER</span></div>
-  <p class="section-intro">An anatomical 3D swimmer reconstructing model technique — joint-by-joint motion timed to elite stroke-phase research. Pick a stroke, or describe any movement and the AI will reconstruct it as an animation. Drag to orbit, scroll to zoom.</p>
+  <div class="section-eyebrow">Stroke Technique Lab</div>
+  <div class="section-title">STROKE <span>VISUALIZER</span></div>
+  <p class="section-intro">Watch real elite technique on video, then study the same movement joint-by-joint in the interactive 3D biomechanics lab below.</p>
+  <div class="section-eyebrow" style="margin-top:0">Watch It — Real Stroke Demos</div>
+  <div class="tabs" style="margin-bottom:1.5rem">
+    <button class="tab-btn active" onclick="switchTab(this,'vd-fr')">🏊 Freestyle</button>
+    <button class="tab-btn" onclick="switchTab(this,'vd-bk')">🔄 Backstroke</button>
+    <button class="tab-btn" onclick="switchTab(this,'vd-br')">🐸 Breaststroke</button>
+    <button class="tab-btn" onclick="switchTab(this,'vd-fly')">🦋 Butterfly</button>
+    <button class="tab-btn" onclick="switchTab(this,'vd-uw')">🌊 Underwater</button>
+  </div>
+  <div class="tab-panel active" id="vd-fr"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube.com/embed/Q0vq-34dWF0" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Demo</span><p>Division I coach breakdown of front crawl technique.</p></div></div></div>
+  <div class="tab-panel" id="vd-bk"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube.com/embed/YkjOvxHsY1g" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Demo</span><p>Six elements of backstroke with perfect technique.</p></div></div></div>
+  <div class="tab-panel" id="vd-br"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube.com/embed/RbgiTaVUqMk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Demo</span><p>Pull-breathe-kick-glide timing and coordination.</p></div></div></div>
+  <div class="tab-panel" id="vd-fly"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube.com/embed/o6Pnv10wyHk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Demo</span><p>Olympian Dylan Carter on mastering butterfly undulation.</p></div></div></div>
+  <div class="tab-panel" id="vd-uw"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube.com/embed/bjDfI0NMVY8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
+  <div class="divider"></div>
+  <div class="section-eyebrow">Study It — Interactive 3D Biomechanics Lab</div>
+  <p class="section-intro" style="margin-bottom:1.5rem">An anatomical model reconstructing the same movements joint-by-joint — slow it down, orbit any angle, isolate a single phase, or describe any movement and the AI reconstructs it. This is a teaching model, not footage: it exists so you can see what video moves too fast to show.</p>
   <div class="viz-canvas-wrap" style="position:relative">
     <div id="viz3d-container"></div>
     <div class="viz-overlay-stats">
@@ -594,7 +610,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>SwimIQ Pro — Free Forever</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- TECHNIQUE PAGE -->
 <div class="page" id="page-technique">
@@ -967,6 +983,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Session Tracker</div>
   <div class="section-title">TRAINING <span>LOG</span></div>
+  <p class="section-intro">All log data is saved locally in your browser — it never leaves your device.</p>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:1.75rem;margin-bottom:1.5rem">
     <div style="font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem;color:var(--cyan)">LOG A SESSION</div>
     <div class="gen-row">
@@ -1398,7 +1415,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   </div>
 </div>
 <div style="height:4rem"></div>
-<footer><div class="footer-bottom"><p>SwimIQ Pro — Free Forever</p><p>AI-powered · Streaming · Built for serious swimmers</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Built for serious swimmers</p></div></footer>
 </div>
 <!-- AUTH — real Supabase email/password accounts. Content is public; an
      account is only required for AI features (chat, generator, visualizer
@@ -1587,7 +1604,7 @@ function closeAuthGate() {
   <!-- SIGNUP -->
   <div id="screen-signup" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2.75rem 2.25rem;width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)">
     <div style="font-size:2.6rem;margin-bottom:1rem">🏊</div>
-    <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">SwimIQ Pro — Free Forever</div>
+    <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">SwimIQ Pro — Free Account</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">CREATE YOUR<br><span style="color:var(--cyan)">ACCOUNT</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Choose a Username</label>
       <input id="signup-username" type="text" class="form-input" placeholder="e.g. coach_daniel" maxlength="24"></div>
