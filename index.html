@@ -2460,6 +2460,48 @@ function ensureViz3DReady() {
   s.onerror = function(){ threeLoading = false; };
   document.head.appendChild(s);
 }
+// ─── AI-GENERATED STROKE DEMO CLIPS (drop-in slots) ──────────────────────
+// When your AI-generated clips are ready (full plan, prompts and encoding
+// specs in VIDEO_PLAN.md), upload them to a /media folder in your repo and
+// paste the paths below — e.g. male:'media/freestyle-m.mp4'. Each filled
+// stroke automatically replaces its YouTube embed with your own clip and a
+// Male/Female toggle. Empty slots keep the licensed YouTube demo.
+const DEMO_CLIPS = {
+  'vd-fr':  { label:'Freestyle',    male:'', female:'' },
+  'vd-bk':  { label:'Backstroke',   male:'', female:'' },
+  'vd-br':  { label:'Breaststroke', male:'', female:'' },
+  'vd-fly': { label:'Butterfly',    male:'', female:'' },
+  'vd-uw':  { label:'Underwater',   male:'', female:'' }
+};
+function initDemoClips(){
+  Object.keys(DEMO_CLIPS).forEach(id=>{
+    const cfg=DEMO_CLIPS[id];
+    if(!cfg.male && !cfg.female) return; // no clip yet -> keep YouTube fallback
+    const panel=document.getElementById(id);
+    if(!panel) return;
+    const first=cfg.male?'male':'female';
+    panel.innerHTML=`
+      <div class="video-card" style="max-width:640px">
+        <video id="clip-${id}" controls playsinline preload="metadata" loop style="width:100%;display:block;background:#000;aspect-ratio:16/9" src="${cfg[first]}"></video>
+        <div class="video-info">
+          <span class="video-tag">${cfg.label} · AI-generated coaching demo</span>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            ${cfg.male?`<button class="viz-btn ${first==='male'?'active':''}" onclick="setClip('${id}','male',this)">Male</button>`:''}
+            ${cfg.female?`<button class="viz-btn ${first==='female'?'active':''}" onclick="setClip('${id}','female',this)">Female</button>`:''}
+          </div>
+        </div>
+      </div>`;
+  });
+}
+function setClip(id, sex, btn){
+  const v=document.getElementById('clip-'+id);
+  if(!v||!DEMO_CLIPS[id][sex]) return;
+  v.src=DEMO_CLIPS[id][sex];
+  v.play().catch(()=>{});
+  btn.parentElement.querySelectorAll('.viz-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+document.addEventListener('DOMContentLoaded', initDemoClips);
 // ─── AI MOTION DIRECTOR — text prompt → reconstructed 3D animation ──────
 // The AI returns joint keyframes in the same schema as the built-in strokes;
 // they're validated/clamped here, then played by the existing engine.
@@ -2495,6 +2537,35 @@ function validateMotion(obj){
   }
   return out;
 }
+// Built-in reconstructions so the prompt box ALWAYS produces something —
+// even before the ask-ai edge function's "motion" mode is deployed.
+const FALLBACK_MOTIONS = [
+  { match:/pull ?-?out/i, motion:{ name:'Breaststroke Pullout', rollAmp:0, undulate:false, supine:false, hold:true, phases:[
+    { name:'Push-off Streamline', dur:0.22, drag:16, thrust:10, lift:3, vel:2.4, eff:88, desc:'Tight streamline off the wall — hands stacked, core rigid, riding wall speed.', L:{sh:[172,0,4],el:[4],hi:[2,0,0],kn:[2]}, R:{sh:[172,0,-4],el:[4],hi:[2,0,0],kn:[2]} },
+    { name:'Underwater Pull to Thighs', dur:0.18, drag:52, thrust:150, lift:20, vel:2.1, eff:74, desc:'One full pull all the way past the hips — the fastest point in the entire stroke.', L:{sh:[-15,0,6],el:[10],hi:[4,0,0],kn:[4]}, R:{sh:[-15,0,-6],el:[10],hi:[4,0,0],kn:[4]} },
+    { name:'Glide + Dolphin Kick', dur:0.18, drag:30, thrust:90, lift:14, vel:1.9, eff:78, desc:'Arms pinned at the thighs; the single legal dolphin kick fires.', L:{sh:[-15,0,4],el:[8],hi:[26,0,0],kn:[38]}, R:{sh:[-15,0,-4],el:[8],hi:[26,0,0],kn:[38]} },
+    { name:'Sneak Recovery', dur:0.20, drag:44, thrust:20, lift:6, vel:1.5, eff:55, desc:'Hands sneak forward tight to the body to minimize frontal drag.', L:{sh:[80,0,8],el:[95],hi:[6,0,0],kn:[8]}, R:{sh:[80,0,-8],el:[95],hi:[6,0,0],kn:[8]} },
+    { name:'Breakout Reach', dur:0.22, drag:28, thrust:60, lift:10, vel:1.7, eff:66, desc:'Arms extend back into streamline as the first stroke begins toward the surface.', L:{sh:[168,0,5],el:[6],hi:[8,0,0],kn:[10]}, R:{sh:[168,0,-5],el:[6],hi:[8,0,0],kn:[10]} }
+  ] } },
+  { match:/streamline|glide/i, motion:{ name:'Streamline Glide', rollAmp:0, undulate:true, supine:false, phases:[
+    { name:'Peak Streamline', dur:0.5, drag:18, thrust:8, lift:4, vel:2.5, eff:90, desc:'Hands stacked, arms squeezing the ears, core rigid — the lowest-drag shape a human can make.', L:{sh:[172,0,4],el:[4],hi:[2,0,0],kn:[2]}, R:{sh:[172,0,-4],el:[4],hi:[2,0,0],kn:[2]} },
+    { name:'Micro Dolphin', dur:0.5, drag:24, thrust:46, lift:12, vel:2.4, eff:84, desc:'A small hip-driven ripple maintains speed without breaking the line.', L:{sh:[172,0,4],el:[4],hi:[14,0,0],kn:[16]}, R:{sh:[172,0,-4],el:[4],hi:[14,0,0],kn:[16]} }
+  ] } }
+];
+function tryFallbackMotion(desc){
+  for(const f of FALLBACK_MOTIONS){ if(f.match.test(desc)) return validateMotion(f.motion); }
+  return null;
+}
+function loadCustomMotion(motion, statusEl, prefix){
+  STROKES.custom=motion;
+  currentStroke='custom'; clockT=0;
+  document.querySelectorAll('.viz-btn').forEach(b=>{
+    if((b.getAttribute('onclick')||'').includes('setStroke3D')) b.classList.remove('active');
+  });
+  if(viz3DInitialized) rebuildSwimmer('custom');
+  buildPhaseBar3D('custom');
+  statusEl.textContent=(prefix||'✓ Reconstructed: ')+motion.name+' ('+motion.phases.length+' phases). Orbit it, slow to 0.3×, or tap a phase under the canvas.';
+}
 async function generateMotion(){
   const inp=document.getElementById('motion-prompt');
   const statusEl=document.getElementById('motion-status');
@@ -2515,8 +2586,12 @@ async function generateMotion(){
       body:JSON.stringify({mode:'motion',messages:[{role:'user',content:desc}]})
     });
     if(!resp.ok){
+      const fb=tryFallbackMotion(desc);
+      if(fb){ loadCustomMotion(fb, statusEl, '⚠ AI backend unavailable — built-in reconstruction: '); btn.disabled=false; return; }
       const err=await resp.json().catch(()=>({}));
-      statusEl.textContent=err.error||(resp.status===429?'You\'ve reached the limit of 20 AI messages per 5 hours.':'Error: HTTP '+resp.status);
+      statusEl.textContent=err.error||(resp.status===429?'You\'ve reached the limit of 20 AI messages per 5 hours.'
+        :(resp.status===404?'The ask-ai backend isn\'t deployed with the motion mode yet — run: supabase functions deploy ask-ai'
+        :'Error: HTTP '+resp.status));
       btn.disabled=false; return;
     }
     const reader=resp.body.getReader();
@@ -2537,19 +2612,16 @@ async function generateMotion(){
         }catch(e){}
       }
     }
+    // Strip markdown fences if the model added them, then extract the JSON
+    fullText=fullText.replace(/```[a-zA-Z]*\n?/g,'');
     const jsonStart=fullText.indexOf('{'), jsonEnd=fullText.lastIndexOf('}');
     if(jsonStart<0||jsonEnd<=jsonStart) throw new Error('no JSON in response');
     const motion=validateMotion(JSON.parse(fullText.slice(jsonStart,jsonEnd+1)));
-    STROKES.custom=motion;
-    currentStroke='custom'; clockT=0;
-    document.querySelectorAll('.viz-btn').forEach(b=>{
-      if((b.getAttribute('onclick')||'').includes('setStroke3D')) b.classList.remove('active');
-    });
-    if(viz3DInitialized) rebuildSwimmer('custom');
-    buildPhaseBar3D('custom');
-    statusEl.textContent='✓ Reconstructed: '+motion.name+' ('+motion.phases.length+' phases). Orbit it, slow to 0.3×, or tap a phase under the canvas.';
+    loadCustomMotion(motion, statusEl);
   }catch(e){
-    statusEl.textContent='Couldn\'t build that motion — try rephrasing, e.g. "freestyle with breathing to the right".';
+    const fb=tryFallbackMotion(desc);
+    if(fb){ loadCustomMotion(fb, statusEl, '⚠ AI response unusable — built-in reconstruction: '); }
+    else statusEl.textContent='Couldn\'t build that motion. If this keeps happening, the ask-ai backend probably needs redeploying with the motion mode (supabase functions deploy ask-ai). Otherwise try rephrasing, e.g. "freestyle with breathing".';
   }
   btn.disabled=false;
 }
