@@ -2270,17 +2270,33 @@ function onHumanLoaded(gltf){
     applyModelVisibility();
     return;
   }
-  // Scale to the mannequin's body length and put the hips at body origin
+  // UNIT-PROOF SIZING: measure the SKELETON (what the skin actually
+  // follows), not the mesh bounding box — Mixamo rigs are often authored in
+  // centimeters, which made the model render 100x too big. Scale, then
+  // re-measure and correct, so it converges no matter the rig's units.
   const root = new THREE.Group();
   root.add(model);
-  model.updateWorldMatrix(true, true);
-  const box = new THREE.Box3().setFromObject(model);
-  const scale = 1.66 / Math.max(0.01, box.max.y - box.min.y);
-  model.scale.setScalar(scale);
-  model.updateWorldMatrix(true, true);
+  const _mv1 = new THREE.Vector3(), _mv2 = new THREE.Vector3(), _mv3 = new THREE.Vector3();
+  function skelSpan(){
+    root.updateWorldMatrix(true, true);
+    (bones.head || bones.neck || bones.spine1).getWorldPosition(_mv1);
+    (bones.footL || bones.legL).getWorldPosition(_mv2);
+    (bones.footR || bones.legR).getWorldPosition(_mv3);
+    return _mv1.y - Math.min(_mv2.y, _mv3.y);
+  }
+  const TARGET_SPAN = 1.5; // mannequin head-joint→foot distance
+  for (let i = 0; i < 3; i++) {
+    const span = skelSpan();
+    if (isFinite(span) && span > 1e-4) model.scale.multiplyScalar(TARGET_SPAN / span);
+    else break;
+  }
+  // Center the hips at the body origin (all three axes)
+  root.updateWorldMatrix(true, true);
   const hipPos = new THREE.Vector3();
   bones.hips.getWorldPosition(hipPos);
-  model.position.y = -hipPos.y;
+  model.position.x -= hipPos.x;
+  model.position.y -= hipPos.y;
+  model.position.z -= hipPos.z;
   // childDir: the bone's rest direction toward its child, in bone-local
   // space — alignment targets are computed against this, so the retarget
   // self-calibrates to whatever axis conventions the rig uses.
