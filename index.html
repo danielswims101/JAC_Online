@@ -10,6 +10,14 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://danielswims101.github.io/JAC_Online/">
 <link rel="canonical" href="https://danielswims101.github.io/JAC_Online/">
+<meta name="theme-color" content="#040d18">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SwimIQ Pro — Elite Swimming Platform">
+<meta name="twitter:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator and more for competitive swimmers.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8F%8A%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"SwimIQ Pro","url":"https://danielswims101.github.io/JAC_Online/","description":"Training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition and mental performance."}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -63,14 +71,27 @@ THREE.OrbitControls = function (camera, domElement) {
     if (e.deltaY < 0) scale *= Math.pow(0.95, self.zoomSpeed);
     else scale /= Math.pow(0.95, self.zoomSpeed);
   }
+  // Touch direction-lock: a mostly-VERTICAL swipe lets the page scroll
+  // normally (no scroll-trap on phones); a mostly-horizontal drag orbits.
+  var touchAxis = null, touchStartX = 0, touchStartY = 0;
   function onTouchStart(e) {
     if (e.touches.length === 1) {
       rotating = true;
-      lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+      touchAxis = null;
+      touchStartX = lastX = e.touches[0].clientX;
+      touchStartY = lastY = e.touches[0].clientY;
     }
   }
   function onTouchMove(e) {
     if (!self.enabled || !rotating || e.touches.length !== 1) return;
+    if (touchAxis === null) {
+      var adx = Math.abs(e.touches[0].clientX - touchStartX);
+      var ady = Math.abs(e.touches[0].clientY - touchStartY);
+      if (adx < 8 && ady < 8) return;         // not decided yet
+      touchAxis = adx >= ady ? 'orbit' : 'scroll';
+      if (touchAxis === 'scroll') { rotating = false; return; }
+    }
+    if (touchAxis !== 'orbit') return;
     e.preventDefault();
     var dx = e.touches[0].clientX - lastX, dy = e.touches[0].clientY - lastY;
     lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
@@ -78,7 +99,7 @@ THREE.OrbitControls = function (camera, domElement) {
     sphericalDelta.theta -= 2 * Math.PI * dx / el.clientHeight * self.rotateSpeed;
     sphericalDelta.phi   -= 2 * Math.PI * dy / el.clientHeight * self.rotateSpeed;
   }
-  function onTouchEnd() { rotating = false; }
+  function onTouchEnd() { rotating = false; touchAxis = null; }
   this.domElement.addEventListener('mousedown', onPointerDown);
   window.addEventListener('mousemove', onPointerMove);
   window.addEventListener('mouseup', onPointerUp);
@@ -370,6 +391,13 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .ai-mode-btns{gap:4px}
   .ai-mode-btn{padding:4px 8px;font-size:0.58rem}
 }
+/* ACCESSIBILITY */
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.qp:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
+  html{scroll-behavior:auto}
+  .particle{display:none}
+}
 /* PRINT — clean workout printouts, no dark theme ink waste */
 @media print{
   nav,footer,.noise,.hero,#access-gate,.viz-controls,.quick-prompts,.ai-input-row,.gen-form,#gen-actions,.hero-particles{display:none!important}
@@ -430,7 +458,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   <div class="hero-stats">
     <div class="hstat"><span class="hstat-val">3D</span><span class="hstat-lbl">Force Visualizer</span></div>
     <div class="hstat"><span class="hstat-val">AI</span><span class="hstat-lbl">Live Coaching</span></div>
-    <div class="hstat"><span class="hstat-val">16</span><span class="hstat-lbl">Sections</span></div>
+    <div class="hstat"><span class="hstat-val">17</span><span class="hstat-lbl">Sections</span></div>
     <div class="hstat"><span class="hstat-val">∞</span><span class="hstat-lbl">Workouts</span></div>
   </div>
 </div>
@@ -501,14 +529,14 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <button class="tab-btn" onclick="switchTab(this,'vd-fly')">🦋 Butterfly</button>
     <button class="tab-btn" onclick="switchTab(this,'vd-uw')">🌊 Underwater</button>
   </div>
-  <div class="tab-panel active" id="vd-fr"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube.com/embed/Q0vq-34dWF0" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Demo</span><p>Division I coach breakdown of front crawl technique.</p></div></div></div>
-  <div class="tab-panel" id="vd-bk"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube.com/embed/YkjOvxHsY1g" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Demo</span><p>Six elements of backstroke with perfect technique.</p></div></div></div>
-  <div class="tab-panel" id="vd-br"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube.com/embed/RbgiTaVUqMk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Demo</span><p>Pull-breathe-kick-glide timing and coordination.</p></div></div></div>
-  <div class="tab-panel" id="vd-fly"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube.com/embed/o6Pnv10wyHk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Demo</span><p>Olympian Dylan Carter on mastering butterfly undulation.</p></div></div></div>
-  <div class="tab-panel" id="vd-uw"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube.com/embed/bjDfI0NMVY8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
+  <div class="tab-panel active" id="vd-fr"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/Q0vq-34dWF0" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Demo</span><p>Division I coach breakdown of front crawl technique.</p></div></div></div>
+  <div class="tab-panel" id="vd-bk"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/YkjOvxHsY1g" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Demo</span><p>Six elements of backstroke with perfect technique.</p></div></div></div>
+  <div class="tab-panel" id="vd-br"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/RbgiTaVUqMk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Demo</span><p>Pull-breathe-kick-glide timing and coordination.</p></div></div></div>
+  <div class="tab-panel" id="vd-fly"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/o6Pnv10wyHk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Demo</span><p>Olympian Dylan Carter on mastering butterfly undulation.</p></div></div></div>
+  <div class="tab-panel" id="vd-uw"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/bjDfI0NMVY8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
   <div class="divider"></div>
   <div class="section-eyebrow">Study It — Interactive 3D Biomechanics Lab</div>
-  <p class="section-intro" style="margin-bottom:1.5rem">An anatomical model reconstructing the same movements joint-by-joint — slow it down, orbit any angle, isolate a single phase, or describe any movement and the AI reconstructs it. This is a teaching model, not footage: it exists so you can see what video moves too fast to show.</p>
+  <p class="section-intro" style="margin-bottom:1.5rem">A fully rigged 3D human reconstructing the same movements joint-by-joint — slow it down, orbit any angle, isolate a single phase, or describe any movement and the AI reconstructs it. It exists so you can see what video moves too fast to show.</p>
   <div class="viz-canvas-wrap" style="position:relative">
     <div id="viz3d-container"></div>
     <div class="viz-overlay-stats">
@@ -527,10 +555,10 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <button class="viz-btn" onclick="setStroke3D('dolphin',this)">🌊 Dolphin Kick</button>
   </div>
   <div class="viz-controls" style="margin-top:10px;align-items:stretch">
-    <input class="form-input" id="motion-prompt" placeholder='✦ Describe any movement — e.g. "breaststroke pullout off the wall" or "backstroke start"' style="flex:1;min-width:230px" onkeydown="if(event.key==='Enter')generateMotion()">
+    <input class="form-input" id="motion-prompt" maxlength="300" aria-label="Describe a swimming movement to reconstruct in 3D" placeholder='✦ Describe any movement — e.g. "breaststroke pullout off the wall" or "backstroke start"' style="flex:1;min-width:230px" onkeydown="if(event.key==='Enter')generateMotion()">
     <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple);font-weight:600">✦ AI Reconstruct</button>
   </div>
-  <div id="motion-status" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px"></div>
+  <div id="motion-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px"></div>
   <div class="viz-controls" style="margin-top:8px">
     <span style="font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px">View:</span>
     <button class="viz-btn" onclick="setView3D('side')">Side</button>
@@ -539,13 +567,15 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <button class="viz-btn" onclick="setView3D('three-quarter')">3/4 View</button>
   </div>
   <div class="viz-controls" style="margin-top:8px">
+    <button class="viz-btn active" id="vbtn-human" onclick="toggleHumanModel()">🧍 Model: Human</button>
     <button class="viz-btn active" id="vbtn-play" onclick="togglePlay3D()">⏸ Pause</button>
-    <button class="viz-btn" onclick="setSpeed3D(0.3)">0.3× Slow</button>
-    <button class="viz-btn active" onclick="setSpeed3D(1)">1× Normal</button>
-    <button class="viz-btn" onclick="setSpeed3D(2)">2× Fast</button>
-    <button class="viz-btn" onclick="toggleForces3D()">Toggle Forces</button>
+    <button class="viz-btn" data-speed onclick="setSpeed3D(0.3,this)">0.3× Slow</button>
+    <button class="viz-btn active" data-speed onclick="setSpeed3D(1,this)">1× Normal</button>
+    <button class="viz-btn" data-speed onclick="setSpeed3D(2,this)">2× Fast</button>
+    <button class="viz-btn active" id="vbtn-forces" onclick="toggleForces3D(this)">Forces: On</button>
   </div>
   <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px">🖱 Drag to orbit · Scroll to zoom · Tap a phase below to jump to it</p>
+  <div id="human-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:4px;letter-spacing:0.3px"></div>
   <div class="force-legend">
     <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Drag</div>
     <div class="legend-item"><div class="legend-dot" style="background:#00ff88"></div>Thrust / Propulsion</div>
@@ -594,7 +624,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
             <option value="coach">Coach Level — Full technical analysis</option>
           </select>
         </div>
-        <button class="btn-sm" onclick="generateVisualization()" style="padding:12px">Generate Analysis ✦</button>
+        <button class="btn-sm" id="viz-gen-btn" onclick="generateVisualization()" style="padding:12px">Generate Analysis ✦</button>
       </div>
       <div class="imggen-result" id="viz-result">
         <div class="imggen-placeholder">
@@ -725,28 +755,28 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     <button class="tab-btn" onclick="switchTab(this,'v-race')">Race Analysis</button>
   </div>
   <div class="tab-panel active" id="v-fr"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/Q0vq-34dWF0" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Full Stroke</span><h4>FREESTYLE STROKE BREAKDOWN</h4><p>A Division I swim coach breaks down front crawl technique step by step.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/omkBPOvAuu8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Catch</span><h4>HIGH ELBOW SWIMMING — 4 TIPS</h4><p>Global Triathlon Network on the single most impactful freestyle skill.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/MC9m8wp1dqs" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Kick</span><h4>FRONT CRAWL 6-BEAT KICK</h4><p>Step-by-step guide to the 6-beat kick rhythm and mechanics.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/Q0vq-34dWF0" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Full Stroke</span><h4>FREESTYLE STROKE BREAKDOWN</h4><p>A Division I swim coach breaks down front crawl technique step by step.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/omkBPOvAuu8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Catch</span><h4>HIGH ELBOW SWIMMING — 4 TIPS</h4><p>Global Triathlon Network on the single most impactful freestyle skill.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/MC9m8wp1dqs" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Kick</span><h4>FRONT CRAWL 6-BEAT KICK</h4><p>Step-by-step guide to the 6-beat kick rhythm and mechanics.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-bk"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/YkjOvxHsY1g" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Full Stroke</span><h4>BACKSTROKE WITH PERFECT TECHNIQUE</h4><p>Six elements of backstroke: body position, rotation, entry, pull, kick, and timing.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/YkjOvxHsY1g" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Full Stroke</span><h4>BACKSTROKE WITH PERFECT TECHNIQUE</h4><p>Six elements of backstroke: body position, rotation, entry, pull, kick, and timing.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-br"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/RbgiTaVUqMk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Timing</span><h4>BREASTSTROKE TIMING & COORDINATION</h4><p>The pull-breathe-kick-glide sequence explained clearly.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/RbgiTaVUqMk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Timing</span><h4>BREASTSTROKE TIMING & COORDINATION</h4><p>The pull-breathe-kick-glide sequence explained clearly.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-fly"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/o6Pnv10wyHk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Undulation</span><h4>MASTER BUTTERFLY UNDULATION</h4><p>Olympic Channel: Olympian Dylan Carter on the chest-down wave that drives butterfly.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/o6Pnv10wyHk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Undulation</span><h4>MASTER BUTTERFLY UNDULATION</h4><p>Olympic Channel: Olympian Dylan Carter on the chest-down wave that drives butterfly.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-uw"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/bjDfI0NMVY8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Dolphin Kick</span><h4>GRETCHEN WALSH'S UNDERWATER DOLPHIN KICK</h4><p>Breakdown of one of the fastest underwaters in the world — the 5th stroke.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/GoyXk3xMfKY" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Turns</span><h4>HOW TO FLIP TURN</h4><p>Every component of the freestyle flip turn broken down.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/bjDfI0NMVY8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Dolphin Kick</span><h4>GRETCHEN WALSH'S UNDERWATER DOLPHIN KICK</h4><p>Breakdown of one of the fastest underwaters in the world — the 5th stroke.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/GoyXk3xMfKY" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Turns</span><h4>HOW TO FLIP TURN</h4><p>Every component of the freestyle flip turn broken down.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-dry"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/IKWGF4kP8Cs" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Dryland · Strength</span><h4>30-MINUTE DRYLAND WORKOUT</h4><p>Complete no-equipment dryland session built for swimmers.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/IKWGF4kP8Cs" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Dryland · Strength</span><h4>30-MINUTE DRYLAND WORKOUT</h4><p>Complete no-equipment dryland session built for swimmers.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-race"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube.com/embed/3oZo0I4oLfU" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Race · Analysis</span><h4>POPOVICI WORLD-RECORD ANALYSIS</h4><p>Technique analysis of David Popovici's world-record 100m freestyle.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/3oZo0I4oLfU" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Race · Analysis</span><h4>POPOVICI WORLD-RECORD ANALYSIS</h4><p>Technique analysis of David Popovici's world-record 100m freestyle.</p></div></div>
   </div></div>
 </div>
 <footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
@@ -851,7 +881,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
     </div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Additional Notes (optional)</label>
       <input class="form-input" id="gen-notes" placeholder="e.g. sore shoulders, include Golf score sets, pre-meet sharpener..."></div>
-    <button class="btn-sm" onclick="generateWorkout()" style="padding:12px 28px;font-size:0.78rem">Generate Full Workout ✦</button>
+    <button class="btn-sm" id="gen-btn" onclick="generateWorkout()" style="padding:12px 28px;font-size:0.78rem">Generate Full Workout ✦</button>
   </div>
   <div class="gen-output" id="gen-output">
     <div class="loading-state" id="gen-loading" style="display:none">
@@ -964,7 +994,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
       <div style="width:58px;height:58px;border-radius:50%;background:var(--cyan-dim);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0">🏊</div>
       <div><h3 id="profile-name-display" style="font-family:var(--fh);font-size:1.75rem;letter-spacing:1px">Swimmer</h3><p style="font-size:0.8rem;color:var(--white3);margin-top:3px">PRs auto-saved in your browser</p></div>
     </div>
-    <div class="form-group" style="max-width:300px"><label>Swimmer Name</label><input class="form-input" id="profile-name" placeholder="Your name" oninput="saveName()"></div>
+    <div class="form-group" style="max-width:300px"><label>Swimmer Name</label><input class="form-input" id="profile-name" placeholder="Your name" maxlength="30" oninput="saveName()"></div>
   </div>
   <div class="section-eyebrow" style="margin-top:0">Freestyle</div><div class="pr-grid" id="pr-grid-fr"></div>
   <div class="section-eyebrow" style="margin-top:1.5rem">Backstroke</div><div class="pr-grid" id="pr-grid-bk"></div>
@@ -996,8 +1026,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
       <div class="form-group"><label>Primary Zone</label><select class="form-select" id="log-zone"><option value="Z1 Recovery">Z1 Recovery</option><option value="Z2 AeT" selected>Z2 AeT</option><option value="Z3 Threshold">Z3 Threshold</option><option value="Z4 VO2">Z4 VO2 Max</option><option value="Z5 Speed">Z5 Speed</option><option value="Mixed">Mixed</option></select></div>
       <div class="form-group"><label>Effort (1–10)</label><input class="form-input" id="log-effort" type="number" min="1" max="10" placeholder="7"></div>
     </div>
-    <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 26-28"></div>
-    <div class="form-group" style="margin-bottom:1.25rem"><label>Notes</label><textarea class="form-textarea" id="log-notes" placeholder="Technique focus, energy levels, what went well..."></textarea></div>
+    <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" maxlength="200" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 26-28"></div>
+    <div class="form-group" style="margin-bottom:1.25rem"><label>Notes</label><textarea class="form-textarea" id="log-notes" maxlength="1000" placeholder="Technique focus, energy levels, what went well..."></textarea></div>
     <button class="btn-sm" onclick="saveLogEntry()">Save Session</button>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
@@ -1409,7 +1439,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
       <span class="qp" onclick="usePrompt(this)">Explain threshold vs VO2 max training</span>
     </div>
     <div class="ai-input-row">
-      <input class="ai-input" id="ai-input" placeholder="Ask the coach anything…" type="text">
+      <input class="ai-input" id="ai-input" placeholder="Ask the coach anything…" type="text" maxlength="600" aria-label="Ask the AI swim coach">
       <button class="ai-send" id="ai-send-btn" onclick="sendToAI()">SEND</button>
     </div>
   </div>
@@ -1456,9 +1486,14 @@ function showAuthScreen(name) {
 function showAuthError(screenPrefix, message) {
   var el = document.getElementById(screenPrefix + '-error');
   if (!el) return;
+  el.style.color = 'var(--red)'; // reset — success messages recolor it green
   el.textContent = message;
   el.style.display = 'block';
 }
+// Escape closes the auth overlay; so does clicking the dark backdrop.
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeAuthGate();
+});
 async function doSignup() {
   var username = document.getElementById('signup-username').value.trim();
   var email = document.getElementById('signup-email').value.trim();
@@ -1581,7 +1616,7 @@ function closeAuthGate() {
   }
 })();
 </script>
-<div id="access-gate" style="position:fixed;inset:0;background:rgba(4,13,24,0.94);z-index:9998;display:none;align-items:center;justify-content:center;padding:2rem">
+<div id="access-gate" onclick="if(event.target===this)closeAuthGate()" style="position:fixed;inset:0;background:rgba(4,13,24,0.94);z-index:9998;display:none;align-items:center;justify-content:center;padding:2rem">
   <button onclick="closeAuthGate()" title="Close" style="position:absolute;top:16px;right:22px;background:none;border:none;color:var(--white3);font-size:1.6rem;cursor:pointer;line-height:1">✕</button>
   <div style="max-width:440px;width:100%;">
   <!-- LOGIN -->
@@ -1590,9 +1625,9 @@ function closeAuthGate() {
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">SwimIQ Pro</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">WELCOME<br><span style="color:var(--cyan)">BACK</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
-      <input id="login-email" type="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <input id="login-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Password</label>
-      <input id="login-password" type="password" class="form-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <input id="login-password" type="password" autocomplete="current-password" class="form-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button id="login-btn" onclick="doLogin()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">LOG IN →</button>
     <p id="login-error" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p style="font-size:0.82rem;color:var(--white3)">
@@ -1607,11 +1642,11 @@ function closeAuthGate() {
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">SwimIQ Pro — Free Account</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">CREATE YOUR<br><span style="color:var(--cyan)">ACCOUNT</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Choose a Username</label>
-      <input id="signup-username" type="text" class="form-input" placeholder="e.g. coach_daniel" maxlength="24"></div>
+      <input id="signup-username" type="text" autocomplete="username" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(event.key==='Enter')doSignup()"></div>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
-      <input id="signup-email" type="email" class="form-input" placeholder="you@example.com"></div>
+      <input id="signup-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doSignup()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Choose a Password</label>
-      <input id="signup-password" type="password" class="form-input" placeholder="8+ characters" onkeydown="if(event.key==='Enter')doSignup()"></div>
+      <input id="signup-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(event.key==='Enter')doSignup()"></div>
     <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:1rem;font-size:0.78rem;color:var(--white3);text-align:left;cursor:pointer;line-height:1.5">
       <input type="checkbox" id="signup-age" style="margin-top:2px;accent-color:var(--cyan)"> I confirm I am 13 years of age or older.
     </label>
@@ -1624,7 +1659,7 @@ function closeAuthGate() {
     <div style="font-size:2.6rem;margin-bottom:1rem">🔑</div>
     <h2 style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:1.25rem">RESET YOUR<br><span style="color:var(--cyan)">PASSWORD</span></h2>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Email</label>
-      <input id="forgot-email" type="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doForgotPassword()"></div>
+      <input id="forgot-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doForgotPassword()"></div>
     <button onclick="doForgotPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SEND RESET LINK →</button>
     <p id="forgot-msg" style="font-family:var(--fm);font-size:0.78rem;letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p style="font-size:0.82rem;color:var(--white3)"><a onclick="showAuthScreen('login')" style="cursor:pointer;color:var(--cyan)">Back to login</a></p>
@@ -1632,6 +1667,12 @@ function closeAuthGate() {
   </div>
 </div>
 <script>
+// ─── SAFE HTML — every user-typed or AI-returned string that lands in
+// innerHTML goes through this first, so pasted/streamed content can never
+// inject markup or scripts into the page.
+function escapeHTML(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 // ─── NAVIGATION ───────────────────────────────
 function showPage(name){
   const page=document.getElementById('page-'+name);
@@ -1695,7 +1736,14 @@ function initViz3D() {
   scene.fog = new THREE.Fog(0x040d18, 4, 12);
   camera = new THREE.PerspectiveCamera(42, container.clientWidth/container.clientHeight, 0.1, 100);
   camera.position.set(2.8, 1.4, 3.4);
-  renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  // WebGL can be unavailable (old device, disabled GPU, headless browser).
+  // Without this guard the throw would kill ALL page JavaScript.
+  try {
+    renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  } catch (err) {
+    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:2rem;text-align:center;color:var(--white2);font-size:0.9rem;line-height:1.8">3D isn\'t supported on this device or browser.<br>Use the stroke demo videos above — they cover the same technique.</div>';
+    return; // viz3DInitialized stays false; the render loop never starts
+  }
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
@@ -2119,20 +2167,186 @@ const STROKES = {
 // ═══════════════════════════════════════════════════════════════════════
 // ANIMATION DRIVER — quaternion slerp between keyframes, per joint
 // ═══════════════════════════════════════════════════════════════════════
-function eulerQuat(xDeg, yDeg, zDeg) {
-  return new THREE.Quaternion().setFromEuler(new THREE.Euler(xDeg*DEG, (yDeg||0)*DEG, (zDeg||0)*DEG, 'XYZ'));
+// Scratch objects reused every frame — zero per-frame allocation, so the
+// garbage collector never causes micro-stutters mid-stroke.
+let _sqA, _sqB, _seul; // created after THREE loads
+function initScratch() {
+  _sqA = new THREE.Quaternion();
+  _sqB = new THREE.Quaternion();
+  _seul = new THREE.Euler(0, 0, 0, 'XYZ');
+}
+function setQuatFromDeg(q, xDeg, yDeg, zDeg) {
+  _seul.set(xDeg*DEG, (yDeg||0)*DEG, (zDeg||0)*DEG, 'XYZ');
+  return q.setFromEuler(_seul);
 }
 let swimmer = null;
 let currentStroke = 'freestyle';
 let clockT = 0;
 let playing = true;
 let speed = 1;
+// Free the previous swimmer's GPU buffers — without this, every stroke
+// switch leaks ~60 geometries/materials until the tab slows to a crawl.
+function disposeObject3D(root) {
+  root.traverse(o => {
+    if (o.geometry) o.geometry.dispose();
+    if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.dispose());
+  });
+}
 function rebuildSwimmer(strokeKey) {
-  if (swimmer) swimmerOrient.remove(swimmer.root);
+  if (swimmer) {
+    swimmerOrient.remove(swimmer.root);
+    disposeObject3D(swimmer.root);
+  }
   const sd = STROKES[strokeKey];
   swimmer = buildSwimmer(sd.color);
   setBodyOrientation(!!sd.supine);
   swimmerOrient.add(swimmer.root);
+  applyModelVisibility();
+}
+// ═══════════════════════════════════════════════════════════════════════
+// REALISTIC HUMAN MODEL — a professionally rigged glTF human (Mixamo
+// character bundled with Three.js, free to use) driven by the SAME stroke
+// engine: the biomechanics mannequin keeps running invisibly as the driver
+// skeleton, and every frame each human bone is aligned to the matching
+// mannequin segment. All verified stroke mechanics transfer 1:1.
+// ═══════════════════════════════════════════════════════════════════════
+let humanRig = null;
+let humanLoadState = 'idle'; // idle | loading | ready | failed
+let useHuman = true;
+const HUMAN_MODEL_URL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/models/gltf/Xbot.glb';
+const GLTF_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
+function humanStatus(msg){ const el=document.getElementById('human-status'); if(el) el.textContent=msg; }
+function loadHumanModel(){
+  if (humanLoadState !== 'idle') return;
+  humanLoadState = 'loading';
+  humanStatus('Loading realistic human model…');
+  const s = document.createElement('script');
+  s.src = GLTF_LOADER_URL;
+  s.onload = function(){
+    try {
+      new THREE.GLTFLoader().load(HUMAN_MODEL_URL, onHumanLoaded, undefined, function(){
+        humanLoadState = 'failed';
+        humanStatus('Human model unavailable — showing the biomechanics mannequin.');
+        applyModelVisibility();
+      });
+    } catch(e){ humanLoadState = 'failed'; applyModelVisibility(); }
+  };
+  s.onerror = function(){ humanLoadState = 'failed'; humanStatus('Human model unavailable — showing the biomechanics mannequin.'); applyModelVisibility(); };
+  document.head.appendChild(s);
+}
+function findBone(root, suffix){
+  let hit = null;
+  const want = suffix.toLowerCase();
+  root.traverse(o => { if (!hit && o.isBone && o.name.toLowerCase().endsWith(want)) hit = o; });
+  return hit;
+}
+let _hv1, _hv2, _hv3, _hq1, _hq2, _heul; // human-sync scratch
+function onHumanLoaded(gltf){
+  const model = gltf.scene;
+  // Skin-tone tint; the model's darker secondary material reads as the suit
+  model.traverse(o => {
+    if (o.isMesh) {
+      o.castShadow = true;
+      o.frustumCulled = false; // skinned mesh bounds don't track the pose
+      if (o.material) {
+        o.material = o.material.clone();
+        if (o.material.color) o.material.color.set(0xc9915f);
+        if ('roughness' in o.material) o.material.roughness = 0.6;
+        if ('metalness' in o.material) o.material.metalness = 0.05;
+      }
+    }
+  });
+  const b = n => findBone(model, n);
+  const bones = {
+    hips:b('Hips'), spine1:b('Spine1'), spine2:b('Spine2'), neck:b('Neck'), head:b('Head'),
+    armL:b('LeftArm'), foreL:b('LeftForeArm'), handL:b('LeftHand'),
+    armR:b('RightArm'), foreR:b('RightForeArm'), handR:b('RightHand'),
+    upLegL:b('LeftUpLeg'), legL:b('LeftLeg'), footL:b('LeftFoot'), toeL:b('LeftToeBase'),
+    upLegR:b('RightUpLeg'), legR:b('RightLeg'), footR:b('RightFoot'), toeR:b('RightToeBase')
+  };
+  if (!bones.hips || !bones.armL || !bones.foreL || !bones.upLegL || !bones.legL) {
+    humanLoadState = 'failed';
+    humanStatus('Human model skeleton not recognized — using the mannequin.');
+    applyModelVisibility();
+    return;
+  }
+  // Scale to the mannequin's body length and put the hips at body origin
+  const root = new THREE.Group();
+  root.add(model);
+  model.updateWorldMatrix(true, true);
+  const box = new THREE.Box3().setFromObject(model);
+  const scale = 1.66 / Math.max(0.01, box.max.y - box.min.y);
+  model.scale.setScalar(scale);
+  model.updateWorldMatrix(true, true);
+  const hipPos = new THREE.Vector3();
+  bones.hips.getWorldPosition(hipPos);
+  model.position.y = -hipPos.y;
+  // childDir: the bone's rest direction toward its child, in bone-local
+  // space — alignment targets are computed against this, so the retarget
+  // self-calibrates to whatever axis conventions the rig uses.
+  const cd = (bone, child) => child ? child.position.clone().normalize() : new THREE.Vector3(0,1,0);
+  const entries = [
+    // parent-first order: torso, upper limbs, lower limbs, feet
+    { bone:bones.spine1, dir:cd(bones.spine1, bones.spine2||bones.neck), a:()=>swimmer.hips,          bpt:()=>swimmer.neck },
+    { bone:bones.armL,   dir:cd(bones.armL, bones.foreL),                a:()=>swimmer.armL.shoulder, bpt:()=>swimmer.armL.elbow },
+    { bone:bones.armR,   dir:cd(bones.armR, bones.foreR),                a:()=>swimmer.armR.shoulder, bpt:()=>swimmer.armR.elbow },
+    { bone:bones.upLegL, dir:cd(bones.upLegL, bones.legL),               a:()=>swimmer.legL.hipJ,     bpt:()=>swimmer.legL.knee },
+    { bone:bones.upLegR, dir:cd(bones.upLegR, bones.legR),               a:()=>swimmer.legR.hipJ,     bpt:()=>swimmer.legR.knee },
+    { bone:bones.foreL,  dir:cd(bones.foreL, bones.handL),               a:()=>swimmer.armL.elbow,    bpt:()=>swimmer.armL.wrist },
+    { bone:bones.foreR,  dir:cd(bones.foreR, bones.handR),               a:()=>swimmer.armR.elbow,    bpt:()=>swimmer.armR.wrist },
+    { bone:bones.legL,   dir:cd(bones.legL, bones.footL),                a:()=>swimmer.legL.knee,     bpt:()=>swimmer.legL.ankle },
+    { bone:bones.legR,   dir:cd(bones.legR, bones.footR),                a:()=>swimmer.legR.knee,     bpt:()=>swimmer.legR.ankle }
+  ];
+  if (bones.footL && bones.toeL) entries.push({ bone:bones.footL, dir:cd(bones.footL, bones.toeL), a:()=>swimmer.legL.ankle, bpt:()=>swimmer.legL.foot });
+  if (bones.footR && bones.toeR) entries.push({ bone:bones.footR, dir:cd(bones.footR, bones.toeR), a:()=>swimmer.legR.ankle, bpt:()=>swimmer.legR.foot });
+  _hv1 = new THREE.Vector3(); _hv2 = new THREE.Vector3(); _hv3 = new THREE.Vector3();
+  _hq1 = new THREE.Quaternion(); _hq2 = new THREE.Quaternion();
+  _heul = new THREE.Euler(0,0,0,'XYZ');
+  humanRig = {
+    root, bones, entries,
+    headRest: bones.head ? bones.head.quaternion.clone() : null
+  };
+  swimmerOrient.add(root);
+  humanLoadState = 'ready';
+  humanStatus('✓ Realistic human model active — toggle back to the mannequin any time.');
+  applyModelVisibility();
+}
+function syncHumanRig(){
+  // Follow the mannequin's body roll, then align every bone to its segment
+  humanRig.root.rotation.y = swimmer.root.rotation.y;
+  humanRig.root.updateWorldMatrix(true, false);
+  for (const en of humanRig.entries) {
+    en.a().getWorldPosition(_hv1);
+    en.bpt().getWorldPosition(_hv2);
+    _hv3.subVectors(_hv2, _hv1);
+    if (_hv3.lengthSq() < 1e-8) continue;
+    _hv3.normalize();
+    en.bone.parent.updateWorldMatrix(true, false);
+    en.bone.parent.getWorldQuaternion(_hq2).invert();
+    _hv3.applyQuaternion(_hq2);
+    en.bone.quaternion.setFromUnitVectors(en.dir, _hv3);
+  }
+  // Head: copy the mannequin neck's breathing turn/lift onto the human head
+  if (humanRig.bones.head && humanRig.headRest) {
+    _heul.set(swimmer.neck.rotation.x, swimmer.neck.rotation.y, 0, 'XYZ');
+    humanRig.bones.head.quaternion.copy(humanRig.headRest).multiply(_hq1.setFromEuler(_heul));
+  }
+}
+function applyModelVisibility(){
+  const humanOn = useHuman && humanLoadState === 'ready' && humanRig;
+  if (humanRig) humanRig.root.visible = !!humanOn;
+  if (swimmer) swimmer.root.visible = !humanOn;
+  const btn = document.getElementById('vbtn-human');
+  if (btn) {
+    btn.classList.toggle('active', !!humanOn);
+    btn.textContent = humanOn ? '🧍 Model: Human' : '🤖 Model: Mannequin';
+  }
+}
+function toggleHumanModel(){
+  if (humanLoadState === 'loading') { humanStatus('Human model still loading…'); return; }
+  if (humanLoadState !== 'ready') { humanStatus('Human model unavailable on this connection — mannequin shown.'); return; }
+  useHuman = !useHuman;
+  applyModelVisibility();
 }
 function easeInOut(t) { return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
 // NOTE on signs: keyframe data uses the convention "positive shoulder/hip x
@@ -2149,18 +2363,17 @@ function applyPose(rig, sideObj, phaseAData, phaseBData, e, supine) {
   // (backstroke) keeps the authored sign — the body is flipped, so the
   // same rotation already puts the pull underwater and the arc overhead.
   const sx = supine ? 1 : -1;
-  const qA_sh = eulerQuat(sx*phaseAData.sh[0], phaseAData.sh[1], phaseAData.sh[2]);
-  const qB_sh = eulerQuat(sx*phaseBData.sh[0], phaseBData.sh[1], phaseBData.sh[2]);
-  const qSh = qA_sh.clone().slerp(qB_sh, e);
-  sideObj.shoulder.quaternion.copy(qSh);
+  setQuatFromDeg(_sqA, sx*phaseAData.sh[0], phaseAData.sh[1], phaseAData.sh[2]);
+  setQuatFromDeg(_sqB, sx*phaseBData.sh[0], phaseBData.sh[1], phaseBData.sh[2]);
+  sideObj.shoulder.quaternion.copy(_sqA).slerp(_sqB, e);
   const elA = phaseAData.el[0]*DEG, elB = phaseBData.el[0]*DEG;
   // Elbow flexes toward the water on the pulling side in both orientations
   sideObj.elbow.rotation.set(sx*(elA + (elB-elA)*e), 0, 0);
 }
 function applyLegPose(legObj, phaseAData, phaseBData, e) {
-  const qA = eulerQuat(-phaseAData.hi[0], phaseAData.hi[1], phaseAData.hi[2]);
-  const qB = eulerQuat(-phaseBData.hi[0], phaseBData.hi[1], phaseBData.hi[2]);
-  legObj.hipJ.quaternion.copy(qA.clone().slerp(qB, e));
+  setQuatFromDeg(_sqA, -phaseAData.hi[0], phaseAData.hi[1], phaseAData.hi[2]);
+  setQuatFromDeg(_sqB, -phaseBData.hi[0], phaseBData.hi[1], phaseBData.hi[2]);
+  legObj.hipJ.quaternion.copy(_sqA).slerp(_sqB, e);
   const knA = phaseAData.kn[0]*DEG, knB = phaseBData.kn[0]*DEG;
   // Knees flex posteriorly — heels rise toward the surface, never forward
   legObj.knee.rotation.set(knA + (knB-knA)*e, 0, 0);
@@ -2175,7 +2388,8 @@ function applyFlutterKick(u) {
     const s = Math.sin(kp + off);
     // Compact amplitude: heels just break the surface, kick stays inside
     // the body's shadow — never a splashy air-kick.
-    leg.hipJ.quaternion.setFromEuler(new THREE.Euler(s * 0.13, 0, 0));
+    _seul.set(s * 0.13, 0, 0, 'XYZ');
+    leg.hipJ.quaternion.setFromEuler(_seul);
     // Knee flexes as the leg sweeps posteriorly (whip comes from the hip)
     leg.knee.rotation.set(0.10 + Math.max(0, Math.sin(kp + off + 0.7)) * 0.30, 0, 0);
   }
@@ -2251,6 +2465,8 @@ function updateSwimmer(dtPhase) {
   // Bob happens in WORLD space on the orientation rig, so the body rises
   // and sinks at the waterline instead of sliding along its own length.
   swimmerOrient.position.y = 0.5 + bob;
+  // Retarget this frame's pose onto the realistic human model, if active
+  if (humanRig && useHuman && humanLoadState === 'ready') syncHumanRig();
   const e = easeInOut(localT);
   const drag = THREE.MathUtils.lerp(A.drag, B.drag, e);
   const thrust = THREE.MathUtils.lerp(A.thrust, B.thrust, e);
@@ -2316,17 +2532,23 @@ function buildForceArrows() {
   vizForceGroup.userData.net    = makeArrow3D(0xffaa00);
   vizForceGroup.add(vizForceGroup.userData.drag, vizForceGroup.userData.thrust, vizForceGroup.userData.lift, vizForceGroup.userData.net);
 }
+let _arrowDir, _arrowZ; // scratch, created after THREE loads (initScratch2)
 function pointArrow(arrowGrp, originY, dirVec, magnitude, maxLen) {
   const len = Math.max(0.001, Math.min(maxLen, magnitude * 0.012));
   arrowGrp.visible = len > 0.04 && vizShowForces3D;
   if (!arrowGrp.visible) return;
   arrowGrp.position.set(0, originY, 0);
   arrowGrp.scale.set(1, 1, len);
-  const target = new THREE.Vector3().copy(dirVec).normalize();
-  const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1), target);
-  arrowGrp.quaternion.copy(quat);
+  _arrowDir.copy(dirVec).normalize();
+  arrowGrp.quaternion.setFromUnitVectors(_arrowZ, _arrowDir);
 }
-function toggleForces3D() { vizShowForces3D = !vizShowForces3D; }
+function toggleForces3D(btn) {
+  vizShowForces3D = !vizShowForces3D;
+  if (btn) {
+    btn.classList.toggle('active', vizShowForces3D);
+    btn.textContent = vizShowForces3D ? 'Forces: On' : 'Forces: Off';
+  }
+}
 // ═══════════════════════════════════════════════════════════════════════
 // PHASE BAR + INFO PANEL SYNC
 // ═══════════════════════════════════════════════════════════════════════
@@ -2347,48 +2569,52 @@ function jumpToPhase3D(i) {
 function updatePhaseBar3D(idx) {
   document.querySelectorAll('.phase-step').forEach((el,i) => el.classList.toggle('active', i===idx));
 }
-function syncInfoPanel3D() {
-  const dragEl = document.getElementById('stat-drag');
-  const thrustEl = document.getElementById('stat-thrust');
-  const veloEl = document.getElementById('stat-velocity');
-  const effEl = document.getElementById('stat-efficiency');
-  if (dragEl) dragEl.textContent = physState.drag.toFixed(0);
-  if (thrustEl) thrustEl.textContent = physState.thrust.toFixed(0);
-  if (veloEl) veloEl.textContent = physState.vel.toFixed(2);
-  if (effEl) effEl.textContent = physState.eff.toFixed(0) + '%';
-  const phaseName = document.getElementById('viz-phase-name');
-  const phaseText = document.getElementById('viz-phase-text');
-  const strokeName = document.getElementById('viz-stroke-name');
+// Info-panel sync — PERF-CONSCIOUS: the physics row is built ONCE; after
+// that only number spans update via textContent, throttled to 10Hz. Phase
+// name/description/bar update only when the phase actually changes.
+// (The old version rebuilt the whole row with innerHTML 60x/second.)
+const _panelState = { t: 0, idx: -1, stroke: '' };
+function buildPhysicsRow() {
   const physRow = document.getElementById('viz-physics-row');
-  if (phaseName) phaseName.textContent = `Phase ${currentPhaseInfo.idx+1}: ${currentPhaseInfo.name}`;
-  if (strokeName) strokeName.textContent = STROKES[currentStroke].name || currentStroke;
-  if (phaseText) phaseText.textContent = currentPhaseInfo.desc;
-  if (physRow) physRow.innerHTML = `
-    <div style="background:var(--navy3);border-radius:var(--r8);padding:.75rem;text-align:center;border:1px solid rgba(255,68,68,.3)">
-      <div style="font-family:var(--fm);font-size:.57rem;letter-spacing:1.5px;color:#ff4444;text-transform:uppercase;margin-bottom:4px">Drag</div>
-      <div style="font-family:var(--fh);font-size:1.4rem;color:#ff4444">${physState.drag.toFixed(0)}<span style="font-size:.7rem">N</span></div>
-    </div>
-    <div style="background:var(--navy3);border-radius:var(--r8);padding:.75rem;text-align:center;border:1px solid rgba(0,255,136,.3)">
-      <div style="font-family:var(--fm);font-size:.57rem;letter-spacing:1.5px;color:#00ff88;text-transform:uppercase;margin-bottom:4px">Thrust</div>
-      <div style="font-family:var(--fh);font-size:1.4rem;color:#00ff88">${physState.thrust.toFixed(0)}<span style="font-size:.7rem">N</span></div>
-    </div>
-    <div style="background:var(--navy3);border-radius:var(--r8);padding:.75rem;text-align:center;border:1px solid rgba(68,136,255,.3)">
-      <div style="font-family:var(--fm);font-size:.57rem;letter-spacing:1.5px;color:#4488ff;text-transform:uppercase;margin-bottom:4px">Lift</div>
-      <div style="font-family:var(--fh);font-size:1.4rem;color:#4488ff">${physState.lift.toFixed(0)}<span style="font-size:.7rem">N</span></div>
-    </div>
-    <div style="background:var(--navy3);border-radius:var(--r8);padding:.75rem;text-align:center;border:1px solid rgba(0,212,255,.3)">
-      <div style="font-family:var(--fm);font-size:.57rem;letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;margin-bottom:4px">Velocity</div>
-      <div style="font-family:var(--fh);font-size:1.4rem;color:var(--cyan)">${physState.vel.toFixed(2)}<span style="font-size:.7rem">m/s</span></div>
-    </div>
-    <div style="background:var(--navy3);border-radius:var(--r8);padding:.75rem;text-align:center;border:1px solid rgba(255,170,0,.3)">
-      <div style="font-family:var(--fm);font-size:.57rem;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-bottom:4px">Net Force</div>
-      <div style="font-family:var(--fh);font-size:1.4rem;color:var(--gold)">${Math.max(0,physState.thrust-physState.drag).toFixed(0)}<span style="font-size:.7rem">N</span></div>
-    </div>
-    <div style="background:var(--navy3);border-radius:var(--r8);padding:.75rem;text-align:center;border:1px solid rgba(0,229,153,.3)">
-      <div style="font-family:var(--fm);font-size:.57rem;letter-spacing:1.5px;color:var(--green);text-transform:uppercase;margin-bottom:4px">Efficiency</div>
-      <div style="font-family:var(--fh);font-size:1.4rem;color:var(--green)">${physState.eff.toFixed(0)}<span style="font-size:.7rem">%</span></div>
+  if (!physRow || physRow.dataset.built) return;
+  physRow.dataset.built = '1';
+  const box = (id, label, color, border, unit) => `
+    <div style="background:var(--navy3);border-radius:var(--r8);padding:.75rem;text-align:center;border:1px solid ${border}">
+      <div style="font-family:var(--fm);font-size:.57rem;letter-spacing:1.5px;color:${color};text-transform:uppercase;margin-bottom:4px">${label}</div>
+      <div style="font-family:var(--fh);font-size:1.4rem;color:${color}"><span id="${id}">—</span><span style="font-size:.7rem">${unit}</span></div>
     </div>`;
-  updatePhaseBar3D(currentPhaseInfo.idx);
+  physRow.innerHTML =
+    box('pr-drag','Drag','#ff4444','rgba(255,68,68,.3)','N') +
+    box('pr-thrust','Thrust','#00ff88','rgba(0,255,136,.3)','N') +
+    box('pr-lift','Lift','#4488ff','rgba(68,136,255,.3)','N') +
+    box('pr-vel','Velocity','var(--cyan)','rgba(0,212,255,.3)','m/s') +
+    box('pr-net','Net Force','var(--gold)','rgba(255,170,0,.3)','N') +
+    box('pr-eff','Efficiency','var(--green)','rgba(0,229,153,.3)','%');
+}
+function syncInfoPanel3D() {
+  const now = performance.now();
+  if (now - _panelState.t < 100) return; // 10Hz is plenty for readouts
+  _panelState.t = now;
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('stat-drag', physState.drag.toFixed(0));
+  set('stat-thrust', physState.thrust.toFixed(0));
+  set('stat-velocity', physState.vel.toFixed(2));
+  set('stat-efficiency', physState.eff.toFixed(0) + '%');
+  buildPhysicsRow();
+  set('pr-drag', physState.drag.toFixed(0));
+  set('pr-thrust', physState.thrust.toFixed(0));
+  set('pr-lift', physState.lift.toFixed(0));
+  set('pr-vel', physState.vel.toFixed(2));
+  set('pr-net', Math.max(0, physState.thrust - physState.drag).toFixed(0));
+  set('pr-eff', physState.eff.toFixed(0));
+  if (currentPhaseInfo.idx !== _panelState.idx || currentStroke !== _panelState.stroke) {
+    _panelState.idx = currentPhaseInfo.idx;
+    _panelState.stroke = currentStroke;
+    set('viz-phase-name', `Phase ${currentPhaseInfo.idx+1}: ${currentPhaseInfo.name}`);
+    set('viz-stroke-name', STROKES[currentStroke].name || currentStroke);
+    set('viz-phase-text', currentPhaseInfo.desc);
+    updatePhaseBar3D(currentPhaseInfo.idx);
+  }
 }
 // ═══════════════════════════════════════════════════════════════════════
 // PUBLIC UI API (called from buttons in the visualizer page)
@@ -2405,9 +2631,16 @@ function setStroke3D(s, btn) {
 function togglePlay3D() {
   playing = !playing;
   const btn = document.getElementById('vbtn-play');
-  if (btn) btn.textContent = playing ? '⏸ Pause' : '▶ Play';
+  if (btn) {
+    btn.textContent = playing ? '⏸ Pause' : '▶ Play';
+    btn.classList.toggle('active', playing);
+  }
 }
-function setSpeed3D(s) { speed = s; }
+function setSpeed3D(s, btn) {
+  speed = s;
+  document.querySelectorAll('.viz-btn[data-speed]').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
 function resizeViz3D() {
   const container = document.getElementById('viz3d-container');
   if (!container || !renderer || !camera) return;
@@ -2419,21 +2652,33 @@ function resizeViz3D() {
 }
 window.addEventListener('resize', resizeViz3D);
 let lastTime3D = performance.now();
+let _axNegX, _axPosX, _axPosY, _netDir; // scratch axes, created in startViz3D
+let _vizPageEl = null;
 function animate3D(){
   requestAnimationFrame(animate3D);
   if (!viz3DInitialized) return;
+  // Idle when the visualizer isn't on screen — no reason to burn GPU and
+  // battery rendering a hidden canvas while the user reads another page.
+  if (!_vizPageEl) _vizPageEl = document.getElementById('page-visualizer');
+  if (document.hidden || (_vizPageEl && !_vizPageEl.classList.contains('active'))) {
+    lastTime3D = performance.now();
+    return;
+  }
   const now = performance.now();
-  const dt = (now - lastTime3D) / 1000; lastTime3D = now;
+  let dt = (now - lastTime3D) / 1000; lastTime3D = now;
+  // Clamp: after a background-tab pause dt can be seconds — without this the
+  // swimmer and water lurch violently on return.
+  if (dt > 0.05) dt = 0.05;
   if (playing) clockT += dt * 0.55 * speed;
   updateSwimmer(dt);
   water.material.uniforms.time.value += dt;
   if (vizForceGroup && swimmer) {
     const hipY = swimmerOrient.position.y;
-    pointArrow(vizForceGroup.userData.drag,   hipY, new THREE.Vector3(-1,0,0), physState.drag,   1.1);
-    pointArrow(vizForceGroup.userData.thrust, hipY, new THREE.Vector3(1,0,0),  physState.thrust, 1.6);
-    pointArrow(vizForceGroup.userData.lift,   hipY, new THREE.Vector3(0,1,0),  physState.lift,   0.6);
-    const netDir = new THREE.Vector3(physState.thrust - physState.drag, physState.lift*0.4, 0);
-    pointArrow(vizForceGroup.userData.net,    hipY, netDir.lengthSq()>0.001 ? netDir : new THREE.Vector3(1,0,0), netDir.length(), 1.3);
+    pointArrow(vizForceGroup.userData.drag,   hipY, _axNegX, physState.drag,   1.1);
+    pointArrow(vizForceGroup.userData.thrust, hipY, _axPosX, physState.thrust, 1.6);
+    pointArrow(vizForceGroup.userData.lift,   hipY, _axPosY, physState.lift,   0.6);
+    _netDir.set(physState.thrust - physState.drag, physState.lift*0.4, 0);
+    pointArrow(vizForceGroup.userData.net,    hipY, _netDir.lengthSq()>0.001 ? _netDir : _axPosX, _netDir.length(), 1.3);
   }
   controls.update();
   renderer.render(scene, camera);
@@ -2442,9 +2687,18 @@ function animate3D(){
 // ─── LAZY INIT — loads Three.js from CDN the first time the page opens ──
 function startViz3D() {
   initViz3D();
+  if (!viz3DInitialized) return; // WebGL unavailable — graceful message shown
+  initScratch();
+  _arrowDir = new THREE.Vector3();
+  _arrowZ = new THREE.Vector3(0, 0, 1);
+  _axNegX = new THREE.Vector3(-1, 0, 0);
+  _axPosX = new THREE.Vector3(1, 0, 0);
+  _axPosY = new THREE.Vector3(0, 1, 0);
+  _netDir = new THREE.Vector3();
   buildForceArrows();
   rebuildSwimmer(currentStroke);
   buildPhaseBar3D(currentStroke);
+  loadHumanModel(); // fetch the rigged human in the background
   resizeViz3D();
   lastTime3D = performance.now();
   animate3D();
@@ -2502,6 +2756,16 @@ function setClip(id, sex, btn){
   btn.classList.add('active');
 }
 document.addEventListener('DOMContentLoaded', initDemoClips);
+// A11y: give every video iframe a title (screen readers announce these),
+// derived from its own card heading so it never goes stale.
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.video-embed iframe').forEach(function(f){
+    if (f.title) return;
+    const card = f.closest('.video-card');
+    const h = card && (card.querySelector('h4') || card.querySelector('.video-tag'));
+    f.title = h ? h.textContent : 'Swimming technique video';
+  });
+});
 // ─── AI MOTION DIRECTOR — text prompt → reconstructed 3D animation ──────
 // The AI returns joint keyframes in the same schema as the built-in strokes;
 // they're validated/clamped here, then played by the existing engine.
@@ -2659,7 +2923,8 @@ function renderSeasonPage() {
   courseEl.textContent = info.course;
   blurbEl.textContent = info.blurb;
   if (tableBody) {
-    tableBody.innerHTML = SEASON_MEETS.map(m => {
+    // Always render chronologically, regardless of array order
+    tableBody.innerHTML = SEASON_MEETS.slice().sort((a,b)=>a.start.localeCompare(b.start)).map(m => {
       const start = new Date(m.start + 'T00:00:00');
       const end = new Date(m.end + 'T23:59:59');
       let status, statusColor;
@@ -2698,8 +2963,11 @@ async function sendToAI(){
     return;
   }
   const btn=document.getElementById('ai-send-btn');
+  if(btn.disabled) return; // a stream is already running
   addMsg(msg,'user'); input.value=''; btn.disabled=true;
   conversationHistory.push({role:'user',content:msg});
+  // Cap history — otherwise every message re-uploads the whole conversation
+  if(conversationHistory.length>20) conversationHistory=conversationHistory.slice(-20);
   // Create streaming bubble
   const streamBubble=createStreamBubble();
   try{
@@ -2764,7 +3032,7 @@ function createStreamBubble(){
 }
 function updateStreamBubble(el,text){
   if(!el) return;
-  el.innerHTML=text.replace(/\n/g,'<br>');
+  el.innerHTML=escapeHTML(text).replace(/\n/g,'<br>');
   const msgs=document.getElementById('ai-messages');
   msgs.scrollTop=msgs.scrollHeight;
 }
@@ -2772,7 +3040,7 @@ function finishStreamBubble(el,text){
   if(!el) return;
   el.id='';
   el.classList.remove('streaming');
-  el.innerHTML=text.replace(/\n/g,'<br>');
+  el.innerHTML=escapeHTML(text).replace(/\n/g,'<br>');
   const msgs=document.getElementById('ai-messages');
   msgs.scrollTop=msgs.scrollHeight;
 }
@@ -2785,7 +3053,7 @@ function addMsg(text,type){
   av.textContent=type==='user'?'YOU':'AI';
   const bubble=document.createElement('div');
   bubble.className='msg-bubble'+(type==='user'?' user-b':'');
-  bubble.innerHTML=text.replace(/\n/g,'<br>');
+  bubble.innerHTML=escapeHTML(text).replace(/\n/g,'<br>');
   div.appendChild(av); div.appendChild(bubble);
   msgs.appendChild(div);
   msgs.scrollTop=msgs.scrollHeight;
@@ -2812,6 +3080,12 @@ document.addEventListener('DOMContentLoaded',()=>{
 // ─── WORKOUT GENERATOR — STREAMING ────────────
 async function generateWorkout(){
   if(!currentUser){ openAuthGate('login'); return; }
+  const genBtn=document.getElementById('gen-btn');
+  if(genBtn&&genBtn.disabled) return; // double-click = two streams + two rate-limit hits
+  if(genBtn) genBtn.disabled=true;
+  try{ await _generateWorkoutInner(); } finally { if(genBtn) genBtn.disabled=false; }
+}
+async function _generateWorkoutInner(){
   const focus=document.getElementById('gen-focus').value;
   const stroke=document.getElementById('gen-stroke').value;
   const length=document.getElementById('gen-length').value;
@@ -2901,7 +3175,7 @@ function formatWorkout(text){
   const lines=text.split('\n');
   let html='', inSec=false;
   for(const line of lines){
-    const t=line.trim();
+    const t=escapeHTML(line.trim());
     if(!t){if(inSec){html+='</div>';inSec=false;}continue;}
     if(/^(WARM-UP|PRE-MAIN|MAIN SET|COOL-DOWN|TOTAL|COACH NOTES)/i.test(t)){
       if(inSec) html+='</div>';
@@ -2932,6 +3206,12 @@ const VIZ_CONCEPTS={
 };
 async function generateVisualization(){
   if(!currentUser){ openAuthGate('login'); return; }
+  const vgBtn=document.getElementById('viz-gen-btn');
+  if(vgBtn&&vgBtn.disabled) return;
+  if(vgBtn) vgBtn.disabled=true;
+  try{ await _generateVisualizationInner(); } finally { if(vgBtn) vgBtn.disabled=false; }
+}
+async function _generateVisualizationInner(){
   const concept=document.getElementById('viz-concept').value;
   const custom=document.getElementById('viz-custom').value.trim();
   const detail=document.getElementById('viz-detail').value;
@@ -3019,8 +3299,8 @@ function formatVizOutput(text){
   return sections.map(s=>{
     if(!s.trim()) return '';
     const lines=s.trim().split('\n');
-    const header=lines[0];
-    const body=lines.slice(1).join('\n').trim();
+    const header=escapeHTML(lines[0]);
+    const body=escapeHTML(lines.slice(1).join('\n').trim());
     return `<div style="margin-bottom:1.75rem;padding:1.5rem;background:var(--navy3);border-radius:var(--r12);border:1px solid var(--border2)">
       <div style="font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;color:var(--cyan);margin-bottom:0.85rem">${header}</div>
       <div style="font-size:0.88rem;color:var(--white2);line-height:1.85;white-space:pre-line;font-weight:300">${body}</div>
@@ -3032,8 +3312,11 @@ function parseTime(str){
   if(!str) return null;
   str=str.trim();
   const p=str.split(':');
-  if(p.length===2) return parseFloat(p[0])*60+parseFloat(p[1]);
-  return parseFloat(str);
+  let v;
+  if(p.length===2) v=parseFloat(p[0])*60+parseFloat(p[1]);
+  else v=parseFloat(str);
+  // Reject negatives, zero, NaN and absurd values (> 1 hour) up front
+  return (isFinite(v) && v>0 && v<3600) ? v : null;
 }
 function formatTime(secs){
   if(isNaN(secs)||secs<=0) return '--';
@@ -3045,6 +3328,8 @@ function calcGolf(){
   const split=parseFloat(document.getElementById('golf-split').value);
   const strokes=parseFloat(document.getElementById('golf-strokes').value);
   if(isNaN(split)||isNaN(strokes)){alert('Enter both values.');return;}
+  if(split<15||split>120){alert('50m split should be between 15 and 120 seconds.');return;}
+  if(strokes<5||strokes>60){alert('Stroke count should be between 5 and 60 per 50m.');return;}
   const score=split+strokes;
   document.getElementById('golf-score').textContent=score.toFixed(0);
   const r=document.getElementById('golf-rating');
@@ -3061,6 +3346,8 @@ function calcSplits(){
   const strategy=document.getElementById('split-strategy').value;
   if(!totalSecs){alert('Enter a valid target time.');return;}
   const n=dist/50, avg=totalSecs/n;
+  if(avg<15){alert('That works out to under 15 seconds per 50m — faster than the world record. Check the distance and time.');return;}
+  if(avg>120){alert('That works out to over 2 minutes per 50m — check the distance and time.');return;}
   const splits=[];
   for(let i=0;i<n;i++){
     let s=avg;
@@ -3125,7 +3412,7 @@ function buildPRGrid(stroke){
     const key='pr_'+event.replace(/ /g,'_');
     const saved=localStorage.getItem(key)||'';
     const item=document.createElement('div'); item.className='pr-item';
-    item.innerHTML=`<span class="pr-event">${event}</span><input class="pr-input" placeholder="—" value="${saved}" oninput="savePR('${key}',this.value)">`;
+    item.innerHTML=`<span class="pr-event">${event}</span><input class="pr-input" placeholder="—" maxlength="12" value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value)">`;
     grid.appendChild(item);
   });
 }
@@ -3148,6 +3435,14 @@ function initProfile(){
 }
 initProfile();
 // ─── TRAINING LOG ─────────────────────────────
+// Crash-proof read: renderLog() runs at page load — a single corrupted
+// localStorage entry must never take down the whole site's JavaScript.
+function readLog(){
+  try{
+    const v=JSON.parse(localStorage.getItem('swimiq_log')||'[]');
+    return Array.isArray(v)?v:[];
+  }catch(e){ return []; }
+}
 function saveLogEntry(){
   const date=document.getElementById('log-date').value;
   if(!date){alert('Please select a date.');return;}
@@ -3162,7 +3457,7 @@ function saveLogEntry(){
     mainset:document.getElementById('log-mainset').value,
     notes:document.getElementById('log-notes').value
   };
-  const entries=JSON.parse(localStorage.getItem('swimiq_log')||'[]');
+  const entries=readLog();
   entries.unshift(entry); entries.splice(100);
   localStorage.setItem('swimiq_log',JSON.stringify(entries));
   ['log-distance','log-duration','log-effort','log-mainset','log-notes'].forEach(id=>{
@@ -3171,7 +3466,7 @@ function saveLogEntry(){
   renderLog();
 }
 function renderLog(){
-  const entries=JSON.parse(localStorage.getItem('swimiq_log')||'[]');
+  const entries=readLog();
   const container=document.getElementById('log-entries');
   const statsEl=document.getElementById('log-stats');
   if(!container)return;
@@ -3181,12 +3476,12 @@ function renderLog(){
   }
   container.innerHTML=entries.map(e=>`
     <div class="log-entry">
-      <div class="log-date">${e.date}</div>
+      <div class="log-date">${escapeHTML(e.date)}</div>
       <div class="log-content">
-        <div class="log-title">${e.type}</div>
-        <div class="log-meta">${e.dist?e.dist.toLocaleString()+'m · ':''}${e.dur?e.dur+' min · ':''}${e.zone} · Effort ${e.effort}/10</div>
-        ${e.mainset?`<div class="log-notes" style="color:var(--cyan)">${e.mainset}</div>`:''}
-        ${e.notes?`<div class="log-notes">${e.notes}</div>`:''}
+        <div class="log-title">${escapeHTML(e.type)}</div>
+        <div class="log-meta">${e.dist?e.dist.toLocaleString()+'m · ':''}${e.dur?e.dur+' min · ':''}${escapeHTML(e.zone)} · Effort ${e.effort}/10</div>
+        ${e.mainset?`<div class="log-notes" style="color:var(--cyan)">${escapeHTML(e.mainset)}</div>`:''}
+        ${e.notes?`<div class="log-notes">${escapeHTML(e.notes)}</div>`:''}
       </div>
       <button onclick="deleteLogEntry(${e.id})" style="background:none;border:none;color:var(--white4);cursor:pointer;font-size:1.1rem;padding:4px;transition:color 0.2s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--white4)'">✕</button>
     </div>`).join('');
@@ -3205,8 +3500,7 @@ function renderLog(){
   }
 }
 function deleteLogEntry(id){
-  const entries=JSON.parse(localStorage.getItem('swimiq_log')||'[]');
-  localStorage.setItem('swimiq_log',JSON.stringify(entries.filter(e=>e.id!==id)));
+  localStorage.setItem('swimiq_log',JSON.stringify(readLog().filter(e=>e.id!==id)));
   renderLog();
 }
 function clearLog(){if(!confirm('Clear all log entries?'))return; localStorage.removeItem('swimiq_log'); renderLog();}
