@@ -567,7 +567,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="viz-btn" onclick="setView3D('three-quarter')">3/4 View</button>
   </div>
   <div class="viz-controls" style="margin-top:8px">
-    <button class="viz-btn active" id="vbtn-human" onclick="toggleHumanModel()">🧍 Model: Human</button>
+    <button class="viz-btn active" id="vbtn-model-male" onclick="setHumanModel('male')">♂ Male</button>
+    <button class="viz-btn" id="vbtn-model-female" onclick="setHumanModel('female')">♀ Female</button>
+    <button class="viz-btn" id="vbtn-model-mannequin" onclick="setHumanModel('mannequin')">🤖 Mannequin</button>
     <button class="viz-btn active" id="vbtn-play" onclick="togglePlay3D()">⏸ Pause</button>
     <button class="viz-btn" data-speed onclick="setSpeed3D(0.3,this)">0.3× Slow</button>
     <button class="viz-btn active" data-speed onclick="setSpeed3D(1,this)">1× Normal</button>
@@ -2210,29 +2212,60 @@ function rebuildSwimmer(strokeKey) {
 // skeleton, and every frame each human bone is aligned to the matching
 // mannequin segment. All verified stroke mechanics transfer 1:1.
 // ═══════════════════════════════════════════════════════════════════════
-let humanRig = null;
-let humanLoadState = 'idle'; // idle | loading | ready | failed
-let useHuman = true;
-const HUMAN_MODEL_URL = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/models/gltf/Xbot.glb';
+// ── MALE / FEMALE AVATARS — how to get real skin + a friendly face ──────
+// The engine drives ANY Mixamo-compatible rigged human, which includes
+// Ready Player Me avatars. To upgrade from the demo model (free, ~10 min):
+//   1. On readyplayer.me create TWO full-body avatars — one male, one
+//      female. Pick a PRESET face (friendly, generic — never a real
+//      person's) and an athletic build. Needs an account: loop in your dad.
+//   2. Download each as .glb into a /media folder in your repo, named
+//      swimmer-male.glb and swimmer-female.glb.
+//   3. Point the two urls below at them, e.g. 'media/swimmer-male.glb'.
+// Until then MALE uses the Three.js demo human (Xbot) so the feature works
+// out of the box, and FEMALE politely asks for its file.
+const HUMAN_MODELS = {
+  male:   { label:'Male',   url:'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/models/gltf/Xbot.glb' },
+  female: { label:'Female', url:'' } // ← e.g. 'media/swimmer-female.glb'
+};
 const GLTF_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
+const humanRigs = { male:{state:'idle',rig:null}, female:{state:'idle',rig:null} };
+let currentHumanKey = 'male'; // 'male' | 'female' | 'mannequin'
+let gltfLoaderState = 'idle';
 function humanStatus(msg){ const el=document.getElementById('human-status'); if(el) el.textContent=msg; }
-function loadHumanModel(){
-  if (humanLoadState !== 'idle') return;
-  humanLoadState = 'loading';
-  humanStatus('Loading realistic human model…');
+function activeHumanRig(){
+  const slot = humanRigs[currentHumanKey];
+  return (slot && slot.state === 'ready') ? slot.rig : null;
+}
+function withGLTFLoader(cb){
+  if (gltfLoaderState === 'ready') { cb(); return; }
+  if (gltfLoaderState === 'failed') return;
+  if (gltfLoaderState === 'loading') { setTimeout(function(){ withGLTFLoader(cb); }, 300); return; }
+  gltfLoaderState = 'loading';
   const s = document.createElement('script');
   s.src = GLTF_LOADER_URL;
-  s.onload = function(){
+  s.onload = function(){ gltfLoaderState = 'ready'; cb(); };
+  s.onerror = function(){ gltfLoaderState = 'failed'; humanStatus('3D model loader unavailable — mannequin shown.'); applyModelVisibility(); };
+  document.head.appendChild(s);
+}
+function loadHumanModel(key){
+  const slot = humanRigs[key];
+  if (!slot || slot.state !== 'idle') return;
+  if (!HUMAN_MODELS[key].url) { slot.state = 'missing'; return; }
+  slot.state = 'loading';
+  humanStatus('Loading ' + HUMAN_MODELS[key].label.toLowerCase() + ' swimmer model…');
+  withGLTFLoader(function(){
     try {
-      new THREE.GLTFLoader().load(HUMAN_MODEL_URL, onHumanLoaded, undefined, function(){
-        humanLoadState = 'failed';
-        humanStatus('Human model unavailable — showing the biomechanics mannequin.');
+      new THREE.GLTFLoader().load(HUMAN_MODELS[key].url, function(gltf){ onHumanLoaded(gltf, key); }, undefined, function(){
+        slot.state = 'failed';
+        humanStatus(HUMAN_MODELS[key].label + ' model unavailable — showing the mannequin.');
         applyModelVisibility();
       });
-    } catch(e){ humanLoadState = 'failed'; applyModelVisibility(); }
-  };
-  s.onerror = function(){ humanLoadState = 'failed'; humanStatus('Human model unavailable — showing the biomechanics mannequin.'); applyModelVisibility(); };
-  document.head.appendChild(s);
+    } catch(e){ slot.state = 'failed'; applyModelVisibility(); }
+  });
+}
+function loadHumanModels(){
+  loadHumanModel('male');
+  if (HUMAN_MODELS.female.url) loadHumanModel('female');
 }
 function findBone(root, suffix){
   let hit = null;
@@ -2241,16 +2274,18 @@ function findBone(root, suffix){
   return hit;
 }
 let _hv1, _hv2, _hv3, _hq1, _hq2, _heul; // human-sync scratch
-function onHumanLoaded(gltf){
+function onHumanLoaded(gltf, key){
   const model = gltf.scene;
-  // Skin-tone tint; the model's darker secondary material reads as the suit
   model.traverse(o => {
     if (o.isMesh) {
       o.castShadow = true;
       o.frustumCulled = false; // skinned mesh bounds don't track the pose
       if (o.material) {
         o.material = o.material.clone();
-        if (o.material.color) o.material.color.set(0xc9915f);
+        // Tint ONLY untextured materials (the plain demo Xbot) skin-tone.
+        // Real avatars (Ready Player Me etc.) carry actual skin and face
+        // textures — never overwrite those.
+        if (!o.material.map && o.material.color) o.material.color.set(0xc9915f);
         if ('roughness' in o.material) o.material.roughness = 0.6;
         if ('metalness' in o.material) o.material.metalness = 0.05;
       }
@@ -2265,8 +2300,8 @@ function onHumanLoaded(gltf){
     upLegR:b('RightUpLeg'), legR:b('RightLeg'), footR:b('RightFoot'), toeR:b('RightToeBase')
   };
   if (!bones.hips || !bones.armL || !bones.foreL || !bones.upLegL || !bones.legL) {
-    humanLoadState = 'failed';
-    humanStatus('Human model skeleton not recognized — using the mannequin.');
+    humanRigs[key].state = 'failed';
+    humanStatus(HUMAN_MODELS[key].label + ' model skeleton not recognized — using the mannequin.');
     applyModelVisibility();
     return;
   }
@@ -2315,23 +2350,25 @@ function onHumanLoaded(gltf){
   ];
   if (bones.footL && bones.toeL) entries.push({ bone:bones.footL, dir:cd(bones.footL, bones.toeL), a:()=>swimmer.legL.ankle, bpt:()=>swimmer.legL.foot });
   if (bones.footR && bones.toeR) entries.push({ bone:bones.footR, dir:cd(bones.footR, bones.toeR), a:()=>swimmer.legR.ankle, bpt:()=>swimmer.legR.foot });
-  _hv1 = new THREE.Vector3(); _hv2 = new THREE.Vector3(); _hv3 = new THREE.Vector3();
-  _hq1 = new THREE.Quaternion(); _hq2 = new THREE.Quaternion();
-  _heul = new THREE.Euler(0,0,0,'XYZ');
-  humanRig = {
+  if (!_hv1) {
+    _hv1 = new THREE.Vector3(); _hv2 = new THREE.Vector3(); _hv3 = new THREE.Vector3();
+    _hq1 = new THREE.Quaternion(); _hq2 = new THREE.Quaternion();
+    _heul = new THREE.Euler(0,0,0,'XYZ');
+  }
+  humanRigs[key].rig = {
     root, bones, entries,
     headRest: bones.head ? bones.head.quaternion.clone() : null
   };
+  humanRigs[key].state = 'ready';
   swimmerOrient.add(root);
-  humanLoadState = 'ready';
-  humanStatus('✓ Realistic human model active — toggle back to the mannequin any time.');
+  humanStatus('✓ ' + HUMAN_MODELS[key].label + ' swimmer model ready.');
   applyModelVisibility();
 }
-function syncHumanRig(){
+function syncHumanRig(rig){
   // Follow the mannequin's body roll, then align every bone to its segment
-  humanRig.root.rotation.y = swimmer.root.rotation.y;
-  humanRig.root.updateWorldMatrix(true, false);
-  for (const en of humanRig.entries) {
+  rig.root.rotation.y = swimmer.root.rotation.y;
+  rig.root.updateWorldMatrix(true, false);
+  for (const en of rig.entries) {
     en.a().getWorldPosition(_hv1);
     en.bpt().getWorldPosition(_hv2);
     _hv3.subVectors(_hv2, _hv1);
@@ -2343,25 +2380,38 @@ function syncHumanRig(){
     en.bone.quaternion.setFromUnitVectors(en.dir, _hv3);
   }
   // Head: copy the mannequin neck's breathing turn/lift onto the human head
-  if (humanRig.bones.head && humanRig.headRest) {
+  if (rig.bones.head && rig.headRest) {
     _heul.set(swimmer.neck.rotation.x, swimmer.neck.rotation.y, 0, 'XYZ');
-    humanRig.bones.head.quaternion.copy(humanRig.headRest).multiply(_hq1.setFromEuler(_heul));
+    rig.bones.head.quaternion.copy(rig.headRest).multiply(_hq1.setFromEuler(_heul));
   }
 }
 function applyModelVisibility(){
-  const humanOn = useHuman && humanLoadState === 'ready' && humanRig;
-  if (humanRig) humanRig.root.visible = !!humanOn;
-  if (swimmer) swimmer.root.visible = !humanOn;
-  const btn = document.getElementById('vbtn-human');
-  if (btn) {
-    btn.classList.toggle('active', !!humanOn);
-    btn.textContent = humanOn ? '🧍 Model: Human' : '🤖 Model: Mannequin';
+  const rig = activeHumanRig();
+  for (const k in humanRigs) {
+    if (humanRigs[k].rig) humanRigs[k].rig.root.visible = (humanRigs[k].rig === rig);
   }
+  if (swimmer) swimmer.root.visible = !rig;
+  ['male','female','mannequin'].forEach(function(k){
+    const btn = document.getElementById('vbtn-model-' + k);
+    if (btn) btn.classList.toggle('active', k === currentHumanKey);
+  });
 }
-function toggleHumanModel(){
-  if (humanLoadState === 'loading') { humanStatus('Human model still loading…'); return; }
-  if (humanLoadState !== 'ready') { humanStatus('Human model unavailable on this connection — mannequin shown.'); return; }
-  useHuman = !useHuman;
+function setHumanModel(key){
+  currentHumanKey = key;
+  if (key === 'mannequin') {
+    applyModelVisibility();
+    humanStatus('Biomechanics mannequin shown.');
+    return;
+  }
+  const slot = humanRigs[key];
+  if (slot.state === 'idle') loadHumanModel(key); // may resolve to 'missing'
+  if (slot.state === 'missing') {
+    humanStatus(HUMAN_MODELS[key].label + ' avatar not added yet — open index.html, find HUMAN_MODELS, and follow the 3-step instructions (free Ready Player Me avatar). Mannequin shown meanwhile.');
+  } else if (slot.state === 'loading') {
+    humanStatus('Loading ' + HUMAN_MODELS[key].label.toLowerCase() + ' model…');
+  } else if (slot.state === 'failed') {
+    humanStatus(HUMAN_MODELS[key].label + ' model unavailable — mannequin shown.');
+  }
   applyModelVisibility();
 }
 function easeInOut(t) { return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
@@ -2481,8 +2531,9 @@ function updateSwimmer(dtPhase) {
   // Bob happens in WORLD space on the orientation rig, so the body rises
   // and sinks at the waterline instead of sliding along its own length.
   swimmerOrient.position.y = 0.5 + bob;
-  // Retarget this frame's pose onto the realistic human model, if active
-  if (humanRig && useHuman && humanLoadState === 'ready') syncHumanRig();
+  // Retarget this frame's pose onto the active human model, if any
+  const _ahr = activeHumanRig();
+  if (_ahr) syncHumanRig(_ahr);
   const e = easeInOut(localT);
   const drag = THREE.MathUtils.lerp(A.drag, B.drag, e);
   const thrust = THREE.MathUtils.lerp(A.thrust, B.thrust, e);
@@ -2714,7 +2765,7 @@ function startViz3D() {
   buildForceArrows();
   rebuildSwimmer(currentStroke);
   buildPhaseBar3D(currentStroke);
-  loadHumanModel(); // fetch the rigged human in the background
+  loadHumanModels(); // fetch the rigged human avatars in the background
   resizeViz3D();
   lastTime3D = performance.now();
   animate3D();
