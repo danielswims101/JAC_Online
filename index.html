@@ -536,7 +536,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="tab-panel" id="vd-uw"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/bjDfI0NMVY8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
   <div class="divider"></div>
   <div class="section-eyebrow">Study It — Interactive 3D Biomechanics Lab</div>
-  <p class="section-intro" style="margin-bottom:1.5rem">A fully rigged 3D human reconstructing the same movements joint-by-joint — slow it down, orbit any angle, isolate a single phase, or describe any movement and the AI reconstructs it. It exists so you can see what video moves too fast to show.</p>
+  <p class="section-intro" style="margin-bottom:1.5rem">A rigged 3D human swimming underwater — caustic light, depth haze, wet skin — reconstructing every movement joint-by-joint. Slow it down, orbit any angle, isolate a single phase, or describe any movement and the AI reconstructs it. It exists so you can see what video moves too fast to show.</p>
   <div class="viz-canvas-wrap" style="position:relative">
     <div id="viz3d-container"></div>
     <div class="viz-overlay-stats">
@@ -563,7 +563,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <span style="font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px">View:</span>
     <button class="viz-btn" onclick="setView3D('side')">Side</button>
     <button class="viz-btn" onclick="setView3D('front')">Front</button>
-    <button class="viz-btn" onclick="setView3D('top')">Top</button>
+    <button class="viz-btn" onclick="setView3D('top')">Below</button>
     <button class="viz-btn" onclick="setView3D('three-quarter')">3/4 View</button>
   </div>
   <div class="viz-controls" style="margin-top:8px">
@@ -1730,14 +1730,72 @@ let viz3DInitialized = false;
 let threeLoading = false;
 let scene, camera, renderer, controls;
 let swimmerOrient = null; // lays the anatomical rig horizontal (prone/supine)
-let water, grid; // referenced inside animate loop
+let water; // referenced inside animate loop
+let causticsTex = null, particles = null, vizTime = 0; // underwater layers
+// ── UNDERWATER LAYERS ────────────────────────────────────────────────────
+// Procedural, seamlessly-tiling caustic pattern: interference of sine nets
+// raised to a high power = the bright shifting light-nets of a real pool.
+// Generated once on a canvas; scrolled (not simulated) every frame.
+function makeCausticTexture(){
+  const S = 256, cv = document.createElement('canvas');
+  cv.width = cv.height = S;
+  const ctx = cv.getContext('2d');
+  const img = ctx.createImageData(S, S);
+  const TAU = Math.PI*2;
+  for (let y = 0; y < S; y++) {
+    for (let x = 0; x < S; x++) {
+      const u = x/S, v = y/S;
+      // integer cycle counts keep every edge seamless
+      const n1 = Math.sin(TAU*(3*u + 0.7*Math.sin(TAU*2*v))) * Math.sin(TAU*(2*v + 0.6*Math.sin(TAU*3*u)));
+      const n2 = Math.sin(TAU*(5*u + 0.5*Math.sin(TAU*3*v))) * Math.sin(TAU*(4*v + 0.4*Math.sin(TAU*2*u)));
+      const c = Math.min(1, Math.pow(Math.abs(n1), 6) + Math.pow(Math.abs(n2), 8)*0.7);
+      const i = (y*S + x)*4, b = Math.floor(c*255);
+      img.data[i] = b; img.data[i+1] = b; img.data[i+2] = b; img.data[i+3] = 255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(3, 3);
+  return tex;
+}
+// MOVE 3 — wet skin. Light enters skin and comes back out; a wet body has a
+// hard tight highlight on top (the water film = clearcoat). Roughness 0.28
+// is "just surfaced"; 0.7 would be "standing in a gym". The suit/cap use
+// the OPPOSITE material — that contrast is part of what sells it.
+function toWetMaterial(srcMat, mesh, isKit){
+  const m = new THREE.MeshPhysicalMaterial({
+    color: (srcMat && srcMat.color) ? srcMat.color.clone() : new THREE.Color(0xc9915f),
+    map: (srcMat && srcMat.map) || null,
+    normalMap: (srcMat && srcMat.normalMap) || null,
+    roughness: isKit ? 0.55 : 0.28,
+    metalness: 0.0,
+    clearcoat: isKit ? 0.08 : 0.6,
+    clearcoatRoughness: 0.12,
+    emissive: new THREE.Color(0x7fc4e8),
+    emissiveIntensity: isKit ? 0.12 : 0.28,
+    emissiveMap: causticsTex || null // caustic nets crawl across the body
+  });
+  if ('thickness' in m) m.thickness = 0.5; // fake subsurface depth (r129+)
+  if (mesh) {
+    m.skinning = !!mesh.isSkinnedMesh; // r128: required for skinned meshes
+    const ma = mesh.geometry && mesh.geometry.morphAttributes;
+    if (ma && ma.position && ma.position.length) m.morphTargets = true;
+    if (ma && ma.normal && ma.normal.length) m.morphNormals = true;
+  }
+  return m;
+}
 function initViz3D() {
   const container = document.getElementById('viz3d-container');
   if (!container) return;
   scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x040d18, 4, 12);
+  // MOVE 1 — put the scene underwater. Exponential blue-green fog with a
+  // matching background: depth attenuation, the eye's #1 "this is water"
+  // signal. Density tuned so a swimmer ~2 body-lengths away loses contrast.
+  scene.fog = new THREE.FogExp2(0x0a4a6e, 0.075);
+  scene.background = new THREE.Color(0x0a4a6e);
   camera = new THREE.PerspectiveCamera(42, container.clientWidth/container.clientHeight, 0.1, 100);
-  camera.position.set(2.8, 1.4, 3.4);
+  camera.position.set(2.6, 0.25, 3.2); // BELOW the waterline — never across it
   // WebGL can be unavailable (old device, disabled GPU, headless browser).
   // Without this guard the throw would kill ALL page JavaScript.
   try {
@@ -1762,24 +1820,22 @@ function initViz3D() {
   controls.minDistance = 1.5;
   controls.maxDistance = 8;
   controls.maxPolarAngle = Math.PI * 0.92;
-  // Lighting
-  scene.add(new THREE.HemisphereLight(0x88ccff, 0x081020, 0.55));
-  const keyLight = new THREE.DirectionalLight(0xffffff, 1.3);
-  keyLight.position.set(3, 5, 4);
+  // MOVE 4 — light it like a pool, not a studio: ONE strong source from
+  // overhead (sun/ceiling scattered through the surface), a weak floor
+  // bounce from below, ambient tinted to the water. Nothing else.
+  scene.add(new THREE.HemisphereLight(0x9fd8e8, 0x0a2438, 0.5));
+  const keyLight = new THREE.DirectionalLight(0xeaf6ff, 1.45);
+  keyLight.position.set(1.2, 6, 1.5);
   keyLight.castShadow = true;
   keyLight.shadow.mapSize.set(1024,1024);
   scene.add(keyLight);
-  const rimLight = new THREE.DirectionalLight(0x00d4ff, 0.5);
-  rimLight.position.set(-3, 1, -3);
-  scene.add(rimLight);
-  // Soft fill from below — mimics light bouncing off the pool floor
-  const bounceLight = new THREE.DirectionalLight(0x2288cc, 0.35);
-  bounceLight.position.set(0, -3, 2);
+  const bounceLight = new THREE.DirectionalLight(0x2288cc, 0.3);
+  bounceLight.position.set(0, -3, 1);
   scene.add(bounceLight);
-  // Warm front fill so the body reads with depth instead of flat shading
-  const fillLight = new THREE.PointLight(0xffeedd, 0.4, 12);
-  fillLight.position.set(0, 1.6, 3.5);
-  scene.add(fillLight);
+  // MOVE 2 — caustics: procedurally generated tiling interference pattern,
+  // projected on the body and floor, drifted slowly and irregularly in the
+  // render loop. Not simulated — scrolled. (Kept subtle on purpose.)
+  causticsTex = makeCausticTexture();
   // Water surface plane (semi-transparent, animated ripple via vertex shader)
   const waterGeo = new THREE.PlaneGeometry(14, 14, 80, 80);
   const waterMat = new THREE.ShaderMaterial({
@@ -1801,8 +1857,9 @@ function initViz3D() {
       varying float vWave;
       uniform vec3 color;
       void main() {
-        float a = 0.10 + vWave * 2.0;
-        gl_FragColor = vec4(color, clamp(a, 0.03, 0.22));
+        // Seen from below, the surface is the bright ceiling of the scene
+        float a = 0.18 + vWave * 2.5;
+        gl_FragColor = vec4(color, clamp(a, 0.08, 0.38));
       }
     `
   });
@@ -1810,24 +1867,36 @@ function initViz3D() {
   water.rotation.x = -Math.PI/2;
   water.position.y = 0.55;
   scene.add(water);
-  // Floor grid (pool bottom feel)
-  grid = new THREE.GridHelper(14, 28, 0x00d4ff, 0x0c2840);
-  grid.position.y = -1.1;
-  grid.material.opacity = 0.25;
-  grid.material.transparent = true;
-  scene.add(grid);
-  // Pool floor with a lane line stripe (competition pool feel)
-  const floorMat = new THREE.MeshStandardMaterial({ color: 0x0a2035, roughness: 0.9 });
+  // Pool floor with caustic light nets dancing across it
+  const floorMat = new THREE.MeshStandardMaterial({
+    color: 0x155276, roughness: 0.85,
+    emissive: 0x9fdcff, emissiveIntensity: 0.4, emissiveMap: causticsTex
+  });
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), floorMat);
   floor.rotation.x = -Math.PI/2;
   floor.position.y = -1.11;
   floor.receiveShadow = true;
   scene.add(floor);
   const stripe = new THREE.Mesh(new THREE.PlaneGeometry(14, 0.25),
-    new THREE.MeshStandardMaterial({ color: 0x061525, roughness: 0.85 }));
+    new THREE.MeshStandardMaterial({ color: 0x0b3350, roughness: 0.85 }));
   stripe.rotation.x = -Math.PI/2;
   stripe.position.y = -1.105;
   scene.add(stripe);
+  // Scatter/particulate — real pool water is not glass. A faint drifting
+  // particle field is what makes the volume itself read as water.
+  const pGeo = new THREE.BufferGeometry();
+  const pCount = 320, pPos = new Float32Array(pCount*3);
+  for (let i = 0; i < pCount; i++) {
+    pPos[i*3]   = (Math.random()-0.5)*10;
+    pPos[i*3+1] = -1.0 + Math.random()*2.4;
+    pPos[i*3+2] = (Math.random()-0.5)*8;
+  }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
+    color: 0xbfe8ff, size: 0.022, transparent: true, opacity: 0.35,
+    sizeAttenuation: true, depthWrite: false
+  }));
+  scene.add(particles);
   // Lane ropes at the water line — alternating discs like real anti-wave ropes
   function addLaneRope(z) {
     const rope = new THREE.Group();
@@ -1890,10 +1959,10 @@ function makeSegment(length, rTop, rBot, material, segments=14) {
 }
 function buildSwimmer(baseColor) {
   const root = new THREE.Group(); // overall body translate/roll/undulate
-  // Bio-realistic materials: skin for the body, the stroke's theme color
-  // only on the kit (cap + jammers) — reads as a human, not a mannequin.
-  const mat = new THREE.MeshStandardMaterial({ color: 0xc9915f, roughness: 0.55, metalness: 0.02 });
-  const kit = new THREE.MeshStandardMaterial({ color: baseColor, roughness: 0.42, metalness: 0.08 });
+  // Wet-skin physical materials: clearcoat water film + caustics on the
+  // body; matte suit/cap in the stroke's theme color for contrast.
+  const mat = toWetMaterial({ color: new THREE.Color(0xc9915f) }, null, false);
+  const kit = toWetMaterial({ color: new THREE.Color(baseColor) }, null, true);
   const matDim = kit; // swim cap
   // ── Pelvis / hips (root of skeleton) — jammer-covered ──
   const hips = new THREE.Group();
@@ -2281,13 +2350,12 @@ function onHumanLoaded(gltf, key){
       o.castShadow = true;
       o.frustumCulled = false; // skinned mesh bounds don't track the pose
       if (o.material) {
-        o.material = o.material.clone();
-        // Tint ONLY untextured materials (the plain demo Xbot) skin-tone.
-        // Real avatars (Ready Player Me etc.) carry actual skin and face
-        // textures — never overwrite those.
-        if (!o.material.map && o.material.color) o.material.color.set(0xc9915f);
-        if ('roughness' in o.material) o.material.roughness = 0.6;
-        if ('metalness' in o.material) o.material.metalness = 0.05;
+        // Wet-skin conversion. Textured avatars (Ready Player Me) keep
+        // their skin/face textures; only untextured demo materials get the
+        // skin tint. Everyone gets the water-film clearcoat + caustics.
+        const hadMap = !!o.material.map;
+        o.material = toWetMaterial(o.material, o, false);
+        if (!hadMap && o.material.color) o.material.color.set(0xc9915f);
       }
     }
   });
@@ -2547,12 +2615,13 @@ function updateSwimmer(dtPhase) {
 // VIEW PRESETS (animated camera tween)
 // ═══════════════════════════════════════════════════════════════════════
 const VIEWS = {
-  // Body travels along +X (head at +X), so "side" looks from the lane rope,
-  // "front" is head-on down the lane.
-  side:           { pos:[0.0, 0.9, 3.4],  target:[0, 0.5, 0] },
-  front:          { pos:[3.6, 0.7, 0.0],  target:[0, 0.5, 0] },
-  top:            { pos:[0.0, 4.2, 0.05], target:[0, 0.5, 0] },
-  'three-quarter':{ pos:[2.4, 1.6, 2.4],  target:[0, 0.5, 0] }
+  // All presets stay UNDERWATER (below the y=0.55 surface) — a camera that
+  // crosses the waterline is exactly what reads wrong. "Top" looks up-ish
+  // from below instead of down through the surface.
+  side:           { pos:[0.0, 0.25, 3.4],  target:[0, 0.45, 0] },
+  front:          { pos:[3.6, 0.2, 0.0],   target:[0, 0.45, 0] },
+  top:            { pos:[0.6, -0.85, 1.6], target:[0, 0.5, 0] },
+  'three-quarter':{ pos:[2.4, 0.3, 2.4],   target:[0, 0.45, 0] }
 };
 function setView3D(name) {
   if (!viz3DInitialized) return;
@@ -2739,6 +2808,21 @@ function animate3D(){
   if (playing) clockT += dt * 0.55 * speed;
   updateSwimmer(dt);
   water.material.uniforms.time.value += dt;
+  vizTime += dt;
+  // Caustics drift — slow and irregular, never a straight line
+  if (causticsTex) {
+    causticsTex.offset.x = Math.sin(vizTime * 0.12) * 0.25 + vizTime * 0.02;
+    causticsTex.offset.y = vizTime * 0.035;
+  }
+  // Particulate drift — slow rise with wraparound
+  if (particles) {
+    const pp = particles.geometry.attributes.position;
+    for (let i = 1; i < pp.array.length; i += 3) {
+      pp.array[i] += dt * 0.025;
+      if (pp.array[i] > 1.5) pp.array[i] = -1.05;
+    }
+    pp.needsUpdate = true;
+  }
   if (vizForceGroup && swimmer) {
     const hipY = swimmerOrient.position.y;
     pointArrow(vizForceGroup.userData.drag,   hipY, _axNegX, physState.drag,   1.1);
