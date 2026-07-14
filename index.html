@@ -2337,27 +2337,27 @@ const STROKES = {
     // half a cycle behind (R[i] = mirror of L[i+3]) — when one hand enters,
     // the other is finishing at the hip. No catch-up pause.
     phases: [
-      { name:'Entry & Extension', dur:0.16, drag:26, thrust:60, lift:14, vel:1.78, eff:62,
+      { name:'Entry & Extension', dur:0.15, drag:26, thrust:60, lift:14, vel:1.78, eff:62,
         desc:'Hand enters narrow at 10-15° and extends overhead while the OTHER hand finishes its push past the hip — true opposition timing, never catch-up. Body roll ~45°.',
         L:{ sh:[170,0,8],   el:[8],   hi:[8,0,0], kn:[8] },
         R:{ sh:[-12,0,-2],  el:[20],  hi:[8,0,0], kn:[8] } },
-      { name:'Catch', dur:0.14, drag:40, thrust:64, lift:24, vel:1.84, eff:67,
+      { name:'Catch', dur:0.13, drag:40, thrust:64, lift:24, vel:1.84, eff:67,
         desc:'Elbow rises high and flares outward, wrist presses down — the forearm becomes a vertical paddle while the opposite elbow lifts clear of the water behind.',
         L:{ sh:[125,10,10],  el:[58],  hi:[8,0,0], kn:[8] },
         R:{ sh:[-95,-55,70], el:[105], hi:[8,0,0], kn:[8] } },
-      { name:'Pull', dur:0.20, drag:66, thrust:142, lift:42, vel:2.18, eff:76,
+      { name:'Pull', dur:0.18, drag:66, thrust:142, lift:42, vel:2.18, eff:76,
         desc:'The hand accelerates from catch to hip along a gentle S-curve while the opposite arm reaches forward over the water. Hand speed at exit is 3-4x catch speed.',
         L:{ sh:[55,5,4],     el:[95],  hi:[8,0,0], kn:[8] },
         R:{ sh:[150,20,15],  el:[70],  hi:[8,0,0], kn:[8] } },
-      { name:'Push & Finish', dur:0.16, drag:50, thrust:96, lift:20, vel:2.04, eff:71,
+      { name:'Push & Finish', dur:0.14, drag:50, thrust:96, lift:20, vel:2.04, eff:71,
         desc:'The hand pushes past the hip, thumb brushing the thigh, exactly as the opposite hand enters overhead — the propulsive engine never stops.',
         L:{ sh:[-12,0,2],    el:[20],  hi:[8,0,0], kn:[8] },
         R:{ sh:[170,0,-8],   el:[8],   hi:[8,0,0], kn:[8] } },
-      { name:'Recovery & Breath', dur:0.14, drag:33, thrust:70, lift:12, vel:1.86, eff:64,
+      { name:'Recovery & Breath', dur:0.22, drag:33, thrust:70, lift:12, vel:1.86, eff:64,
         desc:'The elbow leads the recovery, lifted clear of the water, while the head rotates with the body roll to breathe — chin stays low, one goggle in the water.',
         L:{ sh:[-95,55,-70], el:[105], hi:[8,0,0], kn:[8] },
         R:{ sh:[125,-10,-10],el:[58],  hi:[8,0,0], kn:[8] } },
-      { name:'Reach Forward', dur:0.20, drag:30, thrust:120, lift:16, vel:2.02, eff:70,
+      { name:'Reach Forward', dur:0.18, drag:30, thrust:120, lift:16, vel:2.02, eff:70,
         desc:'The recovering arm straightens and reaches forward for a narrow entry while the opposite arm drives through the middle of its pull.',
         L:{ sh:[150,-20,-15],el:[70],  hi:[8,0,0], kn:[8] },
         R:{ sh:[55,-5,-4],   el:[95],  hi:[8,0,0], kn:[8] } }
@@ -2772,6 +2772,39 @@ function applyFlutterKick(u) {
 }
 let physState = { drag:0, thrust:0, lift:0, vel:0, eff:0 };
 let currentPhaseInfo = { name:'', desc:'', idx:0, total:0 };
+// ── ULTRA-SMOOTH KEYFRAME INTERPOLATION ────────────────────────────────
+// Non-uniform Catmull-Rom (Hermite form with averaged finite-difference
+// tangents). Interpolates one scalar across four neighbouring keyframes at
+// their real phase-duration spacing, giving C1-continuous motion: the joint
+// velocity matches on BOTH sides of every keyframe, so nothing snaps or whips
+// at a phase boundary the way straight-line interpolation did. This is what
+// turns the freestyle recovery from a whip into a flowing arc.
+function crom(p0, p1, p2, p3, d0, d1, d2, u) {
+  const m1 = 0.5 * ((p1 - p0) / d0 + (p2 - p1) / d1);
+  const m2 = 0.5 * ((p2 - p1) / d1 + (p3 - p2) / d2);
+  const u2 = u * u, u3 = u2 * u;
+  return (2*u3 - 3*u2 + 1) * p1 + (u3 - 2*u2 + u) * d1 * m1
+       + (-2*u3 + 3*u2) * p2 + (u3 - u2) * d1 * m2;
+}
+function smoothArm(sideObj, side, Pm1, A, B, Pp2, d0, d1, d2, u, supine) {
+  const kA = Pm1[side], k0 = A[side], k1 = B[side], k2 = Pp2[side];
+  const sx = supine ? 1 : -1;
+  const shx = crom(kA.sh[0], k0.sh[0], k1.sh[0], k2.sh[0], d0, d1, d2, u);
+  const shy = crom(kA.sh[1], k0.sh[1], k1.sh[1], k2.sh[1], d0, d1, d2, u);
+  const shz = crom(kA.sh[2], k0.sh[2], k1.sh[2], k2.sh[2], d0, d1, d2, u);
+  setQuatFromDeg(sideObj.shoulder.quaternion, sx * shx, shy, shz);
+  const el = crom(kA.el[0], k0.el[0], k1.el[0], k2.el[0], d0, d1, d2, u);
+  sideObj.elbow.rotation.set(sx * el * DEG, 0, 0);
+}
+function smoothLeg(legObj, side, Pm1, A, B, Pp2, d0, d1, d2, u) {
+  const kA = Pm1[side], k0 = A[side], k1 = B[side], k2 = Pp2[side];
+  const hx = crom(kA.hi[0], k0.hi[0], k1.hi[0], k2.hi[0], d0, d1, d2, u);
+  const hy = crom(kA.hi[1], k0.hi[1], k1.hi[1], k2.hi[1], d0, d1, d2, u);
+  const hz = crom(kA.hi[2], k0.hi[2], k1.hi[2], k2.hi[2], d0, d1, d2, u);
+  setQuatFromDeg(legObj.hipJ.quaternion, -hx, hy, hz);
+  const kn = crom(kA.kn[0], k0.kn[0], k1.kn[0], k2.kn[0], d0, d1, d2, u);
+  legObj.knee.rotation.set(kn * DEG, 0, 0);
+}
 function updateSwimmer(dtPhase) {
   const sd = STROKES[currentStroke];
   const phases = sd.phases;
@@ -2785,16 +2818,18 @@ function updateSwimmer(dtPhase) {
   const nextIdx = (idx+1) % phases.length;
   const A = phases[idx], B = phases[nextIdx];
   const u = cycleT / totalDur; // normalized cycle position 0..1
-  // Interpolation style: LINEAR keeps continuous strokes flowing with no
-  // pause at keyframes; strokes with a real glide (hold:true) keep easing.
-  const poseT = sd.hold ? easeInOut(localT) : localT;
-  applyPose(swimmer, swimmer.armL, A.L, B.L, poseT, !!sd.supine);
-  applyPose(swimmer, swimmer.armR, A.R, B.R, poseT, !!sd.supine);
+  // Velocity-continuous Catmull-Rom across the four surrounding keyframes —
+  // no snap or whip at any phase boundary, including the loop seam.
+  const Pm1 = phases[(idx - 1 + phases.length) % phases.length];
+  const Pp2 = phases[(idx + 2) % phases.length];
+  const d0 = Pm1.dur, d1 = A.dur, d2 = B.dur;
+  smoothArm(swimmer.armL, 'L', Pm1, A, B, Pp2, d0, d1, d2, localT, !!sd.supine);
+  smoothArm(swimmer.armR, 'R', Pm1, A, B, Pp2, d0, d1, d2, localT, !!sd.supine);
   if (sd.flutter) {
     applyFlutterKick(u);
   } else {
-    applyLegPose(swimmer.legL, A.L, B.L, poseT);
-    applyLegPose(swimmer.legR, A.R, B.R, poseT);
+    smoothLeg(swimmer.legL, 'L', Pm1, A, B, Pp2, d0, d1, d2, localT);
+    smoothLeg(swimmer.legR, 'R', Pm1, A, B, Pp2, d0, d1, d2, localT);
   }
   // ── Breathing ─────────────────────────────────────────────────────────
   // b rises 0→1→0 across the breath window of the cycle.
@@ -4251,6 +4286,10 @@ document.addEventListener('keydown',e=>{
 // nav, and the home banner shows, until each visitor opens the page
 // (tracked per-browser via localStorage).
 const UPDATES=[
+  { v:'2.4', date:'July 13, 2026', title:'SILK-SMOOTH MOTION', items:[
+    ['🌊','No more whip','every joint now follows a velocity-continuous curve through the keyframes, so the freestyle recovery flows over the top instead of snapping. The whole animation, every stroke, is smoother.'],
+    ['⏳','Relaxed recovery','the freestyle arm recovery was given more of the cycle, so it swings at a natural, unhurried pace.']
+  ]},
   { v:'2.3', date:'July 13, 2026', title:'REAL SWIMMERS, REAL SUITS', items:[
     ['🏊','Male & female swimmers','smooth, athletic human bodies replace the segmented mannequin — a male in a jammer and a female in a racing suit, in your stroke\'s color. One continuous body with soft natural bends at every joint.'],
     ['🎥','Easier study controls','step through stroke phases with the ⏮ ⏭ buttons or ← → arrow keys, hit Space to pause, and toggle Auto-Orbit to circle the swimmer hands-free.']
@@ -4383,3 +4422,4 @@ window.addEventListener('hashchange',()=>{
 </div>
 </body>
 </html>
+
