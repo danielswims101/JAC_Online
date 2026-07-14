@@ -631,16 +631,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="viz-btn" onclick="setView3D('three-quarter')">3/4 View</button>
   </div>
   <div class="viz-controls" style="margin-top:8px">
-    <button class="viz-btn active" id="vbtn-model-female" onclick="setHumanModel('female')">✨ Realistic</button>
-    <button class="viz-btn" id="vbtn-model-male" onclick="setHumanModel('male')">♂ Male (add avatar)</button>
-    <button class="viz-btn" id="vbtn-model-mannequin" onclick="setHumanModel('mannequin')">🤖 Mannequin</button>
+    <button class="viz-btn active" id="vbtn-sex-male" onclick="setBodySex('male',this)">♂ Male</button>
+    <button class="viz-btn" id="vbtn-sex-female" onclick="setBodySex('female',this)">♀ Female</button>
+    <button class="viz-btn" onclick="stepPhase3D(-1)">⏮ Phase</button>
+    <button class="viz-btn" onclick="stepPhase3D(1)">Phase ⏭</button>
+    <button class="viz-btn" id="vbtn-orbit" onclick="toggleAutoOrbit(this)">🎥 Auto-Orbit</button>
     <button class="viz-btn active" id="vbtn-play" onclick="togglePlay3D()">⏸ Pause</button>
     <button class="viz-btn" data-speed onclick="setSpeed3D(0.3,this)">0.3× Slow</button>
     <button class="viz-btn active" data-speed onclick="setSpeed3D(1,this)">1× Normal</button>
     <button class="viz-btn" data-speed onclick="setSpeed3D(2,this)">2× Fast</button>
     <button class="viz-btn active" id="vbtn-forces" onclick="toggleForces3D(this)">Forces: On</button>
   </div>
-  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px">🖱 Drag to orbit · Scroll to zoom · Tap a phase below to jump to it</p>
+  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px">🖱 Drag to orbit · Scroll to zoom · ← → step phases · Space play/pause · Tap a phase below to jump to it</p>
   <div id="human-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:4px;letter-spacing:0.3px"></div>
   <div class="force-legend">
     <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Drag</div>
@@ -2129,131 +2131,196 @@ function makeSegment(length, rTop, rBot, material, segments=14) {
   pivot.userData.mesh = mesh;
   return pivot;
 }
-function buildSwimmer(baseColor) {
-  const root = new THREE.Group(); // overall body translate/roll/undulate
-  // Wet-skin physical materials: clearcoat water film + caustics on the
-  // body; matte suit/cap in the stroke's theme color for contrast.
+// ═══════════════════════════════════════════════════════════════════════
+// PARAMETRIC SKINNED SWIMMER — one continuous human body per sex, bound to
+// a real skeleton. Vertices near each joint blend weights between the two
+// neighbouring bones (smoothstep), so elbows, knees, hips, waist and neck
+// bend SMOOTHLY — no segments, no ball joints. The suit is part of the same
+// mesh (separate material group), so it can never clip: male = jammer,
+// female = racing kneeskin, both in the stroke's theme color.
+function buildSwimmer(baseColor, sex) {
+  const F = (sex || 'male') === 'female';
+  const root = new THREE.Group();
+  // ---- skeleton (same joint layout the stroke engine already drives) ----
+  const B = n => { const b = new THREE.Bone(); b.name = n; return b; };
+  const hips = B('hips'); root.add(hips);
+  const spine = B('spine'); spine.position.set(0, 0.10, 0); hips.add(spine);
+  const neck = B('neck'); neck.position.set(0, 0.42, 0); spine.add(neck);
+  const SHX = F ? 0.175 : 0.20, HPX = F ? 0.10 : 0.115;
+  function mkArm(sgn) {
+    const shoulder = B('shoulder'); shoulder.position.set(sgn * SHX, 0.36, 0); spine.add(shoulder);
+    const elbow = B('elbow'); elbow.position.set(0, -0.30, 0); shoulder.add(elbow);
+    const wrist = B('wrist'); wrist.position.set(0, -0.27, 0); elbow.add(wrist);
+    return { shoulder, elbow, wrist };
+  }
+  function mkLeg(sgn) {
+    const hipJ = B('hipJ'); hipJ.position.set(sgn * HPX, -0.10, 0); hips.add(hipJ);
+    const knee = B('knee'); knee.position.set(0, -0.40, 0); hipJ.add(knee);
+    const ankle = B('ankle'); ankle.position.set(0, -0.38, 0); ankle.rotation.x = 1.15; knee.add(ankle);
+    return { hipJ, knee, ankle };
+  }
+  const armL = mkArm(1), armR = mkArm(-1), legL = mkLeg(1), legR = mkLeg(-1);
+  const bones = [hips, spine, neck,
+    armL.shoulder, armL.elbow, armL.wrist, armR.shoulder, armR.elbow, armR.wrist,
+    legL.hipJ, legL.knee, legL.ankle, legR.hipJ, legR.knee, legR.ankle];
+  const bHips=0,bSpine=1,bNeck=2,bShL=3,bElL=4,bShR=6,bElR=7,bHipL=9,bKneeL=10,bHipR=12,bKneeR=13;
+  // ---- materials: wet skin + matte suit ----
   const mat = toWetMaterial({ color: new THREE.Color(0xc9915f) }, null, false);
   const kit = toWetMaterial({ color: new THREE.Color(baseColor) }, null, true);
-  const matDim = kit; // swim cap
-  // ── Pelvis / hips (root of skeleton) — jammer-covered ──
-  const hips = new THREE.Group();
-  hips.position.set(0, 0, 0);
-  root.add(hips);
-  const pelvisGeo = new THREE.CylinderGeometry(0.155, 0.13, 0.22, 14);
-  const pelvisMesh = new THREE.Mesh(pelvisGeo, kit);
-  pelvisMesh.castShadow = true;
-  hips.add(pelvisMesh);
-  // ── Spine -> chest ──
-  const spine = makeSegment(0.42, 0.155, 0.19, mat, 16);
-  spine.position.set(0, 0.10, 0);
-  hips.add(spine);
-  // Anatomical shaping: chest/ribcage ellipsoid + upper-back (lat) taper
-  const chestGeo = new THREE.SphereGeometry(0.185, 20, 16);
-  chestGeo.scale(1.12, 1.28, 0.72);
-  const chest = new THREE.Mesh(chestGeo, mat);
-  chest.position.set(0, 0.30, 0.005);
-  chest.castShadow = true;
-  spine.add(chest);
-  const latGeo = new THREE.SphereGeometry(0.16, 18, 14);
-  latGeo.scale(1.25, 0.95, 0.6);
-  const lats = new THREE.Mesh(latGeo, mat);
-  lats.position.set(0, 0.16, -0.02);
-  lats.castShadow = true;
-  spine.add(lats);
-  // ── Neck -> head ──
-  const neck = makeSegment(0.10, 0.06, 0.075, mat, 10);
-  neck.position.set(0, 0.42, 0);
-  spine.add(neck);
-  const headGeo = new THREE.SphereGeometry(0.105, 18, 14);
+  mat.side = THREE.DoubleSide; kit.side = THREE.DoubleSide;
+  const matDim = kit;
+  // ---- geometry accumulator ----
+  const RAD = 20;
+  const pos = [], sIdx = [], sWt = [], ringMeta = [];
+  const faceSkin = [], faceSuit = [];
+  const smooth = t => { t = Math.min(1, Math.max(0, t)); return t * t * (3 - 2 * t); };
+  function addRing(cx, cy, cz, rx, rz, blend, suit) {
+    const startI = pos.length / 3;
+    const bA = blend[0], bB = blend[1] || [0, 0];
+    for (let i = 0; i < RAD; i++) {
+      const a = i / RAD * Math.PI * 2;
+      pos.push(cx + Math.cos(a) * rx, cy, cz + Math.sin(a) * rz);
+      sIdx.push(bA[0], bB[0], 0, 0);
+      sWt.push(bA[1], bB[1], 0, 0);
+    }
+    ringMeta.push({ start: startI, suit: !!suit });
+    return ringMeta.length - 1;
+  }
+  function stitch(r1, r2) {
+    const a = ringMeta[r1], b = ringMeta[r2];
+    const tgt = (a.suit && b.suit) ? faceSuit : faceSkin;
+    for (let i = 0; i < RAD; i++) {
+      const j = (i + 1) % RAD;
+      tgt.push(a.start + i, b.start + i, b.start + j);
+      tgt.push(a.start + i, b.start + j, a.start + j);
+    }
+  }
+  function capRing(r, up) {
+    const m = ringMeta[r];
+    let cx = 0, cy = 0, cz = 0;
+    for (let i = 0; i < RAD; i++) { cx += pos[(m.start + i) * 3]; cy += pos[(m.start + i) * 3 + 1]; cz += pos[(m.start + i) * 3 + 2]; }
+    const ci = pos.length / 3;
+    pos.push(cx / RAD, cy / RAD + (up ? 0.02 : -0.02), cz / RAD);
+    sIdx.push(sIdx[m.start * 4], sIdx[m.start * 4 + 1], 0, 0);
+    sWt.push(sWt[m.start * 4], sWt[m.start * 4 + 1], 0, 0);
+    const tgt = m.suit ? faceSuit : faceSkin;
+    for (let i = 0; i < RAD; i++) {
+      const j = (i + 1) % RAD;
+      if (up) tgt.push(m.start + i, m.start + j, ci);
+      else tgt.push(m.start + j, m.start + i, ci);
+    }
+  }
+  function tube(rings) {
+    for (let i = 0; i + 1 < rings.length; i++) stitch(rings[i], rings[i + 1]);
+  }
+  // ---- torso: hips → chest → base of neck (one smooth profile) ----
+  // rows: [y, halfWidth, forwardOffset]
+  const TP = F ? [
+    [-0.165,0.126,0],[-0.12,0.152,0],[-0.06,0.158,0],[0.00,0.145,0],[0.08,0.118,0],
+    [0.16,0.124,0],[0.22,0.134,0.004],[0.28,0.146,0.012],[0.34,0.148,0.012],
+    [0.40,0.136,0.006],[0.46,0.124,0],[0.505,0.104,0],[0.545,0.082,0],[0.585,0.064,0],[0.62,0.060,0]
+  ] : [
+    [-0.165,0.128,0],[-0.12,0.152,0],[-0.06,0.158,0],[0.00,0.150,0],[0.08,0.140,0],
+    [0.16,0.150,0],[0.24,0.163,0],[0.32,0.172,0],[0.40,0.168,0],[0.46,0.146,0],
+    [0.505,0.115,0],[0.545,0.082,0],[0.585,0.064,0],[0.62,0.060,0]
+  ];
+  const suitTorso = y => F ? (y <= 0.401) : (y <= 0.001);
+  const torsoRings = TP.map(row => {
+    const y = row[0];
+    // hips→spine blend through the waist, spine→neck blend at the collar
+    let blend;
+    if (y > 0.50) { const w = smooth((y - 0.50) / 0.10); blend = [[bSpine, 1 - w], [bNeck, w]]; }
+    else { const w = smooth((y - 0.02) / 0.22); blend = [[bHips, 1 - w], [bSpine, w]]; }
+    return addRing(0, y, row[2], row[1], row[1] * 0.64, blend, suitTorso(y));
+  });
+  tube(torsoRings);
+  capRing(torsoRings[0], false);
+  capRing(torsoRings[torsoRings.length - 1], true);
+  // ---- arms: shoulder → elbow → wrist, blended across the elbow ----
+  const AP = [[0.44,0.060],[0.36,0.056],[0.28,0.051],[0.22,0.048],[0.16,0.046],[0.10,0.044],[0.02,0.040],[-0.05,0.035],[-0.10,0.030]];
+  function buildArmTube(sgn, bSh, bEl) {
+    const rings = AP.map(row => {
+      const y = row[0];
+      const w = smooth((0.22 - y) / 0.12);
+      const r = row[1] * (F ? 0.92 : 1);
+      return addRing(sgn * SHX, y + 0.10, 0, r, r, [[bSh, 1 - w], [bEl, w]], false);
+    });
+    tube(rings);
+    capRing(rings[rings.length - 1], false);
+  }
+  buildArmTube(1, bShL, bElL);
+  buildArmTube(-1, bShR, bElR);
+  // ---- legs: hip → knee → ankle, blended at groin and knee ----
+  const LP = [[-0.06,0.104],[-0.14,0.100],[-0.22,0.094],[-0.30,0.085],[-0.38,0.076],[-0.46,0.068],[-0.52,0.064],[-0.58,0.070],[-0.66,0.068],[-0.74,0.056],[-0.82,0.046],[-0.87,0.040]];
+  const suitLeg = y => y >= -0.341;
+  function buildLegTube(sgn, bHip, bKnee) {
+    const rings = LP.map(row => {
+      const y = row[0];
+      let blend;
+      if (y > -0.18) { const w = smooth((-0.06 - y) / 0.12); blend = [[bHips, 1 - w], [bHip, w]]; }
+      else { const w = smooth((-0.44 - y) / 0.12); blend = [[bHip, 1 - w], [bKnee, w]]; }
+      const r = row[1] * (F ? 0.96 : 1);
+      return addRing(sgn * HPX, y, 0, r, r, blend, suitLeg(y));
+    });
+    tube(rings);
+    capRing(rings[rings.length - 1], false);
+  }
+  buildLegTube(1, bHipL, bKneeL);
+  buildLegTube(-1, bHipR, bKneeR);
+  // ---- assemble the skinned mesh ----
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(sIdx, 4));
+  geo.setAttribute('skinWeight', new THREE.Float32BufferAttribute(sWt, 4));
+  geo.setIndex(faceSkin.concat(faceSuit));
+  geo.addGroup(0, faceSkin.length, 0);
+  geo.addGroup(faceSkin.length, faceSuit.length, 1);
+  geo.computeVertexNormals();
+  const body = new THREE.SkinnedMesh(geo, [mat, kit]);
+  body.castShadow = true; body.receiveShadow = true;
+  body.frustumCulled = false; // skinned bounds don't track the pose
+  root.add(body);
+  root.updateMatrixWorld(true);
+  body.bind(new THREE.Skeleton(bones));
+  // ---- rigid parts riding on bones (head, cap, goggles, delts, hands, feet) ----
+  const headGeo = new THREE.SphereGeometry(0.105, 20, 16);
   headGeo.scale(0.92, 1.06, 1.0);
   const head = new THREE.Mesh(headGeo, mat);
   head.position.set(0, 0.16, 0.01);
   head.castShadow = true;
   neck.add(head);
-  // cap accent
-  const capGeo = new THREE.SphereGeometry(0.108, 18, 14, 0, Math.PI*2, 0, Math.PI*0.55);
+  const capGeo = new THREE.SphereGeometry(0.108, 20, 16, 0, Math.PI * 2, 0, Math.PI * 0.55);
   const cap = new THREE.Mesh(capGeo, matDim);
-  cap.position.copy(head.position);
-  cap.position.y += 0.012;
+  cap.position.copy(head.position); cap.position.y += 0.012;
   neck.add(cap);
-  // goggles
-  const goggleMat = new THREE.MeshStandardMaterial({color:0x041018, roughness:0.2, metalness:0.4});
-  const gL = new THREE.Mesh(new THREE.SphereGeometry(0.026,10,8), goggleMat);
-  gL.position.set(-0.04, 0.155, 0.085); gL.scale.set(1,1,0.6);
+  const goggleMat = new THREE.MeshStandardMaterial({ color: 0x041018, roughness: 0.2, metalness: 0.4 });
+  const gL = new THREE.Mesh(new THREE.SphereGeometry(0.026, 10, 8), goggleMat);
+  gL.position.set(-0.04, 0.155, 0.085); gL.scale.set(1, 1, 0.6);
   const gR = gL.clone(); gR.position.x = 0.04;
   neck.add(gL, gR);
-  // ── Shoulders + arms ──
-  function buildArm(side) {
-    const shoulder = new THREE.Group();
-    shoulder.position.set(side * 0.20, 0.36, 0);
-    spine.add(shoulder);
-    // Deltoid cap — rounds the shoulder into the torso
-    const deltGeo = new THREE.SphereGeometry(0.068, 14, 12);
-    deltGeo.scale(1.15, 1.2, 1.0);
-    const deltoid = new THREE.Mesh(deltGeo, mat);
-    deltoid.castShadow = true;
-    shoulder.add(deltoid);
-    const upperArm = makeSegment(0.30, 0.052, 0.044, mat, 12);
-    shoulder.add(upperArm);
-    const elbow = new THREE.Group();
-    elbow.position.set(0, -0.30, 0);
-    upperArm.add(elbow);
-    const forearm = makeSegment(0.27, 0.042, 0.034, mat, 12);
-    elbow.add(forearm);
-    const wrist = new THREE.Group();
-    wrist.position.set(0, -0.27, 0);
-    forearm.add(wrist);
+  [armL, armR].forEach(a => {
+    const deltGeo = new THREE.SphereGeometry(0.062, 16, 12);
+    deltGeo.scale(1.15, 1.25, 1.0);
+    const d = new THREE.Mesh(deltGeo, mat);
+    d.castShadow = true;
+    a.shoulder.add(d);
     const handGeo = new THREE.SphereGeometry(0.05, 12, 10);
     handGeo.scale(0.62, 1.35, 0.34);
     const hand = new THREE.Mesh(handGeo, mat);
     hand.position.set(0, -0.07, 0);
     hand.castShadow = true;
-    wrist.add(hand);
-    return { shoulder, upperArm, elbow, forearm, wrist, hand };
-  }
-  const armL = buildArm(1);
-  const armR = buildArm(-1);
-  // ── Hips joints + legs ──
-  function buildLeg(side) {
-    const hipJ = new THREE.Group();
-    hipJ.position.set(side * 0.115, -0.10, 0);
-    hips.add(hipJ);
-    const thigh = makeSegment(0.40, 0.10, 0.075, mat, 14);
-    hipJ.add(thigh);
-    // Jammer leg — kit-colored band over the upper thigh
-    const jammer = new THREE.Mesh(new THREE.CylinderGeometry(0.104, 0.088, 0.24, 14), kit);
-    jammer.position.set(0, -0.13, 0);
-    jammer.castShadow = true;
-    thigh.add(jammer);
-    const knee = new THREE.Group();
-    knee.position.set(0, -0.40, 0);
-    thigh.add(knee);
-    const shin = makeSegment(0.38, 0.07, 0.05, mat, 14);
-    knee.add(shin);
-    // Calf bulge — gives the lower leg an anatomical profile
-    const calfGeo = new THREE.SphereGeometry(0.062, 12, 10);
-    calfGeo.scale(0.95, 1.6, 1.0);
-    const calf = new THREE.Mesh(calfGeo, mat);
-    calf.position.set(0, -0.12, -0.02);
-    calf.castShadow = true;
-    shin.add(calf);
-    const ankle = new THREE.Group();
-    ankle.position.set(0, -0.38, 0);
-    // Plantarflexed ankle — toes point away behind the swimmer like a real
-    // streamlined kick, instead of standing-pose feet.
-    ankle.rotation.x = 1.15;
-    shin.add(ankle);
+    a.wrist.add(hand);
+    a.hand = hand;
+  });
+  [legL, legR].forEach(l => {
     const footGeo = new THREE.SphereGeometry(0.052, 12, 10);
     footGeo.scale(0.7, 0.4, 1.7);
     const foot = new THREE.Mesh(footGeo, mat);
     foot.position.set(0, -0.02, 0.07);
     foot.castShadow = true;
-    ankle.add(foot);
-    return { hipJ, thigh, knee, shin, ankle, foot };
-  }
-  const legL = buildLeg(1);
-  const legR = buildLeg(-1);
+    l.ankle.add(foot);
+    l.foot = foot;
+  });
   return { root, hips, spine, neck, head, armL, armR, legL, legR, mat, matDim };
 }
 // ═══════════════════════════════════════════════════════════════════════
@@ -2433,6 +2500,7 @@ function disposeObject3D(root) {
   root.traverse(o => {
     if (o.geometry) o.geometry.dispose();
     if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.dispose());
+    if (o.isSkinnedMesh && o.skeleton && o.skeleton.dispose) o.skeleton.dispose();
   });
 }
 function rebuildSwimmer(strokeKey) {
@@ -2441,7 +2509,7 @@ function rebuildSwimmer(strokeKey) {
     disposeObject3D(swimmer.root);
   }
   const sd = STROKES[strokeKey];
-  swimmer = buildSwimmer(sd.color);
+  swimmer = buildSwimmer(sd.color, currentBodySex);
   setBodyOrientation(!!sd.supine);
   swimmerOrient.add(swimmer.root);
   applyModelVisibility();
@@ -2467,12 +2535,12 @@ function rebuildSwimmer(strokeKey) {
 // full skeleton match with this engine). Add a male .glb via the steps
 // above and the Male button starts working automatically.
 const HUMAN_MODELS = {
-  female: { label:'Realistic', url:'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/models/gltf/Michelle.glb' },
+  female: { label:'Female', url:'' }, // ← e.g. 'media/swimmer-female.glb'
   male:   { label:'Male',      url:'' } // ← e.g. 'media/swimmer-male.glb'
 };
 const GLTF_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
 const humanRigs = { male:{state:'idle',rig:null}, female:{state:'idle',rig:null} };
-let currentHumanKey = 'female'; // 'female' | 'male' | 'mannequin'
+let currentHumanKey = 'mannequin'; // parametric swimmers are the default; GLTF avatars stay optional
 let gltfLoaderState = 'idle';
 function humanStatus(msg){ const el=document.getElementById('human-status'); if(el) el.textContent=msg; }
 function activeHumanRig(){
@@ -2946,6 +3014,26 @@ function togglePlay3D() {
     btn.classList.toggle('active', playing);
   }
 }
+let currentBodySex = 'male';
+function setBodySex(sex, btn) {
+  currentBodySex = sex;
+  if (viz3DInitialized) rebuildSwimmer(currentStroke);
+  document.querySelectorAll('[id^="vbtn-sex-"]').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+// Step to the previous/next stroke phase and pause there — for studying one
+// position at a time. Also bound to ←/→ arrow keys on the visualizer page.
+function stepPhase3D(d) {
+  const phases = STROKES[currentStroke].phases;
+  const idx = (currentPhaseInfo.idx + d + phases.length) % phases.length;
+  if (playing) togglePlay3D();
+  jumpToPhase3D(idx);
+}
+let autoOrbit = false, _orbitAxis = null;
+function toggleAutoOrbit(btn) {
+  autoOrbit = !autoOrbit;
+  if (btn) btn.classList.toggle('active', autoOrbit);
+}
 function setSpeed3D(s, btn) {
   speed = s;
   document.querySelectorAll('.viz-btn[data-speed]').forEach(b => b.classList.remove('active'));
@@ -3004,6 +3092,10 @@ function animate3D(){
     pointArrow(vizForceGroup.userData.lift,   hipY, _axPosY, physState.lift,   0.6);
     _netDir.set(physState.thrust - physState.drag, physState.lift*0.4, 0);
     pointArrow(vizForceGroup.userData.net,    hipY, _netDir.lengthSq()>0.001 ? _netDir : _axPosX, _netDir.length(), 1.3);
+  }
+  if (autoOrbit && controls.enabled) {
+    if (!_orbitAxis) _orbitAxis = new THREE.Vector3(0, 1, 0);
+    camera.position.sub(controls.target).applyAxisAngle(_orbitAxis, dt * 0.35).add(controls.target);
   }
   controls.update();
   renderer.render(scene, camera);
@@ -4144,6 +4236,14 @@ document.addEventListener('keydown',e=>{
   const typing=a&&(/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)||a.isContentEditable);
   if(e.key==='/'&&!typing){e.preventDefault();openPalette();return;}
   if(e.key==='Escape')closePalette();
+  // Visualizer study keys: ← → step phases, Space play/pause
+  const vizPage=document.getElementById('page-visualizer');
+  const cmdkOpen=document.getElementById('cmdk').classList.contains('open');
+  if(!typing && !cmdkOpen && vizPage && vizPage.classList.contains('active') && typeof stepPhase3D==='function'){
+    if(e.key==='ArrowLeft'){e.preventDefault();stepPhase3D(-1);}
+    else if(e.key==='ArrowRight'){e.preventDefault();stepPhase3D(1);}
+    else if(e.key===' '){e.preventDefault();togglePlay3D();}
+  }
 });
 // ─── WHAT'S NEW — self-updating changelog ─────
 // To ship an update: add ONE entry to the TOP of this array. Everything
@@ -4151,9 +4251,12 @@ document.addEventListener('keydown',e=>{
 // nav, and the home banner shows, until each visitor opens the page
 // (tracked per-browser via localStorage).
 const UPDATES=[
-  { v:'2.2', date:'July 13, 2026', title:'A REAL HUMAN IN THE POOL', items:[
-    ['🏊‍♀️','Realistic swimmer','the 3D lab now swims a fully textured, professionally rigged human — skin, face, hair — instead of the geometric mannequin. Same verified stroke mechanics, driven joint-by-joint, with the wet-skin water film and caustics on top.'],
-    ['⚙️','New 3D engine','the visualizer jumped from Three.js r128 to r160 — sharper lighting and color, and support for modern avatars. Want a male model too? Drop a Ready Player Me .glb into the repo and the Male button comes alive.']
+  { v:'2.3', date:'July 13, 2026', title:'REAL SWIMMERS, REAL SUITS', items:[
+    ['🏊','Male & female swimmers','smooth, athletic human bodies replace the segmented mannequin — a male in a jammer and a female in a racing suit, in your stroke\'s color. One continuous body with soft natural bends at every joint.'],
+    ['🎥','Easier study controls','step through stroke phases with the ⏮ ⏭ buttons or ← → arrow keys, hit Space to pause, and toggle Auto-Orbit to circle the swimmer hands-free.']
+  ]},
+  { v:'2.2', date:'July 13, 2026', title:'NEW 3D ENGINE', items:[
+    ['⚙️','Three.js r128 → r160','sharper lighting and color in the visualizer, plus support for modern rigged avatars (drop a Ready Player Me .glb into the repo to swim your own).']
   ]},
   { v:'2.1', date:'July 13, 2026', title:'GOALS, MEETS & THIS PAGE', items:[
     ['🎯','Goal times','every event on My PRs now has a goal field beside your PR, with a live readout of exactly how many seconds stand between you and it — and a green check the day you beat it.'],
