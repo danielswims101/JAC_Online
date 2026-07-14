@@ -389,6 +389,31 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .tempo-display{font-family:var(--fh);font-size:5rem;color:var(--cyan);letter-spacing:2px;line-height:1;text-align:center;margin-top:0.5rem}
 .tempo-pulse{width:18px;height:18px;border-radius:50%;background:var(--cyan);margin:1rem auto;opacity:0.22;transition:opacity 0.05s}
 .tempo-pulse.on{opacity:1;box-shadow:0 0 24px var(--cyan)}
+/* WHAT'S NEW */
+.upd{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.6rem;margin-bottom:1.25rem}
+.upd.latest{border-color:var(--border);box-shadow:0 0 40px rgba(0,212,255,0.06)}
+.upd-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:1rem}
+.upd-v{font-family:var(--fh);font-size:1.6rem;color:var(--cyan);letter-spacing:1px}
+.upd-title{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px}
+.upd-date{margin-left:auto;font-family:var(--fm);font-size:0.62rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase}
+.upd ul{list-style:none}
+.upd ul li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border2);font-size:0.87rem;color:var(--white2);line-height:1.7}
+.upd ul li:last-child{border-bottom:none}
+.upd ul li strong{color:var(--white)}
+.upd-ico{flex-shrink:0}
+.new-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);margin-left:5px;vertical-align:middle}
+#update-banner{background:linear-gradient(90deg,rgba(0,212,255,0.12),rgba(168,85,247,0.10));border:1px solid var(--border);border-radius:var(--r12);padding:0.9rem 1.25rem;display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:2.5rem}
+#update-banner span{font-size:0.88rem;color:var(--white2)}
+#update-banner strong{color:var(--cyan)}
+/* GOAL TIMES */
+.goal-row{display:flex;align-items:center;gap:6px;margin-top:7px;justify-content:center;flex-wrap:wrap}
+.goal-lbl{font-family:var(--fm);font-size:0.52rem;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;flex-shrink:0}
+.goal-input{background:var(--navy2);border:1px solid var(--border2);border-radius:5px;padding:3px 6px;color:var(--gold);font-family:var(--fm);font-size:0.72rem;width:64px;text-align:center;outline:none;transition:border-color 0.2s}
+.goal-input:focus{border-color:var(--gold)}
+.goal-input::placeholder{color:var(--white4)}
+.goal-chip{font-family:var(--fm);font-size:0.56rem;letter-spacing:0.5px;white-space:nowrap}
+.goal-chip.gap{color:var(--gold)}
+.goal-chip.hit{color:var(--green)}
 /* RESPONSIVE */
 @media(max-width:768px){
   nav{height:52px}
@@ -436,6 +461,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="nav-scroll">
     <ul class="nav-links">
       <li><a href="#home" id="nav-home" class="active">Home</a></li>
+      <li><a href="#whatsnew" id="nav-whatsnew">What's New<span class="new-dot" id="nav-new-dot" style="display:none"></span></a></li>
       <li><a href="#technique" id="nav-technique">Technique</a></li>
       <li><a href="#videos" id="nav-videos">Videos</a></li>
       <li><a href="#sets" id="nav-sets">Sets</a></li>
@@ -479,12 +505,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="hero-stats">
     <div class="hstat"><span class="hstat-val">3D</span><span class="hstat-lbl">Force Visualizer</span></div>
     <div class="hstat"><span class="hstat-val">AI</span><span class="hstat-lbl">Live Coaching</span></div>
-    <div class="hstat"><span class="hstat-val">18</span><span class="hstat-lbl">Sections</span></div>
+    <div class="hstat"><span class="hstat-val">19</span><span class="hstat-lbl">Sections</span></div>
     <div class="hstat"><span class="hstat-val">∞</span><span class="hstat-lbl">Workouts</span></div>
   </div>
-  <p style="position:relative;margin-top:2.5rem;font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white4);text-transform:uppercase">Press <span style="color:var(--cyan);border:1px solid var(--border);border-radius:4px;padding:2px 7px">⌘K</span> or <span style="color:var(--cyan);border:1px solid var(--border);border-radius:4px;padding:2px 7px">/</span> to search everything</p>
+  <div id="home-meet-chip" style="position:relative;margin-top:1.75rem;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase"></div>
+  <p style="position:relative;margin-top:1.25rem;font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white4);text-transform:uppercase">Press <span style="color:var(--cyan);border:1px solid var(--border);border-radius:4px;padding:2px 7px">⌘K</span> or <span style="color:var(--cyan);border:1px solid var(--border);border-radius:4px;padding:2px 7px">/</span> to search everything</p>
 </div>
 <div class="section-wrap">
+  <div id="update-banner">
+    <span id="update-banner-text"></span>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn-sm" onclick="showPage('whatsnew')">See what's new →</button>
+      <button onclick="markUpdatesSeen()" title="Dismiss" style="background:none;border:none;color:var(--white3);font-size:1.1rem;cursor:pointer;padding:4px">✕</button>
+    </div>
+  </div>
   <div class="metrics-row reveal">
     <div class="metric-card"><span class="val">AeT</span><span class="lbl">Primary Zone</span><span class="sub">2–3 mmol lactate</span></div>
     <div class="metric-card"><span class="val">15m</span><span class="lbl">UW Every Wall</span><span class="sub">Legal maximum</span></div>
@@ -535,7 +569,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <footer>
   <div class="footer-inner">
     <div class="footer-brand"><h3>SWIM<span>IQ</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
-    <div class="footer-col"><h4>Learn</h4><ul><li onclick="showPage('technique')">Technique Library</li><li onclick="showPage('videos')">Video Library</li><li onclick="showPage('sets')">Training Sets</li><li onclick="showPage('zones')">Training Zones</li></ul></div>
+    <div class="footer-col"><h4>Learn</h4><ul><li onclick="showPage('whatsnew')">What's New</li><li onclick="showPage('technique')">Technique Library</li><li onclick="showPage('videos')">Video Library</li><li onclick="showPage('sets')">Training Sets</li><li onclick="showPage('zones')">Training Zones</li></ul></div>
     <div class="footer-col"><h4>Train</h4><ul><li onclick="showPage('workouts')">Workout Generator</li><li onclick="showPage('tempo')">Tempo Trainer</li><li onclick="showPage('dryland')">Dryland</li><li onclick="showPage('log')">Training Log</li><li onclick="showPage('profile')">My PRs</li></ul></div>
     <div class="footer-col"><h4>Compete</h4><ul><li onclick="showPage('race')">Race Strategy</li><li onclick="showPage('nutrition')">Nutrition</li><li onclick="showPage('mental')">Mental Performance</li><li onclick="showPage('taper')">Taper Protocol</li></ul></div>
   </div>
@@ -1439,6 +1473,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="section-eyebrow">Time-Aware</div>
   <div class="section-title">SEASON & <span>MEET CALENDAR</span></div>
   <p class="section-intro">Reads today's date to tell you where you are in the swim season — short course or long course, and what's coming up on the national calendar.</p>
+  <div id="my-meet-card" style="background:var(--card);border:1px solid rgba(245,166,35,0.3);border-radius:var(--r16);padding:1.75rem;margin-bottom:1.5rem">
+    <div class="section-eyebrow" style="color:var(--gold)">My Next Meet</div>
+    <div id="meet-count-display" style="font-family:var(--fh);font-size:2.2rem;letter-spacing:1px;margin-bottom:1rem;line-height:1.1">No meet set yet</div>
+    <div class="gen-row" style="margin-bottom:0.75rem">
+      <div class="form-group"><label>Meet Name</label><input class="form-input" id="meet-name" maxlength="60" placeholder="e.g. Summer Champs"></div>
+      <div class="form-group"><label>First Race Day</label><input class="form-input" id="meet-date" type="date"></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn-sm" onclick="saveMeet()">Save Meet</button>
+      <button class="btn-ghost-sm" onclick="clearMeet()">Clear</button>
+    </div>
+    <p id="meet-taper-hint" style="font-size:0.8rem;color:var(--white3);margin-top:0.75rem;line-height:1.6"></p>
+  </div>
   <div id="season-now-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:1.75rem;margin-bottom:1.5rem">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1rem">
       <div>
@@ -1485,6 +1532,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </div>
   <div class="info-box" style="margin-top:1.5rem"><strong>Want your specific cut?</strong> Ask the AI Coach for help interpreting the standard once you've pulled your event, age, and gender from the official PDF — it can help you build a season plan around it, but it won't guess at the number itself.</div>
+</div>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
+</div>
+<!-- WHAT'S NEW PAGE — rendered from the UPDATES array; ship a new version
+     by adding one entry at the TOP of UPDATES and the nav dot + home banner
+     light up automatically until each visitor has seen it. -->
+<div class="page" id="page-whatsnew">
+<div class="section-wrap narrow">
+  <div class="section-eyebrow">Always Improving</div>
+  <div class="section-title">WHAT'S <span>NEW</span></div>
+  <p class="section-intro">Every update to SwimIQ Pro, newest first. This page keeps itself current — when a new version ships, the gold dot lights up in the nav until you've read about it here.</p>
+  <div id="updates-timeline"></div>
 </div>
 <footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
@@ -1789,6 +1848,13 @@ function showPage(name){
   }
   if (name === 'log' && typeof renderLog === 'function') {
     renderLog(); // redraws the volume chart now that the canvas has a width
+  }
+  if (name === 'whatsnew' && typeof renderWhatsNew === 'function') {
+    renderWhatsNew();
+    markUpdatesSeen(); // reading the page clears the NEW dot and banner
+  }
+  if ((name === 'season' || name === 'home') && typeof renderMeet === 'function') {
+    renderMeet();
   }
   if (page && location.hash !== '#'+name) {
     try { history.pushState(null, '', '#'+name); } catch(e) { location.hash = name; }
@@ -3691,11 +3757,26 @@ function buildPRGrid(stroke){
   grid.innerHTML='';
   PR_EVENTS[stroke].forEach(event=>{
     const key='pr_'+event.replace(/ /g,'_');
+    const gkey='goal_'+key;
     const saved=localStorage.getItem(key)||'';
+    const goal=localStorage.getItem(gkey)||'';
     const item=document.createElement('div'); item.className='pr-item';
-    item.innerHTML=`<span class="pr-event">${event}</span><input class="pr-input" placeholder="—" maxlength="12" value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value)">`;
+    item.innerHTML=`<span class="pr-event">${event}</span>
+      <input class="pr-input" placeholder="—" maxlength="12" value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value);updateGoalChip('${key}')">
+      <div class="goal-row"><span class="goal-lbl">Goal</span><input class="goal-input" placeholder="target" maxlength="12" value="${escapeHTML(goal)}" oninput="savePR('${gkey}',this.value);updateGoalChip('${key}')"><span class="goal-chip" id="chip-${key}"></span></div>`;
     grid.appendChild(item);
   });
+  PR_EVENTS[stroke].forEach(event=>updateGoalChip('pr_'+event.replace(/ /g,'_')));
+}
+// Live gap readout between a PR and its goal — updates as either is typed
+function updateGoalChip(key){
+  const chip=document.getElementById('chip-'+key); if(!chip)return;
+  const pr=parseTime(localStorage.getItem(key)||'');
+  const goal=parseTime(localStorage.getItem('goal_'+key)||'');
+  if(!pr||!goal){chip.textContent='';chip.className='goal-chip';return;}
+  const d=pr-goal;
+  if(d<=0){chip.textContent='✓ goal beaten';chip.className='goal-chip hit';}
+  else{chip.textContent=d.toFixed(1)+'s to go';chip.className='goal-chip gap';}
 }
 function savePR(key,value){ localStorage.setItem(key,value); }
 function saveName(){
@@ -3705,7 +3786,10 @@ function saveName(){
 }
 function clearAllPRs(){
   if(!confirm('Clear all PRs?')) return;
-  Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>localStorage.removeItem('pr_'+e.replace(/ /g,'_'))));
+  Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>{
+    localStorage.removeItem('pr_'+e.replace(/ /g,'_'));
+    localStorage.removeItem('goal_pr_'+e.replace(/ /g,'_'));
+  }));
   Object.keys(PR_EVENTS).forEach(s=>buildPRGrid(s));
 }
 function initProfile(){
@@ -3721,12 +3805,14 @@ initProfile();
 // (PRs + name + training log); Import restores it, with the same length
 // caps the normal inputs enforce so a hand-edited file can't overflow.
 function exportData(){
-  const data={app:'SwimIQ Pro',version:2,exported:new Date().toISOString(),
-    name:localStorage.getItem('swimmer_name')||'',log:readLog(),prs:{}};
+  const data={app:'SwimIQ Pro',version:3,exported:new Date().toISOString(),
+    name:localStorage.getItem('swimmer_name')||'',log:readLog(),prs:{},meet:readMeet()};
   Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>{
-    const k='pr_'+e.replace(/ /g,'_');
-    const v=localStorage.getItem(k);
-    if(v)data.prs[k]=v;
+    ['pr_','goal_pr_'].forEach(pref=>{
+      const k=pref+e.replace(/ /g,'_');
+      const v=localStorage.getItem(k);
+      if(v)data.prs[k]=v;
+    });
   }));
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');
@@ -3743,12 +3829,13 @@ function importData(ev){
       const d=JSON.parse(r.result);
       if(!d||typeof d!=='object') throw new Error('not an object');
       if(d.prs&&typeof d.prs==='object')Object.keys(d.prs).forEach(k=>{
-        if(k.startsWith('pr_'))localStorage.setItem(k,String(d.prs[k]).slice(0,12));
+        if(k.startsWith('pr_')||k.startsWith('goal_pr_'))localStorage.setItem(k,String(d.prs[k]).slice(0,12));
       });
+      if(d.meet&&typeof d.meet==='object'&&d.meet.date)localStorage.setItem('swimiq_meet',JSON.stringify({name:String(d.meet.name||'').slice(0,60),date:String(d.meet.date).slice(0,10)}));
       if(typeof d.name==='string')localStorage.setItem('swimmer_name',d.name.slice(0,30));
       if(Array.isArray(d.log))localStorage.setItem('swimiq_log',JSON.stringify(d.log.slice(0,100)));
-      initProfile();renderLog();
-      alert('Backup imported ✓ — PRs, name, and training log restored.');
+      initProfile();renderLog();renderMeet();
+      alert('Backup imported ✓ — PRs, goals, name, meet, and training log restored.');
     }catch(e){alert('That file isn\'t a valid SwimIQ backup.');}
   };
   r.readAsText(f);
@@ -3974,6 +4061,8 @@ const CMDK_ITEMS=[
   ['CSS — Critical Swim Speed Calculator','Tool',()=>gotoTab('calculator','c-css')],
   ['Pool Format Converter (SCY / SCM / LCM)','Tool',()=>gotoTab('calculator','c-convert')],
   ['Export / Import Backup','Tool',()=>showPage('profile')],
+  ['What\'s New — latest updates','Page',()=>showPage('whatsnew')],
+  ['My Next Meet — countdown','Tool',()=>showPage('season')],
   ['Freestyle — High Elbow Catch','Technique',()=>gotoTab('technique','t-fr')],
   ['Backstroke Technique','Technique',()=>gotoTab('technique','t-bk')],
   ['Breaststroke — 2k1 Scull & Kick','Technique',()=>gotoTab('technique','t-br')],
@@ -4039,6 +4128,115 @@ document.addEventListener('keydown',e=>{
   if(e.key==='/'&&!typing){e.preventDefault();openPalette();return;}
   if(e.key==='Escape')closePalette();
 });
+// ─── WHAT'S NEW — self-updating changelog ─────
+// To ship an update: add ONE entry to the TOP of this array. Everything
+// else is automatic — the page re-renders, the gold NEW dot appears in the
+// nav, and the home banner shows, until each visitor opens the page
+// (tracked per-browser via localStorage).
+const UPDATES=[
+  { v:'2.1', date:'July 13, 2026', title:'GOALS, MEETS & THIS PAGE', items:[
+    ['🎯','Goal times','every event on My PRs now has a goal field beside your PR, with a live readout of exactly how many seconds stand between you and it — and a green check the day you beat it.'],
+    ['🏁','My Next Meet countdown','set your next meet on the Season page and the site counts down to race day on the home page too, with taper-window hints as it gets close.'],
+    ['🆕','This page','a living changelog. When an update ships, the gold dot lights up in the nav until you\'ve read it. Backups now also include goals and your meet.']
+  ]},
+  { v:'2.0', date:'July 13, 2026', title:'THE BIG ONE', items:[
+    ['⌘','Command palette','press ⌘K or / anywhere and search the entire platform — every page, tool, technique topic, and injury guide.'],
+    ['⏱','Tempo Trainer','a sample-accurate stroke-rate metronome with SPM and seconds-per-stroke modes, accent beats, and target rates for every stroke.'],
+    ['📈','CSS calculator','enter a 400 and a 200 time trial, get your Critical Swim Speed with four derived training zones and a benchmark set.'],
+    ['🔗','Real page links','every section is deep-linkable (#tempo, #calculator…) and the browser back button finally works.'],
+    ['📊','Weekly volume chart','the Training Log draws your last 8 weeks of kilometres, current week highlighted.'],
+    ['💾','Backup & restore','export all your PRs and training log as one file; import it on any device.']
+  ]},
+  { v:'1.0', date:'The original', title:'THE FOUNDATION', items:[
+    ['🏊','The platform','17 sections — technique library, videos, 3D stroke visualizer, AI coach, workout generator, calculators, training zones, dryland, nutrition, race strategy, taper, mental performance, injury prevention, season calendar, PRs, and the training log.']
+  ]}
+];
+const LATEST_VERSION=UPDATES[0].v;
+function renderWhatsNew(){
+  const c=document.getElementById('updates-timeline'); if(!c)return;
+  c.innerHTML=UPDATES.map((u,i)=>`
+    <div class="upd ${i===0?'latest':''}">
+      <div class="upd-head">
+        <span class="upd-v">v${u.v}</span>
+        <span class="upd-title">${u.title}</span>
+        ${i===0?'<span class="badge cyan" style="margin:0">Latest</span>':''}
+        <span class="upd-date">${u.date}</span>
+      </div>
+      <ul>${u.items.map(it=>`<li><span class="upd-ico">${it[0]}</span><div><strong>${it[1]}</strong> — ${it[2]}</div></li>`).join('')}</ul>
+    </div>`).join('');
+}
+function updateNewDot(){
+  const unseen=localStorage.getItem('swimiq_seen_version')!==LATEST_VERSION;
+  const dot=document.getElementById('nav-new-dot');
+  if(dot)dot.style.display=unseen?'inline-block':'none';
+  const banner=document.getElementById('update-banner');
+  if(banner){
+    banner.style.display=unseen?'flex':'none';
+    const t=document.getElementById('update-banner-text');
+    if(t)t.innerHTML='🚀 <strong>SwimIQ Pro v'+LATEST_VERSION+'</strong> just landed — '+escapeHTML(UPDATES[0].title.toLowerCase())+'.';
+  }
+}
+function markUpdatesSeen(){
+  localStorage.setItem('swimiq_seen_version',LATEST_VERSION);
+  updateNewDot();
+}
+updateNewDot();
+// ─── MY NEXT MEET — countdown ─────────────────
+function readMeet(){
+  try{
+    const m=JSON.parse(localStorage.getItem('swimiq_meet')||'null');
+    return (m&&typeof m==='object'&&m.date)?m:null;
+  }catch(e){return null;}
+}
+function saveMeet(){
+  const name=(document.getElementById('meet-name').value||'').trim().slice(0,60);
+  const date=document.getElementById('meet-date').value;
+  if(!date){alert('Pick the first race day.');return;}
+  localStorage.setItem('swimiq_meet',JSON.stringify({name:name||'My Meet',date}));
+  renderMeet();
+}
+function clearMeet(){
+  localStorage.removeItem('swimiq_meet');
+  const n=document.getElementById('meet-name'); if(n)n.value='';
+  const d=document.getElementById('meet-date'); if(d)d.value='';
+  renderMeet();
+}
+function renderMeet(){
+  const m=readMeet();
+  const disp=document.getElementById('meet-count-display');
+  const hint=document.getElementById('meet-taper-hint');
+  const chip=document.getElementById('home-meet-chip');
+  let days=null;
+  if(m){
+    const t=new Date(m.date+'T00:00:00'); t.setHours(0,0,0,0);
+    const today=new Date(); today.setHours(0,0,0,0);
+    days=Math.round((t-today)/86400000);
+  }
+  if(disp){
+    if(!m)disp.textContent='No meet set yet';
+    else if(days>1)disp.innerHTML=escapeHTML(m.name.toUpperCase())+' — <span style="color:var(--gold)">'+days+' DAYS OUT</span>';
+    else if(days===1)disp.innerHTML=escapeHTML(m.name.toUpperCase())+' — <span style="color:var(--gold)">TOMORROW</span>';
+    else if(days===0)disp.innerHTML=escapeHTML(m.name.toUpperCase())+' — <span style="color:var(--green)">RACE DAY</span>';
+    else disp.innerHTML=escapeHTML(m.name.toUpperCase())+' — <span style="color:var(--white3)">'+(-days)+' days ago</span>';
+  }
+  if(hint){
+    if(!m)hint.textContent='Set it and the whole site counts down with you — including the home page.';
+    else if(days>21)hint.textContent='Deep in training — build the base now, sharpen later.';
+    else if(days>7)hint.textContent='Inside a typical taper window for sprinters — check the Taper page for the week-by-week volume drop.';
+    else if(days>2)hint.textContent='Final week: volume way down, race-pace touches daily, sleep like it\'s your job.';
+    else if(days>=0)hint.textContent='The work is done. Warm up properly, two focus cues max, and race.';
+    else hint.textContent='Meet\'s done — log your results in the Training Log and set the next target.';
+  }
+  if(chip){
+    if(m&&days>1)chip.innerHTML='🏁 '+escapeHTML(m.name)+' — '+days+' days out';
+    else if(m&&days===1)chip.innerHTML='🏁 '+escapeHTML(m.name)+' — tomorrow';
+    else if(m&&days===0)chip.innerHTML='🏁 '+escapeHTML(m.name)+' — race day!';
+    else chip.innerHTML='';
+  }
+  const n=document.getElementById('meet-name'); if(n&&m&&!n.value)n.value=m.name;
+  const d=document.getElementById('meet-date'); if(d&&m&&!d.value)d.value=m.date;
+}
+renderMeet();
 // ─── HASH ROUTING BOOTSTRAP ───────────────────
 // Back/forward buttons and hand-typed hashes route through showPage; the
 // guard inside showPage prevents this from pushing duplicate history.
