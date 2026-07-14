@@ -22,6 +22,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
 <script>
 // Minimal OrbitControls implementation compatible with THREE r128 (UMD global build).
 // Supports: left-drag orbit, scroll-wheel zoom, damping. No pan (not needed here).
@@ -628,8 +631,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="viz-btn" onclick="setView3D('three-quarter')">3/4 View</button>
   </div>
   <div class="viz-controls" style="margin-top:8px">
-    <button class="viz-btn active" id="vbtn-model-male" onclick="setHumanModel('male')">♂ Male</button>
-    <button class="viz-btn" id="vbtn-model-female" onclick="setHumanModel('female')">♀ Female</button>
+    <button class="viz-btn active" id="vbtn-model-female" onclick="setHumanModel('female')">✨ Realistic</button>
+    <button class="viz-btn" id="vbtn-model-male" onclick="setHumanModel('male')">♂ Male (add avatar)</button>
     <button class="viz-btn" id="vbtn-model-mannequin" onclick="setHumanModel('mannequin')">🤖 Mannequin</button>
     <button class="viz-btn active" id="vbtn-play" onclick="togglePlay3D()">⏸ Pause</button>
     <button class="viz-btn" data-speed onclick="setSpeed3D(0.3,this)">0.3× Slow</button>
@@ -1975,7 +1978,9 @@ function initViz3D() {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.outputEncoding = THREE.sRGBEncoding;
+  if ('outputColorSpace' in renderer) renderer.outputColorSpace = THREE.SRGBColorSpace;
+  else renderer.outputEncoding = THREE.sRGBEncoding;
+  if ('useLegacyLights' in renderer) renderer.useLegacyLights = true; // keep the scene's tuned light levels
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
   renderer.setClearColor(0x040d18, 1);
@@ -2457,15 +2462,17 @@ function rebuildSwimmer(strokeKey) {
 //   2. Download each as .glb into a /media folder in your repo, named
 //      swimmer-male.glb and swimmer-female.glb.
 //   3. Point the two urls below at them, e.g. 'media/swimmer-male.glb'.
-// Until then MALE uses the Three.js demo human (Xbot) so the feature works
-// out of the box, and FEMALE politely asks for its file.
+// Out of the box the swimmer is Michelle — a realistic, fully textured,
+// professionally rigged human from the official three.js examples (verified
+// full skeleton match with this engine). Add a male .glb via the steps
+// above and the Male button starts working automatically.
 const HUMAN_MODELS = {
-  male:   { label:'Male',   url:'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/models/gltf/Xbot.glb' },
-  female: { label:'Female', url:'' } // ← e.g. 'media/swimmer-female.glb'
+  female: { label:'Realistic', url:'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/models/gltf/Michelle.glb' },
+  male:   { label:'Male',      url:'' } // ← e.g. 'media/swimmer-male.glb'
 };
 const GLTF_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
 const humanRigs = { male:{state:'idle',rig:null}, female:{state:'idle',rig:null} };
-let currentHumanKey = 'male'; // 'male' | 'female' | 'mannequin'
+let currentHumanKey = 'female'; // 'female' | 'male' | 'mannequin'
 let gltfLoaderState = 'idle';
 function humanStatus(msg){ const el=document.getElementById('human-status'); if(el) el.textContent=msg; }
 function activeHumanRig(){
@@ -2500,8 +2507,8 @@ function loadHumanModel(key){
   });
 }
 function loadHumanModels(){
-  loadHumanModel('male');
   if (HUMAN_MODELS.female.url) loadHumanModel('female');
+  if (HUMAN_MODELS.male.url) loadHumanModel('male');
 }
 function findBone(root, suffix){
   let hit = null;
@@ -3021,16 +3028,26 @@ function startViz3D() {
   lastTime3D = performance.now();
   animate3D();
 }
-function ensureViz3DReady() {
+async function ensureViz3DReady() {
   if (viz3DInitialized) { resizeViz3D(); return; }
   if (window.THREE) { startViz3D(); return; }
   if (threeLoading) return;
   threeLoading = true;
-  const s = document.createElement('script');
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-  s.onload = function(){ installOrbitControls(); startViz3D(); };
-  s.onerror = function(){ threeLoading = false; };
-  document.head.appendChild(s);
+  try {
+    // Modern module three.js (r160) via the import map in <head>. The module
+    // namespace object is frozen, so copy it into a plain object — the rest
+    // of this file keeps using the THREE.* global exactly as before.
+    const mod = await import('three');
+    window.THREE = Object.assign({}, mod);
+    installOrbitControls();
+    const gltf = await import('three/addons/loaders/GLTFLoader.js');
+    THREE.GLTFLoader = gltf.GLTFLoader;
+    gltfLoaderState = 'ready';
+    startViz3D();
+  } catch (e) {
+    threeLoading = false;
+    humanStatus('3D engine failed to load — check your connection and reopen this page.');
+  }
 }
 // ─── AI-GENERATED STROKE DEMO CLIPS (drop-in slots) ──────────────────────
 // When your AI-generated clips are ready (full plan, prompts and encoding
@@ -4134,6 +4151,10 @@ document.addEventListener('keydown',e=>{
 // nav, and the home banner shows, until each visitor opens the page
 // (tracked per-browser via localStorage).
 const UPDATES=[
+  { v:'2.2', date:'July 13, 2026', title:'A REAL HUMAN IN THE POOL', items:[
+    ['🏊‍♀️','Realistic swimmer','the 3D lab now swims a fully textured, professionally rigged human — skin, face, hair — instead of the geometric mannequin. Same verified stroke mechanics, driven joint-by-joint, with the wet-skin water film and caustics on top.'],
+    ['⚙️','New 3D engine','the visualizer jumped from Three.js r128 to r160 — sharper lighting and color, and support for modern avatars. Want a male model too? Drop a Ready Player Me .glb into the repo and the Male button comes alive.']
+  ]},
   { v:'2.1', date:'July 13, 2026', title:'GOALS, MEETS & THIS PAGE', items:[
     ['🎯','Goal times','every event on My PRs now has a goal field beside your PR, with a live readout of exactly how many seconds stand between you and it — and a green check the day you beat it.'],
     ['🏁','My Next Meet countdown','set your next meet on the Season page and the site counts down to race day on the home page too, with taper-window hints as it gets close.'],
