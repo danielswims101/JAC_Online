@@ -3772,7 +3772,7 @@ function calcPaceZones(){
   let html='<div class="table-wrap"><table class="data-table"><thead><tr><th>Zone</th><th>Per 100m</th><th>Per 50m</th><th>Notes</th></tr></thead><tbody>';
   zones.forEach(z=>{
     const fast=t*z.pct[0], slow=t*z.pct[1];
-    html+=`<tr><td style="color:${z.color}">${z.name}</td><td>${formatTime(fast*2)}–${formatTime(slow*2)}</td><td>${formatTime(fast)}–${formatTime(slow)}</td><td style="color:var(--white3);font-size:0.76rem">${z.desc}</td></tr>`;
+    html+=`<tr><td style="color:${z.color}">${z.name}</td><td>${formatTime(fast)}–${formatTime(slow)}</td><td>${formatTime(fast/2)}–${formatTime(slow/2)}</td><td style="color:var(--white3);font-size:0.76rem">${z.desc}</td></tr>`;
   });
   html+='</tbody></table></div>';
   document.getElementById('pace-result').innerHTML=html;
