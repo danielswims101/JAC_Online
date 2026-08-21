@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tidelyne — Elite Swimming Platform</title>
+<title>SwimIQ Pro — Elite Swimming Platform</title>
 <meta name="description" content="Free swimming training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition, and mental performance.">
-<meta property="og:title" content="Tidelyne — Elite Swimming Platform">
+<meta property="og:title" content="SwimIQ Pro — Elite Swimming Platform">
 <meta property="og:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator, race strategy, nutrition, and mental performance — free for competitive swimmers.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://danielswims101.github.io/JAC_Online/">
 <link rel="canonical" href="https://danielswims101.github.io/JAC_Online/">
 <meta name="theme-color" content="#040d18">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tidelyne — Elite Swimming Platform">
+<meta name="twitter:title" content="SwimIQ Pro — Elite Swimming Platform">
 <meta name="twitter:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator and more for competitive swimmers.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8F%8A%3C/text%3E%3C/svg%3E">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition and mental performance."}
+{"@context":"https://schema.org","@type":"WebSite","name":"SwimIQ Pro","url":"https://danielswims101.github.io/JAC_Online/","description":"Training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition and mental performance."}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -443,7 +443,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <div class="noise"></div>
 <!-- NAV -->
 <nav>
-  <div class="nav-brand" onclick="showPage('home')">TIDE<span>LYNE</span></div>
+  <div class="nav-brand" onclick="showPage('home')">SWIM<span>IQ</span> <span style="font-size:0.65rem;color:var(--gold);font-family:var(--fm);letter-spacing:2px">PRO</span></div>
   <div class="nav-scroll">
     <ul class="nav-links">
       <li><a onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
@@ -538,12 +538,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </div>
 <footer>
   <div class="footer-inner">
-    <div class="footer-brand"><h3>TIDE<span>LYNE</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
+    <div class="footer-brand"><h3>SWIM<span>IQ</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
     <div class="footer-col"><h4>Learn</h4><ul><li onclick="showPage('technique')">Technique Library</li><li onclick="showPage('videos')">Video Library</li><li onclick="showPage('sets')">Training Sets</li><li onclick="showPage('zones')">Training Zones</li></ul></div>
     <div class="footer-col"><h4>Train</h4><ul><li onclick="showPage('workouts')">Workout Generator</li><li onclick="showPage('dryland')">Dryland</li><li onclick="showPage('log')">Training Log</li><li onclick="showPage('profile')">My PRs</li></ul></div>
     <div class="footer-col"><h4>Compete</h4><ul><li onclick="showPage('race')">Race Strategy</li><li onclick="showPage('nutrition')">Nutrition</li><li onclick="showPage('mental')">Mental Performance</li><li onclick="showPage('taper')">Taper Protocol</li></ul></div>
   </div>
-  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a></p><p>Educational information only — not medical advice</p></div>
+  <div class="footer-bottom"><p>SwimIQ Pro</p><p><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a></p><p>Educational information only — not medical advice</p></div>
 </footer>
 </div>
 <!-- 3D VISUALIZER PAGE -->
@@ -673,7 +673,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- TECHNIQUE PAGE -->
 <div class="page" id="page-technique">
@@ -771,7 +771,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div></div></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- VIDEOS PAGE -->
 <div class="page" id="page-videos">
@@ -812,7 +812,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/3oZo0I4oLfU" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Race · Analysis</span><h4>POPOVICI WORLD-RECORD ANALYSIS</h4><p>Technique analysis of David Popovici's world-record 100m freestyle.</p></div></div>
   </div></div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- SETS PAGE -->
 <div class="page" id="page-sets">
@@ -872,7 +872,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </tbody></table></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- DRYLAND PAGE -->
 <div class="page" id="page-dryland">
@@ -893,7 +893,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <li><span class="reps">5 min</span>Ankle plantarflexion loading</li><li><span class="reps">2 min</span>Thoracic rotation</li><li><span class="reps">3 min</span>Shoulder CARs</li><li><span class="reps">2 min</span>Hip 90/90 switches</li></ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- WORKOUT GENERATOR PAGE -->
 <div class="page" id="page-workouts">
@@ -929,7 +929,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- CALCULATOR PAGE -->
 <div class="page" id="page-calculator">
@@ -992,7 +992,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- ZONES PAGE -->
 <div class="page" id="page-zones">
@@ -1016,7 +1016,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX &amp; SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · 3–8 min intervals · 48–72 hr recovery. <strong>Zone 5:</strong> 8.0+ mmol/L · 10–30 sec reps · full rest only.</p></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- MY PRs PAGE -->
 <div class="page" id="page-profile">
@@ -1041,7 +1041,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="btn-sm" onclick="showPage('calculator')">Calculate Pace Zones →</button>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- TRAINING LOG PAGE -->
 <div class="page" id="page-log">
@@ -1080,7 +1080,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- NUTRITION PAGE -->
 <div class="page" id="page-nutrition">
@@ -1119,7 +1119,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="content-block"><h4>DAILY HYDRATION</h4><ul><li>Baseline: 35–45ml per kg bodyweight</li><li>Add 400–600ml per hour of training</li><li>Urine target: pale yellow</li><li>Electrolytes recommended on 90+ min sessions</li></ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not medical or dietetic advice</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not medical or dietetic advice</p></div></footer>
 </div>
 <!-- RACE PAGE -->
 <div class="page" id="page-race">
@@ -1170,7 +1170,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="content-block"><h4>PACING SCIENCE</h4><p>100m target: front half no more than 2% faster than back half. 200m target: back half 1–3% faster than front. 400m+: descending 100m splits throughout.</p></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- TAPER PAGE -->
 <div class="page" id="page-taper">
@@ -1213,7 +1213,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not medical advice</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not medical advice</p></div></footer>
 </div>
 <!-- MENTAL PAGE -->
 <div class="page" id="page-mental">
@@ -1259,7 +1259,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not psychological or medical advice</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not psychological or medical advice</p></div></footer>
 </div>
 <!-- INJURY PAGE -->
 <div class="page" id="page-injury">
@@ -1373,7 +1373,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not medical advice. See a physician for symptoms.</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not medical advice. See a physician for symptoms.</p></div></footer>
 </div>
 <!-- SEASON & CUTS PAGE — time-aware: knows today's date, current season, meet calendar -->
 <div class="page" id="page-season">
@@ -1429,7 +1429,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   </div>
   <div class="info-box" style="margin-top:1.5rem"><strong>Want your specific cut?</strong> Ask the AI Coach for help interpreting the standard once you've pulled your event, age, and gender from the official PDF — it can help you build a season plan around it, but it won't guess at the number itself.</div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- AI COACH PAGE -->
 <div class="page" id="page-ai">
@@ -1481,7 +1481,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   </div>
 </div>
 <div style="height:4rem"></div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Built for serious swimmers</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Built for serious swimmers</p></div></footer>
 </div>
 </main>
 <!-- AUTH — real Supabase email/password accounts. Content is public; an
@@ -1659,7 +1659,7 @@ function closeAuthGate() {
   <!-- LOGIN -->
   <div id="screen-login" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2.75rem 2.25rem;width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)">
     <div style="font-size:2.6rem;margin-bottom:1rem">🏊</div>
-    <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne</div>
+    <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">SwimIQ Pro</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">WELCOME<br><span style="color:var(--cyan)">BACK</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
       <input id="login-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
@@ -1676,7 +1676,7 @@ function closeAuthGate() {
   <!-- SIGNUP -->
   <div id="screen-signup" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2.75rem 2.25rem;width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)">
     <div style="font-size:2.6rem;margin-bottom:1rem">🏊</div>
-    <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne — Free Account</div>
+    <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">SwimIQ Pro — Free Account</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">CREATE YOUR<br><span style="color:var(--cyan)">ACCOUNT</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Choose a Username</label>
       <input id="signup-username" type="text" autocomplete="username" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(event.key==='Enter')doSignup()"></div>
@@ -1730,8 +1730,8 @@ function showPage(name){
   }
 }
 const PAGE_TITLES={
-  home:'Tidelyne — Swimming Technique & Training Tools',
-  whatsnew:"What's New — Tidelyne",
+  home:'SwimIQ Pro — Swimming Technique & Training Tools',
+  whatsnew:"What's New — SwimIQ Pro",
   technique:'Swimming Technique Library — Freestyle, Back, Breast, Fly',
   videos:'Swimming Technique Video Library',
   sets:'Training Set Library — AeT, Threshold, Kick, Speed',
@@ -1752,7 +1752,7 @@ const PAGE_TITLES={
   ai:'AI Swim Coach'
 };
 function setPageTitle(name){
-  document.title = PAGE_TITLES[name] || 'Tidelyne';
+  document.title = PAGE_TITLES[name] || 'SwimIQ Pro';
 }
 function switchTab(btn,id){
   btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));

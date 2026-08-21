@@ -1,1 +1,5 @@
+User-agent: *
+Allow: /
 
+# Update this line when tidelyne.com (or whatever domain you buy) goes live.
+Sitemap: https://danielswims101.github.io/JAC_Online/sitemap.xml

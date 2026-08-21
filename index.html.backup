@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tidelyne — Elite Swimming Platform</title>
+<title>SwimIQ Pro — Elite Swimming Platform</title>
 <meta name="description" content="Free swimming training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition, and mental performance.">
-<meta property="og:title" content="Tidelyne — Elite Swimming Platform">
+<meta property="og:title" content="SwimIQ Pro — Elite Swimming Platform">
 <meta property="og:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator, race strategy, nutrition, and mental performance — free for competitive swimmers.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://danielswims101.github.io/JAC_Online/">
 <link rel="canonical" href="https://danielswims101.github.io/JAC_Online/">
 <meta name="theme-color" content="#040d18">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tidelyne — Elite Swimming Platform">
+<meta name="twitter:title" content="SwimIQ Pro — Elite Swimming Platform">
 <meta name="twitter:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator and more for competitive swimmers.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8F%8A%3C/text%3E%3C/svg%3E">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition and mental performance."}
+{"@context":"https://schema.org","@type":"WebSite","name":"SwimIQ Pro","url":"https://danielswims101.github.io/JAC_Online/","description":"Training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition and mental performance."}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -398,35 +398,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   html{scroll-behavior:auto}
   .particle{display:none}
 }
-
-/* ===== REVIEW FIXES: touch targets, a11y, print ===== */
-/* Skip link — first tab stop on every page */
-.skip-link{position:absolute;left:-9999px;top:0;z-index:10001;background:var(--cyan);color:var(--navy);
-  padding:10px 18px;border-radius:0 0 8px 0;font-family:var(--fm);font-size:0.8rem;font-weight:700}
-.skip-link:focus{left:0}
-/* Higher-contrast muted text (was ~2.4:1 against navy) */
-:root{--white3:#8ba5bd;--white4:#6d879f}
-/* Pool-deck touch targets: 44px minimum on phones */
-@media(max-width:768px){
-  .viz-btn,.btn-sm,.btn-ghost-sm,.qp,.tab-btn,.ai-mode-btn{min-height:44px;display:inline-flex;
-    align-items:center;justify-content:center}
-  .nav-links li a{line-height:44px;padding:4px 12px;font-size:0.72rem}
-  .form-input,.form-select,.form-textarea,.pr-input,.goal-input{min-height:44px}
-  .calc-btn,.ai-send{min-height:48px}
-}
-/* The phase bar is the point of the lab — never hide it, just shrink it */
-@media(max-width:480px){
-  .viz-phase-bar{display:flex!important;height:34px}
-  .phase-step{font-size:0.42rem;letter-spacing:0}
-}
-/* Reduced motion: also stop the WebGL stroke loop, not just CSS particles */
-@media (prefers-reduced-motion: reduce){ .ai-dot{animation:none} }
-/* Print: hide the rest of the app chrome so a workout prints clean */
-@media print{
-  #update-banner,.tabs,.viz-canvas-wrap,.viz-overlay-stats,.force-legend,
-  .ai-mode-btns,.ai-header,#human-status,#motion-status,.nav-scroll,
-  .cmdk-hint,#mobile-nav{display:none!important}
-}
 /* PRINT — clean workout printouts, no dark theme ink waste */
 @media print{
   nav,footer,.noise,.hero,#access-gate,.viz-controls,.quick-prompts,.ai-input-row,.gen-form,#gen-actions,.hero-particles{display:none!important}
@@ -439,11 +410,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </style>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
 <div class="noise"></div>
 <!-- NAV -->
 <nav>
-  <div class="nav-brand" onclick="showPage('home')">TIDE<span>LYNE</span></div>
+  <div class="nav-brand" onclick="showPage('home')">SWIM<span>IQ</span> <span style="font-size:0.65rem;color:var(--gold);font-family:var(--fm);letter-spacing:2px">PRO</span></div>
   <div class="nav-scroll">
     <ul class="nav-links">
       <li><a onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
@@ -472,7 +442,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="nav-key-btn" id="nav-logout-btn" onclick="doLogout()" title="Log out" style="display:none">⎋</button>
   </div>
 </nav>
-<main id="main">
 <!-- HOME PAGE -->
 <div class="page active" id="page-home">
 <div class="hero">
@@ -538,12 +507,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </div>
 <footer>
   <div class="footer-inner">
-    <div class="footer-brand"><h3>TIDE<span>LYNE</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
+    <div class="footer-brand"><h3>SWIM<span>IQ</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
     <div class="footer-col"><h4>Learn</h4><ul><li onclick="showPage('technique')">Technique Library</li><li onclick="showPage('videos')">Video Library</li><li onclick="showPage('sets')">Training Sets</li><li onclick="showPage('zones')">Training Zones</li></ul></div>
     <div class="footer-col"><h4>Train</h4><ul><li onclick="showPage('workouts')">Workout Generator</li><li onclick="showPage('dryland')">Dryland</li><li onclick="showPage('log')">Training Log</li><li onclick="showPage('profile')">My PRs</li></ul></div>
     <div class="footer-col"><h4>Compete</h4><ul><li onclick="showPage('race')">Race Strategy</li><li onclick="showPage('nutrition')">Nutrition</li><li onclick="showPage('mental')">Mental Performance</li><li onclick="showPage('taper')">Taper Protocol</li></ul></div>
   </div>
-  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a></p><p>Educational information only — not medical advice</p></div>
+  <div class="footer-bottom"><p>SwimIQ Pro</p><p>Built for serious swimmers</p><p>Informational only — not medical advice</p></div>
 </footer>
 </div>
 <!-- 3D VISUALIZER PAGE -->
@@ -560,16 +529,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="tab-btn" onclick="switchTab(this,'vd-fly')">🦋 Butterfly</button>
     <button class="tab-btn" onclick="switchTab(this,'vd-uw')">🌊 Underwater</button>
   </div>
-  <div class="tab-panel active" id="vd-fr"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/Q0vq-34dWF0" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Demo</span><p>Division I coach breakdown of front crawl technique.</p></div></div></div>
-  <div class="tab-panel" id="vd-bk"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/YkjOvxHsY1g" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Demo</span><p>Six elements of backstroke with perfect technique.</p></div></div></div>
-  <div class="tab-panel" id="vd-br"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/RbgiTaVUqMk" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Demo</span><p>Pull-breathe-kick-glide timing and coordination.</p></div></div></div>
-  <div class="tab-panel" id="vd-fly"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/o6Pnv10wyHk" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Demo</span><p>Olympian Dylan Carter on mastering butterfly undulation.</p></div></div></div>
-  <div class="tab-panel" id="vd-uw"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/bjDfI0NMVY8" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
+  <div class="tab-panel active" id="vd-fr"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/Q0vq-34dWF0" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Demo</span><p>Division I coach breakdown of front crawl technique.</p></div></div></div>
+  <div class="tab-panel" id="vd-bk"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/YkjOvxHsY1g" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Demo</span><p>Six elements of backstroke with perfect technique.</p></div></div></div>
+  <div class="tab-panel" id="vd-br"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/RbgiTaVUqMk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Demo</span><p>Pull-breathe-kick-glide timing and coordination.</p></div></div></div>
+  <div class="tab-panel" id="vd-fly"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/o6Pnv10wyHk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Demo</span><p>Olympian Dylan Carter on mastering butterfly undulation.</p></div></div></div>
+  <div class="tab-panel" id="vd-uw"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/bjDfI0NMVY8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
   <div class="divider"></div>
   <div class="section-eyebrow">Study It — Interactive 3D Biomechanics Lab</div>
   <p class="section-intro" style="margin-bottom:1.5rem">A rigged 3D human swimming underwater — caustic light, depth haze, wet skin — reconstructing every movement joint-by-joint. Slow it down, orbit any angle, isolate a single phase, or describe any movement and the AI reconstructs it. It exists so you can see what video moves too fast to show.</p>
   <div class="viz-canvas-wrap" style="position:relative">
-    <div id="viz3d-container" role="img" tabindex="0" aria-label="Interactive 3D swimmer. Use the stroke and phase buttons below, or the arrow keys, to step through each phase. Each phase is described in words in the panel underneath."></div>
+    <div id="viz3d-container"></div>
     <div class="viz-overlay-stats">
       <div class="vos-item"><span class="vos-val" id="stat-drag">—</span><span class="vos-lbl">Drag (N)</span></div>
       <div class="vos-item"><span class="vos-val" id="stat-thrust">—</span><span class="vos-lbl">Thrust (N)</span></div>
@@ -673,7 +642,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- TECHNIQUE PAGE -->
 <div class="page" id="page-technique">
@@ -771,7 +740,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div></div></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- VIDEOS PAGE -->
 <div class="page" id="page-videos">
@@ -788,31 +757,31 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="tab-btn" onclick="switchTab(this,'v-race')">Race Analysis</button>
   </div>
   <div class="tab-panel active" id="v-fr"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/Q0vq-34dWF0" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Full Stroke</span><h4>FREESTYLE STROKE BREAKDOWN</h4><p>A Division I swim coach breaks down front crawl technique step by step.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/omkBPOvAuu8" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Catch</span><h4>HIGH ELBOW SWIMMING — 4 TIPS</h4><p>Global Triathlon Network on the single most impactful freestyle skill.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/MC9m8wp1dqs" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Kick</span><h4>FRONT CRAWL 6-BEAT KICK</h4><p>Step-by-step guide to the 6-beat kick rhythm and mechanics.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/Q0vq-34dWF0" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Full Stroke</span><h4>FREESTYLE STROKE BREAKDOWN</h4><p>A Division I swim coach breaks down front crawl technique step by step.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/omkBPOvAuu8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Catch</span><h4>HIGH ELBOW SWIMMING — 4 TIPS</h4><p>Global Triathlon Network on the single most impactful freestyle skill.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/MC9m8wp1dqs" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Kick</span><h4>FRONT CRAWL 6-BEAT KICK</h4><p>Step-by-step guide to the 6-beat kick rhythm and mechanics.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-bk"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/YkjOvxHsY1g" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Full Stroke</span><h4>BACKSTROKE WITH PERFECT TECHNIQUE</h4><p>Six elements of backstroke: body position, rotation, entry, pull, kick, and timing.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/YkjOvxHsY1g" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Full Stroke</span><h4>BACKSTROKE WITH PERFECT TECHNIQUE</h4><p>Six elements of backstroke: body position, rotation, entry, pull, kick, and timing.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-br"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/RbgiTaVUqMk" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Timing</span><h4>BREASTSTROKE TIMING & COORDINATION</h4><p>The pull-breathe-kick-glide sequence explained clearly.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/RbgiTaVUqMk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Timing</span><h4>BREASTSTROKE TIMING & COORDINATION</h4><p>The pull-breathe-kick-glide sequence explained clearly.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-fly"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/o6Pnv10wyHk" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Undulation</span><h4>MASTER BUTTERFLY UNDULATION</h4><p>Olympic Channel: Olympian Dylan Carter on the chest-down wave that drives butterfly.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/o6Pnv10wyHk" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Undulation</span><h4>MASTER BUTTERFLY UNDULATION</h4><p>Olympic Channel: Olympian Dylan Carter on the chest-down wave that drives butterfly.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-uw"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/bjDfI0NMVY8" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Dolphin Kick</span><h4>GRETCHEN WALSH'S UNDERWATER DOLPHIN KICK</h4><p>Breakdown of one of the fastest underwaters in the world — the 5th stroke.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/GoyXk3xMfKY" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Turns</span><h4>HOW TO FLIP TURN</h4><p>Every component of the freestyle flip turn broken down.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/bjDfI0NMVY8" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Dolphin Kick</span><h4>GRETCHEN WALSH'S UNDERWATER DOLPHIN KICK</h4><p>Breakdown of one of the fastest underwaters in the world — the 5th stroke.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/GoyXk3xMfKY" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Turns</span><h4>HOW TO FLIP TURN</h4><p>Every component of the freestyle flip turn broken down.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-dry"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/IKWGF4kP8Cs" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Dryland · Strength</span><h4>30-MINUTE DRYLAND WORKOUT</h4><p>Complete no-equipment dryland session built for swimmers.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/IKWGF4kP8Cs" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Dryland · Strength</span><h4>30-MINUTE DRYLAND WORKOUT</h4><p>Complete no-equipment dryland session built for swimmers.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-race"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/3oZo0I4oLfU" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Race · Analysis</span><h4>POPOVICI WORLD-RECORD ANALYSIS</h4><p>Technique analysis of David Popovici's world-record 100m freestyle.</p></div></div>
+    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/3oZo0I4oLfU" loading="lazy" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Race · Analysis</span><h4>POPOVICI WORLD-RECORD ANALYSIS</h4><p>Technique analysis of David Popovici's world-record 100m freestyle.</p></div></div>
   </div></div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- SETS PAGE -->
 <div class="page" id="page-sets">
@@ -872,7 +841,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </tbody></table></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- DRYLAND PAGE -->
 <div class="page" id="page-dryland">
@@ -893,7 +862,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <li><span class="reps">5 min</span>Ankle plantarflexion loading</li><li><span class="reps">2 min</span>Thoracic rotation</li><li><span class="reps">3 min</span>Shoulder CARs</li><li><span class="reps">2 min</span>Hip 90/90 switches</li></ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- WORKOUT GENERATOR PAGE -->
 <div class="page" id="page-workouts">
@@ -929,7 +898,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- CALCULATOR PAGE -->
 <div class="page" id="page-calculator">
@@ -988,18 +957,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <button class="calc-btn" onclick="convertTime()">Convert →</button>
       </div>
       <div class="calc-panel"><h4>CONVERSION RESULTS</h4><div id="conv-result" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Fill in the form above.</div>
-      <div class="info-box" style="margin-top:1.5rem"><strong>Note:</strong> LCM is ~2–3% slower than SCM because of fewer turns. These are flat approximations for training reference — they are <strong>not</strong> the official USA Swimming conversion factors, which vary by event and distance. For anything that counts (cuts, entries, seeding), use the official conversion on <a href="https://www.usaswimming.org" target="_blank" rel="noopener">usaswimming.org</a>.</div></div>
+      <div class="info-box" style="margin-top:1.5rem"><strong>Note:</strong> LCM ~2–3% slower than SCM due to fewer turns.</div></div>
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- ZONES PAGE -->
 <div class="page" id="page-zones">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Physiology Made Visual</div>
-  <h1 class="section-title">TRAINING <span>ZONES</span></h1>
-  <div class="info-box"><strong>Read the HR numbers as a 10-second count, not bpm.</strong> Stop, find your pulse, count for 10 seconds — "HR 26–28" means 26–28 beats in that 10 seconds (roughly 156–168 bpm). Lactate values are typical ranges from the literature, not measurements of you.</div>
+  <div class="section-title">TRAINING <span>ZONES</span></div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2.5rem">
     <div class="zone-bars">
       <div class="zone-row"><div class="zone-name">Recovery</div><div class="zone-track"><div class="zone-fill z1">Z1</div></div><div class="zone-info">&lt;1.5 mmol · HR &lt;23</div></div>
@@ -1010,13 +978,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </div>
   <div style="display:flex;flex-direction:column;gap:1.25rem">
-    <div class="card"><div class="badge green">Zone 1</div><h3>RECOVERY</h3><p><strong>Lactate:</strong> below 1.5 mmol/L · <strong>HR:</strong> under 23 on the 10-second count · Easy enough to hold a full conversation. Used for warm-up, cool-down, and between hard sets — it clears lactate rather than building fitness, and going too hard here is the most common way swimmers blunt the next quality set.</p></div>
     <div class="card"><div class="badge cyan">Zone 2 — AeT</div><h3>AEROBIC THRESHOLD</h3><p><strong>Lactate:</strong> 2.0–3.0 mmol/L · <strong>HR:</strong> 24–28 Golf scale · <strong>80%+ of total training volume.</strong> Builds mitochondrial density, oxidative enzyme capacity, cardiac output.</p></div>
     <div class="card"><div class="badge gold">Zone 3</div><h3>THRESHOLD</h3><p><strong>Lactate:</strong> 3.0–5.0 mmol/L · <strong>HR:</strong> 27–31 Golf scale · <strong>3–4 word sentences max.</strong> First appears Week 4, expands progressively through Meso II.</p></div>
-    <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX &amp; SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · 3–8 min intervals · 48–72 hr recovery. <strong>Zone 5:</strong> 8.0+ mmol/L · 10–30 sec reps · full rest only.</p></div>
+    <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX & SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · 3–8 min intervals · 48–72 hr recovery. <strong>Zone 5:</strong> 8.0+ mmol/L · 10–30 sec reps · full rest only.</p></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- MY PRs PAGE -->
 <div class="page" id="page-profile">
@@ -1041,7 +1008,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="btn-sm" onclick="showPage('calculator')">Calculate Pace Zones →</button>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- TRAINING LOG PAGE -->
 <div class="page" id="page-log">
@@ -1080,7 +1047,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- NUTRITION PAGE -->
 <div class="page" id="page-nutrition">
@@ -1119,7 +1086,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="content-block"><h4>DAILY HYDRATION</h4><ul><li>Baseline: 35–45ml per kg bodyweight</li><li>Add 400–600ml per hour of training</li><li>Urine target: pale yellow</li><li>Electrolytes recommended on 90+ min sessions</li></ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not medical or dietetic advice</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not medical or dietetic advice</p></div></footer>
 </div>
 <!-- RACE PAGE -->
 <div class="page" id="page-race">
@@ -1170,7 +1137,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="content-block"><h4>PACING SCIENCE</h4><p>100m target: front half no more than 2% faster than back half. 200m target: back half 1–3% faster than front. 400m+: descending 100m splits throughout.</p></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- TAPER PAGE -->
 <div class="page" id="page-taper">
@@ -1213,7 +1180,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not medical advice</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not medical advice</p></div></footer>
 </div>
 <!-- MENTAL PAGE -->
 <div class="page" id="page-mental">
@@ -1259,7 +1226,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not psychological or medical advice</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not psychological or medical advice</p></div></footer>
 </div>
 <!-- INJURY PAGE -->
 <div class="page" id="page-injury">
@@ -1373,7 +1340,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not medical advice. See a physician for symptoms.</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Informational only — not medical advice. See a physician for symptoms.</p></div></footer>
 </div>
 <!-- SEASON & CUTS PAGE — time-aware: knows today's date, current season, meet calendar -->
 <div class="page" id="page-season">
@@ -1392,7 +1359,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <p id="season-blurb" style="font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300">—</p>
   </div>
   <div class="section-eyebrow" style="margin-top:0">2025–26 National Meet Calendar</div>
-  <div class="warn-box" id="season-archive-note" style="display:none"></div>
   <div class="table-wrap"><table class="data-table" id="season-meet-table"><thead><tr><th>Meet</th><th>Dates</th><th>Course</th><th>Status</th></tr></thead><tbody>
     <!-- filled by JS using real dates, with live countdown/status -->
   </tbody></table></div>
@@ -1429,7 +1395,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   </div>
   <div class="info-box" style="margin-top:1.5rem"><strong>Want your specific cut?</strong> Ask the AI Coach for help interpreting the standard once you've pulled your event, age, and gender from the official PDF — it can help you build a season plan around it, but it won't guess at the number itself.</div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p></div></footer>
 </div>
 <!-- AI COACH PAGE -->
 <div class="page" id="page-ai">
@@ -1481,9 +1447,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   </div>
 </div>
 <div style="height:4rem"></div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Built for serious swimmers</p></div></footer>
+<footer><div class="footer-bottom"><p>SwimIQ Pro</p><p>Built for serious swimmers</p></div></footer>
 </div>
-</main>
 <!-- AUTH — real Supabase email/password accounts. Content is public; an
      account is only required for AI features (chat, generator, visualizer
      analysis). The auth overlay is hidden by default and opened on demand. -->
@@ -1521,7 +1486,7 @@ function showAuthScreen(name) {
   });
 }
 function showAuthError(screenPrefix, message) {
-  var el = document.getElementById(screenPrefix + '-error') || document.getElementById(screenPrefix + '-msg');
+  var el = document.getElementById(screenPrefix + '-error');
   if (!el) return;
   el.style.color = 'var(--red)'; // reset — success messages recolor it green
   el.textContent = message;
@@ -1618,7 +1583,7 @@ async function doForgotPassword() {
   var email = document.getElementById('forgot-email').value.trim();
   var msg = document.getElementById('forgot-msg');
   if (!email) { showAuthError('forgot', 'Enter your email first.'); return; }
-  var { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+  var { error } = await sb.auth.resetPasswordForEmail(email);
   msg.style.display = 'block';
   msg.style.color = error ? 'var(--red)' : 'var(--green)';
   msg.textContent = error ? error.message : 'Check your email for a password reset link.';
@@ -1659,7 +1624,7 @@ function closeAuthGate() {
   <!-- LOGIN -->
   <div id="screen-login" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2.75rem 2.25rem;width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)">
     <div style="font-size:2.6rem;margin-bottom:1rem">🏊</div>
-    <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne</div>
+    <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">SwimIQ Pro</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">WELCOME<br><span style="color:var(--cyan)">BACK</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
       <input id="login-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
@@ -1676,7 +1641,7 @@ function closeAuthGate() {
   <!-- SIGNUP -->
   <div id="screen-signup" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2.75rem 2.25rem;width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)">
     <div style="font-size:2.6rem;margin-bottom:1rem">🏊</div>
-    <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne — Free Account</div>
+    <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">SwimIQ Pro — Free Account</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">CREATE YOUR<br><span style="color:var(--cyan)">ACCOUNT</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Choose a Username</label>
       <input id="signup-username" type="text" autocomplete="username" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(event.key==='Enter')doSignup()"></div>
@@ -1720,7 +1685,6 @@ function showPage(name){
   if(page) page.classList.add('active');
   if(nav) nav.classList.add('active');
   if(!alreadyActive) window.scrollTo({top:0,behavior:'smooth'});
-  if(typeof setPageTitle==='function') setPageTitle(name);
   initReveal();
   if (name === 'visualizer' && typeof ensureViz3DReady === 'function') {
     setTimeout(ensureViz3DReady, 30);
@@ -1728,31 +1692,6 @@ function showPage(name){
   if (name === 'season' && typeof renderSeasonPage === 'function') {
     renderSeasonPage();
   }
-}
-const PAGE_TITLES={
-  home:'Tidelyne — Swimming Technique & Training Tools',
-  whatsnew:"What's New — Tidelyne",
-  technique:'Swimming Technique Library — Freestyle, Back, Breast, Fly',
-  videos:'Swimming Technique Video Library',
-  sets:'Training Set Library — AeT, Threshold, Kick, Speed',
-  dryland:'Dryland Training for Swimmers',
-  visualizer:'3D Stroke Visualizer — Swimming Biomechanics Lab',
-  workouts:'Swim Workout Generator',
-  calculator:'Swim Pace Calculators — CSS, Golf Score, Splits, Conversions',
-  tempo:'Tempo Trainer — Stroke Rate Metronome',
-  zones:'Swim Training Zones — AeT, Threshold, VO2 Max',
-  profile:'My PRs & Goal Times',
-  log:'Training Log & Weekly Volume',
-  nutrition:'Nutrition & Fueling for Swimmers',
-  race:'Race Strategy & Meet Day Plan',
-  taper:'Taper & Recovery for Swimmers',
-  mental:'Mental Performance for Swimmers',
-  injury:'Swimming Injury Prevention',
-  season:'Season & Meet Calendar',
-  ai:'AI Swim Coach'
-};
-function setPageTitle(name){
-  document.title = PAGE_TITLES[name] || 'Tidelyne';
 }
 function switchTab(btn,id){
   btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -2371,15 +2310,11 @@ function withGLTFLoader(cb){
   if (gltfLoaderState === 'failed') return;
   if (gltfLoaderState === 'loading') { setTimeout(function(){ withGLTFLoader(cb); }, 300); return; }
   gltfLoaderState = 'loading';
-  // r160 ships GLTFLoader as an ES module only — a 0.128 <script> tag would
-  // load a loader that can't talk to this engine.
-  import('three/addons/loaders/GLTFLoader.js').then(function(m){
-    THREE.GLTFLoader = m.GLTFLoader; gltfLoaderState = 'ready'; cb();
-  }).catch(function(){
-    gltfLoaderState = 'failed';
-    humanStatus('3D model loader unavailable — showing the built-in swimmer.');
-    applyModelVisibility();
-  });
+  const s = document.createElement('script');
+  s.src = GLTF_LOADER_URL;
+  s.onload = function(){ gltfLoaderState = 'ready'; cb(); };
+  s.onerror = function(){ gltfLoaderState = 'failed'; humanStatus('3D model loader unavailable — mannequin shown.'); applyModelVisibility(); };
+  document.head.appendChild(s);
 }
 function loadHumanModel(key){
   const slot = humanRigs[key];
@@ -2911,11 +2846,6 @@ function startViz3D() {
   _axPosX = new THREE.Vector3(1, 0, 0);
   _axPosY = new THREE.Vector3(0, 1, 0);
   _netDir = new THREE.Vector3();
-  // Respect the OS 'reduce motion' setting — start paused, user can play.
-  try{ if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    playing=false; const pb=document.getElementById('vbtn-play');
-    if(pb){pb.textContent='▶ Play';pb.classList.remove('active');}
-  } }catch(e){}
   buildForceArrows();
   rebuildSwimmer(currentStroke);
   buildPhaseBar3D(currentStroke);
@@ -3143,17 +3073,6 @@ function renderSeasonPage() {
   phaseEl.textContent = info.phase;
   courseEl.textContent = info.course;
   blurbEl.textContent = info.blurb;
-  // If every listed meet has finished, say so plainly instead of showing a
-  // wall of "Completed" — a live calendar that is empty reads as abandoned.
-  const allDone = SEASON_MEETS.every(m => now > new Date(m.end + 'T23:59:59'));
-  const note = document.getElementById('season-archive-note');
-  if (note) {
-    note.style.display = allDone ? 'block' : 'none';
-    if (allDone) note.innerHTML = 'The 2025–26 national calendar below has finished. Next season\'s ' +
-      'dates are published by USA Swimming — check <a href="https://www.usaswimming.org/events" ' +
-      'target="_blank" rel="noopener">usaswimming.org/events</a> for the current schedule. ' +
-      'Dates are not guessed here on purpose.';
-  }
   if (tableBody) {
     // Always render chronologically, regardless of array order
     tableBody.innerHTML = SEASON_MEETS.slice().sort((a,b)=>a.start.localeCompare(b.start)).map(m => {
@@ -3255,9 +3174,6 @@ async function sendToAI(){
 }
 function createStreamBubble(){
   const msgs=document.getElementById('ai-messages');
-  // Retire any orphaned bubble so the id is always unique
-  const stale=document.getElementById('stream-bubble-active');
-  if(stale){stale.id='';stale.classList.remove('streaming');}
   const div=document.createElement('div');
   div.className='msg';
   div.innerHTML='<div class="msg-avatar ai-av">AI</div><div class="msg-bubble streaming" id="stream-bubble-active"></div>';
@@ -3423,7 +3339,7 @@ function formatWorkout(text){
     }
   }
   if(inSec) html+='</div></div>';
-  return html||'<p>'+escapeHTML(text)+'</p>';
+  return html||'<p>'+text+'</p>';
 }
 // ─── VISUALIZER AI ANALYSIS — STREAMING ───────
 const VIZ_CONCEPTS={
@@ -3610,7 +3526,7 @@ function calcPaceZones(){
   let html='<div class="table-wrap"><table class="data-table"><thead><tr><th>Zone</th><th>Per 100m</th><th>Per 50m</th><th>Notes</th></tr></thead><tbody>';
   zones.forEach(z=>{
     const fast=t*z.pct[0], slow=t*z.pct[1];
-    html+=`<tr><td style="color:${z.color}">${z.name}</td><td>${formatTime(fast)}–${formatTime(slow)}</td><td>${formatTime(fast/2)}–${formatTime(slow/2)}</td><td style="color:var(--white3);font-size:0.76rem">${z.desc}</td></tr>`;
+    html+=`<tr><td style="color:${z.color}">${z.name}</td><td>${formatTime(fast*2)}–${formatTime(slow*2)}</td><td>${formatTime(fast)}–${formatTime(slow)}</td><td style="color:var(--white3);font-size:0.76rem">${z.desc}</td></tr>`;
   });
   html+='</tbody></table></div>';
   document.getElementById('pace-result').innerHTML=html;
@@ -3740,7 +3656,7 @@ function deleteLogEntry(id){
 }
 function clearLog(){if(!confirm('Clear all log entries?'))return; localStorage.removeItem('swimiq_log'); renderLog();}
 const todayInput=document.getElementById('log-date');
-if(todayInput){const _d=new Date();_d.setMinutes(_d.getMinutes()-_d.getTimezoneOffset());todayInput.value=_d.toISOString().split('T')[0];}
+if(todayInput) todayInput.value=new Date().toISOString().split('T')[0];
 renderLog();
 </script>
 </body>
