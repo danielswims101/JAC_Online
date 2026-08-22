@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SwimIQ / JAC_Online — review fix patcher
+TIDELYNE / JAC_Online — review fix patcher
 ========================================
 Run this ONCE in the folder that contains index.html:
 
@@ -280,8 +280,8 @@ patch("15f. Reduced motion pauses WebGL",
 patch("17. Per-page document titles",
   "function switchTab(btn,id){",
   """const PAGE_TITLES={
-  home:'SwimIQ Pro — Swimming Technique & Training Tools',
-  whatsnew:"What's New — SwimIQ Pro",
+  home:'TIDELYNE Pro — Swimming Technique & Training Tools',
+  whatsnew:"What's New — TIDELYNE Pro",
   technique:'Swimming Technique Library — Freestyle, Back, Breast, Fly',
   videos:'Swimming Technique Video Library',
   sets:'Training Set Library — AeT, Threshold, Kick, Speed',
@@ -302,7 +302,7 @@ patch("17. Per-page document titles",
   ai:'AI Swim Coach'
 };
 function setPageTitle(name){
-  document.title = PAGE_TITLES[name] || 'SwimIQ Pro';
+  document.title = PAGE_TITLES[name] || 'TIDELYNE Pro';
 }
 function switchTab(btn,id){""",
   marker="const PAGE_TITLES=")
@@ -321,8 +321,8 @@ patch("18. AI Coach nav item",
 
 # ── 19. Footer links to the legal pages ───────────────────────────────
 patch("19. Footer legal links",
-  '<div class="footer-bottom"><p>SwimIQ Pro</p><p>Built for serious swimmers</p><p>Informational only — not medical advice</p></div>',
-  '<div class="footer-bottom"><p>SwimIQ Pro</p>'
+  '<div class="footer-bottom"><p>TIDELYNE Pro</p><p>Built for serious swimmers</p><p>Informational only — not medical advice</p></div>',
+  '<div class="footer-bottom"><p>TIDELYNE Pro</p>'
   '<p><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · '
   '<a href="disclaimer.html">Medical Disclaimer</a></p>'
   '<p>Educational information only — not medical advice</p></div>')
@@ -353,7 +353,7 @@ else:
     open(SRC, "w", encoding="utf-8").write(html)
 
 print("\n" + "=" * 62)
-print("  SwimIQ fix patcher")
+print("  TIDELYNE fix patcher")
 print("=" * 62)
 for a in applied:  print("  ✅ APPLIED   ", a)
 for a in already:  print("  ⏭  ALREADY   ", a)
