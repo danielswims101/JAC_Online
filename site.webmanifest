@@ -1,0 +1,27 @@
+{
+  "name": "Tidelyne",
+  "short_name": "Tidelyne",
+  "description": "3D stroke lab, technique library and pace tools for competitive swimmers.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#040d18",
+  "theme_color": "#040d18",
+  "icons": [
+    {
+      "src": "favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "apple-touch-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "logo-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

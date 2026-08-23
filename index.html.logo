@@ -11,20 +11,10 @@
 <meta property="og:url" content="https://danielswims101.github.io/JAC_Online/">
 <link rel="canonical" href="https://danielswims101.github.io/JAC_Online/">
 <meta name="theme-color" content="#040d18">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tidelyne — Elite Swimming Platform">
 <meta name="twitter:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator and more for competitive swimmers.">
-<link rel="icon" type="image/svg+xml" href="logo-mark.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-180.png">
-<link rel="manifest" href="site.webmanifest">
-<meta property="og:image" content="https://danielswims101.github.io/JAC_Online/og.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Tidelyne — 3D stroke lab for competitive swimmers">
-<meta property="og:site_name" content="Tidelyne">
-<meta name="twitter:image" content="https://danielswims101.github.io/JAC_Online/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8F%8A%3C/text%3E%3C/svg%3E">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebSite","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition and mental performance."}
 </script>
@@ -177,8 +167,6 @@ input,textarea,select{font-family:var(--fb)}
 nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;gap:8px}
 .nav-brand{font-family:var(--fh);font-size:1.45rem;letter-spacing:3px;color:var(--cyan);cursor:pointer;flex-shrink:0;white-space:nowrap}
 .nav-brand span{color:var(--white)}
-.nav-brand{display:flex;align-items:center;gap:9px}
-.nav-mark{border-radius:6px;flex-shrink:0;display:block}
 .nav-scroll{flex:1;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-width:0}
 .nav-scroll::-webkit-scrollbar{display:none}
 .nav-links{display:flex;list-style:none;gap:0;width:max-content}
@@ -455,8 +443,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <div class="noise"></div>
 <!-- NAV -->
 <nav>
-  <div class="nav-brand" onclick="showPage('home')" role="link" tabindex="0"
-       onkeydown="if(event.key==='Enter')showPage('home')" aria-label="Tidelyne — home"><img src="logo-mark.svg" alt="" width="26" height="26" class="nav-mark">TIDE<span>LYNE</span></div>
+  <div class="nav-brand" onclick="showPage('home')">TIDE<span>LYNE</span></div>
   <div class="nav-scroll">
     <ul class="nav-links">
       <li><a onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
@@ -551,7 +538,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </div>
 <footer>
   <div class="footer-inner">
-    <div class="footer-brand"><img src="logo-mark.svg" alt="" width="40" height="40" style="border-radius:9px;display:block;margin-bottom:10px"><h3>TIDE<span>LYNE</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
+    <div class="footer-brand"><h3>TIDE<span>LYNE</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
     <div class="footer-col"><h4>Learn</h4><ul><li onclick="showPage('technique')">Technique Library</li><li onclick="showPage('videos')">Video Library</li><li onclick="showPage('sets')">Training Sets</li><li onclick="showPage('zones')">Training Zones</li></ul></div>
     <div class="footer-col"><h4>Train</h4><ul><li onclick="showPage('workouts')">Workout Generator</li><li onclick="showPage('dryland')">Dryland</li><li onclick="showPage('log')">Training Log</li><li onclick="showPage('profile')">My PRs</li></ul></div>
     <div class="footer-col"><h4>Compete</h4><ul><li onclick="showPage('race')">Race Strategy</li><li onclick="showPage('nutrition')">Nutrition</li><li onclick="showPage('mental')">Mental Performance</li><li onclick="showPage('taper')">Taper Protocol</li></ul></div>
