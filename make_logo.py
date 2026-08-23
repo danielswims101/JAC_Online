@@ -29,8 +29,14 @@ CYAN_D = (0, 140, 180)
 WHITE  = (238, 243, 248)
 MUTED  = (139, 165, 189)
 
-FONT_DIRS = ["/usr/share/fonts/truetype/liberation/", "/usr/share/fonts/truetype/liberation2/",
-             "/usr/share/fonts/truetype/google-fonts/", "/usr/share/fonts/truetype/dejavu/"]
+FONT_DIRS = [
+    # macOS
+    "/System/Library/Fonts/Supplemental/", "/System/Library/Fonts/", "/Library/Fonts/",
+    os.path.expanduser("~/Library/Fonts/"),
+    # Linux
+    "/usr/share/fonts/truetype/liberation/", "/usr/share/fonts/truetype/liberation2/",
+    "/usr/share/fonts/truetype/google-fonts/", "/usr/share/fonts/truetype/dejavu/",
+]
 def find_font(*names):
     for n in names:
         for d in FONT_DIRS:
@@ -38,8 +44,18 @@ def find_font(*names):
             if os.path.exists(p): return p
     return None
 
-DISPLAY = find_font("LiberationSansNarrow-Bold.ttf", "Poppins-Bold.ttf", "DejaVuSansCondensed-Bold.ttf")
-BODY    = find_font("Poppins-Medium.ttf", "LiberationSans-Regular.ttf", "DejaVuSans.ttf")
+# Condensed + heavy, closest to the site's Bebas Neue. macOS names first.
+DISPLAY = find_font(
+    "Impact.ttf", "Arial Narrow Bold.ttf", "AvenirNextCondensed.ttc", "HelveticaNeue.ttc",
+    "LiberationSansNarrow-Bold.ttf", "Poppins-Bold.ttf", "DejaVuSansCondensed-Bold.ttf")
+BODY = find_font(
+    "Helvetica.ttc", "Arial.ttf", "HelveticaNeue.ttc",
+    "Poppins-Medium.ttf", "LiberationSans-Regular.ttf", "DejaVuSans.ttf")
+
+if not DISPLAY or not BODY:
+    print("⚠️  No system font found for the share image text.")
+    print("   The icons will still be perfect (they're pure geometry).")
+    print("   Tell me which OS you're on and I'll add the right font path.")
 
 
 # ── wave geometry, shared by every output ────────────────────────────────
