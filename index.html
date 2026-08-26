@@ -189,7 +189,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .nav-ai-btn:hover{background:var(--cyan2)}
 .nav-key-btn{background:var(--navy3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--white3);font-size:0.8rem;cursor:pointer;transition:all 0.2s;flex-shrink:0}
 .nav-key-btn:hover{color:var(--cyan);border-color:var(--cyan)}
-.page{display:none}.page.active{display:block}
+.page{display:none}.page.active{display:block}.page:focus{outline:none}
 /* HERO */
 .hero{position:relative;padding:7rem 2rem 5rem;text-align:center;overflow:hidden;min-height:85vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 120% 80% at 50% -5%,rgba(0,212,255,0.08) 0%,transparent 60%)}
@@ -368,7 +368,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .footer-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:2rem;margin-bottom:2rem}
 .footer-brand h3{font-family:var(--fh);font-size:1.8rem;letter-spacing:2px;color:var(--cyan);margin-bottom:0.75rem}.footer-brand h3 span{color:var(--white)}.footer-brand p{font-size:0.83rem;color:var(--white3);line-height:1.8;max-width:300px}
 .footer-col h4{font-family:var(--fm);font-size:0.61rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:1rem}
-.footer-col ul{list-style:none}.footer-col ul li{font-size:0.83rem;color:var(--white3);padding:4px 0;cursor:pointer;transition:color 0.2s}.footer-col ul li:hover{color:var(--cyan)}
+.footer-col ul{list-style:none}.footer-col ul li{font-size:0.83rem;padding:4px 0}.footer-col ul li a{color:var(--white3);text-decoration:none;transition:color 0.2s}.footer-col ul li a:hover,.footer-col ul li a:focus-visible{color:var(--cyan)}
 .footer-bottom{max-width:1240px;margin:0 auto;padding-top:1.5rem;border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 .footer-bottom p{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white4);text-transform:uppercase}
 /* IMGGEN */
@@ -459,23 +459,23 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
        onkeydown="if(event.key==='Enter')showPage('home')" aria-label="Tidelyne — home"><img src="logo-mark.svg" alt="" width="26" height="26" class="nav-mark">TIDE<span>LYNE</span></div>
   <div class="nav-scroll">
     <ul class="nav-links">
-      <li><a onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
-      <li><a onclick="showPage('technique')" id="nav-technique">Technique</a></li>
-      <li><a onclick="showPage('videos')" id="nav-videos">Videos</a></li>
-      <li><a onclick="showPage('sets')" id="nav-sets">Sets</a></li>
-      <li><a onclick="showPage('dryland')" id="nav-dryland">Dryland</a></li>
-      <li><a onclick="showPage('visualizer')" id="nav-visualizer">3D Viz</a></li>
-      <li><a onclick="showPage('workouts')" id="nav-workouts">Generator</a></li>
-      <li><a onclick="showPage('calculator')" id="nav-calculator">Calculator</a></li>
-      <li><a onclick="showPage('zones')" id="nav-zones">Zones</a></li>
-      <li><a onclick="showPage('profile')" id="nav-profile">My PRs</a></li>
-      <li><a onclick="showPage('log')" id="nav-log">Log</a></li>
-      <li><a onclick="showPage('nutrition')" id="nav-nutrition">Nutrition</a></li>
-      <li><a onclick="showPage('race')" id="nav-race">Race Day</a></li>
-      <li><a onclick="showPage('taper')" id="nav-taper">Taper</a></li>
-      <li><a onclick="showPage('mental')" id="nav-mental">Mental</a></li>
-      <li><a onclick="showPage('injury')" id="nav-injury">Injury</a></li>
-      <li><a onclick="showPage('season')" id="nav-season">Season</a></li>
+      <li><a href="#home" id="nav-home" class="active" aria-current="page">Home</a></li>
+      <li><a href="#technique" id="nav-technique">Technique</a></li>
+      <li><a href="#videos" id="nav-videos">Videos</a></li>
+      <li><a href="#sets" id="nav-sets">Sets</a></li>
+      <li><a href="#dryland" id="nav-dryland">Dryland</a></li>
+      <li><a href="#visualizer" id="nav-visualizer">3D Viz</a></li>
+      <li><a href="#workouts" id="nav-workouts">Generator</a></li>
+      <li><a href="#calculator" id="nav-calculator">Calculator</a></li>
+      <li><a href="#zones" id="nav-zones">Zones</a></li>
+      <li><a href="#profile" id="nav-profile">My PRs</a></li>
+      <li><a href="#log" id="nav-log">Log</a></li>
+      <li><a href="#nutrition" id="nav-nutrition">Nutrition</a></li>
+      <li><a href="#race" id="nav-race">Race Day</a></li>
+      <li><a href="#taper" id="nav-taper">Taper</a></li>
+      <li><a href="#mental" id="nav-mental">Mental</a></li>
+      <li><a href="#injury" id="nav-injury">Injury</a></li>
+      <li><a href="#season" id="nav-season">Season</a></li>
     </ul>
   </div>
   <div class="nav-right">
@@ -552,9 +552,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <footer>
   <div class="footer-inner">
     <div class="footer-brand"><img src="logo-mark.svg" alt="" width="40" height="40" style="border-radius:9px;display:block;margin-bottom:10px"><h3>TIDE<span>LYNE</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
-    <div class="footer-col"><h4>Learn</h4><ul><li onclick="showPage('technique')">Technique Library</li><li onclick="showPage('videos')">Video Library</li><li onclick="showPage('sets')">Training Sets</li><li onclick="showPage('zones')">Training Zones</li></ul></div>
-    <div class="footer-col"><h4>Train</h4><ul><li onclick="showPage('workouts')">Workout Generator</li><li onclick="showPage('dryland')">Dryland</li><li onclick="showPage('log')">Training Log</li><li onclick="showPage('profile')">My PRs</li></ul></div>
-    <div class="footer-col"><h4>Compete</h4><ul><li onclick="showPage('race')">Race Strategy</li><li onclick="showPage('nutrition')">Nutrition</li><li onclick="showPage('mental')">Mental Performance</li><li onclick="showPage('taper')">Taper Protocol</li></ul></div>
+    <div class="footer-col"><h4>Learn</h4><ul><li><a href="#technique">Technique Library</a></li><li><a href="#videos">Video Library</a></li><li><a href="#sets">Training Sets</a></li><li><a href="#zones">Training Zones</a></li></ul></div>
+    <div class="footer-col"><h4>Train</h4><ul><li><a href="#workouts">Workout Generator</a></li><li><a href="#dryland">Dryland</a></li><li><a href="#log">Training Log</a></li><li><a href="#profile">My PRs</a></li></ul></div>
+    <div class="footer-col"><h4>Compete</h4><ul><li><a href="#race">Race Strategy</a></li><li><a href="#nutrition">Nutrition</a></li><li><a href="#mental">Mental Performance</a></li><li><a href="#taper">Taper Protocol</a></li></ul></div>
   </div>
   <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a></p><p>Educational information only — not medical advice</p></div>
 </footer>
@@ -1724,24 +1724,44 @@ function escapeHTML(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 // ─── NAVIGATION ───────────────────────────────
-function showPage(name){
+// ─── ROUTER ───────────────────────────────────
+// Real hash routing: nav/footer links are <a href="#name">, so the browser
+// sets location.hash → hashchange → activatePage. Buttons/cards call
+// showPage(), which sets the hash (or re-activates on a same-page click).
+// This makes every section keyboard-reachable, deep-linkable, Back-button
+// friendly, and gives each view its own crawlable title.
+function activatePage(name){
+  if(!document.getElementById('page-'+name)) name='home'; // guard unknown/empty
   const page=document.getElementById('page-'+name);
   const alreadyActive=page&&page.classList.contains('active');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-links li a').forEach(a=>a.classList.remove('active'));
+  document.querySelectorAll('.nav-links li a').forEach(a=>{a.classList.remove('active');a.removeAttribute('aria-current');});
   const nav=document.getElementById('nav-'+name);
   if(page) page.classList.add('active');
-  if(nav) nav.classList.add('active');
-  if(!alreadyActive) window.scrollTo({top:0,behavior:'smooth'});
+  if(nav){ nav.classList.add('active'); nav.setAttribute('aria-current','page'); }
+  if(!alreadyActive){
+    const smooth=!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    window.scrollTo({top:0,behavior:smooth?'smooth':'auto'});
+    // Move focus to the new view for screen-reader/keyboard users.
+    if(page){ page.setAttribute('tabindex','-1'); try{ page.focus({preventScroll:true}); }catch(e){ page.focus(); } }
+  }
   if(typeof setPageTitle==='function') setPageTitle(name);
   initReveal();
   if (name === 'visualizer' && typeof ensureViz3DReady === 'function') {
     setTimeout(ensureViz3DReady, 30);
+  } else if (typeof stopViz3DLoop === 'function') {
+    stopViz3DLoop(); // pause the render loop when leaving the visualizer
   }
   if (name === 'season' && typeof renderSeasonPage === 'function') {
     renderSeasonPage();
   }
 }
+function showPage(name){
+  if(location.hash.slice(1)===name){ activatePage(name); }  // re-click same page
+  else { location.hash = name; }                            // → hashchange → activatePage
+}
+window.addEventListener('hashchange', function(){ activatePage(location.hash.slice(1)||'home'); });
+document.addEventListener('DOMContentLoaded', function(){ activatePage(location.hash.slice(1)||'home'); });
 const PAGE_TITLES={
   home:'Tidelyne — Swimming Technique & Training Tools',
   whatsnew:"What's New — Tidelyne",
