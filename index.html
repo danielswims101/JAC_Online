@@ -2403,16 +2403,24 @@ function withGLTFLoader(cb){
   if (gltfLoaderState === 'ready') { cb(); return; }
   if (gltfLoaderState === 'failed') return;
   if (gltfLoaderState === 'loading') { setTimeout(function(){ withGLTFLoader(cb); }, 300); return; }
+  if (window.THREE && THREE.GLTFLoader) { gltfLoaderState='ready'; cb(); return; }
   gltfLoaderState = 'loading';
-  // r160 ships GLTFLoader as an ES module only — a 0.128 <script> tag would
-  // load a loader that can't talk to this engine.
-  import('three/addons/loaders/GLTFLoader.js').then(function(m){
-    THREE.GLTFLoader = m.GLTFLoader; gltfLoaderState = 'ready'; cb();
-  }).catch(function(){
+  // The engine is Three.js r128 (UMD global). Load the matching r128 UMD
+  // GLTFLoader via a <script> tag so it attaches THREE.GLTFLoader to the same
+  // global. (A bare ES-module import — "three/addons/…" — can't resolve here:
+  // there is no import map, so it always rejected and the human never loaded.)
+  var s = document.createElement('script');
+  s.src = GLTF_LOADER_URL;
+  s.onload = function(){
+    if (window.THREE && THREE.GLTFLoader) { gltfLoaderState = 'ready'; cb(); }
+    else { gltfLoaderState = 'failed'; humanStatus('3D model loader unavailable — showing the built-in swimmer.'); applyModelVisibility(); }
+  };
+  s.onerror = function(){
     gltfLoaderState = 'failed';
     humanStatus('3D model loader unavailable — showing the built-in swimmer.');
     applyModelVisibility();
-  });
+  };
+  document.head.appendChild(s);
 }
 function loadHumanModel(key){
   const slot = humanRigs[key];
@@ -2791,7 +2799,8 @@ function buildPhaseBar3D(strokeKey) {
   if (!bar) return;
   const phases = STROKES[strokeKey].phases;
   bar.innerHTML = phases.map((p,i) =>
-    `<div class="phase-step" id="ps3d-${i}" onclick="jumpToPhase3D(${i})">${p.name}</div>`
+    // p.name can be AI-generated (custom motion) — escape before it hits innerHTML.
+    `<div class="phase-step" id="ps3d-${i}" onclick="jumpToPhase3D(${i})">${escapeHTML(p.name)}</div>`
   ).join('');
 }
 function jumpToPhase3D(i) {
@@ -3238,7 +3247,7 @@ async function sendToAI(){
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
-    if(!accessToken){ finishStreamBubble(streamBubble, 'Your session expired -- please log in again.'); btn.disabled=false; return; }
+    if(!accessToken){ conversationHistory.pop(); finishStreamBubble(streamBubble, 'Your session expired -- please log in again.'); btn.disabled=false; return; }
     const resp=await fetch(SUPABASE_URL + '/functions/v1/ask-ai',{
       method:'POST',
       headers:{
@@ -3252,6 +3261,7 @@ async function sendToAI(){
       })
     });
     if(!resp.ok){
+      conversationHistory.pop(); // roll back the unanswered user turn (keeps the API from getting two user turns in a row and wedging the chat)
       const err=await resp.json().catch(()=>({}));
       finishStreamBubble(streamBubble, err.error || (resp.status===429 ? 'You\'ve reached the limit of 20 AI messages per 5 hours. Take a break and come back soon.' : `Error: HTTP ${resp.status}`));
       btn.disabled=false; return;
@@ -3280,8 +3290,10 @@ async function sendToAI(){
       }
     }
     finishStreamBubble(streamBubble, fullText||'No response.');
-    conversationHistory.push({role:'assistant',content:fullText||''});
+    if(fullText) conversationHistory.push({role:'assistant',content:fullText});
+    else conversationHistory.pop(); // empty reply — drop the user turn so history stays valid
   }catch(e){
+    conversationHistory.pop(); // roll back the user turn on network failure
     finishStreamBubble(streamBubble, 'Connection error — check your network and try again.');
   }
   btn.disabled=false;
@@ -3293,22 +3305,38 @@ function createStreamBubble(){
   if(stale){stale.id='';stale.classList.remove('streaming');}
   const div=document.createElement('div');
   div.className='msg';
-  div.innerHTML='<div class="msg-avatar ai-av">AI</div><div class="msg-bubble streaming" id="stream-bubble-active"></div>';
+  // white-space:pre-wrap lets us stream with textContent (safe + cheap) and
+  // still show line breaks — no per-token innerHTML/escape/<br> rebuild.
+  div.innerHTML='<div class="msg-avatar ai-av">AI</div><div class="msg-bubble streaming" id="stream-bubble-active" style="white-space:pre-wrap;word-break:break-word"></div>';
   msgs.appendChild(div);
   msgs.scrollTop=msgs.scrollHeight;
   return document.getElementById('stream-bubble-active');
 }
+// Coalesce token updates into one DOM write per animation frame, and only
+// auto-scroll when the user is already near the bottom. Avoids the old
+// O(n²) re-escape-and-reparse-everything-per-token layout thrash.
+let _streamRaf=0, _streamPending=null;
+function _flushStream(){
+  _streamRaf=0;
+  const p=_streamPending; if(!p||!p.el) return;
+  const msgs=document.getElementById('ai-messages'); if(!msgs) return;
+  const atBottom = msgs.scrollHeight - msgs.scrollTop - msgs.clientHeight < 48;
+  p.el.textContent = p.text;
+  if(atBottom) msgs.scrollTop = msgs.scrollHeight;
+}
 function updateStreamBubble(el,text){
   if(!el) return;
-  el.innerHTML=escapeHTML(text).replace(/\n/g,'<br>');
-  const msgs=document.getElementById('ai-messages');
-  msgs.scrollTop=msgs.scrollHeight;
+  _streamPending={el,text};
+  if(!_streamRaf) _streamRaf=requestAnimationFrame(_flushStream);
 }
 function finishStreamBubble(el,text){
   if(!el) return;
+  if(_streamRaf){ cancelAnimationFrame(_streamRaf); _streamRaf=0; }
+  _streamPending=null;
   el.id='';
   el.classList.remove('streaming');
-  el.innerHTML=escapeHTML(text).replace(/\n/g,'<br>');
+  el.style.whiteSpace='pre-wrap';
+  el.textContent=text;
   const msgs=document.getElementById('ai-messages');
   msgs.scrollTop=msgs.scrollHeight;
 }
@@ -3578,18 +3606,23 @@ function formatVizOutput(text){
 // ─── CALCULATORS ──────────────────────────────
 function parseTime(str){
   if(!str) return null;
-  str=str.trim();
-  const p=str.split(':');
-  let v;
-  if(p.length===2) v=parseFloat(p[0])*60+parseFloat(p[1]);
-  else v=parseFloat(str);
-  // Reject negatives, zero, NaN and absurd values (> 1 hour) up front
+  str=String(str).trim();
+  // Accept only "ss(.ss)" or "m:ss(.ss)" — reject "1:23:45", "1e3", stray
+  // letters, and "1.55" typos that used to be silently read as 1.55 seconds.
+  const m=str.match(/^(?:(\d{1,2}):)?([0-5]?\d(?:\.\d{1,3})?)$/);
+  if(!m) return null;
+  const mins=m[1]?parseInt(m[1],10):0;
+  const secs=parseFloat(m[2]);
+  const v=mins*60+secs;
   return (isFinite(v) && v>0 && v<3600) ? v : null;
 }
 function formatTime(secs){
   if(isNaN(secs)||secs<=0) return '--';
-  const m=Math.floor(secs/60);
-  const s=(secs%60).toFixed(2).padStart(5,'0');
+  // Round to centiseconds FIRST so a value like 59.999 carries to 1:00.00
+  // instead of printing the invalid "60.00".
+  const cs=Math.round(secs*100);
+  const m=Math.floor(cs/6000);
+  const s=((cs%6000)/100).toFixed(2).padStart(5,'0');
   return m>0?m+':'+s:s+'s';
 }
 function calcGolf(){
@@ -3684,15 +3717,19 @@ function buildPRGrid(stroke){
     grid.appendChild(item);
   });
 }
-function savePR(key,value){ localStorage.setItem(key,value); }
+// Guarded localStorage writes: a full quota or a privacy-mode block must
+// never throw and break the page (reads are already guarded in readLog).
+function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+function lsRemove(k){ try{ localStorage.removeItem(k); }catch(e){} }
+function savePR(key,value){ lsSet(key,value); }
 function saveName(){
   const n=document.getElementById('profile-name').value;
-  localStorage.setItem('swimmer_name',n);
+  lsSet('swimmer_name',n);
   document.getElementById('profile-name-display').textContent=n||'Swimmer';
 }
 function clearAllPRs(){
   if(!confirm('Clear all PRs?')) return;
-  Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>localStorage.removeItem('pr_'+e.replace(/ /g,'_'))));
+  Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>lsRemove('pr_'+e.replace(/ /g,'_'))));
   Object.keys(PR_EVENTS).forEach(s=>buildPRGrid(s));
 }
 function initProfile(){
@@ -3727,7 +3764,7 @@ function saveLogEntry(){
   };
   const entries=readLog();
   entries.unshift(entry); entries.splice(100);
-  localStorage.setItem('swimiq_log',JSON.stringify(entries));
+  if(!lsSet('swimiq_log',JSON.stringify(entries))){ alert('Could not save the session — your device storage may be full or blocked.'); return; }
   ['log-distance','log-duration','log-effort','log-mainset','log-notes'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
   });
@@ -3757,10 +3794,10 @@ function renderLog(){
   const recent=entries.filter(e=>new Date(e.date)>=thirtyAgo);
   if(statsEl&&recent.length>0){
     statsEl.style.display='block';
-    const totDist=recent.reduce((a,e)=>a+e.dist,0);
-    const totDur=recent.reduce((a,e)=>a+e.dur,0);
-    const eff=recent.filter(e=>e.effort>0);
-    const avgEffort=eff.length?eff.reduce((a,e)=>a+e.effort,0)/eff.length:0;
+    const totDist=recent.reduce((a,e)=>a+(Number(e.dist)||0),0);
+    const totDur=recent.reduce((a,e)=>a+(Number(e.dur)||0),0);
+    const eff=recent.filter(e=>Number(e.effort)>0);
+    const avgEffort=eff.length?eff.reduce((a,e)=>a+(Number(e.effort)||0),0)/eff.length:0;
     document.getElementById('stat-sessions').textContent=recent.length;
     document.getElementById('stat-km').textContent=(totDist/1000).toFixed(1);
     document.getElementById('stat-hours').textContent=(totDur/60).toFixed(1);
@@ -3768,10 +3805,10 @@ function renderLog(){
   }
 }
 function deleteLogEntry(id){
-  localStorage.setItem('swimiq_log',JSON.stringify(readLog().filter(e=>e.id!==id)));
+  lsSet('swimiq_log',JSON.stringify(readLog().filter(e=>e.id!==id)));
   renderLog();
 }
-function clearLog(){if(!confirm('Clear all log entries?'))return; localStorage.removeItem('swimiq_log'); renderLog();}
+function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog();}
 const todayInput=document.getElementById('log-date');
 if(todayInput){const _d=new Date();_d.setMinutes(_d.getMinutes()-_d.getTimezoneOffset());todayInput.value=_d.toISOString().split('T')[0];}
 renderLog();
