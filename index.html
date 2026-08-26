@@ -1517,12 +1517,31 @@ function updateNavAuth() {
   if (logoutBtn) logoutBtn.style.display = loggedIn ? 'inline-block' : 'none';
   if (nameEl) nameEl.textContent = loggedIn ? (currentProfile ? currentProfile.username : (currentUser.email || 'Swimmer')) : '';
 }
+var _authReturnFocus = null;
 function openAuthGate(screen) {
   var g = document.getElementById('access-gate');
+  _authReturnFocus = document.activeElement; // restore focus here on close
   g.style.display = 'flex';
   g.style.opacity = '1';
   showAuthScreen(screen || 'login');
+  // Move focus into the dialog and trap Tab within it.
+  setTimeout(function(){
+    var visible = g.querySelector('[id^="screen-"]:not([style*="display:none"]):not([style*="display: none"])') || g;
+    var first = visible.querySelector('input, button, a[href], [tabindex]');
+    if (first) try { first.focus(); } catch(e){}
+  }, 30);
 }
+function _authTrap(e){
+  var g = document.getElementById('access-gate');
+  if (!g || g.style.display === 'none' || e.key !== 'Tab') return;
+  var f = [].slice.call(g.querySelectorAll('a[href], button, input, [tabindex]:not([tabindex="-1"])'))
+            .filter(function(el){ return el.offsetParent !== null && !el.disabled; });
+  if (!f.length) return;
+  var first = f[0], last = f[f.length-1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
+document.addEventListener('keydown', _authTrap);
 function showAuthScreen(name) {
   ['screen-login','screen-signup','screen-forgot'].forEach(function(id){
     var el = document.getElementById(id);
@@ -1654,6 +1673,8 @@ function closeAuthGate() {
   g.style.opacity = '0';
   g.style.transition = 'opacity 0.4s ease';
   setTimeout(function(){ g.style.display = 'none'; }, 450);
+  if (_authReturnFocus && _authReturnFocus.focus) { try { _authReturnFocus.focus(); } catch(e){} }
+  _authReturnFocus = null;
 }
 // On load: check if there's already a valid Supabase session (so users don't
 // have to log in every visit). Content is public either way.
@@ -1788,8 +1809,8 @@ function setPageTitle(name){
   document.title = PAGE_TITLES[name] || 'Tidelyne';
 }
 function switchTab(btn,id){
-  btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');});
+  btn.classList.add('active'); btn.setAttribute('aria-selected','true');
   const panel=document.getElementById(id); if(!panel)return;
   panel.parentElement.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   panel.classList.add('active');
@@ -1798,7 +1819,79 @@ function toggleAcc(header){
   const body=header.nextElementSibling, chev=header.querySelector('.chevron');
   const open=body.classList.toggle('open');
   if(chev) chev.classList.toggle('open',open);
+  header.setAttribute('aria-expanded', open?'true':'false');
 }
+// ─── ACCESSIBILITY UPGRADES (applied once on load) ────────────────────────
+// Centralizes the keyboard/ARIA fixes so the markup stays lean: makes
+// accordions, tab strips, AI quick-prompts and clickable cards operable by
+// keyboard and understandable to assistive tech.
+function enhanceA11y(){
+  document.querySelectorAll('.acc-header').forEach(h=>{
+    h.setAttribute('role','button'); h.setAttribute('tabindex','0');
+    const body=h.nextElementSibling;
+    h.setAttribute('aria-expanded', body&&body.classList.contains('open')?'true':'false');
+    const chev=h.querySelector('.chevron'); if(chev) chev.setAttribute('aria-hidden','true');
+    h.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleAcc(h); } });
+  });
+  document.querySelectorAll('.tabs').forEach(strip=>{
+    strip.setAttribute('role','tablist');
+    const btns=[...strip.querySelectorAll('.tab-btn')];
+    btns.forEach((b,i)=>{
+      b.setAttribute('role','tab');
+      b.setAttribute('aria-selected', b.classList.contains('active')?'true':'false');
+      b.addEventListener('keydown',e=>{
+        let idx=-1;
+        if(e.key==='ArrowRight') idx=(i+1)%btns.length;
+        else if(e.key==='ArrowLeft') idx=(i-1+btns.length)%btns.length;
+        if(idx>=0){ e.preventDefault(); btns[idx].focus(); btns[idx].click(); }
+      });
+    });
+  });
+  document.querySelectorAll('.qp').forEach(qp=>{
+    qp.setAttribute('role','button'); qp.setAttribute('tabindex','0');
+    qp.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); qp.click(); } });
+  });
+  document.querySelectorAll('.card[onclick],.metric-card[onclick]').forEach(el=>{
+    el.setAttribute('role','button'); el.setAttribute('tabindex','0');
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } });
+  });
+  // Associate every form label with its control (add for/id where missing)
+  let _fid=0;
+  document.querySelectorAll('.form-group').forEach(g=>{
+    const label=g.querySelector('label'); const ctrl=g.querySelector('input,select,textarea');
+    if(label&&ctrl){ if(!ctrl.id) ctrl.id='fld'+(++_fid); if(!label.getAttribute('for')) label.setAttribute('for',ctrl.id); }
+  });
+  // Give every video iframe a unique title from its card heading
+  document.querySelectorAll('.video-embed iframe').forEach(f=>{
+    const card=f.closest('.video-card');
+    const h=card&&(card.querySelector('h4')||card.querySelector('.video-tag'));
+    if(h) f.setAttribute('title', h.textContent.trim());
+  });
+  // Name icon-only buttons for assistive tech (use their title, hide the glyph)
+  document.querySelectorAll('button[title]:not([aria-label])').forEach(b=>{
+    const t=(b.textContent||'').trim();
+    if(!t || /^[^A-Za-z0-9]+$/.test(t)) b.setAttribute('aria-label', b.getAttribute('title'));
+  });
+  // Announce streamed AI output to screen readers
+  const aim=document.getElementById('ai-messages');
+  if(aim){ aim.setAttribute('role','log'); aim.setAttribute('aria-live','polite'); aim.setAttribute('aria-relevant','additions text'); aim.setAttribute('aria-label','AI coach conversation'); }
+  // Mark the auth overlay as a proper dialog (focus handling in openAuthGate)
+  const gate=document.getElementById('access-gate');
+  if(gate){ gate.setAttribute('role','dialog'); gate.setAttribute('aria-modal','true'); gate.setAttribute('aria-label','Account'); }
+  // Make the 3D lab's arrow-key phase stepping real (the aria-label promised it)
+  const vc=document.getElementById('viz3d-container');
+  if(vc){ vc.addEventListener('keydown',function(e){
+    if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight') return;
+    if(typeof STROKES==='undefined'||typeof currentStroke==='undefined'||!STROKES[currentStroke]) return;
+    e.preventDefault();
+    const ph=STROKES[currentStroke].phases;
+    const cur=(typeof currentPhaseInfo!=='undefined'&&currentPhaseInfo)?(currentPhaseInfo.idx||0):0;
+    const idx=(cur+(e.key==='ArrowRight'?1:-1)+ph.length)%ph.length;
+    if(typeof playing!=='undefined'&&playing&&typeof togglePlay3D==='function') togglePlay3D();
+    if(typeof jumpToPhase3D==='function') jumpToPhase3D(idx);
+  }); }
+}
+document.addEventListener('DOMContentLoaded', enhanceA11y);
 function initReveal(){
   const els=document.querySelectorAll('.reveal:not(.visible)');
   if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('visible'));return;}
@@ -3438,7 +3531,7 @@ Every set needs interval, equipment, HR targets on Golf scale. Volume targets: 4
     const reader=resp.body.getReader();
     const decoder=new TextDecoder();
     let fullText='', buffer='';
-    result.innerHTML='<div id="gen-stream" style="color:var(--white2);line-height:1.8;white-space:pre-wrap;font-family:var(--fm);font-size:0.82rem"></div>';
+    result.innerHTML='<div id="gen-stream" role="status" aria-live="polite" style="color:var(--white2);line-height:1.8;white-space:pre-wrap;font-family:var(--fm);font-size:0.82rem"></div>';
     const streamEl=document.getElementById('gen-stream');
     while(true){
       const {done,value}=await reader.read();
@@ -3536,7 +3629,7 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
   const contentDiv=document.getElementById('viz-content');
   resultDiv.innerHTML='<div style="display:flex;align-items:center;gap:12px;padding:2rem;color:var(--white3)"><div class="typing-indicator" style="padding:0"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div><span>Generating analysis…</span></div>';
   outputDiv.style.display='block';
-  contentDiv.innerHTML='<div id="viz-stream" style="font-size:0.88rem;color:var(--white2);line-height:1.8;white-space:pre-wrap"></div>';
+  contentDiv.innerHTML='<div id="viz-stream" role="status" aria-live="polite" style="font-size:0.88rem;color:var(--white2);line-height:1.8;white-space:pre-wrap"></div>';
   const streamEl=document.getElementById('viz-stream');
   try{
     const { data: sessionData } = await sb.auth.getSession();
