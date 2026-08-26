@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tidelyne — Elite Swimming Platform</title>
+<title>Tidelyne — Swimming Technique & Training Tools</title>
 <meta name="description" content="Free swimming training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition, and mental performance.">
 <meta property="og:title" content="Tidelyne — Elite Swimming Platform">
 <meta property="og:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator, race strategy, nutrition, and mental performance — free for competitive swimmers.">
@@ -513,7 +513,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="metric-card"><span class="val">AeT</span><span class="lbl">Primary Zone</span><span class="sub">2–3 mmol lactate</span></div>
     <div class="metric-card"><span class="val">15m</span><span class="lbl">UW Every Wall</span><span class="sub">Legal maximum</span></div>
     <div class="metric-card"><span class="val">3D</span><span class="lbl">Force Viz</span><span class="sub">Drag, thrust, lift</span></div>
-    <div class="metric-card"><span class="val">HR</span><span class="lbl">Golf Scale</span><span class="sub">26–28 at AeT</span></div>
+    <div class="metric-card"><span class="val">HR</span><span class="lbl">Golf Scale</span><span class="sub">24–28 at AeT</span></div>
     <div class="metric-card"><span class="val">6</span><span class="lbl">New Sections</span><span class="sub">Race, Nutrition, Mental…</span></div>
   </div>
   <div class="section-eyebrow">Everything You Need</div>
@@ -762,9 +762,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   </div>
   <div class="tab-panel" id="t-turns">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>FREESTYLE FLIP TURN</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Elite push-off velocities reach 7.5+ m/s. Every 0.1s lost at the wall costs far more metabolically to recover. Approach at full speed. Initiate flip 1.2–1.5 body lengths from wall. Drive into tight streamline with ≥5m UW dolphin kick off every wall.</p></div></div>
+    <div class="acc-body open"><p>Elite push-off/glide velocities reach ~2.8–3.2 m/s. Every 0.1s lost at the wall costs far more metabolically to recover. Approach at full speed. Initiate flip 1.2–1.5 body lengths from wall. Drive into tight streamline with ≥5m UW dolphin kick off every wall.</p></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>BREASTSTROKE PULLOUT</h4><span class="chevron">▾</span></div>
-    <div class="acc-body"><p>The breaststroke pullout is the fastest point in the stroke. Legal sequence: push off → streamline glide → one full underwater pull → one dolphin kick → breakout. Begin the pull the moment you sense velocity starting to drop.</p></div></div>
+    <div class="acc-body"><p>The breaststroke pullout is the fastest point in the stroke. Legal sequence: push off → streamline glide → one full underwater pull to the thighs (with one optional dolphin kick) → recover the arms → one breaststroke kick → breakout as the head surfaces. Begin the pull the moment you sense velocity starting to drop.</p></div></div>
   </div>
   <div class="tab-panel" id="t-starts">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>GRAB START & TRACK START MECHANICS</h4><span class="chevron open">▾</span></div>
@@ -782,7 +782,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="key-grid">
       <div class="key-point"><span class="kp-label">Fly pacing</span><p>Go out controlled — 200 IM is not a 50 fly sprint.</p></div>
       <div class="key-point"><span class="kp-label">Breast leg</span><p>The race decider. If you've gone out too hard, breaststroke is where you pay.</p></div>
-      <div class="key-point"><span class="kp-label">Elite split</span><p>Fly 27%, back 26%, breast 27%, free 20%.</p></div>
+      <div class="key-point"><span class="kp-label">Elite split</span><p>Fly ~23%, back ~26%, breast ~28%, free ~23% — breaststroke is the slowest leg.</p></div>
     </div></div></div>
   </div>
 </div>
@@ -846,7 +846,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="info-box">AeT sets are the backbone of Meso I and majority of Meso II. <strong>80%+ of all training volume lives in this zone.</strong></div>
     <div class="table-wrap"><table class="data-table"><thead><tr><th>Set</th><th>Details</th><th>Purpose & Notes</th></tr></thead><tbody>
       <tr><td>20×50 FR @ :55</td><td>Rd 1: Sub-thresh · Rd 2: AeT<br>DB check Rd 2</td><td><span class="ptag">Aerobic Base Benchmark</span>Primary testing set. HR 25–27 Rd 1, AeT ceiling Rd 2.</td></tr>
-      <tr><td>12×200 FR @ 3:00</td><td>Reps 1–2: Cruise · 3–12: AeT<br>HR 26–28 · 2,400m</td><td><span class="ptag">Volume Load</span>Flagship Meso 2 aerobic set.</td></tr>
+      <tr><td>12×200 FR @ 3:00</td><td>Reps 1–2: Cruise · 3–12: AeT<br>HR 24–28 · 2,400m</td><td><span class="ptag">Volume Load</span>Flagship Meso 2 aerobic set.</td></tr>
       <tr><td>5×100 BK ×5 Rds @ 1:25</td><td>60–90s between rounds<br>Rd 1 with Duck</td><td><span class="ptag">Stroke-Specific AeT</span>Backstroke aerobic maintenance.</td></tr>
     </tbody></table></div>
   </div>
@@ -993,6 +993,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <div class="form-group" style="margin-bottom:1rem"><label>Best 100m Freestyle (m:ss)</label><input class="form-input" id="pace-100" placeholder="e.g. 0:55.5 or 1:02.0"></div>
       <button class="calc-btn" onclick="calcPaceZones()">Calculate Zones →</button>
       <div id="pace-result" style="margin-top:1.5rem"></div>
+      <p style="font-size:0.76rem;color:var(--white3);margin-top:1rem;line-height:1.6">Rough reference paces derived from your 100m time, not lab-tested lactate zones. Use them as a starting point and adjust to feel, heart rate, and how the set actually goes.</p>
     </div>
   </div>
   <div class="tab-panel" id="c-convert">
@@ -1014,7 +1015,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Physiology Made Visual</div>
   <h1 class="section-title">TRAINING <span>ZONES</span></h1>
-  <div class="info-box"><strong>Read the HR numbers as a 10-second count, not bpm.</strong> Stop, find your pulse, count for 10 seconds — "HR 26–28" means 26–28 beats in that 10 seconds (roughly 156–168 bpm). Lactate values are typical ranges from the literature, not measurements of you.</div>
+  <div class="info-box"><strong>Read the HR numbers as a 10-second count, not bpm.</strong> Stop, find your pulse, count for 10 seconds — "HR 24–28" means 24–28 beats in that 10 seconds (roughly 144–168 bpm). Lactate values are typical ranges from the literature, not measurements of you.</div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2.5rem">
     <div class="zone-bars">
       <div class="zone-row"><div class="zone-name">Recovery</div><div class="zone-track"><div class="zone-fill z1">Z1</div></div><div class="zone-info">&lt;1.5 mmol · HR &lt;23</div></div>
@@ -1080,7 +1081,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <div class="form-group"><label>Primary Zone</label><select class="form-select" id="log-zone"><option value="Z1 Recovery">Z1 Recovery</option><option value="Z2 AeT" selected>Z2 AeT</option><option value="Z3 Threshold">Z3 Threshold</option><option value="Z4 VO2">Z4 VO2 Max</option><option value="Z5 Speed">Z5 Speed</option><option value="Mixed">Mixed</option></select></div>
       <div class="form-group"><label>Effort (1–10)</label><input class="form-input" id="log-effort" type="number" min="1" max="10" placeholder="7"></div>
     </div>
-    <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" maxlength="200" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 26-28"></div>
+    <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" maxlength="200" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 24-28"></div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Notes</label><textarea class="form-textarea" id="log-notes" maxlength="1000" placeholder="Technique focus, energy levels, what went well..."></textarea></div>
     <button class="btn-sm" onclick="saveLogEntry()">Save Session</button>
   </div>
@@ -1126,7 +1127,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="success-box"><strong>Race day nutrition is PRACTICE nutrition.</strong> Never try anything new on race day.</div>
     <div class="nutr-grid">
       <div class="nutr-card"><div class="nutr-time">Night Before</div><h4>CARB LOADING</h4><ul><li>High-carb dinner: pasta, rice, bread</li><li>Low fiber, low fat</li><li>8–10 g/kg over the day</li></ul></div>
-      <div class="nutr-card"><div class="nutr-time">Morning of Race</div><h4>PRE-MEET MEAL</h4><ul><li>3–4 hrs before: 1–2g/kg carbs</li><li>600ml water with breakfast</li><li>Caffeine: 3mg/kg 60 min before</li></ul></div>
+      <div class="nutr-card"><div class="nutr-time">Morning of Race</div><h4>PRE-MEET MEAL</h4><ul><li>3–4 hrs before: 1–2g/kg carbs</li><li>600ml water with breakfast</li><li>Caffeine (adult athletes): 3mg/kg 60 min before — not advised for junior/adolescent swimmers</li></ul></div>
       <div class="nutr-card"><div class="nutr-time">Between Events</div><h4>INTRA-MEET</h4><ul><li>30–60g simple carbs every 60–90 min</li><li>250–350ml water every 30–45 min</li><li>Avoid heavy food within 90 min of any event</li></ul></div>
     </div>
   </div>
@@ -1802,17 +1803,15 @@ window.addEventListener('hashchange', function(){ activatePage(location.hash.sli
 document.addEventListener('DOMContentLoaded', function(){ activatePage(location.hash.slice(1)||'home'); });
 const PAGE_TITLES={
   home:'Tidelyne — Swimming Technique & Training Tools',
-  whatsnew:"What's New — Tidelyne",
   technique:'Swimming Technique Library — Freestyle, Back, Breast, Fly',
   videos:'Swimming Technique Video Library',
   sets:'Training Set Library — AeT, Threshold, Kick, Speed',
   dryland:'Dryland Training for Swimmers',
   visualizer:'3D Stroke Visualizer — Swimming Biomechanics Lab',
   workouts:'Swim Workout Generator',
-  calculator:'Swim Pace Calculators — CSS, Golf Score, Splits, Conversions',
-  tempo:'Tempo Trainer — Stroke Rate Metronome',
+  calculator:'Swim Pace Calculators — Golf Score, Splits, Pace Zones & Conversions',
   zones:'Swim Training Zones — AeT, Threshold, VO2 Max',
-  profile:'My PRs & Goal Times',
+  profile:'My PRs — Personal Record Tracker',
   log:'Training Log & Weekly Volume',
   nutrition:'Nutrition & Fueling for Swimmers',
   race:'Race Strategy & Meet Day Plan',
@@ -2418,7 +2417,7 @@ const STROKES = {
     color: 0xff7043, rollAmp: 0, undulate: true,
     phases: [
       { name:'Peak Streamline', dur:0.16, drag:21, thrust:7, lift:4, vel:2.56, eff:88,
-        desc:'Maximum streamline — hands stacked, arms locked past the ears, core completely rigid. Push-off velocity can exceed 7.5 m/s, faster than any swum stroke.',
+        desc:'Maximum streamline — hands stacked, arms locked past the ears, core completely rigid. Push-off/glide velocity peaks around 2.8–3.2 m/s — the fastest a swimmer travels, before drag slows the glide.',
         L:{ sh:[172,0,5], el:[4], hi:[2,0,0], kn:[3] },
         R:{ sh:[172,0,-5], el:[4], hi:[2,0,0], kn:[3] } },
       { name:'Hip Load', dur:0.18, drag:30, thrust:40, lift:16, vel:2.40, eff:81,
