@@ -31,7 +31,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script>
@@ -1052,7 +1051,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="section-eyebrow" style="margin-top:1.5rem">Breaststroke</div><div class="pr-grid" id="pr-grid-br"></div>
   <div class="section-eyebrow" style="margin-top:1.5rem">Butterfly</div><div class="pr-grid" id="pr-grid-fly"></div>
   <div class="section-eyebrow" style="margin-top:1.5rem">Individual Medley</div><div class="pr-grid" id="pr-grid-im"></div>
-  <div style="margin-top:1.75rem;display:flex;gap:10px;flex-wrap:wrap">
+  <p style="font-size:0.82rem;color:var(--white3);margin-top:1.75rem;line-height:1.7">Everything here is saved only in this browser. <strong style="color:var(--white2)">Export a backup</strong> before clearing your data or switching devices, then import it to restore your PRs, name, and training log.</p>
+  <div style="margin-top:0.75rem;display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn-sm" onclick="exportBackup()">⬇ Export Backup</button>
+    <button class="btn-ghost-sm" onclick="document.getElementById('import-file').click()">⬆ Import Backup</button>
+    <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importBackup(event)">
     <button class="btn-ghost-sm" onclick="clearAllPRs()">Clear All PRs</button>
     <button class="btn-sm" onclick="showPage('calculator')">Calculate Pace Zones →</button>
   </div>
@@ -1734,7 +1737,8 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:1rem;font-size:0.78rem;color:var(--white3);text-align:left;cursor:pointer;line-height:1.5">
       <input type="checkbox" id="signup-age" style="margin-top:2px;accent-color:var(--cyan)"> I confirm I am 13 years of age or older.
     </label>
-    <button id="signup-btn" onclick="doSignup()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">CREATE ACCOUNT →</button>
+    <button id="signup-btn" onclick="doSignup()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.6rem">CREATE ACCOUNT →</button>
+    <p style="font-size:0.72rem;color:var(--white4);text-align:left;line-height:1.5;margin-bottom:0.85rem">By creating an account you agree to our <a href="terms.html" target="_blank" rel="noopener" style="color:var(--cyan)">Terms of Use</a> and <a href="privacy.html" target="_blank" rel="noopener" style="color:var(--cyan)">Privacy Policy</a>.</p>
     <p id="signup-error" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p style="font-size:0.82rem;color:var(--white3)">Already have an account? <a onclick="showAuthScreen('login')" style="cursor:pointer;color:var(--cyan)">Log in</a></p>
   </div>
@@ -3088,7 +3092,7 @@ function ensureViz3DReady() {
   if (threeLoading) return;
   threeLoading = true;
   const s = document.createElement('script');
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  s.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
   s.onload = function(){ installOrbitControls(); startViz3D(); };
   s.onerror = function(){
     threeLoading = false;
@@ -3851,6 +3855,44 @@ function clearAllPRs(){
   if(!confirm('Clear all PRs?')) return;
   Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>lsRemove('pr_'+e.replace(/ /g,'_'))));
   Object.keys(PR_EVENTS).forEach(s=>buildPRGrid(s));
+}
+// ─── BACKUP: EXPORT / IMPORT ──────────────────
+// On-device data (name + PRs + training log) never reaches a server, so a
+// downloadable JSON backup is the only way to move it between devices or
+// survive a browser-data clear. Referenced by the Privacy Policy / Terms.
+function exportBackup(){
+  const data={ app:'Tidelyne', version:1, exported:new Date().toISOString(),
+    name:localStorage.getItem('swimmer_name')||'', prs:{}, log:readLog() };
+  Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>{
+    const k='pr_'+e.replace(/ /g,'_'); const v=localStorage.getItem(k); if(v) data.prs[k]=v;
+  }));
+  try{
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='tidelyne-backup-'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  }catch(e){ alert('Could not create the backup file on this device.'); }
+}
+function importBackup(ev){
+  const f=ev.target.files&&ev.target.files[0]; if(!f){return;}
+  const r=new FileReader();
+  r.onload=function(){
+    try{
+      const d=JSON.parse(r.result);
+      if(!d||typeof d!=='object') throw new Error('bad');
+      if(d.prs&&typeof d.prs==='object') Object.keys(d.prs).forEach(k=>{
+        if(k.indexOf('pr_')===0) lsSet(k, String(d.prs[k]).slice(0,12));
+      });
+      if(typeof d.name==='string') lsSet('swimmer_name', d.name.slice(0,30));
+      if(Array.isArray(d.log)) lsSet('swimiq_log', JSON.stringify(d.log.slice(0,100)));
+      initProfile(); if(typeof renderLog==='function') renderLog();
+      alert('Backup imported — your PRs, name, and training log have been restored.');
+    }catch(e){ alert('That file is not a valid Tidelyne backup.'); }
+  };
+  r.readAsText(f);
+  ev.target.value=''; // allow re-importing the same file
 }
 function initProfile(){
   const name=localStorage.getItem('swimmer_name')||'';
