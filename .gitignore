@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Script-generated editor backups — never publish these to the Pages root
+index.html.backup
+index.html.logo
+index.html.prename
+*.backup
+*.orig
+
+# Local dev / tooling config (e.g. preview server launch config)
+.claude/

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page not found — Tidelyne</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="logo-mark.svg">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#040d18;color:#b0c4d8;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem;line-height:1.7}
+.wrap{max-width:460px}
+h1{color:#eef3f8;font-size:3.5rem;letter-spacing:2px;margin-bottom:0.5rem}
+p{font-size:1rem;margin-bottom:1.5rem}
+a.btn{display:inline-block;background:#00d4ff;color:#040d18;text-decoration:none;font-weight:700;letter-spacing:1px;padding:12px 26px;border-radius:8px;text-transform:uppercase;font-size:0.8rem}
+a.btn:hover{background:#00b0d8}
+.small{font-size:0.8rem;color:#607a92;margin-top:1.25rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>404</h1>
+<p>That page isn't here. Tidelyne is a single app — its sections live at the home page.</p>
+<a class="btn" href="./">Go to Tidelyne →</a>
+<p class="small">Redirecting you home in a moment…</p>
+</div>
+<script>
+// Send mistyped/old deep links back into the app after a short pause.
+setTimeout(function(){ location.replace('./'); }, 2500);
+</script>
+</body>
+</html>
