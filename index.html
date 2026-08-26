@@ -29,8 +29,11 @@
 {"@context":"https://schema.org","@type":"WebSite","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition and mental performance."}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script>
 // Minimal OrbitControls implementation compatible with THREE r128 (UMD global build).
 // Supports: left-drag orbit, scroll-wheel zoom, damping. No pan (not needed here).
@@ -174,7 +177,7 @@ button{cursor:pointer;font-family:var(--fb)}
 input,textarea,select{font-family:var(--fb)}
 .noise{position:fixed;inset:0;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");z-index:9999}
 /* NAV */
-nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;gap:8px}
+nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;gap:8px}
 .nav-brand{font-family:var(--fh);font-size:1.45rem;letter-spacing:3px;color:var(--cyan);cursor:pointer;flex-shrink:0;white-space:nowrap}
 .nav-brand span{color:var(--white)}
 .nav-brand{display:flex;align-items:center;gap:9px}
@@ -1503,7 +1506,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <script>
 var SUPABASE_URL = 'https://gzqovsffnziumfbmqdes.supabase.co';
 var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6cW92c2ZmbnppdW1mYm1xZGVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNTgyMTksImV4cCI6MjA5NzgzNDIxOX0.26E4yXVMAjaq_mg4R0BGqRy2adYlG8mgRkbEn3SU36Y';
-var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// supabase-js is loaded with defer (non-render-blocking), so the client is
+// created after it loads (see initSupabaseAuth on DOMContentLoaded) rather
+// than at parse time. Until then sb is null and the site is fully usable —
+// only account/AI features need it.
+var sb = null;
 // AI calls route through the ask-ai Edge Function -- the server holds the
 // Anthropic key and enforces the rate limit (20 messages per 5 hours).
 var currentUser = null;   // Supabase auth user object once logged in
@@ -1519,6 +1526,7 @@ function updateNavAuth() {
 }
 var _authReturnFocus = null;
 function openAuthGate(screen) {
+  if (!sb) { initSupabaseAuth(); if (!sb) { alert('Account features are unavailable right now — the sign-in service could not load. All content is still accessible without an account.'); return; } }
   var g = document.getElementById('access-gate');
   _authReturnFocus = document.activeElement; // restore focus here on close
   g.style.display = 'flex';
@@ -1678,14 +1686,19 @@ function closeAuthGate() {
 }
 // On load: check if there's already a valid Supabase session (so users don't
 // have to log in every visit). Content is public either way.
-(async function checkExistingSession(){
-  var { data } = await sb.auth.getSession();
-  if (data.session && data.session.user) {
-    await onAuthSuccess(data.session.user);
-  } else {
-    updateNavAuth();
-  }
-})();
+async function initSupabaseAuth(){
+  if (sb) return;
+  if (!window.supabase) { updateNavAuth(); return; } // library blocked — content is still public
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  try {
+    var { data } = await sb.auth.getSession();
+    if (data.session && data.session.user) { await onAuthSuccess(data.session.user); }
+    else { updateNavAuth(); }
+  } catch(e) { updateNavAuth(); }
+}
+// Deferred supabase-js finishes before DOMContentLoaded, so the client is
+// ready before any user can click Log In.
+document.addEventListener('DOMContentLoaded', initSupabaseAuth);
 </script>
 <div id="access-gate" onclick="if(event.target===this)closeAuthGate()" style="position:fixed;inset:0;background:rgba(4,13,24,0.94);z-index:9998;display:none;align-items:center;justify-content:center;padding:2rem">
   <button onclick="closeAuthGate()" title="Close" style="position:absolute;top:16px;right:22px;background:none;border:none;color:var(--white3);font-size:1.6rem;cursor:pointer;line-height:1">✕</button>
@@ -1769,9 +1782,9 @@ function activatePage(name){
   if(typeof setPageTitle==='function') setPageTitle(name);
   initReveal();
   if (name === 'visualizer' && typeof ensureViz3DReady === 'function') {
-    setTimeout(ensureViz3DReady, 30);
+    setTimeout(function(){ ensureViz3DReady(); if(typeof startViz3DLoop==='function') startViz3DLoop(); }, 30);
   } else if (typeof stopViz3DLoop === 'function') {
-    stopViz3DLoop(); // pause the render loop when leaving the visualizer
+    stopViz3DLoop(); // stop the render loop when leaving the visualizer
   }
   if (name === 'season' && typeof renderSeasonPage === 'function') {
     renderSeasonPage();
@@ -2085,15 +2098,16 @@ function initViz3D() {
   }));
   scene.add(particles);
   // Lane ropes at the water line — alternating discs like real anti-wave ropes
+  // Share one geometry and one material per colour across every disc (was a
+  // fresh CylinderGeometry + MeshStandardMaterial per disc — ~100 of each).
+  const _ropeGeo = new THREE.CylinderGeometry(0.045, 0.045, 0.22, 10);
+  const _ropeColors = [0xdd3333, 0xf5f5f5, 0x2255cc, 0xf5f5f5];
+  const _ropeMats = _ropeColors.map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.6 }));
   function addLaneRope(z) {
     const rope = new THREE.Group();
-    const colors = [0xdd3333, 0xf5f5f5, 0x2255cc, 0xf5f5f5];
     for (let x = -7; x <= 7; x += 0.28) {
-      const c = colors[Math.abs(Math.round(x/0.28)) % colors.length];
-      const disc = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.045, 0.045, 0.22, 10),
-        new THREE.MeshStandardMaterial({ color: c, roughness: 0.6 })
-      );
+      const ci = Math.abs(Math.round(x/0.28)) % _ropeColors.length;
+      const disc = new THREE.Mesh(_ropeGeo, _ropeMats[ci]);
       disc.rotation.z = Math.PI/2;
       disc.position.set(x, 0, 0);
       rope.add(disc);
@@ -2990,8 +3004,14 @@ window.addEventListener('resize', resizeViz3D);
 let lastTime3D = performance.now();
 let _axNegX, _axPosX, _axPosY, _netDir; // scratch axes, created in startViz3D
 let _vizPageEl = null;
+let _raf3D = 0;
+// Fully stop the render loop when leaving the visualizer (called by the
+// router), and resume it on return — so no requestAnimationFrame fires for
+// the page's whole lifetime once the lab has been opened.
+function stopViz3DLoop(){ if(_raf3D){ cancelAnimationFrame(_raf3D); _raf3D=0; } }
+function startViz3DLoop(){ if(viz3DInitialized && !_raf3D){ lastTime3D=performance.now(); _raf3D=requestAnimationFrame(animate3D); } }
 function animate3D(){
-  requestAnimationFrame(animate3D);
+  _raf3D = requestAnimationFrame(animate3D);
   if (!viz3DInitialized) return;
   // Idle when the visualizer isn't on screen — no reason to burn GPU and
   // battery rendering a hidden canvas while the user reads another page.
@@ -3007,21 +3027,24 @@ function animate3D(){
   if (dt > 0.05) dt = 0.05;
   if (playing) clockT += dt * 0.55 * speed;
   updateSwimmer(dt);
-  water.material.uniforms.time.value += dt;
-  vizTime += dt;
-  // Caustics drift — slow and irregular, never a straight line
-  if (causticsTex) {
-    causticsTex.offset.x = Math.sin(vizTime * 0.12) * 0.25 + vizTime * 0.02;
-    causticsTex.offset.y = vizTime * 0.035;
-  }
-  // Particulate drift — slow rise with wraparound
-  if (particles) {
-    const pp = particles.geometry.attributes.position;
-    for (let i = 1; i < pp.array.length; i += 3) {
-      pp.array[i] += dt * 0.025;
-      if (pp.array[i] > 1.5) pp.array[i] = -1.05;
+  // Ambient motion (water ripple, caustics, particulate) is gated on `playing`
+  // so Pause and prefers-reduced-motion freeze the whole scene, not just the
+  // swimmer — while user orbit/zoom keeps working every frame.
+  if (playing) {
+    water.material.uniforms.time.value += dt;
+    vizTime += dt;
+    if (causticsTex) {
+      causticsTex.offset.x = Math.sin(vizTime * 0.12) * 0.25 + vizTime * 0.02;
+      causticsTex.offset.y = vizTime * 0.035;
     }
-    pp.needsUpdate = true;
+    if (particles) {
+      const pp = particles.geometry.attributes.position;
+      for (let i = 1; i < pp.array.length; i += 3) {
+        pp.array[i] += dt * 0.025;
+        if (pp.array[i] > 1.5) pp.array[i] = -1.05;
+      }
+      pp.needsUpdate = true;
+    }
   }
   if (vizForceGroup && swimmer) {
     const hipY = swimmerOrient.position.y;
@@ -3067,7 +3090,11 @@ function ensureViz3DReady() {
   const s = document.createElement('script');
   s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
   s.onload = function(){ installOrbitControls(); startViz3D(); };
-  s.onerror = function(){ threeLoading = false; };
+  s.onerror = function(){
+    threeLoading = false;
+    const c = document.getElementById('viz3d-container');
+    if (c) c.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:2rem;text-align:center;color:var(--white2);font-size:0.9rem;line-height:1.8">The 3D engine could not load (your connection may be blocking the CDN).<br>The stroke demo videos above cover the same technique. Reopen this page to retry.</div>';
+  };
   document.head.appendChild(s);
 }
 // ─── AI-GENERATED STROKE DEMO CLIPS (drop-in slots) ──────────────────────
