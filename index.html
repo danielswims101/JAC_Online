@@ -516,9 +516,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <div class="section-wrap">
   <div class="metrics-row reveal">
     <div class="metric-card"><span class="val">AeT</span><span class="lbl">Primary Zone</span><span class="sub">2–3 mmol lactate</span></div>
-    <div class="metric-card"><span class="val">15m</span><span class="lbl">UW Every Wall</span><span class="sub">Legal maximum</span></div>
+    <div class="metric-card"><span class="val">15m</span><span class="lbl">UW Off Walls</span><span class="sub">Free/back/fly max</span></div>
     <div class="metric-card"><span class="val">3D</span><span class="lbl">Force Viz</span><span class="sub">Drag, thrust, lift</span></div>
-    <div class="metric-card"><span class="val">HR</span><span class="lbl">Golf Scale</span><span class="sub">24–28 at AeT</span></div>
+    <div class="metric-card"><span class="val">HR</span><span class="lbl">10-sec Count</span><span class="sub">24–28 at AeT</span></div>
     <div class="metric-card"><span class="val">6</span><span class="lbl">New Sections</span><span class="sub">Race, Nutrition, Mental…</span></div>
   </div>
   <div class="section-eyebrow">Everything You Need</div>
@@ -548,7 +548,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <div class="card" onclick="showPage('nutrition')" style="cursor:pointer">
       <span class="card-icon">🥗</span><div class="card-tag" style="color:var(--green)">Nutrition</div><h3>NUTRITION & FUELING</h3>
-      <p>Pre-training, intra-session, and recovery nutrition. Race-day fueling, weight management for swimmers.</p>
+      <p>Pre-training, intra-session, and recovery nutrition. Race-day fueling and everyday habits for swimmers.</p>
     </div>
     <div class="card" onclick="showPage('mental')" style="cursor:pointer">
       <span class="card-icon">🧠</span><div class="card-tag" style="color:var(--purple)">Mental Performance</div><h3>MENTAL PERFORMANCE</h3>
@@ -719,7 +719,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <div class="key-point"><span class="kp-label">Entry angle</span><p>10–15° below horizontal.</p></div>
       <div class="key-point"><span class="kp-label">Elbow height</span><p>Always above wrist through catch.</p></div>
       <div class="key-point"><span class="kp-label">Catch depth</span><p>Wrist vertical at 30–40cm depth.</p></div>
-      <div class="key-point"><span class="kp-label">Dressel benchmark</span><p>Entry to catch: 0.18–0.22 seconds.</p></div>
+      <div class="key-point"><span class="kp-label">Elite catch</span><p>Entry to a locked catch is very quick — roughly a fifth of a second.</p></div>
     </div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>PULL PATH & HAND ACCELERATION</h4><span class="chevron">▾</span></div>
     <div class="acc-body"><p>The pull follows a slight S-curve. Hand accelerates throughout — slowest at catch, fastest at exit. The hand must push all the way past the hip — thumb brushing the thigh.</p>
@@ -775,7 +775,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>GRAB START & TRACK START MECHANICS</h4><span class="chevron open">▾</span></div>
     <div class="acc-body open"><p>Track start (one foot back) is now dominant at elite level. Reaction time target: &lt;0.65 seconds. Takeoff angle: 35–45°.</p>
     <div class="key-grid">
-      <div class="key-point"><span class="kp-label">Reaction time</span><p>Elite target: 0.60–0.64s.</p></div>
+      <div class="key-point"><span class="kp-label">Reaction time</span><p>Fast-elite: ~0.60–0.64s; most swimmers are slower — chase clean, not just fast.</p></div>
       <div class="key-point"><span class="kp-label">Takeoff angle</span><p>35–45° for maximum horizontal distance.</p></div>
       <div class="key-point"><span class="kp-label">Entry angle</span><p>15–20° nose-down at water entry.</p></div>
       <div class="key-point"><span class="kp-label">UW distance</span><p>Elite: 10–15m before breakout.</p></div>
@@ -787,7 +787,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="key-grid">
       <div class="key-point"><span class="kp-label">Fly pacing</span><p>Go out controlled — 200 IM is not a 50 fly sprint.</p></div>
       <div class="key-point"><span class="kp-label">Breast leg</span><p>The race decider. If you've gone out too hard, breaststroke is where you pay.</p></div>
-      <div class="key-point"><span class="kp-label">Elite split</span><p>Fly ~23%, back ~26%, breast ~28%, free ~23% — breaststroke is the slowest leg.</p></div>
+      <div class="key-point"><span class="kp-label">Elite split</span><p>200 IM — fly ~23%, back ~26%, breast ~28%, free ~23%: breaststroke is the slowest leg.</p></div>
     </div></div></div>
   </div>
 </div>
@@ -1496,7 +1496,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <span class="qp" onclick="usePrompt(this)">What to eat before a morning session?</span>
       <span class="qp" onclick="usePrompt(this)">How do I control pre-race nerves?</span>
       <span class="qp" onclick="usePrompt(this)">How many days should I taper?</span>
-      <span class="qp" onclick="usePrompt(this)">Why does my shoulder hurt after practice?</span>
+      <span class="qp" onclick="usePrompt(this)">How do I prevent swimmer's shoulder?</span>
       <span class="qp" onclick="usePrompt(this)">Explain threshold vs VO2 max training</span>
     </div>
     <div class="ai-input-row">
@@ -1896,6 +1896,14 @@ function enhanceA11y(){
   // Announce streamed AI output to screen readers
   const aim=document.getElementById('ai-messages');
   if(aim){ aim.setAttribute('role','log'); aim.setAttribute('aria-live','polite'); aim.setAttribute('aria-relevant','additions text'); aim.setAttribute('aria-label','AI coach conversation'); }
+  // Every view's footer should reach the legal pages (only the home footer did)
+  document.querySelectorAll('.footer-bottom').forEach(fb=>{
+    if(!fb.querySelector('a[href="privacy.html"]')){
+      const p=document.createElement('p');
+      p.innerHTML='<a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a>';
+      fb.appendChild(p);
+    }
+  });
   // Mark the auth overlay as a proper dialog (focus handling in openAuthGate)
   const gate=document.getElementById('access-gate');
   if(gate){ gate.setAttribute('role','dialog'); gate.setAttribute('aria-modal','true'); gate.setAttribute('aria-label','Account'); }
@@ -3245,7 +3253,7 @@ async function generateMotion(){
       if(fb){ loadCustomMotion(fb, statusEl, '⚠ AI backend unavailable — built-in reconstruction: '); btn.disabled=false; return; }
       const err=await resp.json().catch(()=>({}));
       statusEl.textContent=err.error||(resp.status===429?'You\'ve reached the limit of 20 AI messages per 5 hours.'
-        :(resp.status===404?'The ask-ai backend isn\'t deployed with the motion mode yet — run: supabase functions deploy ask-ai'
+        :(resp.status===404?'AI 3D reconstruction is temporarily unavailable — try a built-in stroke, or the stroke buttons.'
         :'Error: HTTP '+resp.status));
       btn.disabled=false; return;
     }
@@ -3276,7 +3284,7 @@ async function generateMotion(){
   }catch(e){
     const fb=tryFallbackMotion(desc);
     if(fb){ loadCustomMotion(fb, statusEl, '⚠ AI response unusable — built-in reconstruction: '); }
-    else statusEl.textContent='Couldn\'t build that motion. If this keeps happening, the ask-ai backend probably needs redeploying with the motion mode (supabase functions deploy ask-ai). Otherwise try rephrasing, e.g. "freestyle with breathing".';
+    else statusEl.textContent='Couldn\'t build that motion. Try a simpler cue, e.g. "freestyle with breathing", or pick a built-in stroke.';
   }
   btn.disabled=false;
 }
