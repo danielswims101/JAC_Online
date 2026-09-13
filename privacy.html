@@ -71,12 +71,14 @@ Export Backup button (and an Import to restore it on another device).</p>
 <tr><td>Username you choose</td><td>Only if you create an account</td><td>To show who is signed in</td></tr>
 <tr><td>Messages you send the AI coach</td><td>Each time you use an AI feature</td><td>To generate the reply</td></tr>
 <tr><td>A count of your AI requests</td><td>Each AI request</td><td>To enforce the 20-messages-per-5-hours limit that keeps the site free</td></tr>
+<tr><td>Your username and email address, in one notification email to the site owner</td><td>Once, when you create an account</td><td>So we know a real person signed up; it is not used for marketing and is not shared</td></tr>
 </table>
 
 <h2>4. Processors we use</h2>
 <ul>
 <li><strong>Supabase</strong> — accounts, authentication, and the AI usage counter.</li>
 <li><strong>Anthropic</strong> — processes the text of your AI coach messages to generate replies.</li>
+<li><strong>Resend</strong> — delivers the single signup-notification email to the site owner.</li>
 <li><strong>GitHub Pages</strong> — hosts the site files; server logs may include IP addresses.</li>
 <li><strong>YouTube (privacy-enhanced mode)</strong> — technique videos are embedded through
 youtube-nocookie.com, so YouTube does not set tracking cookies unless you press play on a video. Video thumbnails are loaded from YouTube's image servers (i.ytimg.com) only when the Videos page

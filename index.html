@@ -3076,38 +3076,34 @@ async function doSignup() {
     return;
   }
   btn.disabled = true; btn.textContent = 'Creating account…';
-  // Check the username isn't already taken before creating the auth user.
-  // (The database also enforces a unique constraint -- see setup.sql -- so a
-  // race here can't create duplicates; it just gives a friendlier message.)
-  var existing = await sb.from('profiles').select('username').eq('username', username).maybeSingle();
-  if (existing.data) {
+  // Availability check via a yes/no database function — the profiles table
+  // itself is no longer readable to anyone but its owner. The database also
+  // enforces case-insensitive uniqueness, so a race can't create duplicates.
+  var taken = await sb.rpc('username_taken', { candidate: username });
+  if (taken.data === true) {
     showAuthError('signup', 'That username is already taken — pick another.');
     btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
     return;
   }
-  var { data, error } = await sb.auth.signUp({ email: email, password: password });
+  // The username travels as sign-up metadata; a database trigger creates the
+  // profile row server-side, which also works when email confirmation is on
+  // (the browser has no session yet at that point).
+  var { data, error } = await sb.auth.signUp({
+    email: email, password: password,
+    options: { data: { username: username } }
+  });
   if (error) {
     showAuthError('signup', error.message);
     btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
     return;
   }
-  // Create the profile row (username) linked to the new auth user
+  // Owner notification (best-effort). The function verifies the account
+  // server-side, so only the new user's id is sent.
   if (data.user) {
-    var { error: profErr } = await sb.from('profiles').insert({
-      id: data.user.id,
-      username: username
-    });
-    if (profErr) {
-      showAuthError('signup', 'Account created, but username setup failed: ' + profErr.message);
-      btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
-      return;
-    }
+    try {
+      await sb.functions.invoke('notify-signup', { body: { user_id: data.user.id } });
+    } catch (e) { /* notification is a nice-to-have; signup already succeeded */ }
   }
-  // Fire the signup notification (best-effort; doesn't block account creation
-  // if the function isn't deployed yet)
-  try {
-    await sb.functions.invoke('notify-signup', { body: { username: username, email: email } });
-  } catch (e) { /* not deployed yet -- fine, signup still succeeded */ }
   if (data.session) {
     // No email confirmation required -- log straight in
     await onAuthSuccess(data.user);
