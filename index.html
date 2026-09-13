@@ -2979,7 +2979,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <p class="tl-upd-note">Update checks run through your browser's service worker against this site only — nothing about you is sent anywhere. The one thing saved is the version you last read, so the nav dot knows when to appear.</p>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p data-tl-version>Version 3.0.0</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p data-tl-version>Version 3.0.1</p></div></footer>
 </div>
 </main>
 <!-- AUTH — real Supabase email/password accounts. Content is public; an
@@ -9171,6 +9171,17 @@ window.tl_an_debug = {
 // never point at a page that has not shipped.  Keep the top entry's version
 // in sync with VERSION in sw.js (see NOTES.md / README snippet).
 const UPDATES = [
+  {
+    version: '3.0.1', date: '2026-09-13',
+    title: 'Account privacy and a safer AI coach',
+    summary: 'Backend hardening. Nothing changes in how you use the site; usernames are now private and the AI coach has firmer safety rules.',
+    items: [
+      { tag: 'Fixed',    text: 'Usernames — the list of usernames is no longer readable by anyone; the signup form only gets a yes/no on whether a name is free.' },
+      { tag: 'Improved', text: 'Signup — your profile is created on the server, so accounts also work when email confirmation is required.' },
+      { tag: 'Improved', text: 'AI coach — firmer rules against diagnosing, medication, weight-loss targets and stimulants for under-18s; a message in crisis gets the 988 Lifeline instead of coaching.', link: '#ai' },
+      { tag: 'Fixed',    text: 'Privacy policy — now says that one signup notification email (username and email) goes to the site owner.' }
+    ]
+  },
   {
     version: '3.0.0', date: '2026-09-13',
     title: 'Deck tools, search and an offline app',

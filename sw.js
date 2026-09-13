@@ -14,7 +14,7 @@
    ============================================================ */
 'use strict';
 
-const VERSION      = '3.0.0';
+const VERSION      = '3.0.1';
 const CACHE_PREFIX = 'tidelyne-v';
 const CACHE        = CACHE_PREFIX + VERSION;
 const INDEX        = './index.html';
