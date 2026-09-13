@@ -1799,6 +1799,9 @@ function activatePage(name){
   if (name === 'season' && typeof renderSeasonPage === 'function') {
     renderSeasonPage();
   }
+  // Feature pages register window.onShow_<page> to refresh when activated.
+  const hook=window['onShow_'+name]; if(typeof hook==='function'){ try{ hook(); }catch(e){ console.error(e); } }
+  const off=window.onPageChange; if(typeof off==='function'){ try{ off(name); }catch(e){ console.error(e); } }
 }
 function showPage(name){
   if(location.hash.slice(1)===name){ activatePage(name); }  // re-click same page
@@ -3945,6 +3948,7 @@ function saveLogEntry(){
   renderLog();
 }
 function renderLog(){
+  if(typeof window.onLogChange==='function'){ try{ window.onLogChange(); }catch(e){ console.error(e); } }
   const entries=readLog();
   const container=document.getElementById('log-entries');
   const statsEl=document.getElementById('log-stats');
