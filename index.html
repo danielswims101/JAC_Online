@@ -943,45 +943,405 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #page-analytics .an-tooltip,#page-analytics .an-toolbar,#page-analytics .an-chart-controls{display:none!important}
   #page-analytics .an-table-wrap{display:block!important}
 }
+/* ── videos ── */
+/* ── Tidelyne · videos bundle · click-to-load YouTube facades ──────────────
+   Scope: .yt-lite, .yt-lite-play, iframe.yt-lite-player only. Works standalone
+   (own 16:9 box) and inside the existing .video-embed padding-bottom box. */
+.yt-lite{position:relative;display:block;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@supports not (aspect-ratio:16/9){.yt-lite{height:0;padding-bottom:56.25%}}
+.video-embed>.yt-lite{position:absolute;top:0;left:0;width:100%;height:100%;aspect-ratio:auto;padding-bottom:0}
+/* hqdefault.jpg is 4:3 with letterbox bars; cover crops them to a clean 16:9 */
+.yt-lite>img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.82);transition:filter .25s ease,transform .4s ease}
+.yt-lite:hover>img,.yt-lite:focus-within>img{filter:brightness(1);transform:scale(1.03)}
+/* 72px circular play control — comfortably above the 44px pool-deck target
+   minimum used elsewhere on the site, and legible over any thumbnail */
+.yt-lite-play{position:absolute;top:50%;left:50%;width:72px;height:72px;margin:-36px 0 0 -36px;padding:0;border-radius:50%;border:2px solid rgba(255,255,255,.45);background:rgba(4,13,24,.75);color:#fff;font-size:1.7rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.45);transition:background .2s,border-color .2s,color .2s,transform .2s}
+.yt-lite-play span{display:block;margin-left:5px} /* optical centre: the ▶ glyph sits left-heavy in its box */
+.yt-lite:hover .yt-lite-play,.yt-lite-play:hover,.yt-lite-play:focus-visible{background:var(--cyan);border-color:var(--cyan);color:var(--navy);transform:scale(1.06)}
+.yt-lite-play:focus-visible{outline:3px solid #fff;outline-offset:3px} /* white ring: the cyan site ring vanishes on the cyan hover fill */
+.yt-lite-play:active{transform:scale(.96)}
+/* The live player created on click */
+iframe.yt-lite-player{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
+.video-embed>iframe.yt-lite-player{position:absolute;top:0;left:0;height:100%;aspect-ratio:auto}
+@media(max-width:480px){.yt-lite-play{width:64px;height:64px;margin:-32px 0 0 -32px;font-size:1.5rem}}
+@media (prefers-reduced-motion:reduce){
+  .yt-lite>img,.yt-lite-play{transition:none}
+  .yt-lite:hover>img,.yt-lite:focus-within>img,.yt-lite:hover .yt-lite-play,.yt-lite-play:hover,.yt-lite-play:focus-visible,.yt-lite-play:active{transform:none}
+}
+@media print{.yt-lite-play{display:none}}
+/* ── palette ── */
+/* ============================================================
+   COMMAND PALETTE / GLOBAL SEARCH  (bundle: palette)
+   All rules are scoped under .tl-pal*, #tl-palette or html.tl-pal-lock.
+   ============================================================ */
+html.tl-pal-lock{overflow:hidden}
+.tl-pal{position:fixed;inset:0;z-index:9990;display:flex;align-items:flex-start;justify-content:center;padding:10vh 1rem 1rem}
+.tl-pal[hidden]{display:none!important}
+.tl-pal-backdrop{position:absolute;inset:0;background:rgba(4,13,24,0.82);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);touch-action:none}
+.tl-pal-dialog{position:relative;width:min(660px,100%);max-height:min(72vh,680px);display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 90px rgba(0,212,255,0.08);overflow:hidden;animation:tlPalIn 0.16s ease-out}
+@keyframes tlPalIn{from{opacity:0;transform:translateY(-8px) scale(0.985)}to{opacity:1;transform:none}}
+/* Header row */
+.tl-pal-head{display:flex;align-items:center;gap:10px;padding:10px 12px 10px 16px;border-bottom:1px solid var(--border);background:var(--card2)}
+.tl-pal-head-ico{color:var(--cyan);display:flex;flex-shrink:0}
+.tl-pal-input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:var(--white);font-family:var(--fb);font-size:1.05rem;font-weight:400;padding:10px 0;line-height:1.3}
+.tl-pal-input::placeholder{color:var(--white4)}
+.tl-pal-input:focus-visible{outline:none;box-shadow:0 2px 0 0 var(--cyan)}
+.tl-pal-esc{font-family:var(--fm);font-size:0.58rem;letter-spacing:1px;color:var(--white3);background:var(--navy3);border:1px solid var(--border);border-radius:4px;padding:2px 6px;text-transform:uppercase;flex-shrink:0}
+.tl-pal-close{background:none;border:none;color:var(--white3);font-size:1rem;line-height:1;width:36px;height:36px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:color 0.15s,background 0.15s}
+.tl-pal-close:hover{color:var(--cyan);background:var(--cyan-dim)}
+/* Results */
+.tl-pal-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px;scroll-padding:8px}
+.tl-pal-list::-webkit-scrollbar{width:5px}
+.tl-pal-groupwrap{padding-bottom:4px}
+.tl-pal-group{font-family:var(--fm);font-size:0.56rem;letter-spacing:2.5px;color:var(--white3);text-transform:uppercase;padding:10px 12px 4px}
+.tl-pal-opt{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:var(--r8);cursor:pointer;min-height:44px;border-left:2px solid transparent}
+.tl-pal-opt[aria-selected="true"]{background:var(--cyan-dim);border-left-color:var(--cyan)}
+.tl-pal-ico{width:26px;height:26px;border-radius:6px;background:var(--navy3);border:1px solid var(--border2);color:var(--white3);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.tl-pal-opt[aria-selected="true"] .tl-pal-ico{color:var(--cyan);border-color:rgba(0,212,255,0.35)}
+.tl-pal-kind-action .tl-pal-ico{color:var(--gold)}
+.tl-pal-kind-page .tl-pal-ico{color:var(--cyan)}
+.tl-pal-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.tl-pal-title{font-family:var(--fh);font-size:1.08rem;letter-spacing:1px;line-height:1.15;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-pal-crumb{font-family:var(--fm);font-size:0.6rem;letter-spacing:0.5px;color:var(--white3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-pal-snip{font-size:0.78rem;color:var(--white2);font-weight:300;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-pal-mark{background:none;color:var(--cyan);font-weight:600}
+.tl-pal-kindtag{font-family:var(--fm);font-size:0.54rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--white4);flex-shrink:0}
+.tl-pal-opt[aria-selected="true"] .tl-pal-kindtag{color:var(--white3)}
+.tl-pal-empty{padding:18px 14px 6px;font-size:0.88rem;color:var(--white2);line-height:1.7;font-weight:300}
+/* Footer hints */
+.tl-pal-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid var(--border2);background:var(--card2);font-family:var(--fm);font-size:0.6rem;letter-spacing:0.5px;color:var(--white3)}
+.tl-pal-foot kbd{display:inline-block;font-family:var(--fm);font-size:0.58rem;color:var(--white2);background:var(--navy3);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin-right:4px;line-height:1.6}
+.tl-pal-foot-r{margin-left:auto}
+.tl-pal-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+/* Destination highlight ring (1.5 s) */
+.tl-pal-hit{outline:2px solid var(--cyan);outline-offset:4px;border-radius:6px;box-shadow:0 0 0 8px rgba(0,212,255,0.14);scroll-margin-top:84px;animation:tlPalHit 1.5s ease-out forwards}
+@keyframes tlPalHit{0%,55%{outline-color:var(--cyan);box-shadow:0 0 0 8px rgba(0,212,255,0.14)}100%{outline-color:transparent;box-shadow:0 0 0 8px rgba(0,212,255,0)}}
+/* Nav button (nav_button.html) */
+.tl-pal-navbtn{display:inline-flex;align-items:center;gap:6px}
+.tl-pal-navbtn svg{display:block}
+.tl-pal-navhint{font-family:var(--fm);font-size:0.56rem;letter-spacing:0.5px;color:var(--white3);line-height:1}
+.tl-pal-navbtn:hover .tl-pal-navhint{color:var(--cyan)}
+/* Mobile: full-screen sheet, big input, tappable rows */
+@media(max-width:640px){
+  .tl-pal{padding:0;align-items:stretch}
+  .tl-pal-dialog{width:100%;max-height:none;height:100vh;height:100dvh;border-radius:0;border:none;padding-top:env(safe-area-inset-top);animation:none}
+  .tl-pal-head{padding:8px 8px 8px 14px}
+  .tl-pal-input{font-size:1.12rem;padding:12px 0}
+  .tl-pal-esc{display:none}
+  .tl-pal-close{width:44px;height:44px;font-size:1.15rem}
+  .tl-pal-opt{padding:10px 12px;min-height:52px}
+  .tl-pal-title{white-space:normal;font-size:1.02rem}
+  .tl-pal-kindtag{display:none}
+  .tl-pal-foot{display:none}
+  .tl-pal-list{padding:4px 6px calc(12px + env(safe-area-inset-bottom))}
+}
+@media(max-width:768px){
+  .tl-pal-navhint{display:none}
+  .tl-pal-navbtn{min-width:44px;min-height:44px}
+}
+/* Phones: the button must not push .nav-right past the viewport (measured
+   +17 px at 375 px). Match the site's 40 px nav-button height and trim the
+   nav's own padding/gaps, but only on the containers initPalette() tagged. */
+@media(max-width:480px){
+  nav.tl-pal-nav{padding:0 5px;gap:3px}
+  .tl-pal-navright{gap:3px}
+  .tl-pal-navbtn{min-width:36px;min-height:40px;padding:6px 4px}
+}
+@media(prefers-reduced-motion:reduce){
+  .tl-pal-dialog{animation:none}
+  .tl-pal-hit{animation:none}
+}
+@media print{
+  .tl-pal,.tl-pal-navbtn{display:none!important}
+}
+/* ── updates ── */
+/* ============================================================
+   WHAT'S NEW + PWA  (bundle: updates)
+   Everything is scoped to #page-updates, #nav-updates or the
+   tl-upd- / tl-has-badge prefixes. No global resets.
+   ============================================================ */
+
+/* The mobile rule `.btn-sm{display:inline-flex}` would beat the UA's
+   [hidden]{display:none} — this id-scoped rule outranks it by specificity. */
+#page-updates [hidden]{display:none}
+
+/* ── App / install card ─────────────────────────────────────── */
+#page-updates .tl-upd-app{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:1.75rem;margin-bottom:2.5rem}
+#page-updates .tl-upd-app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.85rem}
+#page-updates .tl-upd-stat{background:var(--navy3);border:1px solid var(--border2);border-radius:var(--r8);padding:0.9rem 0.6rem;text-align:center}
+#page-updates .tl-upd-stat-val{display:block;font-family:var(--fh);font-size:clamp(1.4rem,3.2vw,1.9rem);letter-spacing:1px;color:var(--cyan);line-height:1;white-space:nowrap}
+#page-updates .tl-upd-stat-lbl{display:block;font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:6px}
+#page-updates .tl-upd-offline-note{font-size:0.8rem;color:var(--white3);line-height:1.7;margin-top:0.9rem}
+#page-updates .tl-upd-offline-note:empty{display:none}
+#page-updates .tl-upd-offline-note strong{color:var(--white2);font-weight:500}
+#page-updates .tl-upd-install{display:flex;gap:1.25rem;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border2)}
+#page-updates .tl-upd-install-text{flex:1 1 300px;min-width:0}
+#page-updates .tl-upd-install h4{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:0.35rem}
+#page-updates .tl-upd-install p{font-size:0.86rem;color:var(--white2);line-height:1.75;font-weight:300;max-width:560px}
+#page-updates .tl-upd-install-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+#page-updates .tl-upd-status{font-family:var(--fm);font-size:0.7rem;letter-spacing:0.3px;color:var(--white3);margin-top:0.9rem;line-height:1.6}
+#page-updates .tl-upd-status:empty{margin-top:0}
+#page-updates .tl-upd-status.ok{color:var(--green)}
+#page-updates .tl-upd-status.warn{color:var(--gold)}
+
+/* ── Timeline ───────────────────────────────────────────────── */
+#page-updates .tl-upd-timeline{list-style:none;position:relative;padding-left:1.75rem;margin:0}
+#page-updates .tl-upd-timeline::before{content:'';position:absolute;left:6px;top:14px;bottom:14px;width:1px;background:linear-gradient(180deg,var(--cyan) 0%,var(--border) 35%,transparent 100%)}
+#page-updates .tl-upd-rel{position:relative;background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.5rem 1.75rem;margin-bottom:1.25rem;transition:border-color 0.3s}
+#page-updates .tl-upd-rel:hover{border-color:var(--border)}
+#page-updates .tl-upd-rel:focus{outline:none}
+#page-updates .tl-upd-rel:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+#page-updates .tl-upd-rel::before{content:'';position:absolute;left:calc(-1.75rem + 2px);top:1.85rem;width:9px;height:9px;border-radius:50%;background:var(--navy);border:2px solid var(--white4);box-sizing:border-box}
+#page-updates .tl-upd-rel.latest{border-color:var(--border)}
+#page-updates .tl-upd-rel.latest::before{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 0 4px var(--cyan-dim)}
+#page-updates .tl-upd-rel.unseen::before{border-color:var(--gold)}
+#page-updates .tl-upd-rel.latest.unseen::before{background:var(--cyan);border-color:var(--cyan)}
+#page-updates .tl-upd-rel-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+#page-updates .tl-upd-ver{font-family:var(--fh);font-size:clamp(1.6rem,3vw,2rem);letter-spacing:1px;color:var(--cyan);line-height:1}
+#page-updates .tl-upd-badge{font-family:var(--fm);font-size:0.55rem;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid;line-height:1.4}
+#page-updates .tl-upd-badge.latest{color:var(--cyan);background:var(--cyan-dim);border-color:rgba(0,212,255,0.3)}
+#page-updates .tl-upd-badge.unseen{color:var(--gold);background:var(--gold-dim);border-color:rgba(245,166,35,0.3)}
+#page-updates .tl-upd-date{margin-left:auto;font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--white3);text-transform:uppercase;white-space:nowrap}
+#page-updates .tl-upd-rel-title{font-family:var(--fh);font-size:1.35rem;letter-spacing:1px;margin:0.6rem 0 0.35rem;color:var(--white);line-height:1.15}
+#page-updates .tl-upd-rel-summary{font-size:0.88rem;color:var(--white2);line-height:1.8;font-weight:300;margin-bottom:0.9rem}
+#page-updates .tl-upd-items{list-style:none;margin:0;padding:0}
+#page-updates .tl-upd-items li{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid var(--border2);font-size:0.86rem;color:var(--white2);line-height:1.65;font-weight:300}
+#page-updates .tl-upd-items li:last-child{border-bottom:none}
+#page-updates .tl-upd-items strong{color:var(--white);font-weight:500}
+#page-updates .tl-upd-items a{color:var(--white2);text-decoration:none;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s}
+#page-updates .tl-upd-items a::after{content:' →';color:var(--cyan);font-size:0.8em}
+#page-updates .tl-upd-items a:hover,#page-updates .tl-upd-items a:focus-visible{color:var(--white);border-bottom-color:var(--cyan)}
+#page-updates .tl-upd-items a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:2px}
+#page-updates .tl-upd-tag{font-family:var(--fm);font-size:0.55rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 0;border-radius:4px;border:1px solid;flex:0 0 74px;text-align:center;margin-top:3px;line-height:1.4}
+#page-updates .tl-upd-tag.new{color:var(--green);background:var(--green-dim);border-color:rgba(0,229,153,0.3)}
+#page-updates .tl-upd-tag.improved{color:var(--cyan);background:var(--cyan-dim);border-color:rgba(0,212,255,0.3)}
+#page-updates .tl-upd-tag.fixed{color:var(--gold);background:var(--gold-dim);border-color:rgba(245,166,35,0.3)}
+#page-updates .tl-upd-counts{font-family:var(--fm);font-size:0.58rem;letter-spacing:2px;color:var(--white4);text-transform:uppercase;margin-top:0.9rem}
+#page-updates .tl-upd-more{display:inline-block;margin:0.25rem 0 0 1.75rem}
+#page-updates .tl-upd-note{font-size:0.76rem;color:var(--white4);line-height:1.7;margin-top:2rem;max-width:620px}
+
+/* ── Unseen-release dot (nav link + any [data-tl-badge] element) ── */
+.tl-upd-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 2px var(--navy),0 0 8px rgba(245,166,35,0.55);vertical-align:middle;margin-left:6px;flex-shrink:0}
+#nav-updates{position:relative}
+#nav-updates .tl-upd-dot{position:absolute;top:13px;right:-1px;margin-left:0}
+
+/* ── Update toast (created by script.js, appended to <body>) ── */
+.tl-upd-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);background:var(--card2);border:1px solid var(--border);border-radius:var(--r12);padding:10px 10px 10px 18px;box-shadow:0 16px 40px rgba(0,0,0,0.45),0 0 40px rgba(0,212,255,0.08);animation:tlUpdIn 0.3s ease}
+@keyframes tlUpdIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+.tl-upd-toast-msg{font-family:var(--fm);font-size:0.72rem;letter-spacing:0.3px;color:var(--white);line-height:1.5}
+.tl-upd-toast-msg b{color:var(--cyan);font-weight:600}
+.tl-upd-toast .btn-sm{white-space:nowrap}
+.tl-upd-toast-x{background:none;border:none;color:var(--white3);font-size:1.05rem;line-height:1;cursor:pointer;min-width:44px;min-height:44px;border-radius:6px;transition:color 0.2s,background 0.2s}
+.tl-upd-toast-x:hover{color:var(--white);background:var(--navy3)}
+.tl-upd-toast .btn-sm{min-height:44px;display:inline-flex;align-items:center}
+@media (prefers-reduced-motion: reduce){
+  .tl-upd-toast{animation:none}
+  #page-updates .tl-upd-rel,#page-updates .tl-upd-items a,.tl-upd-toast-x{transition:none}
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media(max-width:768px){
+  #page-updates .tl-upd-app{padding:1.25rem}
+  #page-updates .tl-upd-rel{padding:1.15rem 1.1rem}
+  #page-updates .tl-upd-more{min-height:44px}
+  #nav-updates .tl-upd-dot{top:12px;right:2px}
+}
+@media(max-width:480px){
+  #page-updates .tl-upd-app-grid{grid-template-columns:repeat(2,1fr)}
+  #page-updates .tl-upd-timeline{padding-left:1.25rem}
+  #page-updates .tl-upd-rel::before{left:calc(-1.25rem + 2px)}
+  #page-updates .tl-upd-more{margin-left:1.25rem}
+  #page-updates .tl-upd-install-actions{width:100%}
+  #page-updates .tl-upd-install-actions .btn-sm,#page-updates .tl-upd-install-actions .btn-ghost-sm{flex:1 1 auto}
+  #page-updates .tl-upd-date{margin-left:0;width:100%}
+  .tl-upd-toast{left:16px;right:16px;transform:none;max-width:none;flex-wrap:wrap;animation:none}
+  .tl-upd-toast-msg{flex:1 1 100%}
+}
+@media print{
+  .tl-upd-toast,.tl-upd-dot,#page-updates .tl-upd-install,#page-updates .tl-upd-status,#page-updates .tl-upd-more{display:none!important}
+}
+/* ── nav ── */
+/* ===== NAV BUNDLE: grouped navigation (desktop dropdowns >=900px / mobile drawer <900px) =====
+   Scoped under `nav`. Reuses the existing nav look (sticky, backdrop blur, cyan active underline,
+   .nav-key-btn / .nav-ai-btn) and only restyles the link list. Breakpoint 900px sits between the
+   site's 768px phone rules and the width the six top-level items need. */
+nav{overflow:visible}
+nav .nav-drawer{flex:1 1 auto;min-width:0;display:flex;align-items:stretch;justify-content:center}
+nav .nav-drawer-head,nav .nav-drawer-search,nav .nav-scrim,nav .nav-burger{display:none}
+nav .nav-drawer-scroll{display:flex;align-items:center;min-width:0}
+nav .nav-links{display:flex;align-items:center;list-style:none;margin:0;padding:0;gap:2px;width:auto}
+nav .nav-links>li{position:relative;margin:0;padding:0}
+/* Top-level items: page links (Home, What's New) and group buttons share one look. */
+nav .nav-links>li>a,nav .nav-group-btn{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;font-family:var(--fb);font-size:0.65rem;font-weight:500;letter-spacing:0.3px;line-height:48px;text-transform:uppercase;white-space:nowrap;color:var(--white3);background:none;border:0;border-bottom:2px solid transparent;border-radius:0;cursor:pointer;transition:color 0.2s,border-color 0.2s}
+nav .nav-links>li>a:hover,nav .nav-links>li>a.active,nav .nav-group-btn:hover,nav .nav-group-btn[aria-expanded="true"],nav .nav-group-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+nav #nav-updates{position:relative}
+nav .nav-caret{display:inline-block;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);opacity:0.75;transition:transform 0.2s}
+nav .nav-group-btn[aria-expanded="true"] .nav-caret{transform:translateY(1px) rotate(225deg)}
+/* Dropdown panel */
+nav .nav-menu{list-style:none;margin:0;padding:6px;position:absolute;top:100%;left:0;min-width:240px;background:rgba(8,21,38,0.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:var(--r12);box-shadow:0 18px 40px rgba(0,0,0,0.45);display:none;z-index:6}
+nav .nav-menu.flip{left:auto;right:0}
+nav .nav-group-btn[aria-expanded="true"]+.nav-menu{display:block;animation:tlNavMenuIn 0.16s ease}
+@keyframes tlNavMenuIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+nav .nav-menu li{margin:0;padding:0}
+nav .nav-menu a{display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:40px;padding:8px 12px;border:0;border-radius:8px;line-height:1.3;font-size:0.82rem;font-weight:500;letter-spacing:0;text-transform:none;color:var(--white2);white-space:nowrap;transition:background 0.15s,color 0.15s}
+nav .nav-menu a[data-desc]::after{content:attr(data-desc);display:block;font-size:0.68rem;font-weight:300;letter-spacing:0;color:var(--white3);line-height:1.35}
+nav .nav-menu a:hover,nav .nav-menu a:focus-visible{background:var(--cyan-dim);color:var(--cyan);border-bottom-color:transparent}
+nav .nav-menu a.active{background:var(--cyan-dim);color:var(--cyan);box-shadow:inset 2px 0 0 var(--cyan);border-bottom-color:transparent}
+/* Right cluster: keep a long username from pushing the row off-screen (CSS only; markup untouched). */
+nav #current-username-display{max-width:120px;overflow:hidden;text-overflow:ellipsis}
+/* script.js sets [hidden] on the search button until window.openPalette exists; the site's
+   768px rule gives .nav-key-btn display:inline-flex, which would otherwise override [hidden]. */
+nav #nav-search-btn[hidden]{display:none}
+@media(max-width:999px){nav #current-username-display{display:none}}
+/* ---------- Mobile / tablet: hamburger + slide-in drawer ---------- */
+@media(max-width:899px){
+  nav{gap:8px}
+  nav .nav-burger{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;min-height:44px;padding:0;order:99;position:relative;flex-shrink:0}
+  nav .nav-burger-bars{position:relative;display:block;width:18px;height:14px}
+  nav .nav-burger-bars span{position:absolute;left:0;top:6px;width:18px;height:2px;border-radius:1px;background:currentColor;transition:transform 0.2s ease,opacity 0.2s ease}
+  nav .nav-burger-bars span:nth-child(1){transform:translateY(-6px)}
+  nav .nav-burger-bars span:nth-child(3){transform:translateY(6px)}
+  nav .nav-burger[aria-expanded="true"] .nav-burger-bars span:nth-child(1){transform:rotate(45deg)}
+  nav .nav-burger[aria-expanded="true"] .nav-burger-bars span:nth-child(2){opacity:0}
+  nav .nav-burger[aria-expanded="true"] .nav-burger-bars span:nth-child(3){transform:rotate(-45deg)}
+  /* Mirrors a badge appended inside #nav-updates (the link is out of sight in the closed drawer). */
+  nav .nav-burger.has-badge::after{content:'';position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 2px var(--navy3)}
+  /* top/left/width/height are explicit (not inset:0) because the nav's backdrop-filter can make it,
+     rather than the viewport, the containing block for fixed children; script.js re-anchors on open. */
+  nav .nav-scrim{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;background:rgba(4,13,24,0.62);opacity:0;pointer-events:none;transition:opacity 0.25s ease;z-index:4}
+  nav .nav-scrim.open{opacity:1;pointer-events:auto}
+  /* Three states, no visibility transition (a transitioned visibility only resolves when the
+     animation timeline ticks, which made the Close button unfocusable for a frame):
+       parked  — display:none. Fully closed. A translated-off-screen box still counts as scrollable
+                 overflow of its containing block (it made the page 344px wider than the phone).
+       closing — translated off-screen while the slide-out runs; script.js marks it inert meanwhile.
+       open    — in place, focusable immediately.
+     script.js un-parks and forces a reflow before adding .open, and parks after the slide-out. */
+  nav .nav-drawer{position:fixed;top:0;right:0;height:100vh;height:100dvh;width:min(360px,88vw);flex:none;display:flex;flex-direction:column;justify-content:flex-start;background:var(--navy2);border-left:1px solid var(--border);box-shadow:-24px 0 60px rgba(0,0,0,0.5);transform:translateX(102%);transition:transform 0.28s cubic-bezier(0.2,0.7,0.2,1);z-index:5;overflow:hidden}
+  nav .nav-drawer.open{transform:none}
+  nav .nav-drawer.parked{display:none}
+  nav .nav-scrim{width:100%}
+  nav .nav-drawer-head{display:flex;align-items:center;justify-content:space-between;gap:8px;height:56px;padding:0 6px 0 16px;border-bottom:1px solid var(--border2);flex-shrink:0}
+  nav .nav-drawer-title{font-family:var(--fh);font-size:1.25rem;letter-spacing:3px;color:var(--cyan)}
+  nav .nav-drawer-close{width:44px;height:44px;min-height:44px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:1rem}
+  nav .nav-drawer-scroll{display:block;flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:10px 12px calc(24px + env(safe-area-inset-bottom,0px))}
+  nav .nav-drawer-search{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;margin:0 0 6px;padding:0 12px;background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);color:var(--white2);font-family:var(--fb);font-size:0.82rem;text-align:left;cursor:pointer}
+  nav .nav-drawer-search[hidden]{display:none}
+  nav .nav-drawer-search span{color:var(--cyan);font-size:1rem}
+  nav .nav-links{display:block;width:auto;gap:0}
+  nav .nav-links>li{position:static}
+  nav .nav-links>li>a{display:flex;align-items:center;min-height:48px;padding:0 12px;line-height:1.3;font-size:0.78rem;letter-spacing:0.5px;border:0;border-radius:8px;color:var(--white2)}
+  nav .nav-links>li>a:hover,nav .nav-links>li>a.active{background:var(--cyan-dim);color:var(--cyan);border-bottom-color:transparent}
+  nav .nav-links>li>a.active{box-shadow:inset 2px 0 0 var(--cyan)}
+  nav #nav-updates{margin-top:8px}
+  /* Groups become headed, collapsible sections (expanded by default). */
+  nav .nav-group{margin-top:8px}
+  nav .nav-group-btn{display:flex;width:100%;justify-content:space-between;align-items:center;min-height:44px;padding:0 12px;line-height:1.2;font-family:var(--fm);font-size:0.6rem;letter-spacing:3px;color:var(--cyan);opacity:0.85;border:0;border-radius:8px}
+  nav .nav-group-btn:hover,nav .nav-group-btn[aria-expanded="true"],nav .nav-group-btn.active{color:var(--cyan);border-bottom-color:transparent}
+  nav .nav-group-btn.active{opacity:1}
+  nav .nav-group-btn .nav-caret{transform:translateY(-1px) rotate(45deg)}
+  nav .nav-group-btn[aria-expanded="true"] .nav-caret{transform:translateY(2px) rotate(225deg)}
+  nav .nav-menu{position:static;display:none;grid-template-columns:1fr 1fr;gap:6px;min-width:0;padding:2px 0 6px;background:none;border:0;border-radius:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+  nav .nav-menu.flip{left:auto;right:auto}
+  nav .nav-group-btn[aria-expanded="true"]+.nav-menu{display:grid;animation:none}
+  nav .nav-menu a{min-height:46px;padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:8px;white-space:normal;font-size:0.8rem}
+  nav .nav-menu a[data-desc]::after{display:none}
+  nav .nav-menu a:hover{border-color:var(--border)}
+  nav .nav-menu a.active{border-color:rgba(0,212,255,0.4);box-shadow:inset 2px 0 0 var(--cyan)}
+}
+@media(max-width:480px){
+  nav{padding:0 12px}
+  nav .nav-brand{font-size:1.2rem;letter-spacing:2px;gap:7px}
+  nav .nav-mark{width:24px;height:24px}
+  nav #nav-search-btn{display:none}   /* the drawer carries a full-width Search row instead */
+  nav .nav-ai-btn{padding:6px 8px;font-size:0.6rem;letter-spacing:0.5px}
+  nav .nav-drawer{width:min(340px,90vw)}
+}
+@media (prefers-reduced-motion: reduce){
+  nav .nav-drawer,nav .nav-drawer.open,nav .nav-scrim,nav .nav-burger-bars span,nav .nav-caret{transition:none}
+  nav .nav-group-btn[aria-expanded="true"]+.nav-menu{animation:none}
+}
+/* Body scroll lock while the drawer is open (script.js also fixes the body for iOS). Keeps the
+   scrollbar gutter so desktop-width narrow windows do not shift when the page stops scrolling. */
+html.tl-nav-lock{overflow-y:scroll}
+html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
+/* ===== /NAV BUNDLE ===== */
 </style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="noise"></div>
 <!-- NAV -->
-<nav>
+<nav aria-label="Primary">
   <div class="nav-brand" onclick="showPage('home')" role="link" tabindex="0"
        onkeydown="if(event.key==='Enter')showPage('home')" aria-label="Tidelyne — home"><img src="logo-mark.svg" alt="" width="26" height="26" class="nav-mark">TIDE<span>LYNE</span></div>
-  <div class="nav-scroll">
-    <ul class="nav-links">
-      <li><a href="#home" id="nav-home" class="active" aria-current="page">Home</a></li>
-      <li><a href="#technique" id="nav-technique">Technique</a></li>
-      <li><a href="#videos" id="nav-videos">Videos</a></li>
-      <li><a href="#sets" id="nav-sets">Sets</a></li>
-      <li><a href="#dryland" id="nav-dryland">Dryland</a></li>
-      <li><a href="#visualizer" id="nav-visualizer">3D Viz</a></li>
-      <li><a href="#workouts" id="nav-workouts">Generator</a></li>
-      <li><a href="#calculator" id="nav-calculator">Calculator</a></li>
-      <li><a href="#timers" id="nav-timers">Timers</a></li>
-      <li><a href="#zones" id="nav-zones">Zones</a></li>
-      <li><a href="#planner" id="nav-planner">Planner</a></li>
-      <li><a href="#profile" id="nav-profile">My PRs</a></li>
-      <li><a href="#log" id="nav-log">Log</a></li>
-      <li><a href="#analytics" id="nav-analytics">Analytics</a></li>
-      <li><a href="#nutrition" id="nav-nutrition">Nutrition</a></li>
-      <li><a href="#race" id="nav-race">Race Day</a></li>
-      <li><a href="#taper" id="nav-taper">Taper</a></li>
-      <li><a href="#mental" id="nav-mental">Mental</a></li>
-      <li><a href="#injury" id="nav-injury">Injury</a></li>
-      <li><a href="#season" id="nav-season">Season</a></li>
-    </ul>
+  <!-- One markup tree for both layouts: inline group buttons with dropdowns at >=900px,
+       a slide-in drawer with headed (collapsible) sections below that. Disclosure pattern
+       throughout — button[aria-expanded][aria-controls] + a plain list of links. -->
+  <div class="nav-drawer parked" id="nav-drawer">
+    <div class="nav-drawer-head">
+      <span class="nav-drawer-title" id="tl-nav-title">Menu</span>
+      <button type="button" class="nav-key-btn nav-drawer-close" id="tl-nav-close" aria-label="Close menu">✕</button>
+    </div>
+    <div class="nav-drawer-scroll">
+      <button type="button" class="nav-drawer-search" id="tl-nav-search" hidden><span aria-hidden="true">⌕</span>Search Tidelyne</button>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="#home" id="nav-home" class="active" aria-current="page">Home</a></li>
+        <li class="nav-group">
+          <button type="button" class="nav-group-btn" id="tl-grp-learn" aria-expanded="false" aria-controls="tl-menu-learn">Learn<span class="nav-caret" aria-hidden="true"></span></button>
+          <ul class="nav-menu" id="tl-menu-learn" aria-labelledby="tl-grp-learn">
+            <li><a href="#technique" id="nav-technique" data-desc="Every stroke, turn and start, phase by phase">Technique</a></li>
+            <li><a href="#videos" id="nav-videos" data-desc="Elite demos by stroke and skill">Videos</a></li>
+            <li><a href="#sets" id="nav-sets" data-desc="AeT, threshold, kick and speed sets">Sets</a></li>
+            <li><a href="#dryland" id="nav-dryland" data-desc="Four-day strength and mobility plan">Dryland</a></li>
+            <li><a href="#nutrition" id="nav-nutrition" data-desc="Daily fueling, race day, recovery, hydration">Nutrition</a></li>
+          </ul>
+        </li>
+        <li class="nav-group">
+          <button type="button" class="nav-group-btn" id="tl-grp-tools" aria-expanded="false" aria-controls="tl-menu-tools">Tools<span class="nav-caret" aria-hidden="true"></span></button>
+          <ul class="nav-menu" id="tl-menu-tools" aria-labelledby="tl-grp-tools">
+            <li><a href="#visualizer" id="nav-visualizer" data-desc="Interactive 3D stroke biomechanics">3D Viz</a></li>
+            <li><a href="#workouts" id="nav-workouts" data-desc="Build a session by focus, stroke and phase">Generator</a></li>
+            <li><a href="#calculator" id="nav-calculator" data-desc="Golf score, splits, pace zones, conversions">Calculator</a></li>
+            <li><a href="#zones" id="nav-zones" data-desc="Lactate and heart-rate ranges by zone">Zones</a></li>
+            <li><a href="#timers" id="nav-timers" data-desc="Tempo trainer, interval timer and pace clock">Timers</a></li>
+            <li><a href="#planner" id="nav-planner" data-desc="Goal times, race predictor, splits and meet countdown">Planner</a></li>
+          </ul>
+        </li>
+        <li class="nav-group">
+          <button type="button" class="nav-group-btn" id="tl-grp-track" aria-expanded="false" aria-controls="tl-menu-track">Track<span class="nav-caret" aria-hidden="true"></span></button>
+          <ul class="nav-menu" id="tl-menu-track" aria-labelledby="tl-grp-track">
+            <li><a href="#profile" id="nav-profile" data-desc="Personal records by event">My PRs</a></li>
+            <li><a href="#log" id="nav-log" data-desc="Sessions, volume and a 30-day summary">Log</a></li>
+            <li><a href="#analytics" id="nav-analytics" data-desc="Trends from your training data">Analytics</a></li>
+          </ul>
+        </li>
+        <li class="nav-group">
+          <button type="button" class="nav-group-btn" id="tl-grp-compete" aria-expanded="false" aria-controls="tl-menu-compete">Compete<span class="nav-caret" aria-hidden="true"></span></button>
+          <ul class="nav-menu" id="tl-menu-compete" aria-labelledby="tl-grp-compete">
+            <li><a href="#race" id="nav-race" data-desc="Meet-day timeline, warm-up, event plans">Race Day</a></li>
+            <li><a href="#taper" id="nav-taper" data-desc="Sprint and distance taper, recovery, sleep">Taper</a></li>
+            <li><a href="#mental" id="nav-mental" data-desc="Visualization, arousal control, focus cues">Mental</a></li>
+            <li><a href="#injury" id="nav-injury" data-desc="Prevention by body region, plus breathing">Injury</a></li>
+            <li><a href="#season" id="nav-season" data-desc="Season phase, meet calendar, time standards">Season</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="#updates" id="nav-updates">What's New</a></li>
+      </ul>
+    </div>
   </div>
+  <div class="nav-scrim" id="tl-nav-scrim"></div>
   <div class="nav-right">
+    <!-- Same markup as the palette bundle's nav_button.html (the palette's initPalette() rewrites the hint and
+         labels for the platform). Skip that bundle's "insert nav_button.html" step: the button is already here.
+         script.js hides it while window.openPalette is undefined so it is never a dead control. -->
+    <button type="button" class="nav-key-btn tl-pal-navbtn" id="nav-search-btn" aria-label="Search (Cmd+K)" title="Search (Cmd+K)" onclick="if(window.openPalette)openPalette()"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg><span class="tl-pal-navhint" aria-hidden="true">⌘K</span></button>
     <button class="nav-ai-btn" onclick="showPage('ai')">AI Coach ✦</button>
     <button class="nav-ai-btn" id="nav-login-btn" onclick="openAuthGate('login')" style="background:var(--navy3);color:var(--cyan);border:1px solid var(--border)">Log In</button>
     <span id="current-username-display" style="font-family:var(--fm);font-size:0.65rem;color:var(--cyan);letter-spacing:0.5px;white-space:nowrap;padding:0 4px"></span>
     <button class="nav-key-btn" id="nav-logout-btn" onclick="doLogout()" title="Log out" style="display:none">⎋</button>
   </div>
+  <button type="button" class="nav-key-btn nav-burger" id="nav-menu-btn" aria-expanded="false" aria-controls="nav-drawer" aria-label="Menu"><span class="nav-burger-bars" aria-hidden="true"><span></span><span></span><span></span></span></button>
 </nav>
 <main id="main">
 <!-- HOME PAGE -->
@@ -1000,7 +1360,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <div class="hero-stats">
     <div class="hstat"><span class="hstat-val">3D</span><span class="hstat-lbl">Force Visualizer</span></div>
     <div class="hstat"><span class="hstat-val">AI</span><span class="hstat-lbl">Live Coaching</span></div>
-    <div class="hstat"><span class="hstat-val">17</span><span class="hstat-lbl">Sections</span></div>
+    <div class="hstat"><span class="hstat-val">21</span><span class="hstat-lbl">Sections</span></div>
     <div class="hstat"><span class="hstat-val">∞</span><span class="hstat-lbl">Workouts</span></div>
   </div>
 </div>
@@ -1071,11 +1431,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="tab-btn" onclick="switchTab(this,'vd-fly')">🦋 Butterfly</button>
     <button class="tab-btn" onclick="switchTab(this,'vd-uw')">🌊 Underwater</button>
   </div>
-  <div class="tab-panel active" id="vd-fr"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/Q0vq-34dWF0" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Demo</span><p>Division I coach breakdown of front crawl technique.</p></div></div></div>
-  <div class="tab-panel" id="vd-bk"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/YkjOvxHsY1g" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Demo</span><p>Six elements of backstroke with perfect technique.</p></div></div></div>
-  <div class="tab-panel" id="vd-br"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/RbgiTaVUqMk" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Demo</span><p>Pull-breathe-kick-glide timing and coordination.</p></div></div></div>
-  <div class="tab-panel" id="vd-fly"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/o6Pnv10wyHk" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Demo</span><p>Olympian Dylan Carter on mastering butterfly undulation.</p></div></div></div>
-  <div class="tab-panel" id="vd-uw"><div class="video-card" style="max-width:640px"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/bjDfI0NMVY8" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
+  <div class="tab-panel active" id="vd-fr"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="Q0vq-34dWF0" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/Q0vq-34dWF0/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Freestyle · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Freestyle · Demo</span><p>Division I coach breakdown of front crawl technique.</p></div></div></div>
+  <div class="tab-panel" id="vd-bk"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="YkjOvxHsY1g" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/YkjOvxHsY1g/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Backstroke · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Backstroke · Demo</span><p>Six elements of backstroke with perfect technique.</p></div></div></div>
+  <div class="tab-panel" id="vd-br"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="RbgiTaVUqMk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/RbgiTaVUqMk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Breaststroke · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Breaststroke · Demo</span><p>Pull-breathe-kick-glide timing and coordination.</p></div></div></div>
+  <div class="tab-panel" id="vd-fly"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="o6Pnv10wyHk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/o6Pnv10wyHk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Butterfly · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Butterfly · Demo</span><p>Olympian Dylan Carter on mastering butterfly undulation.</p></div></div></div>
+  <div class="tab-panel" id="vd-uw"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="bjDfI0NMVY8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/bjDfI0NMVY8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Underwater · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
   <div class="divider"></div>
   <div class="section-eyebrow">Study It — Interactive 3D Biomechanics Lab</div>
   <p class="section-intro" style="margin-bottom:1.5rem">A rigged 3D human swimming underwater — caustic light, depth haze, wet skin — reconstructing every movement joint-by-joint. Slow it down, orbit any angle, isolate a single phase, or describe any movement and the AI reconstructs it. It exists so you can see what video moves too fast to show.</p>
@@ -1299,28 +1659,28 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <button class="tab-btn" onclick="switchTab(this,'v-race')">Race Analysis</button>
   </div>
   <div class="tab-panel active" id="v-fr"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/Q0vq-34dWF0" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Full Stroke</span><h4>FREESTYLE STROKE BREAKDOWN</h4><p>A Division I swim coach breaks down front crawl technique step by step.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/omkBPOvAuu8" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Catch</span><h4>HIGH ELBOW SWIMMING — 4 TIPS</h4><p>Global Triathlon Network on the single most impactful freestyle skill.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/MC9m8wp1dqs" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Freestyle · Kick</span><h4>FRONT CRAWL 6-BEAT KICK</h4><p>Step-by-step guide to the 6-beat kick rhythm and mechanics.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="Q0vq-34dWF0" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/Q0vq-34dWF0/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: FREESTYLE STROKE BREAKDOWN"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Freestyle · Full Stroke</span><h4>FREESTYLE STROKE BREAKDOWN</h4><p>A Division I swim coach breaks down front crawl technique step by step.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="omkBPOvAuu8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/omkBPOvAuu8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: HIGH ELBOW SWIMMING — 4 TIPS"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Freestyle · Catch</span><h4>HIGH ELBOW SWIMMING — 4 TIPS</h4><p>Global Triathlon Network on the single most impactful freestyle skill.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="MC9m8wp1dqs" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/MC9m8wp1dqs/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: FRONT CRAWL 6-BEAT KICK"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Freestyle · Kick</span><h4>FRONT CRAWL 6-BEAT KICK</h4><p>Step-by-step guide to the 6-beat kick rhythm and mechanics.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-bk"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/YkjOvxHsY1g" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Backstroke · Full Stroke</span><h4>BACKSTROKE WITH PERFECT TECHNIQUE</h4><p>Six elements of backstroke: body position, rotation, entry, pull, kick, and timing.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="YkjOvxHsY1g" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/YkjOvxHsY1g/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: BACKSTROKE WITH PERFECT TECHNIQUE"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Backstroke · Full Stroke</span><h4>BACKSTROKE WITH PERFECT TECHNIQUE</h4><p>Six elements of backstroke: body position, rotation, entry, pull, kick, and timing.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-br"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/RbgiTaVUqMk" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Breaststroke · Timing</span><h4>BREASTSTROKE TIMING & COORDINATION</h4><p>The pull-breathe-kick-glide sequence explained clearly.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="RbgiTaVUqMk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/RbgiTaVUqMk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: BREASTSTROKE TIMING &amp; COORDINATION"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Breaststroke · Timing</span><h4>BREASTSTROKE TIMING & COORDINATION</h4><p>The pull-breathe-kick-glide sequence explained clearly.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-fly"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/o6Pnv10wyHk" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Butterfly · Undulation</span><h4>MASTER BUTTERFLY UNDULATION</h4><p>Olympic Channel: Olympian Dylan Carter on the chest-down wave that drives butterfly.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="o6Pnv10wyHk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/o6Pnv10wyHk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: MASTER BUTTERFLY UNDULATION"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Butterfly · Undulation</span><h4>MASTER BUTTERFLY UNDULATION</h4><p>Olympic Channel: Olympian Dylan Carter on the chest-down wave that drives butterfly.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-uw"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/bjDfI0NMVY8" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Dolphin Kick</span><h4>GRETCHEN WALSH'S UNDERWATER DOLPHIN KICK</h4><p>Breakdown of one of the fastest underwaters in the world — the 5th stroke.</p></div></div>
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/GoyXk3xMfKY" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Underwater · Turns</span><h4>HOW TO FLIP TURN</h4><p>Every component of the freestyle flip turn broken down.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="bjDfI0NMVY8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/bjDfI0NMVY8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: GRETCHEN WALSH&#x27;S UNDERWATER DOLPHIN KICK"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Underwater · Dolphin Kick</span><h4>GRETCHEN WALSH'S UNDERWATER DOLPHIN KICK</h4><p>Breakdown of one of the fastest underwaters in the world — the 5th stroke.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="GoyXk3xMfKY" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/GoyXk3xMfKY/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: HOW TO FLIP TURN"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Underwater · Turns</span><h4>HOW TO FLIP TURN</h4><p>Every component of the freestyle flip turn broken down.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-dry"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/IKWGF4kP8Cs" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Dryland · Strength</span><h4>30-MINUTE DRYLAND WORKOUT</h4><p>Complete no-equipment dryland session built for swimmers.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="IKWGF4kP8Cs" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/IKWGF4kP8Cs/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: 30-MINUTE DRYLAND WORKOUT"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Dryland · Strength</span><h4>30-MINUTE DRYLAND WORKOUT</h4><p>Complete no-equipment dryland session built for swimmers.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-race"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/3oZo0I4oLfU" loading="lazy" title="Swimming technique video" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="video-info"><span class="video-tag">Race · Analysis</span><h4>POPOVICI WORLD-RECORD ANALYSIS</h4><p>Technique analysis of David Popovici's world-record 100m freestyle.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="3oZo0I4oLfU" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/3oZo0I4oLfU/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: POPOVICI WORLD-RECORD ANALYSIS"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Race · Analysis</span><h4>POPOVICI WORLD-RECORD ANALYSIS</h4><p>Technique analysis of David Popovici's world-record 100m freestyle.</p></div></div>
   </div></div>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
@@ -1907,12 +2267,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <p id="season-blurb" style="font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300">—</p>
   </div>
-  <div class="section-eyebrow" style="margin-top:0">2025–26 National Meet Calendar</div>
+  <div class="section-eyebrow" id="season-calendar-eyebrow" style="margin-top:0">National Meet Calendar</div>
   <div class="warn-box" id="season-archive-note" style="display:none"></div>
   <div class="table-wrap"><table class="data-table" id="season-meet-table"><thead><tr><th>Meet</th><th>Dates</th><th>Course</th><th>Status</th></tr></thead><tbody>
     <!-- filled by JS using real dates, with live countdown/status -->
   </tbody></table></div>
-  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;line-height:1.6">Dates reflect the published 2025–26 USA Swimming national events calendar and are subject to official updates — always confirm with usaswimming.org before planning travel.</p>
+  <p id="season-calendar-note" style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;line-height:1.6">Dates reflect the published USA Swimming national events calendar and are subject to official updates — always confirm with usaswimming.org before planning travel.</p>
   <div class="divider"></div>
   <div class="section-eyebrow">Cuts & Motivational Standards</div>
   <div class="section-title" style="font-size:2.2rem">FUTURES, JUNIORS<span>, & NATIONAL CUTS</span></div>
@@ -2566,6 +2926,61 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p><p>Analytics run on your device — log data never leaves it</p></div></footer>
 </div>
+<!-- COMMAND PALETTE / GLOBAL SEARCH — ⌘K · Ctrl+K · "/"  (bundle: palette; insert just before </main>) -->
+<div id="tl-palette" class="tl-pal" hidden>
+  <div class="tl-pal-backdrop" data-tl-pal-close></div>
+  <div class="tl-pal-dialog" role="dialog" aria-modal="true" aria-label="Search Tidelyne">
+    <div class="tl-pal-head">
+      <span class="tl-pal-head-ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg></span>
+      <input id="tl-pal-input" class="tl-pal-input" type="text" role="combobox" aria-expanded="false" aria-controls="tl-pal-list" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Search pages, sections and actions" placeholder="Search pages, sets, drills, actions…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" maxlength="80">
+      <kbd class="tl-pal-esc" aria-hidden="true">esc</kbd>
+      <button type="button" class="tl-pal-close" id="tl-pal-close" aria-label="Close search">✕</button>
+    </div>
+    <div id="tl-pal-list" class="tl-pal-list" role="listbox" aria-label="Search results"></div>
+    <div class="tl-pal-foot" aria-hidden="true">
+      <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+      <span><kbd>↵</kbd> open</span>
+      <span><kbd>esc</kbd> close</span>
+      <span class="tl-pal-foot-r"><kbd id="tl-pal-modkey">⌘</kbd><kbd>K</kbd> or <kbd>/</kbd> from anywhere</span>
+    </div>
+    <div id="tl-pal-status" class="tl-pal-sr" role="status" aria-live="polite"></div>
+  </div>
+</div>
+<!-- WHAT'S NEW PAGE — release notes + install / offline status (bundle: updates) -->
+<div class="page" id="page-updates">
+<div class="section-wrap narrow">
+  <div class="section-eyebrow">Release Notes</div>
+  <div class="section-title">WHAT'S <span>NEW</span></div>
+  <p class="section-intro">Every Tidelyne release, newest first — what was added, what got better, what was fixed. New versions download in the background; when one lands you get a small prompt to reload, never an interruption mid-set.</p>
+
+  <div class="tl-upd-app" id="tl-upd-app">
+    <div class="tl-upd-app-grid">
+      <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-ver">—</span><span class="tl-upd-stat-lbl">Current version</span></div>
+      <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-date">—</span><span class="tl-upd-stat-lbl">Released</span></div>
+      <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-offline">—</span><span class="tl-upd-stat-lbl">Offline</span></div>
+      <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-mode">—</span><span class="tl-upd-stat-lbl">Running as</span></div>
+    </div>
+    <p class="tl-upd-offline-note" id="tl-upd-offline-note"></p>
+    <div class="tl-upd-install" id="tl-upd-install">
+      <div class="tl-upd-install-text">
+        <h4>INSTALL TIDELYNE</h4>
+        <p id="tl-upd-install-msg">Add Tidelyne to your home screen or desktop: full-screen, offline, one tap from the deck.</p>
+      </div>
+      <div class="tl-upd-install-actions">
+        <button class="btn-sm" type="button" id="tl-upd-install-btn" onclick="tlPromptInstall()" hidden>Install Tidelyne</button>
+        <button class="btn-ghost-sm" type="button" id="tl-upd-check-btn" onclick="tlCheckForUpdates()">Check for updates</button>
+      </div>
+    </div>
+    <div class="tl-upd-status" id="tl-upd-status" role="status" aria-live="polite"></div>
+  </div>
+
+  <ol class="tl-upd-timeline" id="tl-upd-timeline" aria-label="Release history"></ol>
+  <button class="btn-ghost-sm tl-upd-more" type="button" id="tl-upd-more" onclick="tlShowAllUpdates()" hidden>Show older releases</button>
+
+  <p class="tl-upd-note">Update checks run through your browser's service worker against this site only — nothing about you is sent anywhere. The one thing saved is the version you last read, so the nav dot knows when to appear.</p>
+</div>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p data-tl-version>Version 3.0.0</p></div></footer>
+</div>
 </main>
 <!-- AUTH — real Supabase email/password accounts. Content is public; an
      account is only required for AI features (chat, generator, visualizer
@@ -2838,9 +3253,10 @@ function activatePage(name){
   const alreadyActive=page&&page.classList.contains('active');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-links li a').forEach(a=>{a.classList.remove('active');a.removeAttribute('aria-current');});
+  document.querySelectorAll('.nav-links .nav-group-btn.active').forEach(b=>b.classList.remove('active'));
   const nav=document.getElementById('nav-'+name);
   if(page) page.classList.add('active');
-  if(nav){ nav.classList.add('active'); nav.setAttribute('aria-current','page'); }
+  if(nav){ nav.classList.add('active'); nav.setAttribute('aria-current','page'); const navGroup=nav.closest('.nav-group'); const navGroupBtn=navGroup&&navGroup.querySelector('.nav-group-btn'); if(navGroupBtn) navGroupBtn.classList.add('active'); }
   if(!alreadyActive){
     const smooth=!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
     window.scrollTo({top:0,behavior:smooth?'smooth':'auto'});
@@ -2885,6 +3301,7 @@ const PAGE_TITLES={
   mental:'Mental Performance for Swimmers',
   injury:'Swimming Injury Prevention',
   season:'Season & Meet Calendar',
+  updates:'What\'s New — Tidelyne Release Notes',
   ai:'AI Swim Coach',
   timers:'Swim Timers — Tempo Trainer, Interval Timer & Pace Clock',
   planner:'Race Planner — Goal Times, Race Predictor, Split Planner & Meet Countdown',
@@ -4353,18 +4770,47 @@ async function generateMotion(){
   btn.disabled=false;
 }
 // ─── SEASON & MEET CALENDAR — time-aware (reads the real device date) ────
-// Meet dates below reflect the published 2025-26 USA Swimming national
-// events calendar. The page never invents specific cut times -- it links
-// to the official standards instead. Always confirm on usaswimming.org.
+// PATCH BUNDLE — this file REPLACES the block in index.html that starts at the
+// header line above and ends just before "// ─── AI COACH — STREAMING". It is
+// not an add-on: pasting it anywhere else would redeclare SEASON_MEETS and
+// break the whole script. See NOTES.md for the exact edit.
+//
+// Meet dates below reflect the published 2026-27 USA Swimming national events
+// calendar (verified 2026-09-13; sources in NOTES.md). The page never invents
+// specific cut times -- it links to the official standards instead. Always
+// confirm on usaswimming.org. Shape is unchanged: {name,start,end,course,tag}.
 const SEASON_MEETS = [
-  { name: 'Toyota U.S. Open',                start: '2025-12-03', end: '2025-12-06', course: 'LCM', tag: 'Senior' },
-  { name: 'Speedo Winter Junior Championships', start: '2025-12-10', end: '2025-12-13', course: 'SCY', tag: 'Junior' },
-  { name: 'Open Water National & Junior Championships', start: '2026-04-02', end: '2026-04-04', course: 'Open Water', tag: 'Senior/Junior' },
-  { name: 'TYR Futures Championships',       start: '2026-07-29', end: '2026-08-01', course: 'LCM', tag: 'Zoned' },
-  { name: 'Toyota National Championships',   start: '2026-07-28', end: '2026-08-01', course: 'LCM', tag: 'Senior' },
-  { name: 'Speedo Summer Junior Championships', start: '2026-08-03', end: '2026-08-07', course: 'LCM', tag: 'Junior' },
-  { name: 'Pan Pacific Championships',       start: '2026-08-12', end: '2026-08-15', course: 'LCM', tag: 'International' },
+  { name: 'Short Course World Championship Trials',      start: '2026-10-28', end: '2026-10-31', course: 'SCM',        tag: 'Senior · Westmont, IL · selects the Beijing SC Worlds team' },
+  { name: 'World Aquatics Swimming Championships (25m)', start: '2026-12-01', end: '2026-12-06', course: 'SCM',        tag: 'International · Beijing' },
+  { name: 'Toyota U.S. Open',                            start: '2026-12-02', end: '2026-12-05', course: 'LCM',        tag: 'Senior · Austin, TX' },
+  { name: 'Speedo Winter Junior Championships',          start: '2026-12-09', end: '2026-12-12', course: 'SCY',        tag: 'Junior · East: Indianapolis · West: Austin' },
+  { name: 'Open Water National & Junior Championships',  start: '2027-04-02', end: '2027-04-04', course: 'Open Water', tag: 'Senior/Junior · Sarasota, FL' },
+  { name: 'Toyota National Championships',               start: '2027-06-08', end: '2027-06-12', course: 'LCM',        tag: 'Senior · Indianapolis · expected 2027 Worlds selection meet' },
+  { name: 'World Aquatics Championships — Swimming',     start: '2027-07-10', end: '2027-07-18', course: 'LCM',        tag: 'International · Budapest' },
+  { name: 'Pan American Games — Swimming',               start: '2027-07-26', end: '2027-07-30', course: 'LCM',        tag: 'International · Lima' },
+  { name: 'TYR Futures Championships',                   start: '2027-07-28', end: '2027-07-31', course: 'LCM',        tag: 'Zoned · multiple sites (host cities not yet announced)' },
+  { name: 'Speedo Junior National Championships',        start: '2027-08-02', end: '2027-08-06', course: 'LCM',        tag: 'Junior · Huntsville, AL' }
 ];
+// Announcements still pending. Rendered as a short "Still to be announced"
+// list under the table so the page says so instead of guessing. `expected`
+// is free text; `url` must be https or the entry renders without a link.
+const SEASON_TBA = [
+  { name: 'TYR Futures Championships 2027 — host sites', expected: 'sites to be announced (dates are set: Jul 28–31, 2027)', url: 'https://www.usaswimming.org/events' }
+];
+// Season label derived from the data ("2026–27"), so the page copy never
+// goes stale when the array is swapped for the next season.
+function seasonLabelFor(meets) {
+  const years = [];
+  (meets || []).forEach(m => {
+    const a = parseInt(String(m.start || '').slice(0, 4), 10);
+    const b = parseInt(String(m.end || '').slice(0, 4), 10);
+    if (a) years.push(a);
+    if (b) years.push(b);
+  });
+  if (!years.length) return '';
+  const lo = Math.min.apply(null, years), hi = Math.max.apply(null, years);
+  return lo === hi ? String(lo) : lo + '–' + String(hi).slice(-2);
+}
 function seasonPhaseFor(d) {
   const m = d.getMonth() + 1; // 1-12
   if (m >= 4 && m <= 8) return { course: 'LCM — Long Course', phase: 'Long Course Season', blurb: 'You\'re in the long-course (50m) part of the year — the season that builds toward Futures, Junior Nationals, and Toyota Nationals. Most championship meets of the year land in this window.' };
@@ -4372,36 +4818,83 @@ function seasonPhaseFor(d) {
   if (m >= 10 && m <= 12) return { course: 'SCY — Short Course', phase: 'Mid Season', blurb: 'You\'re mid short-course season. U.S. Open and Winter Juniors fall in this window for the swimmers who qualify — for everyone else, it\'s a strong stretch for time trials and mid-season meets.' };
   return { course: 'SCY — Short Course', phase: 'Late Season / Taper Window', blurb: 'Late short-course season — Sectionals and Spring Championship season for many LSCs. A common taper window ahead of championship meets before the transition into long course.' };
 }
-function renderSeasonPage() {
+// "Still to be announced" list under the meet table. Creates its own
+// container after the table's .table-wrap if the HTML doesn't provide one,
+// so no markup change is required. Idempotent; hides itself when empty.
+function renderSeasonTBA() {
+  const table = document.getElementById('season-meet-table');
+  if (!table) return;
+  let box = document.getElementById('season-tba');
+  if (!box) {
+    const anchor = (table.closest && table.closest('.table-wrap')) || table.parentElement || table;
+    box = document.createElement('div');
+    box.id = 'season-tba';
+    anchor.insertAdjacentElement('afterend', box);
+  }
+  const items = Array.isArray(SEASON_TBA) ? SEASON_TBA : [];
+  if (!items.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = 'block';
+  box.innerHTML =
+    '<div style="margin-top:0.85rem;padding:0.85rem 1rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r8)">' +
+      '<span class="ptag" style="margin-bottom:6px">Still to be announced</span>' +
+      '<ul style="list-style:none;margin:0;padding:0;font-size:0.82rem;color:var(--white2);line-height:1.7">' +
+      items.map(t => {
+        const name = escapeHTML(t.name || '');
+        const expected = escapeHTML(t.expected || '');
+        const url = String(t.url || '');
+        const safeUrl = /^https:\/\/[^\s"'<>]+$/.test(url) ? escapeHTML(url) : '';
+        const label = safeUrl ? '<a href="' + safeUrl + '" target="_blank" rel="noopener">' + name + '</a>' : name;
+        return '<li style="padding:3px 0">' + label + (expected ? ' <span style="color:var(--white3)">— ' + expected + '</span>' : '') + '</li>';
+      }).join('') +
+      '</ul></div>';
+}
+// `now` is optional and exists for tests; the router calls renderSeasonPage()
+// with no arguments and the real device date is used.
+function renderSeasonPage(now) {
   const todayEl = document.getElementById('season-today');
   const phaseEl = document.getElementById('season-phase');
   const courseEl = document.getElementById('season-course-badge');
   const blurbEl = document.getElementById('season-blurb');
   const tableBody = document.querySelector('#season-meet-table tbody');
   if (!todayEl) return;
-  const now = new Date();
+  if (!(now instanceof Date) || isNaN(now.getTime())) now = new Date();
   todayEl.textContent = now.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
   const info = seasonPhaseFor(now);
-  phaseEl.textContent = info.phase;
-  courseEl.textContent = info.course;
-  blurbEl.textContent = info.blurb;
+  if (phaseEl) phaseEl.textContent = info.phase;
+  if (courseEl) courseEl.textContent = info.course;
+  if (blurbEl) blurbEl.textContent = info.blurb;
+  // Season label ("2026–27") comes from the data, never from hard-coded copy.
+  const label = seasonLabelFor(SEASON_MEETS);
+  const eyebrow = document.getElementById('season-calendar-eyebrow');
+  if (eyebrow) eyebrow.textContent = (label ? label + ' ' : '') + 'National Meet Calendar';
+  const foot = document.getElementById('season-calendar-note');
+  if (foot) foot.textContent = 'Dates reflect the published ' + (label ? label + ' ' : '') +
+    'USA Swimming national events calendar and are subject to official updates — always confirm with usaswimming.org before planning travel.';
   // If every listed meet has finished, say so plainly instead of showing a
   // wall of "Completed" — a live calendar that is empty reads as abandoned.
-  const allDone = SEASON_MEETS.every(m => now > new Date(m.end + 'T23:59:59'));
+  const allDone = SEASON_MEETS.length > 0 && SEASON_MEETS.every(m => {
+    const e = new Date(String(m.end || '') + 'T23:59:59');
+    return !isNaN(e.getTime()) && now > e;
+  });
   const note = document.getElementById('season-archive-note');
   if (note) {
     note.style.display = allDone ? 'block' : 'none';
-    if (allDone) note.innerHTML = 'The 2025–26 national calendar below has finished. Next season\'s ' +
+    if (allDone) note.innerHTML = 'The ' + escapeHTML(label) + ' national calendar below has finished. Next season\'s ' +
       'dates are published by USA Swimming — check <a href="https://www.usaswimming.org/events" ' +
       'target="_blank" rel="noopener">usaswimming.org/events</a> for the current schedule. ' +
       'Dates are not guessed here on purpose.';
   }
   if (tableBody) {
     // Always render chronologically, regardless of array order
-    tableBody.innerHTML = SEASON_MEETS.slice().sort((a,b)=>a.start.localeCompare(b.start)).map(m => {
-      const start = new Date(m.start + 'T00:00:00');
-      const end = new Date(m.end + 'T23:59:59');
+    tableBody.innerHTML = SEASON_MEETS.slice().sort((a,b)=>String(a.start||'').localeCompare(String(b.start||''))).map(m => {
+      const start = new Date(String(m.start || '') + 'T00:00:00');
+      const end = new Date(String(m.end || '') + 'T23:59:59');
       let status, statusColor;
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        // Malformed row: never print "In NaN days"; show the raw strings escaped.
+        const raw = escapeHTML(String(m.start || '')) + (m.end ? '–' + escapeHTML(String(m.end)) : '');
+        return `<tr><td>${escapeHTML(m.name || '')}<br><span style="font-size:0.7rem;color:var(--white3)">${escapeHTML(m.tag || '')}</span></td><td>${raw || 'TBA'}</td><td>${escapeHTML(m.course || '')}</td><td style="color:var(--white3)">Dates TBA</td></tr>`;
+      }
       if (now > end) { status = 'Completed'; statusColor = 'var(--white4)'; }
       else if (now >= start && now <= end) { status = 'Happening now'; statusColor = 'var(--green)'; }
       else {
@@ -4410,9 +4903,10 @@ function renderSeasonPage() {
         statusColor = days <= 21 ? 'var(--gold)' : 'var(--cyan)';
       }
       const dateStr = start.toLocaleDateString(undefined,{month:'short',day:'numeric'}) + '–' + end.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
-      return `<tr><td>${m.name}<br><span style="font-size:0.7rem;color:var(--white3)">${m.tag}</span></td><td>${dateStr}</td><td>${m.course}</td><td style="color:${statusColor}">${status}</td></tr>`;
+      return `<tr><td>${escapeHTML(m.name || '')}<br><span style="font-size:0.7rem;color:var(--white3)">${escapeHTML(m.tag || '')}</span></td><td>${dateStr}</td><td>${escapeHTML(m.course || '')}</td><td style="color:${statusColor}">${status}</td></tr>`;
     }).join('');
   }
+  renderSeasonTBA();
 }
 // ─── AI COACH — STREAMING ─────────────────────
 // System prompts live server-side in the ask-ai Edge Function. The client
@@ -7750,6 +8244,1736 @@ window.tl_an_debug = {
   weekStart:weekStart, localDate:localDate, streaks:streaks, zoneReading:zoneReading, buildSummaryText:buildSummaryText,
   calcSwolfValues:calcSwolfValues, calcStrokeValues:calcStrokeValues, calcCSSValues:calcCSSValues, parseSecs:parseSecs, fmtTick:fmtTick
 };
+})();
+// ─── VIDEOS ───
+/* ── Tidelyne · videos bundle · click-to-load YouTube facades ──────────────
+   apply_facades.py turns every YouTube <iframe> into a facade:
+     div.yt-lite[data-video=ID][data-params=…]
+       > img  (lazy hqdefault.jpg thumbnail from i.ytimg.com)
+       > button.yt-lite-play[aria-label="Play video: TITLE"]
+   (data-video rather than data-id: check_index.py's element-id scan also
+   matches data-id, and five demos are embedded on two pages; data-id is still
+   honoured as a fallback. Keep the literal sequence  i d = "  out of this
+   file's comments for the same reason.)
+   This script (one delegated listener pair, no per-element handlers, no timers):
+     • click / Enter / Space on a facade → builds the real player iframe
+       (youtube-nocookie, autoplay=1, rel=0, plus any original params), swaps it
+       in, and moves focus to it;
+     • when the router shows another page, or a tab strip hides a panel, any
+       player that is no longer visible is swapped back to its facade — audio
+       stops and the player's memory is released instead of playing on unseen.
+   Exposed on window: initVideos() (idempotent), tl_videos_activate(facadeEl),
+   tl_videos_restoreHidden(), tl_videos_buildSrc(id, params).
+   ES2019, no modules, DOM APIs only (nothing is built from HTML strings). */
+(function () {
+  'use strict';
+  var ID_RE = /^[A-Za-z0-9_-]{11}$/;            // YouTube video ids are 11 chars
+  var LABEL_PREFIX_RE = /^play video:\s*/i;
+  var DEFAULT_TITLE = 'Swimming technique video';
+  var EMBED_BASE = 'https://www.youtube-nocookie.com/embed/';
+  // The original embeds' permissions plus autoplay (needed for autoplay=1 in a
+  // cross-origin frame — top frames delegate it via allow="autoplay").
+  var ALLOW = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  var players = (typeof WeakMap === 'function') ? new WeakMap() : null; // iframe → its facade
+  var inited = false;
+
+  function decode(s) {
+    try { return decodeURIComponent(String(s).replace(/\+/g, ' ')); } catch (e) { return String(s); }
+  }
+
+  // ?autoplay=1&rel=0 + the original query string. autoplay is always forced
+  // (the click is the user gesture browsers require); rel and playsinline keep
+  // an explicit original value, otherwise rel=0 (related videos limited to the
+  // same channel) and playsinline=1 (iOS plays in the card, not full screen).
+  function buildSrc(id, params) {
+    var extra = [], rel = null, playsinline = null;
+    String(params || '').replace(/^\?/, '').split('&').forEach(function (pair) {
+      if (!pair) return;
+      var i = pair.indexOf('=');
+      var k = decode(i < 0 ? pair : pair.slice(0, i));
+      var v = decode(i < 0 ? '' : pair.slice(i + 1));
+      if (!k || k === 'autoplay') return;
+      if (k === 'rel') { rel = v; return; }
+      if (k === 'playsinline') { playsinline = v; return; }
+      extra.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+    });
+    var q = ['autoplay=1', 'rel=' + encodeURIComponent(rel === null ? '0' : rel)]
+      .concat(extra)
+      .concat(['playsinline=' + encodeURIComponent(playsinline === null ? '1' : playsinline)]);
+    return EMBED_BASE + id + '?' + q.join('&');
+  }
+
+  function titleOf(facade) {
+    var btn = facade.querySelector ? facade.querySelector('.yt-lite-play') : null;
+    var label = btn ? (btn.getAttribute('aria-label') || '') : '';
+    var t = label.replace(LABEL_PREFIX_RE, '').trim();
+    return t || DEFAULT_TITLE;
+  }
+
+  // Facade → live player. Returns the iframe, or null if nothing was done.
+  function activate(facade) {
+    if (!facade || !facade.parentNode) return null;
+    var id = String(facade.getAttribute('data-video') || facade.getAttribute('data-id') || '').trim();
+    // 'videoseries' is 11 letters but names a playlist endpoint, not a video.
+    if (!ID_RE.test(id) || id === 'videoseries') { if (window.console) console.warn('yt-lite: bad video id', id); return null; }
+    var iframe = document.createElement('iframe');
+    iframe.className = 'yt-lite-player';
+    iframe.setAttribute('src', buildSrc(id, facade.getAttribute('data-params')));
+    iframe.setAttribute('title', titleOf(facade));
+    iframe.setAttribute('allow', ALLOW);
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    iframe.setAttribute('width', '100%');
+    iframe.setAttribute('height', '100%');
+    facade.parentNode.replaceChild(iframe, facade);
+    if (players) players.set(iframe, facade);
+    try { iframe.focus({ preventScroll: true }); } catch (e) { try { iframe.focus(); } catch (e2) {} }
+    return iframe;
+  }
+
+  function isHidden(el) {
+    if (!el || !document.contains(el)) return true;
+    return typeof el.getClientRects === 'function' && el.getClientRects().length === 0;
+  }
+
+  // Any player inside a hidden page/tab panel goes back to its facade.
+  function restoreHidden() {
+    if (!players) return 0;
+    var n = 0;
+    var list = document.querySelectorAll('iframe.yt-lite-player');
+    for (var i = 0; i < list.length; i++) {
+      var iframe = list[i];
+      if (!isHidden(iframe)) continue;
+      var facade = players.get(iframe);
+      if (!facade || !iframe.parentNode) continue;
+      iframe.parentNode.replaceChild(facade, iframe);
+      players.delete(iframe);
+      n++;
+    }
+    return n;
+  }
+
+  function onClick(e) {
+    var t = e.target;
+    if (!t || typeof t.closest !== 'function') return;
+    var facade = t.closest('.yt-lite');
+    if (facade) { e.preventDefault(); activate(facade); return; }
+    // A tab strip just hid a panel (switchTab ran in the inline onclick before
+    // this bubbled here) — stop anything that is now playing out of sight.
+    if (t.closest('.tab-btn')) restoreHidden();
+  }
+
+  // The play control is a real <button>, so Enter/Space already arrive as a
+  // click; this only covers the rest of the facade surface (e.g. a focused
+  // wrapper) and deliberately skips native controls to avoid double firing.
+  function onKey(e) {
+    if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+    var t = e.target;
+    if (!t || typeof t.closest !== 'function') return;
+    if (t.closest('button,a,input,select,textarea')) return;
+    var facade = t.closest('.yt-lite');
+    if (!facade) return;
+    e.preventDefault();
+    activate(facade);
+  }
+
+  window.initVideos = function () {
+    if (inited) return;
+    inited = true;
+    document.addEventListener('click', onClick);
+    document.addEventListener('keydown', onKey);
+    var prev = window.onPageChange;
+    window.onPageChange = function (name) {
+      if (typeof prev === 'function') { try { prev(name); } catch (err) { if (window.console) console.error(err); } }
+      restoreHidden();
+    };
+  };
+  window.tl_videos_activate = activate;
+  window.tl_videos_restoreHidden = restoreHidden;
+  window.tl_videos_buildSrc = buildSrc;
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', window.initVideos);
+  else window.initVideos();
+})();
+// ─── PALETTE ───
+// ─── COMMAND PALETTE / GLOBAL SEARCH (bundle: palette, mode: global) ──────
+// ⌘K / Ctrl+K toggles it; "/" opens it when focus is not in a text field.
+// The index is built lazily on first open from the live DOM: every page,
+// every heading / accordion header / tab / video title / key point inside
+// each .page, plus a short list of quick actions. Selecting a result routes
+// with showPage(), then opens the enclosing accordion and/or switches the
+// enclosing tab, scrolls the target into view and rings it for 1.5 s.
+// Public API (all idempotent, all safe to call before the markup exists):
+//   window.initPalette()          — wires listeners; the integrator calls it on DOMContentLoaded
+//   window.openPalette(opts)      — opts.query pre-fills the box
+//   window.closePalette()         — returns focus to the element that opened it
+//   window.togglePalette()
+//   window.rebuildPaletteIndex()  — drop the cached index (call after injecting new pages)
+// Storage: tl_recent_search (JSON array of the last 8 selected result keys).
+(function(){
+  'use strict';
+  var RECENT_KEY = 'tl_recent_search';
+  var RECENT_MAX = 8;
+  var HIGHLIGHT_MS = 1500;
+  var MAX_PER_GROUP = 8;
+  var MAX_TOTAL = 40;
+  var MIN_SCORE = 12;
+  // Containers whose headings are dynamic, user-typed or chrome — never indexed.
+  // Live regions / outputs are dynamic by definition (contract rule 4), so any
+  // bundle's result boxes are skipped without having to list their ids here.
+  var EXCLUDE = 'footer, nav, #ai-messages, #gen-result, #gen-output, #viz-content, #viz-output, #log-entries, #log-stats, #split-result, #pace-result, #conv-result, #profile-name-display, #access-gate, .tl-pal, [aria-live], [role="status"], [role="log"], [role="alert"], output';
+  var KIND_PRIOR = { page: 6, action: 5, tab: 2, section: 0, video: 0, keypoint: -2 };
+  var KIND_LABEL = { page: 'Page', action: 'Action', tab: 'Tab', section: 'Section', video: 'Video', keypoint: 'Key point' };
+  // Extra search terms per page so the words swimmers actually type resolve
+  // to the right view even when the nav label is terse ("3D Viz", "Log").
+  var PAGE_ALIASES = {
+    home: ['start', 'overview', 'platform'],
+    technique: ['stroke', 'drills', 'freestyle', 'backstroke', 'breaststroke', 'butterfly', 'turns', 'starts', 'library'],
+    videos: ['video library', 'watch', 'youtube', 'demos'],
+    sets: ['training sets', 'main set', 'intervals', 'aet', 'threshold', 'kick', 'speed', 'warm-up'],
+    dryland: ['strength', 'gym', 'weights', 'conditioning', 'mobility'],
+    visualizer: ['3d', 'biomechanics', 'stroke lab', 'force', 'model', 'animation'],
+    workouts: ['workout generator', 'generate', 'session builder', 'practice'],
+    calculator: ['pace', 'golf score', 'splits', 'converter', 'scy', 'scm', 'lcm', 'conversion'],
+    zones: ['training zones', 'heart rate', 'lactate', 'intensity', 'z1', 'z2', 'z3', 'z4', 'z5'],
+    profile: ['prs', 'personal records', 'best times', 'my times', 'backup', 'export', 'import'],
+    log: ['training log', 'diary', 'sessions', 'history', 'volume'],
+    nutrition: ['fuel', 'food', 'carbs', 'protein', 'hydration', 'diet', 'eating'],
+    race: ['race day', 'meet', 'strategy', 'warm-up', 'pacing', 'event plans'],
+    taper: ['rest', 'peak', 'recovery', 'sleep', 'shave'],
+    mental: ['psychology', 'nerves', 'anxiety', 'visualization', 'focus', 'mindset'],
+    injury: ['shoulder', 'knee', 'back', 'hip', 'pain', 'prevention', 'rehab', 'physio'],
+    season: ['calendar', 'meet calendar', 'cuts', 'standards', 'futures', 'juniors', 'nationals'],
+    ai: ['ai coach', 'chat', 'ask', 'assistant', 'question'],
+    timers: ['tempo', 'metronome', 'stroke rate', 'interval timer', 'pace clock'],
+    planner: ['race planner', 'race plan', 'split plan'],
+    analytics: ['charts', 'trends', 'stats', 'progress'],
+    updates: ["what's new", 'changelog', 'release notes']
+  };
+  // Quick actions. Each is included only when its destination exists on the
+  // page (other bundles may or may not be integrated) or its function is defined.
+  var QUICK_ACTIONS = [
+    { text: 'Start tempo trainer', page: 'timers', keys: ['tempo', 'metronome', 'stroke rate', 'timer', 'beep'] },
+    { text: 'Log a session', page: 'log', keys: ['training log', 'record', 'add entry', 'new session'],
+      after: function(){ focusField('log-date'); } },
+    { text: 'Export backup', fnName: 'exportBackup', keys: ['download', 'json', 'save my data', 'prs', 'backup'] },
+    { text: 'Ask the AI coach', page: 'ai', keys: ['chat', 'question', 'coach', 'help'],
+      after: function(){ focusField('ai-input'); } },
+    { text: 'Open 3D visualizer', page: 'visualizer', keys: ['stroke lab', 'biomechanics', 'model', '3d'] },
+    { text: "What's new", page: 'updates', keys: ['changelog', 'release notes', 'updates', 'version'] },
+    { text: 'Race planner', page: 'planner', keys: ['race plan', 'splits', 'meet', 'strategy'] },
+    { text: 'Analytics', page: 'analytics', keys: ['charts', 'trends', 'stats', 'progress', 'volume'] }
+  ];
+  var ICONS = {
+    page: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6.5h12"/></svg>',
+    section: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2 4.5 14M11.5 2 10 14M2.5 6h12M1.5 10h12"/></svg>',
+    tab: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 13V4.5h4l1.2-1.5H14V13z"/></svg>',
+    video: '<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M4.5 3v10l8.5-5z"/></svg>',
+    keypoint: '<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="8" cy="8" r="3"/></svg>',
+    action: '<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M9.5 1 3 9.2h4.3L6.5 15 13 6.8H8.7z"/></svg>',
+    ask: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 3h12v8H6.5L3 13.5V11H2z"/></svg>'
+  };
+
+  var state = {
+    inited: false, open: false,
+    index: null, indexedPages: 0,
+    flat: [], active: -1, opener: null, rawQuery: '',
+    hitTimer: 0, hitEl: null, rafWait: 0, lock: null, isMac: false
+  };
+
+  // ── Text helpers ────────────────────────────────────────────────────────
+  function clean(s){
+    s = String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
+    // Drop leading icon glyphs ("🏊 Freestyle" → "Freestyle") and trailing arrows.
+    s = s.replace(/^[^\p{L}\p{N}"'(]+/u, '').replace(/\s*[→›»]\s*$/u, '');
+    return s;
+  }
+  var DIA = { 'à':'a','á':'a','â':'a','ã':'a','ä':'a','å':'a','ç':'c','è':'e','é':'e','ê':'e','ë':'e','ì':'i','í':'i','î':'i','ï':'i','ñ':'n','ò':'o','ó':'o','ô':'o','õ':'o','ö':'o','ø':'o','ù':'u','ú':'u','û':'u','ü':'u','ý':'y','ÿ':'y','₂':'2','’':"'",'‘':"'",'“':'"','”':'"' };
+  // Length-preserving normalisation so match positions map 1:1 onto the
+  // display string (needed for the <mark> highlighting).
+  function norm(s){
+    s = String(s == null ? '' : s);
+    var out = '';
+    for (var i = 0; i < s.length; i++){
+      var c = s[i], l = c.toLowerCase();
+      if (l.length !== 1) l = c;
+      out += DIA[l] || l;
+    }
+    return out;
+  }
+  function normQuery(s){ return norm(clean(s)).replace(/\s+/g, ' ').trim(); }
+  function isAlnum(c){ return /[a-z0-9]/.test(c); }
+  function isWordStart(s, i){ return i === 0 || !isAlnum(s[i - 1]); }
+  function range(a, n){ var r = []; for (var i = 0; i < n; i++) r.push(a + i); return r; }
+
+  // Score one query token against one normalised string.
+  // Tiers: exact 100 · prefix 85 · word-start 70 · substring 50 · initials 60 ·
+  // subsequence 12–38 (compactness- and word-start-weighted; scattered = reject).
+  function tokenMatch(s, t){
+    if (!t || !s) return null;
+    if (s === t) return { score: 100, pos: range(0, t.length) };
+    var i = s.indexOf(t);
+    if (i === 0) return { score: 85, pos: range(0, t.length) };
+    if (i > 0){
+      var j = i;
+      while (j >= 0 && !isWordStart(s, j)) j = s.indexOf(t, j + 1);
+      if (j >= 0) return { score: 70 - Math.min(10, j * 0.15), pos: range(j, t.length) };
+      return { score: 50 - Math.min(10, i * 0.15), pos: range(i, t.length) };
+    }
+    if (t.length < 2) return null;
+    // Initials: "hec" → "High Elbow Catch"
+    var starts = [], k;
+    for (k = 0; k < s.length; k++) if (isAlnum(s[k]) && isWordStart(s, k)) starts.push(k);
+    var ini = starts.map(function(p){ return s[p]; }).join('');
+    var ii = ini.indexOf(t);
+    if (ii >= 0) return { score: ii === 0 ? 60 : 55, pos: starts.slice(ii, ii + t.length) };
+    // Subsequence, preferring word-start hits when they are close by
+    var pos = [], si = 0, ws = 0;
+    for (k = 0; k < t.length; k++){
+      var c = t[k], f = s.indexOf(c, si);
+      if (f < 0) return null;
+      // Only hop to a nearby word-start occurrence when the plain hit would
+      // break the run anyway (f > si); contiguous runs always win.
+      if (f > si && !isWordStart(s, f)){
+        var g = f;
+        while (g >= 0 && !isWordStart(s, g)) g = s.indexOf(c, g + 1);
+        if (g >= 0 && g - si <= 14) f = g;
+      }
+      if (isWordStart(s, f)) ws++;
+      pos.push(f); si = f + 1;
+    }
+    var span = pos[pos.length - 1] - pos[0] + 1;
+    var compact = t.length / span;
+    // Loose matches must either be tight (≥ half the span is matched chars)
+    // or land mostly on word starts; otherwise "ask" would hit "breASt...Kick".
+    if (compact < 0.5 && ws < t.length * 0.5) return null;
+    if (compact < 0.35 && ws < t.length * 0.75) return null;
+    return { score: 12 + 20 * compact + 6 * (ws / t.length), pos: pos };
+  }
+
+  function scoreItem(item, q, tokens, recentIdx){
+    var total = 0, titlePos = [], snip = null;
+    for (var i = 0; i < tokens.length; i++){
+      var t = tokens[i], best = -1, field = '', mt = tokenMatch(item.n, t), ms = null, k;
+      if (mt){ best = mt.score; field = 'title'; }
+      for (k = 0; k < item.keys.length; k++){
+        var mk = tokenMatch(item.keys[k], t);
+        if (mk && mk.score >= 50 && mk.score * 0.6 > best){ best = mk.score * 0.6; field = 'key'; }
+      }
+      if (item.snipN){
+        ms = tokenMatch(item.snipN, t);
+        if (ms && ms.score >= 50 && ms.score * 0.5 > best){ best = ms.score * 0.5; field = 'snip'; }
+      }
+      if (best < 0) return null;
+      total += best;
+      if (field === 'title') titlePos = titlePos.concat(mt.pos);
+      else if (field === 'snip' && !snip) snip = [ms.pos[0], ms.pos[ms.pos.length - 1] + 1];
+    }
+    var score = total / tokens.length;
+    if (tokens.length > 1 && item.n.indexOf(q) >= 0) score += 10;
+    score += KIND_PRIOR[item.kind] || 0;
+    if (recentIdx >= 0) score += 12 * (1 - recentIdx / RECENT_MAX);
+    score -= Math.min(6, item.n.length * 0.04);
+    if (score < MIN_SCORE) return null;
+    return { item: item, score: score, pos: titlePos, snip: snip };
+  }
+
+  function search(index, rawQuery, recent){
+    var q = normQuery(rawQuery);
+    if (!q) return [];
+    if (!Array.isArray(recent)) recent = [];
+    var tokens = q.split(' ').filter(Boolean);
+    var out = [];
+    for (var i = 0; i < index.length; i++){
+      var it = index[i];
+      var r = scoreItem(it, q, tokens, recent.indexOf(it.key));
+      if (r) out.push(r);
+    }
+    out.sort(function(a, b){ return (b.score - a.score) || (a.item.n.length - b.item.n.length); });
+    return out;
+  }
+
+  // Group by page (actions get their own group); group order = order of
+  // each group's best hit, so the strongest page floats to the top.
+  function groupResults(scored, labelFor){
+    var groups = [], byKey = {}, total = 0;
+    for (var i = 0; i < scored.length && total < MAX_TOTAL; i++){
+      var r = scored[i], gk = r.item.kind === 'action' ? '__actions' : r.item.page;
+      var g = byKey[gk];
+      if (!g){ g = { key: gk, label: gk === '__actions' ? 'Actions' : labelFor(gk), items: [] }; byKey[gk] = g; groups.push(g); }
+      if (g.items.length < MAX_PER_GROUP){ g.items.push(r); total++; }
+    }
+    return groups;
+  }
+
+  // Merge sorted match positions into contiguous [start,end) runs.
+  function runs(pos){
+    var p = pos.slice().sort(function(a, b){ return a - b; }), out = [];
+    for (var i = 0; i < p.length; i++){
+      if (i > 0 && p[i] === p[i - 1]) continue;
+      if (out.length && p[i] === out[out.length - 1][1]) out[out.length - 1][1] = p[i] + 1;
+      else out.push([p[i], p[i] + 1]);
+    }
+    return out;
+  }
+
+  // ── Recent selections (tl_recent_search) ────────────────────────────────
+  function readRecent(){
+    try {
+      var v = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+      return Array.isArray(v) ? v.filter(function(x){ return typeof x === 'string'; }).slice(0, RECENT_MAX) : [];
+    } catch(e){ return []; }
+  }
+  function pushRecent(key){
+    if (!key) return;
+    var list = readRecent().filter(function(k){ return k !== key; });
+    list.unshift(key);
+    list = list.slice(0, RECENT_MAX);
+    var json = JSON.stringify(list);
+    if (typeof lsSet === 'function') lsSet(RECENT_KEY, json);
+    else { try { localStorage.setItem(RECENT_KEY, json); } catch(e){} }
+  }
+
+  // ── Index ───────────────────────────────────────────────────────────────
+  function pageTitles(){
+    /* global PAGE_TITLES */
+    if (typeof PAGE_TITLES !== 'undefined' && PAGE_TITLES) return PAGE_TITLES;
+    return window.PAGE_TITLES || {};
+  }
+  function pageLabel(id){
+    var a = document.getElementById('nav-' + id);
+    if (a && clean(a.textContent)) return clean(a.textContent);
+    var PT = pageTitles();
+    if (PT[id]) return String(PT[id]).split(/\s[—–-]\s/)[0].trim();
+    var st = document.querySelector('#page-' + id + ' .section-title');
+    if (st && clean(st.textContent)) return clean(st.textContent);
+    return id.charAt(0).toUpperCase() + id.slice(1);
+  }
+  function tabButtonFor(panel){
+    if (!panel || !panel.id || !panel.parentElement) return null;
+    var btns = panel.parentElement.querySelectorAll('.tabs .tab-btn');
+    for (var i = 0; i < btns.length; i++){
+      var oc = btns[i].getAttribute('onclick') || '';
+      if (oc.indexOf("'" + panel.id + "'") >= 0 || oc.indexOf('"' + panel.id + '"') >= 0) return btns[i];
+    }
+    return null;
+  }
+  // textContent glues "<li>a</li><li>b</li>" into "ab"; walk the tree and put
+  // a separator at block boundaries instead (innerText is unreliable inside
+  // display:none tab panels).
+  var SEP_TAG = /^(P|DIV|BR|TD|TH|H[1-6]|UL|OL|TABLE|TBODY|THEAD)$/;
+  var DOT_TAG = /^(LI|TR)$/;
+  function blockText(root){
+    var out = '';
+    (function walk(n){
+      if (n.nodeType === 3){ out += n.nodeValue; return; }
+      if (n.nodeType !== 1) return;
+      // Never pull user-typed or generated text (log entries, AI output, live
+      // result boxes) into a snippet, even when it sits inside an indexed card.
+      if (n !== root && n.matches && n.matches(EXCLUDE)) return;
+      if (/^(SCRIPT|STYLE|TEMPLATE|INPUT|TEXTAREA|SELECT)$/.test(n.tagName)) return;
+      var sep = DOT_TAG.test(n.tagName) ? ' · ' : (SEP_TAG.test(n.tagName) || n.classList.contains('kp-label') || n.classList.contains('ptag') || n.classList.contains('video-tag')) ? ' ' : '';
+      out += sep;
+      for (var c = n.firstChild; c; c = c.nextSibling) walk(c);
+      out += sep;
+    })(root);
+    return out.replace(/\s+/g, ' ').replace(/(\s*·\s*)+/g, ' · ').replace(/^\s*·\s*|\s*·\s*$/g, '').trim();
+  }
+  function headingText(el){
+    if (el.classList.contains('acc-header')){
+      var h = el.querySelector('h2, h3, h4');
+      if (h) return clean(h.textContent);
+      return clean(el.textContent).replace(/\s*[▾▸▴▿]\s*$/, '');
+    }
+    return clean(el.textContent);
+  }
+  function snippetFor(el){
+    var box = null;
+    if (el.classList.contains('acc-header')){
+      var b = el.nextElementSibling;
+      if (b && b.classList.contains('acc-body')) box = b;
+    } else if (el.classList.contains('kp-label')){
+      box = el.parentElement;
+    } else {
+      box = el.closest('.card, .content-block, .calc-panel, .dl-card, .nutr-card, .video-info, .info-box, .warn-box, .success-box, .key-point, .workout-phase');
+    }
+    if (!box) return '';
+    var txt = blockText(box);
+    var head = headingText(el);
+    if (head && txt.indexOf(head) === 0) txt = txt.slice(head.length).trim();
+    txt = txt.replace(/^[\s:·—–-]+/, '');
+    return txt.length > 220 ? txt.slice(0, 217).replace(/\s+\S*$/, '') + '…' : txt;
+  }
+  function makeItem(o){
+    o.n = norm(o.text);
+    o.keys = (o.keys || []).map(norm).filter(Boolean);
+    o.snip = o.snip || '';
+    o.snipN = o.snip ? norm(o.snip) : '';
+    o.key = o.kind + '|' + (o.page || '') + '|' + o.n + '|' + norm(o.crumb || '');
+    return o;
+  }
+  function buildIndex(){
+    var items = [], seen = {}, PT = pageTitles();
+    var navOrder = {}, links = document.querySelectorAll('.nav-links a[href^="#"]');
+    for (var i = 0; i < links.length; i++) navOrder[links[i].getAttribute('href').slice(1)] = i;
+    var pages = Array.prototype.slice.call(document.querySelectorAll('.page[id^="page-"]'));
+    pages.sort(function(a, b){
+      var ia = navOrder[a.id.slice(5)], ib = navOrder[b.id.slice(5)];
+      if (ia == null && ib == null) return 0;
+      if (ia == null) return 1;
+      if (ib == null) return -1;
+      return ia - ib;
+    });
+    pages.forEach(function(page){
+      var id = page.id.slice(5), label = pageLabel(id);
+      var st = page.querySelector('.section-title');
+      var intro = page.querySelector('.section-intro');
+      items.push(makeItem({
+        kind: 'page', page: id, text: label,
+        keys: [PT[id] || '', st ? clean(st.textContent) : '', id].concat(PAGE_ALIASES[id] || []),
+        snip: intro ? clean(intro.textContent) : ''
+      }));
+      var els = page.querySelectorAll('.acc-header, h2, h3, h4, .tab-btn, .key-point .kp-label, .video-card .video-tag');
+      for (var j = 0; j < els.length; j++){
+        var el = els[j];
+        if (el.closest(EXCLUDE)) continue;
+        if (/^H[234]$/.test(el.tagName) && el.closest('.acc-header')) continue;   // header row carries it
+        var isVideo = !!el.closest('.video-card');
+        if (el.classList.contains('video-tag') && el.parentElement && el.parentElement.querySelector('h4')) continue; // card already indexed by its h4
+        var text = headingText(el);
+        if (!text || text.length < 2) continue;
+        var kind = el.classList.contains('acc-header') ? 'section'
+                 : el.classList.contains('tab-btn') ? 'tab'
+                 : el.classList.contains('kp-label') ? 'keypoint'
+                 : isVideo ? 'video' : 'section';
+        var panel = el.closest('.tab-panel'), tabBtn = panel ? tabButtonFor(panel) : null;
+        var crumb = label + (tabBtn ? ' › ' + clean(tabBtn.textContent) : '');
+        var item = makeItem({
+          kind: kind, page: id, text: text, crumb: crumb, el: el, tabBtn: tabBtn,
+          keys: [label, tabBtn ? clean(tabBtn.textContent) : ''],
+          snip: kind === 'tab' ? '' : snippetFor(el)
+        });
+        if (seen[item.key]) continue;
+        seen[item.key] = 1;
+        items.push(item);
+      }
+    });
+    QUICK_ACTIONS.forEach(function(a){
+      var fn = a.fnName && typeof window[a.fnName] === 'function' ? window[a.fnName] : null;
+      var hasPage = a.page && document.getElementById('page-' + a.page);
+      if (!fn && !hasPage) return;
+      items.push(makeItem({
+        kind: 'action', page: a.page || '', text: a.text, crumb: hasPage ? pageLabel(a.page) : 'Runs immediately',
+        keys: (a.keys || []).concat(hasPage ? [pageLabel(a.page)] : []), fn: fn, after: a.after
+      }));
+    });
+    return items;
+  }
+  function ensureIndex(){
+    var n = document.querySelectorAll('.page[id^="page-"]').length;
+    if (!state.index || n !== state.indexedPages){
+      state.index = buildIndex();
+      state.indexedPages = n;
+    }
+    return state.index;
+  }
+  function findByKey(key){
+    var ix = state.index || [];
+    for (var i = 0; i < ix.length; i++) if (ix[i].key === key) return ix[i];
+    return null;
+  }
+
+  // ── DOM: rendering ──────────────────────────────────────────────────────
+  function $(id){ return document.getElementById(id); }
+  function el(tag, cls, text){
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function markedText(text, pos){
+    var frag = document.createDocumentFragment();
+    if (!pos || !pos.length){ frag.appendChild(document.createTextNode(text)); return frag; }
+    var rs = runs(pos), at = 0;
+    for (var i = 0; i < rs.length; i++){
+      var a = rs[i][0], b = Math.min(rs[i][1], text.length);
+      if (a > at) frag.appendChild(document.createTextNode(text.slice(at, a)));
+      var m = el('mark', 'tl-pal-mark', text.slice(a, b));
+      frag.appendChild(m);
+      at = b;
+    }
+    if (at < text.length) frag.appendChild(document.createTextNode(text.slice(at)));
+    return frag;
+  }
+  function snippetFrag(snip, rng){
+    var W = 48, a = Math.max(0, rng[0] - W), b = Math.min(snip.length, rng[1] + W);
+    var frag = document.createDocumentFragment();
+    if (a > 0){ while (a > 0 && a < rng[0] && snip[a - 1] !== ' ') a--; frag.appendChild(document.createTextNode('…' + snip.slice(a, rng[0]))); }
+    else frag.appendChild(document.createTextNode(snip.slice(0, rng[0])));
+    frag.appendChild(el('mark', 'tl-pal-mark', snip.slice(rng[0], rng[1])));
+    if (b < snip.length){ while (b < snip.length && snip[b] !== ' ') b++; frag.appendChild(document.createTextNode(snip.slice(rng[1], b) + '…')); }
+    else frag.appendChild(document.createTextNode(snip.slice(rng[1])));
+    return frag;
+  }
+  function optionNode(r, idx){
+    var it = r.item;
+    var o = el('div', 'tl-pal-opt tl-pal-kind-' + it.kind);
+    o.setAttribute('role', 'option');
+    o.setAttribute('aria-selected', 'false');
+    o.id = 'tl-pal-opt-' + idx;
+    o.setAttribute('data-idx', String(idx));
+    var ico = el('span', 'tl-pal-ico');
+    ico.setAttribute('aria-hidden', 'true');
+    ico.innerHTML = ICONS[it.icon || it.kind] || ICONS.section;   // static markup only
+    o.appendChild(ico);
+    var main = el('span', 'tl-pal-main');
+    var title = el('span', 'tl-pal-title');
+    title.appendChild(markedText(it.text, r.pos));
+    main.appendChild(title);
+    if (it.crumb) main.appendChild(el('span', 'tl-pal-crumb', it.crumb));
+    if (r.snip && it.snip){ var sn = el('span', 'tl-pal-snip'); sn.appendChild(snippetFrag(it.snip, r.snip)); main.appendChild(sn); }
+    o.appendChild(main);
+    o.appendChild(el('span', 'tl-pal-kindtag', KIND_LABEL[it.kind] || ''));
+    return o;
+  }
+  function renderGroups(groups, emptyMsg){
+    var list = $('tl-pal-list'); if (!list) return;
+    list.textContent = '';
+    state.flat = []; state.active = -1;
+    var n = 0;
+    groups.forEach(function(g, gi){
+      if (!g.items.length) return;
+      var wrap = el('div', 'tl-pal-groupwrap');
+      wrap.setAttribute('role', 'group');
+      var h = el('div', 'tl-pal-group', g.label);
+      h.id = 'tl-pal-g-' + gi;
+      h.setAttribute('role', 'presentation');
+      wrap.setAttribute('aria-labelledby', h.id);
+      wrap.appendChild(h);
+      g.items.forEach(function(r){
+        var idx = state.flat.length;
+        state.flat.push(r.item);
+        wrap.appendChild(optionNode(r, idx));
+        n++;
+      });
+      list.appendChild(wrap);
+    });
+    if (emptyMsg){
+      var em = el('div', 'tl-pal-empty', emptyMsg);
+      em.setAttribute('role', 'presentation');
+      list.insertBefore(em, list.firstChild);
+    }
+    if (state.flat.length) setActive(0, false);
+    else { var inp = $('tl-pal-input'); if (inp) inp.removeAttribute('aria-activedescendant'); }
+    if (emptyMsg) announce('No matches' + (n ? '. ' + n + (n === 1 ? ' suggestion' : ' suggestions') : ''));
+    else announce(n ? (n + (n === 1 ? ' result' : ' results')) : 'No matches');
+  }
+  var _annT = 0;
+  function announce(msg){
+    var s = $('tl-pal-status'); if (!s) return;
+    clearTimeout(_annT);
+    _annT = setTimeout(function(){ s.textContent = msg; }, 120);
+  }
+  function askItem(raw){
+    var q = raw.length > 60 ? raw.slice(0, 57) + '…' : raw;
+    return makeItem({
+      kind: 'action', icon: 'ask', page: 'ai', transient: true,
+      text: 'Ask the AI coach: “' + q + '”', crumb: 'Opens the coach with your question filled in',
+      after: function(){ var i = $('ai-input'); if (i){ i.value = raw.slice(0, 600); try { i.focus({ preventScroll: true }); } catch(e){ i.focus(); } } }
+    });
+  }
+  function render(){
+    var inp = $('tl-pal-input'); if (!inp) return;
+    var raw = clean(inp.value);
+    state.rawQuery = raw;
+    var index = ensureIndex(), recent = readRecent(), labelFor = pageLabel;
+    if (!raw){
+      var rec = recent.map(findByKey).filter(Boolean).map(function(it){ return { item: it, pos: null, snip: null }; });
+      var acts = index.filter(function(it){ return it.kind === 'action'; }).map(function(it){ return { item: it }; });
+      var pgs = index.filter(function(it){ return it.kind === 'page'; }).map(function(it){ return { item: it }; });
+      renderGroups([
+        { label: 'Recent', items: rec },
+        { label: 'Actions', items: acts },
+        { label: 'Pages', items: pgs }
+      ], '');
+      return;
+    }
+    var scored = search(index, raw, recent);
+    if (!scored.length){
+      var fallback = $('page-ai') ? [{ label: 'No matches', items: [{ item: askItem(raw) }] }] : [];
+      renderGroups(fallback, 'Nothing matches “' + raw + '”. Try a stroke, a set, a page name, or a drill.');
+      return;
+    }
+    renderGroups(groupResults(scored, labelFor), '');
+  }
+  function setActive(idx, scroll){
+    var list = $('tl-pal-list'), inp = $('tl-pal-input'); if (!list) return;
+    var opts = list.querySelectorAll('.tl-pal-opt');
+    if (!opts.length){ state.active = -1; return; }
+    idx = ((idx % opts.length) + opts.length) % opts.length;
+    for (var i = 0; i < opts.length; i++) opts[i].setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    state.active = idx;
+    if (inp) inp.setAttribute('aria-activedescendant', opts[idx].id);
+    if (scroll !== false){ try { opts[idx].scrollIntoView({ block: 'nearest' }); } catch(e){} }
+  }
+
+  // ── DOM: navigation to a result ─────────────────────────────────────────
+  function reduced(){
+    try { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch(e){ return false; }
+  }
+  function focusField(id){
+    var f = $(id); if (!f) return;
+    try { f.focus({ preventScroll: true }); } catch(e){ try { f.focus(); } catch(e2){} }
+  }
+  function clearHit(){
+    clearTimeout(state.hitTimer); state.hitTimer = 0;
+    if (state.hitEl){ state.hitEl.classList.remove('tl-pal-hit'); state.hitEl = null; }
+  }
+  function scrollHighlight(scrollEl, focusEl){
+    clearHit();
+    if (!scrollEl) return;
+    if (focusEl){
+      if (!focusEl.hasAttribute('tabindex')) focusEl.setAttribute('tabindex', '-1');
+      try { focusEl.focus({ preventScroll: true }); } catch(e){ try { focusEl.focus(); } catch(e2){} }
+    }
+    scrollEl.classList.add('tl-pal-hit');
+    try { scrollEl.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'center' }); }
+    catch(e){ try { scrollEl.scrollIntoView(); } catch(e2){} }
+    state.hitEl = scrollEl;
+    state.hitTimer = setTimeout(clearHit, HIGHLIGHT_MS + 100);
+  }
+  function openAcc(header){
+    if (!header) return;
+    if (typeof toggleAcc === 'function') toggleAcc(header); else header.click();
+  }
+  function reveal(item){
+    var target = item.el;
+    if (item.kind === 'action'){ if (typeof item.after === 'function') item.after(); return; }
+    if (!target || !document.contains(target)) return;
+    if (item.kind === 'tab'){
+      if (!target.classList.contains('active')) target.click();
+      scrollHighlight(target.closest('.tabs') || target, target);
+      return;
+    }
+    var panel = target.closest('.tab-panel');
+    if (panel && !panel.classList.contains('active')){
+      var tb = item.tabBtn || tabButtonFor(panel);
+      if (tb) tb.click();
+    }
+    var body = target.closest('.acc-body');
+    if (body && !body.classList.contains('open')){
+      var h = body.previousElementSibling;
+      if (h && h.classList.contains('acc-header')) openAcc(h);
+    }
+    if (target.classList.contains('acc-header')){
+      var b2 = target.nextElementSibling;
+      if (b2 && b2.classList.contains('acc-body') && !b2.classList.contains('open')) openAcc(target);
+    }
+    scrollHighlight(target, target);
+  }
+  // Poll with timers rather than requestAnimationFrame: the router activates
+  // the page on the (async) hashchange event, and rAF never fires in a
+  // background tab, which would leave the reveal pending until the tab is shown.
+  function waitActive(pageId, cb){
+    if (state.rafWait) clearTimeout(state.rafWait);
+    var tries = 0;
+    (function step(){
+      var page = $('page-' + pageId);
+      if (!page) return;
+      if (page.classList.contains('active')){
+        // Short settle so the router's scroll-to-top and focus move land first.
+        state.rafWait = setTimeout(function(){ state.rafWait = 0; cb(page); }, 40);
+        return;
+      }
+      if (++tries < 120) state.rafWait = setTimeout(step, 16);
+    })();
+  }
+  function run(item){
+    if (item.kind === 'action' && item.fn){ try { item.fn(); } catch(e){ console.error(e); } return; }
+    if (!item.page || !$('page-' + item.page)) return;
+    if (typeof showPage === 'function') showPage(item.page); else location.hash = item.page;
+    waitActive(item.page, function(){ reveal(item); });
+  }
+  function select(idx){
+    var item = state.flat[idx]; if (!item) return;
+    if (!item.transient) pushRecent(item.key);
+    window.closePalette();
+    run(item);
+  }
+
+  // ── DOM: open / close / lock ────────────────────────────────────────────
+  function lockScroll(){
+    var de = document.documentElement, b = document.body;
+    var sbw = window.innerWidth - de.clientWidth;
+    state.lock = { pr: b.style.paddingRight };
+    de.classList.add('tl-pal-lock');
+    if (sbw > 0) b.style.paddingRight = sbw + 'px';
+  }
+  function unlockScroll(){
+    document.documentElement.classList.remove('tl-pal-lock');
+    if (state.lock) document.body.style.paddingRight = state.lock.pr || '';
+    state.lock = null;
+  }
+  function authGateOpen(){
+    var g = $('access-gate');
+    return !!(g && g.style.display && g.style.display !== 'none');
+  }
+  window.openPalette = function(opts){
+    if (!state.inited) window.initPalette();
+    var root = $('tl-palette'), inp = $('tl-pal-input');
+    if (!root || !inp || authGateOpen()) return;
+    if (state.open){ inp.focus(); inp.select(); return; }
+    state.opener = document.activeElement;
+    ensureIndex();
+    root.hidden = false;
+    state.open = true;
+    lockScroll();
+    inp.value = (opts && typeof opts.query === 'string') ? opts.query : '';
+    inp.setAttribute('aria-expanded', 'true');
+    render();
+    try { inp.focus({ preventScroll: true }); } catch(e){ inp.focus(); }
+    inp.select();
+  };
+  window.closePalette = function(restoreFocus){
+    var root = $('tl-palette'), inp = $('tl-pal-input');
+    if (!state.open) return;
+    state.open = false;
+    if (state.rafWait){ clearTimeout(state.rafWait); state.rafWait = 0; }
+    if (root) root.hidden = true;
+    if (inp){ inp.setAttribute('aria-expanded', 'false'); inp.removeAttribute('aria-activedescendant'); }
+    unlockScroll();
+    var op = state.opener; state.opener = null;
+    if (restoreFocus !== false && op && op !== document.body && typeof op.focus === 'function' && document.contains(op)){
+      try { op.focus({ preventScroll: true }); } catch(e){ try { op.focus(); } catch(e2){} }
+    }
+  };
+  window.togglePalette = function(){ if (state.open) window.closePalette(); else window.openPalette(); };
+  window.rebuildPaletteIndex = function(){ state.index = null; state.indexedPages = 0; if (state.open) render(); };
+
+  // ── Events ──────────────────────────────────────────────────────────────
+  function isEditable(t){
+    if (!t || t === document.body) return false;
+    var tag = t.tagName;
+    return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || !!t.isContentEditable;
+  }
+  function onGlobalKey(e){
+    if (e.defaultPrevented || e.isComposing) return;
+    var k = e.key;
+    if ((e.metaKey || e.ctrlKey) && !e.altKey && !e.shiftKey && (k === 'k' || k === 'K')){
+      e.preventDefault();
+      window.togglePalette();
+      return;
+    }
+    if (k === '/' && !e.metaKey && !e.ctrlKey && !e.altKey && !state.open && !isEditable(e.target) && !authGateOpen()){
+      e.preventDefault();
+      window.openPalette();
+    }
+  }
+  function onDialogKey(e){
+    var k = e.key;
+    if (e.isComposing) return;   // IME composition: Enter/arrows belong to the editor
+    if (k === 'Escape'){ e.preventDefault(); e.stopPropagation(); window.closePalette(); return; }
+    if (k === 'ArrowDown'){ e.preventDefault(); setActive(state.active + 1); return; }
+    if (k === 'ArrowUp'){ e.preventDefault(); setActive(state.active - 1); return; }
+    if (k === 'PageDown'){ e.preventDefault(); setActive(Math.min(state.flat.length - 1, state.active + 6)); return; }
+    if (k === 'PageUp'){ e.preventDefault(); setActive(Math.max(0, state.active - 6)); return; }
+    if ((k === 'Home' || k === 'End') && state.flat.length && (e.ctrlKey || document.activeElement !== $('tl-pal-input'))){
+      e.preventDefault(); setActive(k === 'Home' ? 0 : state.flat.length - 1); return;
+    }
+    if (k === 'Enter'){ e.preventDefault(); if (state.active >= 0) select(state.active); return; }
+    if (k === 'Tab'){
+      // Keep focus inside the dialog: input ⇄ close button.
+      var inp = $('tl-pal-input'), cls = $('tl-pal-close');
+      if (!inp || !cls) return;
+      e.preventDefault();
+      if (document.activeElement === inp) cls.focus(); else inp.focus();
+    }
+  }
+  function platformHints(){
+    var plat = '';
+    try { plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || ''; } catch(e){}
+    state.isMac = /Mac|iPhone|iPad|iPod/i.test(plat);
+    var mod = $('tl-pal-modkey'); if (mod) mod.textContent = state.isMac ? '⌘' : 'Ctrl';
+    var btn = $('nav-search-btn');
+    if (btn){
+      var hint = btn.querySelector('.tl-pal-navhint');
+      if (hint) hint.textContent = state.isMac ? '⌘K' : 'Ctrl K';
+      if (!state.isMac){ btn.setAttribute('aria-label', 'Search (Ctrl+K)'); btn.setAttribute('title', 'Search (Ctrl+K)'); }
+      btn.setAttribute('aria-keyshortcuts', 'Meta+K Control+K');
+      // Phones: the nav is already tight (brand + .nav-right leave the link
+      // strip ~23 px at 375 px); tag the containers so styles.css can trim
+      // their padding/gaps only when this button is present. Classes rather
+      // than :has() so the rule also applies in older mobile browsers.
+      var nv = btn.closest('nav'), nr = btn.closest('.nav-right');
+      if (nv) nv.classList.add('tl-pal-nav');
+      if (nr) nr.classList.add('tl-pal-navright');
+    }
+  }
+  window.initPalette = function(){
+    if (state.inited) return;
+    var root = $('tl-palette'), inp = $('tl-pal-input'), list = $('tl-pal-list'), cls = $('tl-pal-close');
+    if (!root || !inp || !list) return;   // markup not on the page (yet)
+    state.inited = true;
+    platformHints();
+    document.addEventListener('keydown', onGlobalKey);
+    root.addEventListener('keydown', onDialogKey);
+    inp.addEventListener('input', render);
+    if (cls) cls.addEventListener('click', function(){ window.closePalette(); });
+    root.addEventListener('click', function(e){
+      if (e.target === root || (e.target.hasAttribute && e.target.hasAttribute('data-tl-pal-close'))) window.closePalette();
+    });
+    // Keep the caret in the input when a row is clicked (not on the scrollbar).
+    list.addEventListener('mousedown', function(e){ if (e.target.closest && e.target.closest('.tl-pal-opt')) e.preventDefault(); });
+    list.addEventListener('click', function(e){
+      var o = e.target.closest ? e.target.closest('.tl-pal-opt') : null;
+      if (!o) return;
+      e.preventDefault();
+      select(parseInt(o.getAttribute('data-idx'), 10));
+    });
+    // Hover selects, but only on real pointer movement — browsers synthesise a
+    // mousemove after a keyboard-driven scroll, which would hijack ↑/↓.
+    var lastX = -1, lastY = -1;
+    list.addEventListener('mousemove', function(e){
+      if (e.clientX === lastX && e.clientY === lastY) return;
+      lastX = e.clientX; lastY = e.clientY;
+      var o = e.target.closest ? e.target.closest('.tl-pal-opt') : null;
+      if (!o) return;
+      var i = parseInt(o.getAttribute('data-idx'), 10);
+      if (i !== state.active) setActive(i, false);
+    });
+    // Browser Back / hash edits while the palette is open: close it (chained, not overwritten).
+    var prev = window.onPageChange;
+    window.onPageChange = function(name){ if (typeof prev === 'function') prev(name); if (state.open) window.closePalette(false); };
+  };
+  if (typeof document !== 'undefined' && document.addEventListener){
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ window.initPalette(); });
+    else window.initPalette();
+  }
+  // Pure logic exposed for the node test harness (no DOM needed).
+  window.TL_PALETTE = { _internals: { clean: clean, norm: norm, normQuery: normQuery, tokenMatch: tokenMatch, scoreItem: scoreItem, search: search, groupResults: groupResults, runs: runs, makeItem: makeItem, readRecent: readRecent, pushRecent: pushRecent, RECENT_KEY: RECENT_KEY } };
+})();
+// ─── UPDATES ───
+/* ============================================================
+   TIDELYNE — WHAT'S NEW + PWA  (feature bundle: updates)
+   ------------------------------------------------------------
+   - Release-notes timeline driven by UPDATES (newest first)
+   - window.TL_VERSION / window.TL_UPDATES
+   - Unseen-release dot on #nav-updates and any [data-tl-badge]
+     (storage key tl_seen_update, cleared when the page is shown)
+   - Service-worker registration (./sw.js) + "updated — Reload" toast
+   - Install prompt (beforeinstallprompt), iOS hint, standalone detection
+   Public API on window: initUpdates(), onShow_updates(), tlPromptInstall(),
+   tlCheckForUpdates(), tlRefreshUpdateBadge(), tlShowAllUpdates().
+   Plain ES2019 — no modules, no top-level await.
+   ============================================================ */
+(function(){
+'use strict';
+
+// ─── RELEASE NOTES (newest first) ─────────────────────────────────────────
+// tag: 'New' | 'Improved' | 'Fixed'.  link: a page hash such as '#videos' —
+// rendered as a link only when that page exists in the DOM, so a note can
+// never point at a page that has not shipped.  Keep the top entry's version
+// in sync with VERSION in sw.js (see NOTES.md / README snippet).
+const UPDATES = [
+  {
+    version: '3.0.0', date: '2026-09-13',
+    title: 'Deck tools, search and an offline app',
+    summary: 'Three new tool pages built for the pool deck, a command palette, an installable offline app and a reorganised, faster-loading site. Your log and PRs stay on your device.',
+    items: [
+      { tag: 'New',      text: 'Timers — tempo trainer, interval timer, and a pace clock with a send-off calculator and split taker.', link: '#timers' },
+      { tag: 'New',      text: 'Race Planner — goal times, race predictor, split planner and meet countdown.', link: '#planner' },
+      { tag: 'New',      text: 'Training Analytics — weekly volume chart, streaks, zone distribution and insights built from your training log, plus SWOLF, DPS and CSS calculators.', link: '#analytics' },
+      { tag: 'New',      text: 'Global search — press ⌘K (Ctrl+K on Windows and Linux) anywhere to open the command palette and jump to any page or tool.' },
+      { tag: 'Improved', text: 'Navigation — pages are grouped by purpose instead of one long strip, with a proper menu on phones.' },
+      { tag: 'New',      text: 'Installable app — add Tidelyne to your home screen or desktop; pages, calculators, timers, your log and PRs work offline.', link: '#updates' },
+      { tag: 'Improved', text: 'Videos page — embeds load only when you tap a video, so the page opens in a fraction of the time.', link: '#videos' },
+      { tag: 'Improved', text: 'Season calendar — refreshed for 2026–27 with the new national meet dates.', link: '#season' },
+      { tag: 'New',      text: 'What\'s New — this page. A dot on the nav link means there is a release you have not read yet.' }
+    ]
+  },
+  {
+    version: '2.1.0', date: '2026-08-25',
+    title: 'Forensic audit release',
+    summary: 'A line-by-line audit of the whole app — navigation, accessibility, data safety and the accuracy of every number on the site.',
+    items: [
+      { tag: 'Improved', text: 'Deep links — every section has its own URL, so you can bookmark or share a page and the browser back button works as expected.' },
+      { tag: 'Improved', text: 'Accessibility — tabs, accordions, dialogs, quick prompts and clickable cards are keyboard-operable and labelled for screen readers across the app.' },
+      { tag: 'New',      text: 'Backup — Export and Import your name, PRs and training log as a JSON file to move between devices or survive a browser-data clear.', link: '#profile' },
+      { tag: 'Fixed',    text: 'Content accuracy — push-off speed, IM split percentages, the breaststroke pullout sequence and heart-rate zone references corrected.', link: '#technique' },
+      { tag: 'Improved', text: '3D lab — the Three.js engine now loads only when the visualizer opens, saving about 600 KB on every other visit.', link: '#visualizer' },
+      { tag: 'Fixed',    text: 'Legal pages — privacy, terms and disclaimer now describe exactly what the site does and does not do with your data.' }
+    ]
+  },
+  {
+    version: '2.0.0', date: '2026-08-23',
+    title: 'Tidelyne brand launch',
+    summary: 'SwimIQ Pro becomes Tidelyne — a name, a mark and one consistent identity across every icon and share card.',
+    items: [
+      { tag: 'New', text: 'Logo — three waves in a rounded badge: the cyan waterline with the swell above and below. It still reads as water at 16 px.' },
+      { tag: 'New', text: 'Social preview — shared links now show a proper preview card in iMessage, Slack and X.' },
+      { tag: 'New', text: 'Icons — favicons and home-screen icons for every platform, generated from one source so they never drift.' }
+    ]
+  }
+];
+
+const TAG_CLASS = { New: 'new', Improved: 'improved', Fixed: 'fixed' };
+const SEEN_KEY  = 'tl_seen_update';
+const MAX_OPEN  = 4;   // releases shown before "Show older releases"
+
+window.TL_VERSION = UPDATES[0].version;
+window.TL_UPDATES = UPDATES;   // read-only reference (e.g. for the command palette)
+
+// ─── SMALL HELPERS (reuse the app's globals when present) ────────────────
+function esc(s){
+  if (typeof window.escapeHTML === 'function') return window.escapeHTML(s);
+  return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+}
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsPut(k, v){
+  if (typeof window.lsSet === 'function') return !!window.lsSet(k, v);
+  try { localStorage.setItem(k, v); return true; } catch(e){ return false; }
+}
+function $(id){ return document.getElementById(id); }
+function setText(id, v){ const el = $(id); if (el) el.textContent = v; }
+
+// Numeric dotted-version compare: -1 / 0 / 1 ("3.0.0" > "2.10.1").
+function cmpVer(a, b){
+  const pa = String(a || '').split('.').map(function(n){ return parseInt(n, 10) || 0; });
+  const pb = String(b || '').split('.').map(function(n){ return parseInt(n, 10) || 0; });
+  const n = Math.max(pa.length, pb.length);
+  for (let i = 0; i < n; i++){
+    const x = pa[i] || 0, y = pb[i] || 0;
+    if (x !== y) return x < y ? -1 : 1;
+  }
+  return 0;
+}
+// 'YYYY-MM-DD' → locale short date, built from parts so no timezone shift.
+function fmtDate(iso){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+  if (!m) return String(iso || '');
+  const d = new Date(+m[1], +m[2] - 1, +m[3]);
+  try { return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }); }
+  catch(e){ return iso; }
+}
+// Only hash links to pages that exist, or plain relative .html files.
+function linkFor(link){
+  if (!link || typeof link !== 'string') return null;
+  if (link.charAt(0) === '#'){
+    const id = link.slice(1);
+    return (/^[a-z0-9_-]+$/i.test(id) && $('page-' + id)) ? link : null;
+  }
+  // Relative path segments only: no leading slash (rules out protocol-relative
+  // //host/x.html), no dot segments (rules out ../), one .html extension.
+  return /^[a-z0-9_-]+(?:\/[a-z0-9_-]+)*\.html$/i.test(link) ? link : null;
+}
+// "Timers — tempo trainer…" → bold lead + rest (presentation only).
+function splitHead(text){
+  const t = String(text || '');
+  const i = t.indexOf(' — ');
+  if (i > 0 && i < 48) return { head: t.slice(0, i), rest: t.slice(i + 3) };
+  return { head: '', rest: t };
+}
+
+// ─── TIMELINE ─────────────────────────────────────────────────────────────
+let prevSeenAtLoad = null;   // version last read before this visit (null = first visit)
+let showAll = false;
+
+function countsText(c){
+  const parts = [];
+  if (c.new) parts.push(c.new + ' new');
+  if (c.improved) parts.push(c.improved + ' improved');
+  if (c.fixed) parts.push(c.fixed + ' fixed');
+  return parts.join(' · ');
+}
+function renderRelease(rel, i){
+  const latest = i === 0;
+  const unseen = !!prevSeenAtLoad && cmpVer(rel.version, prevSeenAtLoad) > 0;
+  const counts = { new: 0, improved: 0, fixed: 0 };
+  const items = (rel.items || []).map(function(it){
+    const cls = TAG_CLASS[it.tag] || 'improved';
+    counts[cls]++;
+    const p = splitHead(it.text);
+    const inner = p.head ? '<strong>' + esc(p.head) + '</strong> — ' + esc(p.rest) : esc(p.rest);
+    const href = linkFor(it.link);
+    const body = href ? '<a href="' + esc(href) + '">' + inner + '</a>' : '<span>' + inner + '</span>';
+    return '<li><span class="tl-upd-tag ' + cls + '">' + esc(it.tag) + '</span>' + body + '</li>';
+  }).join('');
+  return '<li class="tl-upd-rel' + (latest ? ' latest' : '') + (unseen ? ' unseen' : '') + '" tabindex="-1">'
+    + '<div class="tl-upd-rel-head">'
+    +   '<span class="tl-upd-ver">v' + esc(rel.version) + '</span>'
+    +   (latest ? '<span class="tl-upd-badge latest">Latest</span>' : '')
+    +   (unseen ? '<span class="tl-upd-badge unseen">Since your last visit</span>' : '')
+    +   '<time class="tl-upd-date" datetime="' + esc(rel.date) + '">' + esc(fmtDate(rel.date)) + '</time>'
+    + '</div>'
+    + '<h3 class="tl-upd-rel-title">' + esc(rel.title) + '</h3>'
+    + (rel.summary ? '<p class="tl-upd-rel-summary">' + esc(rel.summary) + '</p>' : '')
+    + (items ? '<ul class="tl-upd-items">' + items + '</ul>' : '')
+    + '<div class="tl-upd-counts">' + esc(countsText(counts)) + '</div>'
+    + '</li>';
+}
+function renderTimeline(){
+  const ol = $('tl-upd-timeline');
+  if (!ol) return;
+  const shown = showAll ? UPDATES : UPDATES.slice(0, MAX_OPEN);
+  ol.innerHTML = shown.map(renderRelease).join('');
+  const more = $('tl-upd-more');
+  if (more){
+    const hidden = Math.max(0, UPDATES.length - MAX_OPEN);
+    more.hidden = showAll || hidden === 0;
+    more.textContent = 'Show ' + hidden + ' older release' + (hidden === 1 ? '' : 's');
+  }
+}
+window.tlShowAllUpdates = function(){
+  showAll = true;
+  renderTimeline();
+  const ol = $('tl-upd-timeline');
+  const items = ol ? ol.querySelectorAll('.tl-upd-rel') : [];
+  const first = items && items.length > MAX_OPEN ? items[MAX_OPEN] : null;
+  if (first && first.focus){ try { first.focus({ preventScroll: false }); } catch(e){} }
+};
+
+// ─── UNSEEN BADGE ─────────────────────────────────────────────────────────
+function badgeTargets(){
+  const list = [];
+  const nav = $('nav-updates');
+  if (nav) list.push(nav);
+  document.querySelectorAll('[data-tl-badge]').forEach(function(el){ if (list.indexOf(el) < 0) list.push(el); });
+  return list;
+}
+function showBadge(){
+  badgeTargets().forEach(function(el){
+    if (el.querySelector('.tl-upd-dot')) return;
+    el.classList.add('tl-has-badge');
+    const d = document.createElement('span');
+    d.className = 'tl-upd-dot';
+    d.setAttribute('role', 'img');
+    d.setAttribute('aria-label', 'new release');
+    el.appendChild(d);
+  });
+}
+function clearBadge(){
+  document.querySelectorAll('.tl-upd-dot').forEach(function(d){ if (d.parentNode) d.parentNode.removeChild(d); });
+  document.querySelectorAll('.tl-has-badge').forEach(function(el){ el.classList.remove('tl-has-badge'); });
+}
+// Call after injecting nav markup (e.g. a mobile menu) so late [data-tl-badge]
+// elements get their dot.
+window.tlRefreshUpdateBadge = function(){
+  if (lsGet(SEEN_KEY) !== window.TL_VERSION) showBadge(); else clearBadge();
+};
+
+// ─── STATUS CARD ──────────────────────────────────────────────────────────
+let swReg = null, swSupported = false, swVersion = null;
+
+function isStandalone(){
+  try {
+    if (navigator.standalone === true) return true;                  // iOS Safari
+    if (window.matchMedia){
+      if (matchMedia('(display-mode: standalone)').matches) return true;
+      if (matchMedia('(display-mode: fullscreen)').matches) return true;
+      if (matchMedia('(display-mode: minimal-ui)').matches) return true;
+    }
+  } catch(e){}
+  return false;
+}
+function isIOS(){
+  const ua = navigator.userAgent || '';
+  if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return true;
+  // iPadOS 13+ reports itself as a Mac but has a touch screen
+  return navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1;
+}
+function setStatus(msg, kind){
+  const el = $('tl-upd-status');
+  if (!el) return;
+  el.textContent = msg || '';
+  el.className = 'tl-upd-status' + (kind ? ' ' + kind : '');
+}
+function renderStatus(){
+  setText('tl-upd-ver', 'v' + window.TL_VERSION);
+  setText('tl-upd-date', fmtDate(UPDATES[0].date));
+  setText('tl-upd-mode', isStandalone() ? 'App' : 'Browser');
+  const controlled = swSupported && !!(navigator.serviceWorker && navigator.serviceWorker.controller);
+  const offline = controlled ? 'Ready' : (swSupported ? 'Caching' : 'No');
+  setText('tl-upd-offline', offline);
+  const note = $('tl-upd-offline-note');
+  if (note){
+    let msg = '';
+    if (controlled) msg = 'Offline ready — pages, calculators, timers, your log and PRs work without signal. The AI coach, videos and the 3D lab need a connection.';
+    else if (swSupported) msg = 'Preparing offline support — reload once to finish caching.';
+    else msg = 'Offline support is unavailable here: it needs https and a browser that supports service workers.';
+    if (typeof navigator.onLine === 'boolean' && !navigator.onLine) msg = 'You are offline. ' + msg;
+    if (swVersion && cmpVer(swVersion, window.TL_VERSION) > 0) msg += ' Version ' + swVersion + ' has been downloaded — reload to finish updating.';
+    note.textContent = msg;
+  }
+  // Rewrite the version text without destroying a badge dot that showBadge()
+  // may already have appended (textContent replaces every child node).
+  document.querySelectorAll('[data-tl-version]').forEach(function(el){
+    const want = 'Version ' + window.TL_VERSION;
+    const dot = el.querySelector('.tl-upd-dot');
+    if (el.textContent === want && !dot) return;
+    if (dot && dot.parentNode) dot.parentNode.removeChild(dot);
+    if (el.textContent !== want) el.textContent = want;
+    if (dot) el.appendChild(dot);
+  });
+}
+
+// ─── INSTALL ──────────────────────────────────────────────────────────────
+let deferredPrompt = null;
+// Chrome fires this soon after load — listen from parse time, not from init.
+window.addEventListener('beforeinstallprompt', function(e){
+  try { e.preventDefault(); } catch(err){}
+  deferredPrompt = e;
+  renderInstall();
+});
+window.addEventListener('appinstalled', function(){
+  deferredPrompt = null;
+  setStatus('Tidelyne is installed. Launch it from your home screen or app list.', 'ok');
+  renderInstall(); renderStatus();
+});
+function renderInstall(){
+  const btn = $('tl-upd-install-btn'), msg = $('tl-upd-install-msg');
+  if (!btn || !msg) return;
+  if (isStandalone()){
+    btn.hidden = true;
+    msg.textContent = 'Installed — Tidelyne is running as an app on this device. Updates arrive in the background and you are prompted to reload when one lands.';
+    return;
+  }
+  if (isIOS()){
+    btn.hidden = true;
+    msg.textContent = 'On iPhone or iPad: tap Share, then Add to Home Screen. Tidelyne then opens full-screen and works offline.';
+    return;
+  }
+  if (deferredPrompt){
+    btn.hidden = false;
+    msg.textContent = 'Add Tidelyne to your home screen or desktop: full-screen, offline, one tap from the deck.';
+    return;
+  }
+  btn.hidden = true;
+  msg.textContent = 'Your browser has not offered installation yet. Chrome and Edge show Install in the address bar or browser menu once the app qualifies; Safari on macOS 14 or later uses File, then Add to Dock.';
+}
+window.tlPromptInstall = function(){
+  if (!deferredPrompt){
+    renderInstall();
+    setStatus('Installation is not available in this browser right now.', 'warn');
+    return Promise.resolve(false);
+  }
+  const ev = deferredPrompt;
+  deferredPrompt = null;               // a captured prompt can be used once
+  // prompt() returns a promise that rejects if the event was already used —
+  // swallow that so it can never surface as an unhandled rejection.
+  try { Promise.resolve(ev.prompt()).catch(function(){}); } catch(e){}
+  return Promise.resolve(ev.userChoice).then(function(r){
+    const ok = !!(r && r.outcome === 'accepted');
+    setStatus(ok ? 'Installing Tidelyne…' : 'Install dismissed — you can install later from the browser menu.', ok ? 'ok' : '');
+    renderInstall();
+    return ok;
+  }).catch(function(){ renderInstall(); return false; });
+};
+
+// ─── SERVICE WORKER ───────────────────────────────────────────────────────
+let hadController = false;
+
+function canRegister(){
+  if (!('serviceWorker' in navigator)) return false;
+  const h = location.hostname;
+  const local = h === 'localhost' || h === '127.0.0.1' || h === '[::1]' || h === '::1';
+  return location.protocol === 'https:' || local;
+}
+function registerSW(){
+  try {
+    if (!canRegister()) return;
+    swSupported = true;
+    hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('message', onSWMessage);
+    navigator.serviceWorker.addEventListener('controllerchange', function(){ askSWVersion(); renderStatus(); });
+    navigator.serviceWorker.register('./sw.js', { scope: './' }).then(function(reg){
+      swReg = reg;
+      reg.addEventListener('updatefound', function(){
+        // On the very first install there is no controller yet — say nothing.
+        if (!navigator.serviceWorker.controller) return;
+        setStatus('Update found — installing in the background.', 'ok');
+      });
+      askSWVersion();
+      renderStatus();
+    }).catch(function(){ swSupported = false; renderStatus(); });
+  } catch(e){ swSupported = false; }
+}
+function askSWVersion(){
+  try {
+    const c = navigator.serviceWorker && navigator.serviceWorker.controller;
+    if (c) c.postMessage({ type: 'TL_GET_VERSION' });
+  } catch(e){}
+}
+function onSWMessage(e){
+  const d = e && e.data;
+  if (!d || typeof d !== 'object') return;
+  if (d.type === 'TL_VERSION'){ swVersion = String(d.version || ''); renderStatus(); return; }
+  if (d.type !== 'TL_UPDATED') return;
+  swVersion = String(d.version || '');
+  renderStatus();
+  // First-ever install: the page is already the newest — nothing to reload into.
+  if (!hadController && !d.previous) return;
+  showUpdateToast(swVersion);
+}
+function showUpdateToast(version){
+  if (!document.body) return;
+  let t = $('tl-upd-toast');
+  if (t && t.parentNode) t.parentNode.removeChild(t);
+  t = document.createElement('div');
+  t.id = 'tl-upd-toast';
+  t.className = 'tl-upd-toast';
+  t.setAttribute('role', 'status');
+  t.setAttribute('aria-live', 'polite');
+  const msg = document.createElement('span');
+  msg.className = 'tl-upd-toast-msg';
+  const same = !version || cmpVer(version, window.TL_VERSION) === 0;
+  msg.textContent = same ? 'Tidelyne was updated' : 'Tidelyne updated to ';
+  if (!same){ const b = document.createElement('b'); b.textContent = 'v' + version; msg.appendChild(b); }
+  const reload = document.createElement('button');
+  reload.type = 'button'; reload.className = 'btn-sm'; reload.textContent = 'Reload';
+  reload.addEventListener('click', function(){ try { location.reload(); } catch(e){} });
+  const x = document.createElement('button');
+  x.type = 'button'; x.className = 'tl-upd-toast-x'; x.textContent = '✕';
+  x.setAttribute('aria-label', 'Dismiss');
+  x.addEventListener('click', hideUpdateToast);
+  t.appendChild(msg); t.appendChild(reload); t.appendChild(x);
+  document.body.appendChild(t);
+}
+function hideUpdateToast(){
+  const t = $('tl-upd-toast');
+  if (t && t.parentNode) t.parentNode.removeChild(t);
+}
+window.tlCheckForUpdates = function(){
+  if (!swSupported || !swReg){
+    setStatus(swSupported ? 'Still registering — try again in a moment.' : 'Update checks need https and a browser with service-worker support. Reload the page to fetch the latest version.', 'warn');
+    return Promise.resolve(false);
+  }
+  setStatus('Checking for updates…');
+  return Promise.resolve(swReg.update()).then(function(){
+    const w = swReg.installing || swReg.waiting;
+    if (w){
+      // A worker installing while nothing controls the page is the first
+      // install, not an update — no reload prompt will follow.
+      const first = !(navigator.serviceWorker && navigator.serviceWorker.controller);
+      setStatus(first ? 'Offline support is still being set up — reload once to finish caching.'
+                      : 'Update found — installing in the background. You will be prompted to reload.', 'ok');
+      return !first;
+    }
+    setStatus('You have the latest version (v' + window.TL_VERSION + ').', 'ok');
+    return false;
+  }).catch(function(){
+    setStatus('Could not check — you may be offline. Cached pages still work.', 'warn');
+    return false;
+  });
+};
+
+// ─── INIT / ROUTER HOOKS ──────────────────────────────────────────────────
+let inited = false;
+window.initUpdates = function(){
+  if (inited) return;
+  inited = true;
+  prevSeenAtLoad = lsGet(SEEN_KEY);
+  if (prevSeenAtLoad === window.TL_VERSION) prevSeenAtLoad = null;   // nothing new since last read
+  else showBadge();
+  try { swSupported = canRegister(); } catch(e){ swSupported = false; }  // known before load, so the status card never flashes "No"
+  renderTimeline();
+  renderStatus();
+  renderInstall();
+  window.addEventListener('online', renderStatus);
+  window.addEventListener('offline', renderStatus);
+  try {
+    const mq = window.matchMedia && matchMedia('(display-mode: standalone)');
+    if (mq && mq.addEventListener) mq.addEventListener('change', function(){ renderInstall(); renderStatus(); });
+  } catch(e){}
+  if (document.readyState === 'complete') registerSW();
+  else window.addEventListener('load', registerSW);
+};
+window.onShow_updates = function(){
+  window.initUpdates();          // idempotent; guarantees prevSeenAtLoad is captured first
+  if (lsGet(SEEN_KEY) !== window.TL_VERSION){
+    lsPut(SEEN_KEY, window.TL_VERSION);
+  }
+  clearBadge();
+  renderTimeline();              // links reflect whichever pages exist now
+  renderStatus();
+  renderInstall();
+};
+// Self-schedule as a safety net; the integrator's DOMContentLoaded call is a no-op after this.
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', window.initUpdates);
+else window.initUpdates();
+
+// Test hook (only when a harness opts in) — never used by the page itself.
+if (window.__TL_TEST__ === true){
+  window.__tlUpdInternals = { cmpVer: cmpVer, fmtDate: fmtDate, linkFor: linkFor, splitHead: splitHead,
+    countsText: countsText, renderRelease: renderRelease, renderTimeline: renderTimeline,
+    onSWMessage: onSWMessage, showUpdateToast: showUpdateToast, hideUpdateToast: hideUpdateToast,
+    renderInstall: renderInstall, renderStatus: renderStatus, isIOS: isIOS, isStandalone: isStandalone,
+    setHadController: function(v){ hadController = !!v; } };
+}
+})();
+// ─── NAV ───
+/* ─── NAV: grouped navigation ────────────────────────────────────────────
+   Desktop (>=900px): group buttons open dropdown panels (click, hover intent,
+   keyboard). Mobile (<900px): hamburger opens a slide-in drawer; groups are
+   headed, collapsible sections. One markup tree, re-flowed by CSS.
+   Pattern: WAI-ARIA APG "Disclosure Navigation Menu" — button[aria-expanded]
+   controlling a plain list of links. No role="menu" anywhere.
+   Exposes: window.initNav() (idempotent), window.openNavDrawer(),
+   window.closeNavDrawer(), window.closeNavMenus(). Chains window.onPageChange. */
+(function(){
+  'use strict';
+  if (window.__tlNavLoaded) return;
+  window.__tlNavLoaded = true;
+
+  var DESKTOP_MQ = '(min-width:900px)';
+  var HOVER_OPEN_MS = 120;   // intent delay so a cursor crossing the bar does not flash menus
+  var HOVER_CLOSE_MS = 260;  // grace period to travel from button into the panel
+  var st = { mq:null, open:null, byHover:false, tOpen:0, tClose:0, tPark:0, drawer:false, scrollY:0, focusBack:null, docBound:false, obs:null };
+
+  function byId(id){ return document.getElementById(id); }
+  function navEl(){ return document.querySelector('nav'); }
+  function q(sel, root){ return [].slice.call((root || document).querySelectorAll(sel)); }
+  function isDesktop(){ return st.mq ? !!st.mq.matches : true; }
+  function groups(){ return q('nav .nav-links > li.nav-group'); }
+  function btnOf(g){ return g ? g.querySelector('.nav-group-btn') : null; }
+  function menuOf(g){ return g ? g.querySelector('.nav-menu') : null; }
+  function linksOf(g){ return g ? q('.nav-menu a[href]', g) : []; }
+  function topItems(){ return q('nav .nav-links > li > a[href], nav .nav-links > li > .nav-group-btn'); }
+  function isOpen(g){ var b = btnOf(g); return !!b && b.getAttribute('aria-expanded') === 'true'; }
+  function setOpen(g, open){
+    var b = btnOf(g); if (!b) return;
+    b.setAttribute('aria-expanded', open ? 'true' : 'false');
+    g.classList.toggle('open', !!open);
+    if (!open) { var m = menuOf(g); if (m) m.classList.remove('flip'); }
+  }
+  function clearTimers(){
+    if (st.tOpen) { clearTimeout(st.tOpen); st.tOpen = 0; }
+    if (st.tClose) { clearTimeout(st.tClose); st.tClose = 0; }
+  }
+  function safeFocus(el, preventScroll){
+    if (!el || typeof el.focus !== 'function') return;
+    try { el.focus(preventScroll ? { preventScroll:true } : undefined); } catch (e) { try { el.focus(); } catch (e2) {} }
+  }
+
+  // ── Desktop dropdowns ──────────────────────────────────────────────────
+  function openMenu(g, viaHover){
+    if (!g) return;
+    clearTimers();
+    groups().forEach(function(o){ if (o !== g) setOpen(o, false); });
+    setOpen(g, true);
+    st.open = g; st.byHover = !!viaHover;
+    // Keep the panel on-screen if the bar ever sits near the right edge.
+    var m = menuOf(g);
+    if (m && m.getBoundingClientRect) {
+      m.classList.remove('flip');
+      var r = m.getBoundingClientRect();
+      if (r.right > (window.innerWidth || document.documentElement.clientWidth) - 8) m.classList.add('flip');
+    }
+  }
+  function closeMenu(g, focusBtn){
+    if (!g) return;
+    clearTimers();
+    setOpen(g, false);
+    if (st.open === g) { st.open = null; st.byHover = false; }
+    if (focusBtn) safeFocus(btnOf(g));
+  }
+  function closeAllMenus(){
+    clearTimers();
+    if (isDesktop()) groups().forEach(function(g){ setOpen(g, false); });
+    st.open = null; st.byHover = false;
+  }
+  function onGroupClick(e, b){
+    var g = b.closest('.nav-group'); if (!g) return;
+    e.preventDefault();
+    if (!isDesktop()) { setOpen(g, !isOpen(g)); return; }          // drawer: collapsible section
+    if (isOpen(g)) { if (st.byHover) st.byHover = false; else closeMenu(g, false); } // a click on a hover-opened menu pins it
+    else openMenu(g, false);
+  }
+  function onPointerEnter(e){
+    if (!isDesktop() || e.pointerType === 'touch') return;
+    var g = e.currentTarget;
+    if (st.tClose) { clearTimeout(st.tClose); st.tClose = 0; }
+    if (isOpen(g)) return;
+    var delay = st.open ? 0 : HOVER_OPEN_MS;                       // already browsing a menu → switch instantly
+    if (st.tOpen) clearTimeout(st.tOpen);
+    st.tOpen = setTimeout(function(){ st.tOpen = 0; openMenu(g, true); }, delay);
+  }
+  function onPointerLeave(e){
+    if (!isDesktop() || e.pointerType === 'touch') return;
+    var g = e.currentTarget;
+    if (st.tOpen) { clearTimeout(st.tOpen); st.tOpen = 0; }
+    if (!isOpen(g) || !st.byHover) return;                          // click/keyboard-opened menus stay put
+    if (st.tClose) clearTimeout(st.tClose);
+    st.tClose = setTimeout(function(){
+      st.tClose = 0;
+      if (isOpen(g) && st.byHover && !g.contains(document.activeElement)) closeMenu(g, false);
+    }, HOVER_CLOSE_MS);
+  }
+  function onNavKeydown(e){
+    if (!isDesktop()) return;
+    var t = e.target, key = e.key;
+    if (!t || !t.closest) return;
+    var g = t.closest('.nav-group');
+    if (g && t.classList.contains('nav-group-btn')) {
+      if (key === 'ArrowDown' || key === 'ArrowUp') {
+        e.preventDefault();
+        openMenu(g, false);
+        var ls = linksOf(g); safeFocus(key === 'ArrowDown' ? ls[0] : ls[ls.length - 1]);
+        return;
+      }
+    }
+    if (g && t.matches('.nav-menu a')) {
+      var ls2 = linksOf(g), i = ls2.indexOf(t), n = ls2.length;
+      if (n && key === 'ArrowDown') { e.preventDefault(); safeFocus(ls2[(i + 1) % n]); return; }
+      if (n && key === 'ArrowUp')   { e.preventDefault(); safeFocus(ls2[(i - 1 + n) % n]); return; }
+      if (n && key === 'Home')      { e.preventDefault(); safeFocus(ls2[0]); return; }
+      if (n && key === 'End')       { e.preventDefault(); safeFocus(ls2[n - 1]); return; }
+    }
+    if (key === 'ArrowLeft' || key === 'ArrowRight') {
+      var items = topItems(), cur = g ? btnOf(g) : t, idx = items.indexOf(cur);
+      if (idx < 0 || items.length < 2) return;
+      e.preventDefault();
+      var wasOpen = !!g && isOpen(g);
+      var next = items[(idx + (key === 'ArrowRight' ? 1 : -1) + items.length) % items.length];
+      if (wasOpen) closeMenu(g, false);
+      safeFocus(next);
+      if (wasOpen && next.classList.contains('nav-group-btn')) openMenu(next.closest('.nav-group'), false);
+    }
+  }
+  function onNavFocusOut(e){
+    if (!isDesktop() || !st.open) return;
+    var to = e.relatedTarget;
+    if (!to) return;                                                // focus to body/void: outside-click handler decides
+    if (!st.open.contains(to)) closeAllMenus();
+  }
+  function onDocPointerDown(e){
+    var t = e.target;
+    if (st.open && !(t && t.closest && t.closest('.nav-group'))) closeAllMenus();
+  }
+
+  // ── Mobile drawer ──────────────────────────────────────────────────────
+  function inertTargets(){
+    return q('main, nav .nav-brand, nav .nav-right, #nav-menu-btn, #access-gate');
+  }
+  function setInert(on){
+    inertTargets().forEach(function(el){
+      try { if (on) { el.setAttribute('data-tl-inert', '1'); el.inert = true; }
+            else if (el.getAttribute('data-tl-inert')) { el.removeAttribute('data-tl-inert'); el.inert = false; } } catch (err) {}
+    });
+  }
+  function lockScroll(){
+    var b = document.body, de = document.documentElement;
+    st.scrollY = window.pageYOffset || de.scrollTop || 0;
+    var hadGutter = (window.innerWidth - de.clientWidth) > 0;
+    b.style.position = 'fixed'; b.style.top = (-st.scrollY) + 'px';
+    b.style.left = '0'; b.style.right = '0'; b.style.width = '100%';
+    de.classList.add('tl-nav-lock');
+    de.classList.toggle('tl-nav-lock-nogutter', !hadGutter);
+  }
+  function unlockScroll(){
+    var b = document.body, de = document.documentElement;
+    b.style.position = ''; b.style.top = ''; b.style.left = ''; b.style.right = ''; b.style.width = '';
+    de.classList.remove('tl-nav-lock'); de.classList.remove('tl-nav-lock-nogutter');
+    var prev = de.style.scrollBehavior;                             // html{scroll-behavior:smooth} would animate the restore
+    de.style.scrollBehavior = 'auto';
+    try { window.scrollTo(0, st.scrollY); } catch (e) {}
+    de.style.scrollBehavior = prev;
+  }
+  function fixOffset(){
+    // The nav's backdrop-filter makes it the containing block of its fixed children in
+    // Chrome/Firefox (Filter Effects Level 2) but not everywhere. Measure and re-anchor to
+    // the viewport top so the drawer is full-height regardless of engine or a banner above.
+    ['nav-drawer', 'tl-nav-scrim'].forEach(function(id){
+      var el = byId(id); if (!el || !el.getBoundingClientRect) return;
+      el.style.top = '';
+      var top = el.getBoundingClientRect().top;
+      if (Math.abs(top) > 0.5) el.style.top = (-top) + 'px';
+    });
+  }
+  function syncSearchRow(){
+    // Both search controls only mean something once the palette bundle has defined
+    // window.openPalette; until then they are hidden rather than left as dead buttons.
+    var absent = typeof window.openPalette !== 'function';
+    var row = byId('tl-nav-search'); if (row) row.hidden = absent;
+    var btn = byId('nav-search-btn'); if (btn) btn.hidden = absent;
+  }
+  function setDrawerInert(d, on){ try { d.inert = !!on; } catch (e) {} }
+  function parkDrawer(){
+    var d = byId('nav-drawer');
+    if (d && !st.drawer && !isDesktop() && !d.classList.contains('open')) { d.classList.add('parked'); setDrawerInert(d, false); }
+  }
+  function openDrawer(){
+    var d = byId('nav-drawer'), s = byId('tl-nav-scrim'), b = byId('nav-menu-btn');
+    if (!d || st.drawer || isDesktop()) return;
+    st.drawer = true;
+    if (st.tPark) { clearTimeout(st.tPark); st.tPark = 0; }
+    st.focusBack = document.activeElement;
+    lockScroll();
+    d.classList.remove('parked');
+    setDrawerInert(d, false);
+    void d.offsetWidth;                                             // commit display before the transform transition
+    fixOffset();
+    d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'tl-nav-title');
+    d.classList.add('open');
+    if (s) s.classList.add('open');
+    if (b) b.setAttribute('aria-expanded', 'true');
+    setInert(true);
+    syncSearchRow();
+    var c = byId('tl-nav-close');
+    safeFocus(c || d, true);                                        // focusable now: nothing waits on a transition
+    setTimeout(function(){ if (st.drawer && !d.contains(document.activeElement)) safeFocus(c || d, true); }, 40);
+  }
+  function closeDrawer(returnFocus){
+    var d = byId('nav-drawer'), s = byId('tl-nav-scrim'), b = byId('nav-menu-btn');
+    if (!st.drawer) return;
+    st.drawer = false;
+    if (d) {
+      d.classList.remove('open'); d.removeAttribute('role'); d.removeAttribute('aria-modal'); d.removeAttribute('aria-labelledby');
+      setDrawerInert(d, true);                                      // off-screen but still rendered during the slide-out
+      if (st.tPark) clearTimeout(st.tPark);
+      st.tPark = setTimeout(function(){ st.tPark = 0; parkDrawer(); }, 320); // transitionend also parks; this covers reduced-motion
+    }
+    if (s) s.classList.remove('open');
+    if (b) b.setAttribute('aria-expanded', 'false');
+    setInert(false);
+    unlockScroll();
+    if (returnFocus) {
+      // APG: focus returns to the invoking control. The hamburger is the invoker on every
+      // path (tap, keyboard, openNavDrawer()); fall back to the prior focus only if it is gone.
+      var f = (b && b.getClientRects().length) ? b
+            : ((st.focusBack && document.contains(st.focusBack) && st.focusBack !== document.body) ? st.focusBack : null);
+      safeFocus(f, true);
+    }
+    st.focusBack = null;
+  }
+  function focusables(root){
+    return q('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])', root).filter(function(el){
+      return !el.hidden && el.getClientRects().length > 0;
+    });
+  }
+  function onDrawerTab(e){
+    if (!st.drawer || e.key !== 'Tab') return;
+    var d = byId('nav-drawer'); if (!d) return;
+    var f = focusables(d); if (!f.length) { e.preventDefault(); return; }
+    var first = f[0], last = f[f.length - 1], a = document.activeElement, inside = d.contains(a);
+    if (e.shiftKey && (a === first || !inside)) { e.preventDefault(); safeFocus(last); }
+    else if (!e.shiftKey && (a === last || !inside)) { e.preventDefault(); safeFocus(first); }
+  }
+  function onDocKeydown(e){
+    if (e.key === 'Tab') { onDrawerTab(e); return; }
+    if (e.key !== 'Escape' && e.key !== 'Esc') return;
+    if (st.drawer) { e.preventDefault(); closeDrawer(true); return; }
+    if (st.open) { var g = st.open; closeMenu(g, g.contains(document.activeElement)); }
+  }
+
+  // ── Shared click routing (delegated on <nav>) ──────────────────────────
+  function onNavClick(e){
+    var t = e.target; if (!t || !t.closest) return;
+    if (t.closest('#nav-menu-btn')) { e.preventDefault(); if (st.drawer) closeDrawer(true); else openDrawer(); return; }
+    if (t.closest('#tl-nav-close')) { e.preventDefault(); closeDrawer(true); return; }
+    if (t.closest('#tl-nav-scrim')) { closeDrawer(true); return; }
+    if (t.closest('#tl-nav-search')) {
+      e.preventDefault();
+      closeDrawer(false);
+      if (typeof window.openPalette === 'function') setTimeout(function(){ window.openPalette(); }, 0);
+      return;
+    }
+    var gb = t.closest('.nav-group-btn');
+    if (gb) { onGroupClick(e, gb); return; }
+    var a = t.closest('.nav-links a[href]');
+    if (a) {
+      // The router focuses the new page once the hash changes. A click on the link for the
+      // page already shown changes nothing, so put focus on a control that stays visible
+      // (hamburger / group button) instead of leaving it on a link that is about to be hidden.
+      if (st.drawer) closeDrawer(true);
+      else { var ag = a.closest('.nav-group'); closeAllMenus(); if (ag) safeFocus(btnOf(ag), true); }
+    }
+  }
+
+  // ── State sync ─────────────────────────────────────────────────────────
+  function syncActiveGroup(){
+    q('nav .nav-links .nav-group-btn.active').forEach(function(b){ b.classList.remove('active'); });
+    var a = document.querySelector('nav .nav-links a.active');
+    var b = btnOf(a && a.closest ? a.closest('.nav-group') : null);
+    if (b) b.classList.add('active');
+  }
+  function syncBadge(){
+    var u = byId('nav-updates'), b = byId('nav-menu-btn'); if (!u || !b) return;
+    var has = q('*', u).some(function(el){
+      if (el.hidden || el.getAttribute('aria-hidden') === 'true') return false;
+      try { return getComputedStyle(el).display !== 'none'; } catch (e) { return true; }
+    });
+    b.classList.toggle('has-badge', has);
+  }
+  function syncMode(){
+    var desktop = isDesktop();
+    if (st.drawer) closeDrawer(false);
+    clearTimers(); st.open = null; st.byHover = false;
+    groups().forEach(function(g){ setOpen(g, !desktop); });         // desktop: closed; drawer: sections expanded
+    var d = byId('nav-drawer');
+    if (d) {
+      d.classList.remove('open'); d.removeAttribute('role'); d.removeAttribute('aria-modal'); d.removeAttribute('aria-labelledby'); d.style.top = '';
+      if (st.tPark) { clearTimeout(st.tPark); st.tPark = 0; }
+      d.classList.toggle('parked', !desktop);                        // desktop ignores .parked; mobile starts fully closed
+      setDrawerInert(d, false);
+    }
+    var s = byId('tl-nav-scrim'); if (s) { s.classList.remove('open'); s.style.top = ''; }
+    var b = byId('nav-menu-btn'); if (b) b.setAttribute('aria-expanded', 'false');
+    syncSearchRow();
+  }
+
+  function initNav(){
+    var n = navEl(), d = byId('nav-drawer');
+    if (!n || !d) return;
+    if (!st.mq && window.matchMedia) {
+      st.mq = window.matchMedia(DESKTOP_MQ);
+      var onChange = function(){ syncMode(); };
+      if (st.mq.addEventListener) st.mq.addEventListener('change', onChange);
+      else if (st.mq.addListener) st.mq.addListener(onChange);
+    }
+    if (n.getAttribute('data-tl-nav') !== '1') {
+      n.setAttribute('data-tl-nav', '1');
+      n.addEventListener('click', onNavClick);
+      n.addEventListener('keydown', onNavKeydown);
+      n.addEventListener('focusout', onNavFocusOut);
+      d.addEventListener('transitionend', function(e){ if (e.target === d && e.propertyName === 'transform') parkDrawer(); });
+      groups().forEach(function(g){
+        g.addEventListener('pointerenter', onPointerEnter);
+        g.addEventListener('pointerleave', onPointerLeave);
+      });
+      var u = byId('nav-updates');
+      if (u && window.MutationObserver && !st.obs) {
+        st.obs = new MutationObserver(function(){ syncBadge(); });
+        st.obs.observe(u, { childList:true, subtree:true, attributes:true });
+      }
+    }
+    if (!st.docBound) {
+      st.docBound = true;
+      document.addEventListener('keydown', onDocKeydown);
+      document.addEventListener('pointerdown', onDocPointerDown, true);
+      document.addEventListener('visibilitychange', function(){ if (document.hidden) clearTimers(); });
+    }
+    syncMode();
+    syncActiveGroup();
+    syncBadge();
+  }
+
+  // Close everything whenever the router activates a page (footer links, cards, hash edits).
+  var prevPageChange = window.onPageChange;
+  window.onPageChange = function(name){
+    if (typeof prevPageChange === 'function') { try { prevPageChange(name); } catch (e) { console.error(e); } }
+    closeAllMenus();
+    if (st.drawer) closeDrawer(false);
+    syncActiveGroup();
+    syncSearchRow();                                                // palette may have loaded after initNav
+  };
+
+  window.initNav = initNav;
+  window.openNavDrawer = openDrawer;
+  window.closeNavDrawer = function(){ closeDrawer(true); };
+  window.closeNavMenus = closeAllMenus;
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initNav);
+  else initNav();
 })();
 </script>
 </body>

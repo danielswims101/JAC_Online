@@ -3,6 +3,7 @@
   "short_name": "Tidelyne",
   "description": "3D stroke lab, technique library and pace tools for competitive swimmers.",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#040d18",
   "theme_color": "#040d18",
@@ -22,6 +23,41 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Training Log",
+      "short_name": "Log",
+      "description": "Log a session",
+      "url": "./#log",
+      "icons": [{ "src": "favicon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Pace Calculator",
+      "short_name": "Calculator",
+      "description": "Golf score, splits, pace zones",
+      "url": "./#calculator",
+      "icons": [{ "src": "favicon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "AI Coach",
+      "short_name": "Coach",
+      "description": "Ask the AI swim coach",
+      "url": "./#ai",
+      "icons": [{ "src": "favicon-192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }
