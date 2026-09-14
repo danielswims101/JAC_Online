@@ -1,7 +1,8 @@
 # Tidelyne
 
 A free training platform for competitive swimmers — technique library, an
-interactive 3D stroke-biomechanics lab, pace/time calculators, pool-deck timers
+interactive 3D stroke-biomechanics lab with a realistic procedural human swimmer,
+pace/time calculators, pool-deck timers
 (tempo trainer, interval timer, pace clock), a race planner, a training log with
 analytics, race-day and taper guidance, global search (⌘K), and an AI swim coach.
 Installable as an app and works offline.
@@ -13,6 +14,7 @@ Installable as an app and works offline.
 | Path | Purpose |
 | --- | --- |
 | `index.html` | The whole app — one self-contained file (inline CSS/JS, hash-routed sections, a lazily-loaded Three.js visualizer, calculators, training log). |
+| `viz-human.js` | The realistic 3D swimmer for the biomechanics lab — procedural anatomy, wet-skin materials and the motion layer (`TL_Human`, `TL_HumanMaterials`, `TL_HumanMotion`). Loaded lazily after Three.js as `./viz-human.js?v=<version>`; if it fails to load the lab falls back to the built-in mannequin. |
 | `privacy.html`, `terms.html`, `disclaimer.html` | Legal pages. |
 | `robots.txt`, `sitemap.xml`, `site.webmanifest` | SEO / PWA. |
 | `sw.js` | Service worker — precaches the app shell for offline use. Bump its `VERSION` on every release (see below). |
@@ -23,7 +25,7 @@ Installable as an app and works offline.
 ## Stack
 
 - Static site hosted on **GitHub Pages** — no build step; `index.html` is the deployed artifact.
-- **Three.js r128** (loaded from jsDelivr, on demand) powers the 3D stroke lab.
+- **Three.js r128** (loaded from jsDelivr, on demand) powers the 3D stroke lab; `viz-human.js` builds the realistic swimmer in the browser with no external model files.
 - **Supabase** handles email/password accounts and gates the AI features; the AI itself runs in a Supabase Edge Function (`ask-ai`) that holds the server-side key and enforces the rate limit (20 messages / 5 hours). Only the public anon key ships in the page.
 - Google Fonts for typography; technique videos embed via `youtube-nocookie.com`.
 

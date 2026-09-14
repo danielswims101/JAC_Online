@@ -283,6 +283,11 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .viz-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem}
 .viz-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:7px 14px;font-family:var(--fm);font-size:0.65rem;letter-spacing:0.8px;cursor:pointer;transition:all 0.2s;text-transform:uppercase}
 .viz-btn.active,.viz-btn:hover{background:var(--cyan-dim);color:var(--cyan);border-color:rgba(0,212,255,0.4)}
+/* 3D lab: swimmer model / skin-tone controls */
+.viz-ctl-lbl{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px}
+.viz-tone{display:inline-flex;align-items:center;gap:7px;padding-left:10px}
+.tone-swatch{width:12px;height:12px;border-radius:50%;border:1px solid rgba(255,255,255,0.35);flex:0 0 auto}
+.viz-btn.viz-busy{opacity:.55;cursor:progress}
 .force-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:1rem;padding:1rem;background:var(--navy3);border-radius:var(--r8);border:1px solid var(--border2)}
 .legend-item{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:0.65rem;letter-spacing:0.5px;color:var(--white3);text-transform:uppercase}
 .legend-dot{width:12px;height:12px;border-radius:50%}
@@ -1438,7 +1443,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="vd-uw"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="bjDfI0NMVY8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/bjDfI0NMVY8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Underwater · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
   <div class="divider"></div>
   <div class="section-eyebrow">Study It — Interactive 3D Biomechanics Lab</div>
-  <p class="section-intro" style="margin-bottom:1.5rem">A rigged 3D human swimming underwater — caustic light, depth haze, wet skin — reconstructing every movement joint-by-joint. Slow it down, orbit any angle, isolate a single phase, or describe any movement and the AI reconstructs it. It exists so you can see what video moves too fast to show.</p>
+  <p class="section-intro" style="margin-bottom:1.5rem">A realistic human swimmer — built in your browser from real athlete proportions, with wet skin, race swimwear, silicone cap and goggles — swimming underwater in caustic light and depth haze, every joint driven by elite stroke-phase timing. Slow it down, orbit any angle, zoom in on a hand or a foot, isolate a single phase, switch between the male and female swimmer or X-ray the skeleton, or describe any movement and the AI reconstructs it. It exists so you can see what video moves too fast to show.</p>
   <div class="viz-canvas-wrap" style="position:relative">
     <div id="viz3d-container" role="img" tabindex="0" aria-label="Interactive 3D swimmer. Use the stroke and phase buttons below, or the arrow keys, to step through each phase. Each phase is described in words in the panel underneath."></div>
     <div class="viz-overlay-stats">
@@ -1468,10 +1473,17 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="viz-btn" onclick="setView3D('top')">Below</button>
     <button class="viz-btn" onclick="setView3D('three-quarter')">3/4 View</button>
   </div>
+  <div class="viz-controls" style="margin-top:8px" role="group" aria-label="Swimmer model and skin tone">
+    <span class="viz-ctl-lbl" aria-hidden="true">Swimmer:</span>
+    <button class="viz-btn active" id="vbtn-model-male" aria-pressed="true" onclick="setHumanModel('male')">♂ Male</button>
+    <button class="viz-btn" id="vbtn-model-female" aria-pressed="false" onclick="setHumanModel('female')">♀ Female</button>
+    <button class="viz-btn" id="vbtn-xray" aria-pressed="false" title="Show the skeleton and joints inside the swimmer" onclick="toggleXray3D()">🩻 X-ray</button>
+    <span class="viz-ctl-lbl" style="margin-left:6px" aria-hidden="true">Skin:</span>
+    <button class="viz-btn viz-tone" id="vbtn-tone-light" aria-pressed="false" aria-label="Light skin tone" onclick="setSkinTone3D('light')"><span class="tone-swatch" style="background:#e8b99a"></span>Light</button>
+    <button class="viz-btn viz-tone active" id="vbtn-tone-medium" aria-pressed="true" aria-label="Medium skin tone" onclick="setSkinTone3D('medium')"><span class="tone-swatch" style="background:#c9915f"></span>Medium</button>
+    <button class="viz-btn viz-tone" id="vbtn-tone-deep" aria-pressed="false" aria-label="Deep skin tone" onclick="setSkinTone3D('deep')"><span class="tone-swatch" style="background:#6b3f22"></span>Deep</button>
+  </div>
   <div class="viz-controls" style="margin-top:8px">
-    <button class="viz-btn active" id="vbtn-model-male" onclick="setHumanModel('male')">♂ Male</button>
-    <button class="viz-btn" id="vbtn-model-female" onclick="setHumanModel('female')">♀ Female</button>
-    <button class="viz-btn" id="vbtn-model-mannequin" onclick="setHumanModel('mannequin')">🤖 Mannequin</button>
     <button class="viz-btn active" id="vbtn-play" onclick="togglePlay3D()">⏸ Pause</button>
     <button class="viz-btn" data-speed onclick="setSpeed3D(0.3,this)">0.3× Slow</button>
     <button class="viz-btn active" data-speed onclick="setSpeed3D(1,this)">1× Normal</button>
@@ -1492,7 +1504,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div id="viz-phase-name" style="font-family:var(--fh);font-size:1.4rem;letter-spacing:1px;color:var(--cyan)">Select a stroke</div>
       <div id="viz-stroke-name" style="font-family:var(--fm);font-size:0.65rem;letter-spacing:3px;color:var(--white3);text-transform:uppercase"></div>
     </div>
-    <div id="viz-phase-text" style="font-size:0.9rem;color:var(--white2);line-height:1.8;font-weight:300">The visualizer renders a real 3D swimmer with joint motion timed to elite stroke-phase research. Orbit freely or use the view buttons to inspect technique from any angle.</div>
+    <div id="viz-phase-text" style="font-size:0.9rem;color:var(--white2);line-height:1.8;font-weight:300">The lab renders a realistic 3D swimmer — anatomically proportioned, with wet skin, swimwear, cap and goggles — whose joints move on timing from elite stroke-phase research. Orbit freely, zoom in close, or use the view buttons to inspect technique from any angle; X-ray shows the skeleton underneath.</div>
     <div id="viz-physics-row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-top:1rem"></div>
   </div>
   <div class="divider"></div>
@@ -2979,7 +2991,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <p class="tl-upd-note">Update checks run through your browser's service worker against this site only — nothing about you is sent anywhere. The one thing saved is the version you last read, so the nav dot knows when to appear.</p>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p data-tl-version>Version 3.0.1</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p data-tl-version>Version 3.1.0</p></div></footer>
 </div>
 </main>
 <!-- AUTH — real Supabase email/password accounts. Content is public; an
@@ -3510,7 +3522,7 @@ function initViz3D() {
   controls.target.set(0, 0.5, 0);
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
-  controls.minDistance = 1.5;
+  controls.minDistance = 0.35;   // realistic human: close-ups down to 35 cm (was 1.5 — the four presets sit at 2-4 m)
   controls.maxDistance = 8;
   controls.maxPolarAngle = Math.PI * 0.92;
   // MOVE 4 — light it like a pool, not a studio: ONE strong source from
@@ -3619,6 +3631,11 @@ function initViz3D() {
   swimmerOrient = new THREE.Group();
   swimmerOrient.position.set(0, 0.5, 0);
   scene.add(swimmerOrient);
+  // Realistic-human lighting (TL_HumanMaterials, optional): a pool-tinted IBL
+  // for the wet skin plus shadow bias/normalBias and one rim light on top of
+  // the lights above. Runs after every scene material exists so the floor and
+  // ropes get their envMapIntensity tamed instead of blowing out.
+  initHumanLighting();
   viz3DInitialized = true;
 }
 // Prone (face-down: freestyle, breaststroke, butterfly, dolphin) or
@@ -3951,242 +3968,217 @@ let playing = true;
 let speed = 1;
 // Free the previous swimmer's GPU buffers — without this, every stroke
 // switch leaks ~60 geometries/materials until the tab slows to a crawl.
+// (Mannequin only — the realistic human is cached; rig.dispose() owns it.)
 function disposeObject3D(root) {
   root.traverse(o => {
     if (o.geometry) o.geometry.dispose();
     if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.dispose());
   });
 }
-function rebuildSwimmer(strokeKey) {
-  if (swimmer) {
-    swimmerOrient.remove(swimmer.root);
-    disposeObject3D(swimmer.root);
-  }
-  const sd = STROKES[strokeKey];
-  swimmer = buildSwimmer(sd.color);
-  setBodyOrientation(!!sd.supine);
-  swimmerOrient.add(swimmer.root);
-  applyModelVisibility();
-}
 // ═══════════════════════════════════════════════════════════════════════
-// REALISTIC HUMAN MODEL — a professionally rigged glTF human (Mixamo
-// character bundled with Three.js, free to use) driven by the SAME stroke
-// engine: the biomechanics mannequin keeps running invisibly as the driver
-// skeleton, and every frame each human bone is aligned to the matching
-// mannequin segment. All verified stroke mechanics transfer 1:1.
+// REALISTIC HUMAN SWIMMER — procedural, rigged, built in the browser by
+// ./viz-human.js (TL_HumanMaterials + TL_HumanMotion + TL_Human, one lazily
+// loaded file). It uses the SAME joint hierarchy and angle conventions as the
+// mannequin below (buildSwimmer, kept as the fallback), so every stroke
+// keyframe, the force arrows and the AI reconstruction drive it unchanged.
+// The script loads lazily after Three.js (loadHumanScripts). If it is
+// missing or a build throws, the mannequin is shown instead — silently.
 // ═══════════════════════════════════════════════════════════════════════
-// ── MALE / FEMALE AVATARS — how to get real skin + a friendly face ──────
-// The engine drives ANY Mixamo-compatible rigged human, which includes
-// Ready Player Me avatars. To upgrade from the demo model (free, ~10 min):
-//   1. On readyplayer.me create TWO full-body avatars — one male, one
-//      female. Pick a PRESET face (friendly, generic — never a real
-//      person's) and an athletic build. Needs an account: loop in your dad.
-//   2. Download each as .glb into a /media folder in your repo, named
-//      swimmer-male.glb and swimmer-female.glb.
-//   3. Point the two urls below at them, e.g. 'media/swimmer-male.glb'.
-// Until then MALE uses the Three.js demo human (Xbot) so the feature works
-// out of the box, and FEMALE politely asks for its file.
-const HUMAN_MODELS = {
-  male:   { label:'Male',   url:'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/models/gltf/Xbot.glb' },
-  female: { label:'Female', url:'' } // ← e.g. 'media/swimmer-female.glb'
-};
-const GLTF_LOADER_URL = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js';
-const humanRigs = { male:{state:'idle',rig:null}, female:{state:'idle',rig:null} };
-let currentHumanKey = 'male'; // 'male' | 'female' | 'mannequin'
-let gltfLoaderState = 'idle';
-function humanStatus(msg){ const el=document.getElementById('human-status'); if(el) el.textContent=msg; }
-function activeHumanRig(){
-  const slot = humanRigs[currentHumanKey];
-  return (slot && slot.state === 'ready') ? slot.rig : null;
-}
-function withGLTFLoader(cb){
-  if (gltfLoaderState === 'ready') { cb(); return; }
-  if (gltfLoaderState === 'failed') return;
-  if (gltfLoaderState === 'loading') { setTimeout(function(){ withGLTFLoader(cb); }, 300); return; }
-  if (window.THREE && THREE.GLTFLoader) { gltfLoaderState='ready'; cb(); return; }
-  gltfLoaderState = 'loading';
-  // The engine is Three.js r128 (UMD global). Load the matching r128 UMD
-  // GLTFLoader via a <script> tag so it attaches THREE.GLTFLoader to the same
-  // global. (A bare ES-module import — "three/addons/…" — can't resolve here:
-  // there is no import map, so it always rejected and the human never loaded.)
-  var s = document.createElement('script');
-  s.src = GLTF_LOADER_URL;
-  s.onload = function(){
-    if (window.THREE && THREE.GLTFLoader) { gltfLoaderState = 'ready'; cb(); }
-    else { gltfLoaderState = 'failed'; humanStatus('3D model loader unavailable — showing the built-in swimmer.'); applyModelVisibility(); }
+const HUMAN_SCRIPT = './viz-human.js'; // relative to index.html; cache-busted with ?v=TL_VERSION (sw.js precaches it)
+let humanScriptState = 'idle'; // 'idle' | 'loading' | 'done'
+const _humanScriptQueue = [];
+function loadHumanScripts(done){
+  if (humanScriptState === 'done') { done(); return; }
+  _humanScriptQueue.push(done);
+  if (humanScriptState === 'loading') return;
+  humanScriptState = 'loading';
+  const finish = function(){
+    humanScriptState = 'done';
+    _humanScriptQueue.splice(0).forEach(fn => fn());
   };
-  s.onerror = function(){
-    gltfLoaderState = 'failed';
-    humanStatus('3D model loader unavailable — showing the built-in swimmer.');
-    applyModelVisibility();
-  };
+  const s = document.createElement('script');
+  s.src = HUMAN_SCRIPT + '?v=' + encodeURIComponent(window.TL_VERSION || '3.1.0');
+  s.async = false;
+  s.onload = finish;
+  // Offline, blocked or a broken deploy: the page keeps working with the built-in mannequin.
+  s.onerror = function(){ console.warn('Tidelyne: could not load ' + HUMAN_SCRIPT + ' — the built-in mannequin will be shown.'); finish(); };
   document.head.appendChild(s);
 }
-function loadHumanModel(key){
-  const slot = humanRigs[key];
-  if (!slot || slot.state !== 'idle') return;
-  if (!HUMAN_MODELS[key].url) { slot.state = 'missing'; return; }
-  slot.state = 'loading';
-  humanStatus('Loading ' + HUMAN_MODELS[key].label.toLowerCase() + ' swimmer model…');
-  withGLTFLoader(function(){
-    try {
-      new THREE.GLTFLoader().load(HUMAN_MODELS[key].url, function(gltf){ onHumanLoaded(gltf, key); }, undefined, function(){
-        slot.state = 'failed';
-        humanStatus(HUMAN_MODELS[key].label + ' model unavailable — showing the mannequin.');
-        applyModelVisibility();
-      });
-    } catch(e){ slot.state = 'failed'; applyModelVisibility(); }
+const SKIN_TONE_HEX = { light: 0xe8b99a, medium: 0xc9915f, deep: 0x6b3f22 };
+const humanRigCache = {};      // 'male|high' → rig, built ONCE and kept for the page's lifetime
+const humanInflight = {};      // keys currently building
+const _humanCausticMats = [];  // materials whose caustic offset is not the shared Vector2 (normally none)
+let humanSex = 'male';         // 'male' | 'female'
+let humanTone = 'medium';      // 'light' | 'medium' | 'deep'
+let humanXray = false;
+let humanQuality = null;       // decided once: 'high' on desktop, 'medium' on phones/tablets
+let humanFailed = false;       // a build threw → mannequin for the rest of the session
+let strokesPatched = false;
+function humanStatus(msg){ const el=document.getElementById('human-status'); if(el && el.textContent !== msg) el.textContent = msg; }
+function humanModulesReady(){ return !!(window.TL_Human && typeof TL_Human.buildHumanSwimmerAsync === 'function'); }
+function humanLabel(sex){ return sex === 'female' ? 'Female' : 'Male'; }
+function pickHumanQuality(){
+  if (humanQuality) return humanQuality;
+  let small = false;
+  try {
+    small = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ||
+            (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4);
+  } catch(e) {}
+  humanQuality = small ? 'medium' : 'high';
+  return humanQuality;
+}
+function initHumanLighting(){
+  const M = window.TL_HumanMaterials;
+  if (!M || !renderer || !scene) return;
+  try { M.makeEnvironment(renderer, scene); } catch (e) { console.warn('Tidelyne: makeEnvironment failed', e); }
+  try { M.enhanceLighting(scene, renderer); } catch (e) { console.warn('Tidelyne: enhanceLighting failed', e); }
+}
+// Keyframe corrections from the motion module (measured against the real
+// body: hand paths, heel heights, roll sign…) — applied ONCE to a clone of
+// the built-in strokes; AI motions get the same clone discipline.
+function applyStrokePatches(){
+  const HM = window.TL_HumanMotion;
+  if (strokesPatched || !HM || typeof HM.applyPatches !== 'function') return;
+  try {
+    HM.config.anatomicalElbow = true; // elbows always flex toward the biceps (supine too); must precede applyPatches
+    HM.config.anatomicalKick = true;  // flutter kick under the body line (round-1 review: the shin left the water)
+    Object.assign(STROKES, HM.applyPatches(STROKES));
+    strokesPatched = true;
+  } catch (e) { console.warn('Tidelyne: stroke patches skipped', e); }
+}
+function applyHumanTone(rig, tone){
+  const M = window.TL_HumanMaterials;
+  try {
+    if (rig.materials && rig.materials.source === 'TL_HumanMaterials' && M && M.setSkinTone) M.setSkinTone(rig.mat, tone);
+    else if (rig.mat && rig.mat.color) rig.mat.color.setHex(SKIN_TONE_HEX[tone] || SKIN_TONE_HEX.medium);
+  } catch (e) {}
+}
+// The caustic uniform on every human material IS causticsTex.offset (same
+// Vector2), so animate3D's scroll already drives the body. Verified here; a
+// material that somehow holds its own Vector2 gets a per-frame copy instead.
+function registerHumanCaustics(rig){
+  if (!causticsTex) return;
+  const M = window.TL_HumanMaterials;
+  if (M && M.setCausticsTexture) { try { M.setCausticsTexture(causticsTex); } catch (e) {} }
+  const mats = rig.materials ? [rig.materials.skin, rig.materials.suit, rig.materials.cap] : [rig.mat, rig.matDim];
+  mats.forEach(function(m){
+    const c = m && m.userData && m.userData.caustic;
+    if (c && c.offset && c.offset !== causticsTex.offset && _humanCausticMats.indexOf(m) < 0) _humanCausticMats.push(m);
   });
 }
-function loadHumanModels(){
-  loadHumanModel('male');
-  if (HUMAN_MODELS.female.url) loadHumanModel('female');
+function syncHumanCaustics(){
+  for (let i = 0; i < _humanCausticMats.length; i++) _humanCausticMats[i].userData.caustic.offset.copy(causticsTex.offset);
 }
-function findBone(root, suffix){
-  let hit = null;
-  const want = suffix.toLowerCase();
-  root.traverse(o => { if (!hit && o.isBone && o.name.toLowerCase().endsWith(want)) hit = o; });
-  return hit;
-}
-let _hv1, _hv2, _hv3, _hq1, _hq2, _heul; // human-sync scratch
-function onHumanLoaded(gltf, key){
-  const model = gltf.scene;
-  model.traverse(o => {
-    if (o.isMesh) {
-      o.castShadow = true;
-      o.frustumCulled = false; // skinned mesh bounds don't track the pose
-      if (o.material) {
-        // Wet-skin conversion. Textured avatars (Ready Player Me) keep
-        // their skin/face textures; only untextured demo materials get the
-        // skin tint. Everyone gets the water-film clearcoat + caustics.
-        const hadMap = !!o.material.map;
-        o.material = toWetMaterial(o.material, o, false);
-        if (!hadMap && o.material.color) o.material.color.set(0xc9915f);
-      }
+// Put a cached rig on screen. Never disposes a human (they live in humanRigCache).
+function showHumanRig(rig, sd){
+  if (swimmer !== rig) {
+    if (swimmer) {
+      swimmerOrient.remove(swimmer.root);
+      if (!swimmer.isHuman) disposeObject3D(swimmer.root);
+      else if (window.TL_HumanMotion && TL_HumanMotion.resetSecondary) TL_HumanMotion.resetSecondary(swimmer);
     }
+    swimmer = rig;
+    swimmerOrient.add(rig.root);
+  }
+  rig.setSuitColor(sd.color);
+  applyHumanTone(rig, humanTone);
+  rig.setXray(humanXray);
+}
+function buildHumanRig(sex, quality, sd){
+  const key = sex + '|' + quality;
+  if (humanInflight[key]) return;
+  humanInflight[key] = true;
+  const t0 = performance.now();
+  const wanted = () => (sex === humanSex && quality === pickHumanQuality());
+  const setBusy = on => { const b = document.getElementById('vbtn-model-' + sex); if (b) b.classList.toggle('viz-busy', on); };
+  setBusy(true);
+  humanStatus('Building ' + humanLabel(sex).toLowerCase() + ' swimmer… 0 %');
+  let hiddenDuringBuild = !!document.hidden;   // a throttled background tab makes the wall time meaningless (round-1 review)
+  let p;
+  try {
+    p = TL_Human.buildHumanSwimmerAsync({
+      sex, quality, suitColor: sd.color, skinTone: humanTone,
+      causticsTex, envMap: (scene && scene.environment) || undefined
+    }, function(prog, stage){
+      if (document.hidden) hiddenDuringBuild = true;
+      if (wanted()) humanStatus('Building ' + humanLabel(sex).toLowerCase() + ' swimmer… ' + Math.round(prog * 100) + ' %');
+    });
+  } catch (e) { p = Promise.reject(e); }
+  p.then(function(rig){
+    rig.isHuman = true;
+    humanRigCache[key] = rig;
+    delete humanInflight[key];
+    setBusy(false);
+    registerHumanCaustics(rig);
+    const ms = Math.round(performance.now() - t0);
+    const st = rig.stats || {};
+    console.info('Tidelyne: ' + sex + '/' + quality + ' swimmer built in ' + ms + ' ms — ' + st.triangles + ' triangles, ' + st.vertices + ' vertices');
+    if (wanted()) {
+      showHumanRig(rig, STROKES[currentStroke]);
+      humanStatus('✓ ' + humanLabel(sex) + ' swimmer ready — ' + (st.triangles ? Math.round(st.triangles / 1000) + 'k triangles' : '') + (hiddenDuringBuild ? '.' : ', ' + ms + ' ms.'));
+    }
+  }).catch(function(err){
+    delete humanInflight[key];
+    setBusy(false);
+    console.error('Tidelyne: realistic swimmer build failed — showing the mannequin.', err);
+    humanFailed = true;
+    humanStatus('Realistic swimmer unavailable on this device — showing the built-in mannequin.');
+    showMannequin(STROKES[currentStroke]);
   });
-  const b = n => findBone(model, n);
-  const bones = {
-    hips:b('Hips'), spine1:b('Spine1'), spine2:b('Spine2'), neck:b('Neck'), head:b('Head'),
-    armL:b('LeftArm'), foreL:b('LeftForeArm'), handL:b('LeftHand'),
-    armR:b('RightArm'), foreR:b('RightForeArm'), handR:b('RightHand'),
-    upLegL:b('LeftUpLeg'), legL:b('LeftLeg'), footL:b('LeftFoot'), toeL:b('LeftToeBase'),
-    upLegR:b('RightUpLeg'), legR:b('RightLeg'), footR:b('RightFoot'), toeR:b('RightToeBase')
-  };
-  if (!bones.hips || !bones.armL || !bones.foreL || !bones.upLegL || !bones.legL) {
-    humanRigs[key].state = 'failed';
-    humanStatus(HUMAN_MODELS[key].label + ' model skeleton not recognized — using the mannequin.');
-    applyModelVisibility();
+}
+function ensureHumanRig(sd){
+  const quality = pickHumanQuality(), key = humanSex + '|' + quality;
+  const rig = humanRigCache[key];
+  if (rig) { showHumanRig(rig, sd); if (!humanInflight[key]) humanStatus('✓ ' + humanLabel(humanSex) + ' swimmer.'); return; }
+  buildHumanRig(humanSex, quality, sd);
+}
+// Fallback: the segmented biomechanics mannequin (rebuilt per stroke, as before).
+function showMannequin(sd){
+  if (swimmer) {
+    swimmerOrient.remove(swimmer.root);
+    if (!swimmer.isHuman) disposeObject3D(swimmer.root);
+  }
+  swimmer = buildSwimmer(sd.color);
+  swimmerOrient.add(swimmer.root);
+  if (window.TL_HumanMaterials && scene && scene.environment) { try { TL_HumanMaterials.tameEnvironment(scene, 0.25); } catch (e) {} }
+}
+// Called on every stroke change and every AI motion. For the human this is
+// orientation + suit colour only — the rig is built ONCE per (sex, quality)
+// and cached; the skin tone is re-tinted in place.
+function rebuildSwimmer(strokeKey) {
+  const sd = STROKES[strokeKey];
+  setBodyOrientation(!!sd.supine);
+  if (humanModulesReady() && !humanFailed) {
+    if (swimmer && swimmer.isHuman) swimmer.setSuitColor(sd.color); // whatever is on screen follows the stroke colour
+    ensureHumanRig(sd);                                               // cache hit → show; miss → async build
     return;
   }
-  // UNIT-PROOF SIZING: measure the SKELETON (what the skin actually
-  // follows), not the mesh bounding box — Mixamo rigs are often authored in
-  // centimeters, which made the model render 100x too big. Scale, then
-  // re-measure and correct, so it converges no matter the rig's units.
-  const root = new THREE.Group();
-  root.add(model);
-  const _mv1 = new THREE.Vector3(), _mv2 = new THREE.Vector3(), _mv3 = new THREE.Vector3();
-  function skelSpan(){
-    root.updateWorldMatrix(true, true);
-    (bones.head || bones.neck || bones.spine1).getWorldPosition(_mv1);
-    (bones.footL || bones.legL).getWorldPosition(_mv2);
-    (bones.footR || bones.legR).getWorldPosition(_mv3);
-    return _mv1.y - Math.min(_mv2.y, _mv3.y);
-  }
-  const TARGET_SPAN = 1.5; // mannequin head-joint→foot distance
-  for (let i = 0; i < 3; i++) {
-    const span = skelSpan();
-    if (isFinite(span) && span > 1e-4) model.scale.multiplyScalar(TARGET_SPAN / span);
-    else break;
-  }
-  // Center the hips at the body origin (all three axes)
-  root.updateWorldMatrix(true, true);
-  const hipPos = new THREE.Vector3();
-  bones.hips.getWorldPosition(hipPos);
-  model.position.x -= hipPos.x;
-  model.position.y -= hipPos.y;
-  model.position.z -= hipPos.z;
-  // childDir: the bone's rest direction toward its child, in bone-local
-  // space — alignment targets are computed against this, so the retarget
-  // self-calibrates to whatever axis conventions the rig uses.
-  const cd = (bone, child) => child ? child.position.clone().normalize() : new THREE.Vector3(0,1,0);
-  const entries = [
-    // parent-first order: torso, upper limbs, lower limbs, feet
-    { bone:bones.spine1, dir:cd(bones.spine1, bones.spine2||bones.neck), a:()=>swimmer.hips,          bpt:()=>swimmer.neck },
-    { bone:bones.armL,   dir:cd(bones.armL, bones.foreL),                a:()=>swimmer.armL.shoulder, bpt:()=>swimmer.armL.elbow },
-    { bone:bones.armR,   dir:cd(bones.armR, bones.foreR),                a:()=>swimmer.armR.shoulder, bpt:()=>swimmer.armR.elbow },
-    { bone:bones.upLegL, dir:cd(bones.upLegL, bones.legL),               a:()=>swimmer.legL.hipJ,     bpt:()=>swimmer.legL.knee },
-    { bone:bones.upLegR, dir:cd(bones.upLegR, bones.legR),               a:()=>swimmer.legR.hipJ,     bpt:()=>swimmer.legR.knee },
-    { bone:bones.foreL,  dir:cd(bones.foreL, bones.handL),               a:()=>swimmer.armL.elbow,    bpt:()=>swimmer.armL.wrist },
-    { bone:bones.foreR,  dir:cd(bones.foreR, bones.handR),               a:()=>swimmer.armR.elbow,    bpt:()=>swimmer.armR.wrist },
-    { bone:bones.legL,   dir:cd(bones.legL, bones.footL),                a:()=>swimmer.legL.knee,     bpt:()=>swimmer.legL.ankle },
-    { bone:bones.legR,   dir:cd(bones.legR, bones.footR),                a:()=>swimmer.legR.knee,     bpt:()=>swimmer.legR.ankle }
-  ];
-  if (bones.footL && bones.toeL) entries.push({ bone:bones.footL, dir:cd(bones.footL, bones.toeL), a:()=>swimmer.legL.ankle, bpt:()=>swimmer.legL.foot });
-  if (bones.footR && bones.toeR) entries.push({ bone:bones.footR, dir:cd(bones.footR, bones.toeR), a:()=>swimmer.legR.ankle, bpt:()=>swimmer.legR.foot });
-  if (!_hv1) {
-    _hv1 = new THREE.Vector3(); _hv2 = new THREE.Vector3(); _hv3 = new THREE.Vector3();
-    _hq1 = new THREE.Quaternion(); _hq2 = new THREE.Quaternion();
-    _heul = new THREE.Euler(0,0,0,'XYZ');
-  }
-  humanRigs[key].rig = {
-    root, bones, entries,
-    headRest: bones.head ? bones.head.quaternion.clone() : null
-  };
-  humanRigs[key].state = 'ready';
-  swimmerOrient.add(root);
-  humanStatus('✓ ' + HUMAN_MODELS[key].label + ' swimmer model ready.');
-  applyModelVisibility();
-}
-function syncHumanRig(rig){
-  // Follow the mannequin's body roll, then align every bone to its segment
-  rig.root.rotation.y = swimmer.root.rotation.y;
-  rig.root.updateWorldMatrix(true, false);
-  for (const en of rig.entries) {
-    en.a().getWorldPosition(_hv1);
-    en.bpt().getWorldPosition(_hv2);
-    _hv3.subVectors(_hv2, _hv1);
-    if (_hv3.lengthSq() < 1e-8) continue;
-    _hv3.normalize();
-    en.bone.parent.updateWorldMatrix(true, false);
-    en.bone.parent.getWorldQuaternion(_hq2).invert();
-    _hv3.applyQuaternion(_hq2);
-    en.bone.quaternion.setFromUnitVectors(en.dir, _hv3);
-  }
-  // Head: copy the mannequin neck's breathing turn/lift onto the human head
-  if (rig.bones.head && rig.headRest) {
-    _heul.set(swimmer.neck.rotation.x, swimmer.neck.rotation.y, 0, 'XYZ');
-    rig.bones.head.quaternion.copy(rig.headRest).multiply(_hq1.setFromEuler(_heul));
-  }
-}
-function applyModelVisibility(){
-  const rig = activeHumanRig();
-  for (const k in humanRigs) {
-    if (humanRigs[k].rig) humanRigs[k].rig.root.visible = (humanRigs[k].rig === rig);
-  }
-  if (swimmer) swimmer.root.visible = !rig;
-  ['male','female','mannequin'].forEach(function(k){
-    const btn = document.getElementById('vbtn-model-' + k);
-    if (btn) btn.classList.toggle('active', k === currentHumanKey);
-  });
+  showMannequin(sd);
 }
 function setHumanModel(key){
-  currentHumanKey = key;
-  if (key === 'mannequin') {
-    applyModelVisibility();
-    humanStatus('Biomechanics mannequin shown.');
-    return;
-  }
-  const slot = humanRigs[key];
-  if (slot.state === 'idle') loadHumanModel(key); // may resolve to 'missing'
-  if (slot.state === 'missing') {
-    humanStatus(HUMAN_MODELS[key].label + ' avatar not added yet — open index.html, find HUMAN_MODELS, and follow the 3-step instructions (free Ready Player Me avatar). Mannequin shown meanwhile.');
-  } else if (slot.state === 'loading') {
-    humanStatus('Loading ' + HUMAN_MODELS[key].label.toLowerCase() + ' model…');
-  } else if (slot.state === 'failed') {
-    humanStatus(HUMAN_MODELS[key].label + ' model unavailable — mannequin shown.');
-  }
-  applyModelVisibility();
+  if (key !== 'male' && key !== 'female') return;
+  humanSex = key;
+  ['male','female'].forEach(function(k){
+    const b = document.getElementById('vbtn-model-' + k);
+    if (b) { b.classList.toggle('active', k === key); b.setAttribute('aria-pressed', k === key ? 'true' : 'false'); }
+  });
+  if (viz3DInitialized) rebuildSwimmer(currentStroke);
+}
+function toggleXray3D(){
+  humanXray = !humanXray;
+  const b = document.getElementById('vbtn-xray');
+  if (b) { b.classList.toggle('active', humanXray); b.setAttribute('aria-pressed', humanXray ? 'true' : 'false'); }
+  if (swimmer && swimmer.isHuman) swimmer.setXray(humanXray);
+  else if (humanXray && viz3DInitialized) humanStatus('X-ray shows the skeleton inside the realistic swimmer once it has built.');
+}
+function setSkinTone3D(tone){
+  if (!SKIN_TONE_HEX[tone]) return;
+  humanTone = tone;
+  Object.keys(SKIN_TONE_HEX).forEach(function(k){
+    const b = document.getElementById('vbtn-tone-' + k);
+    if (b) { b.classList.toggle('active', k === tone); b.setAttribute('aria-pressed', k === tone ? 'true' : 'false'); }
+  });
+  for (const k in humanRigCache) applyHumanTone(humanRigCache[k], tone);
 }
 function easeInOut(t) { return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
 // NOTE on signs: keyframe data uses the convention "positive shoulder/hip x
@@ -4249,16 +4241,25 @@ function updateSwimmer(dtPhase) {
   const nextIdx = (idx+1) % phases.length;
   const A = phases[idx], B = phases[nextIdx];
   const u = cycleT / totalDur; // normalized cycle position 0..1
+  // Pose. Realistic human: TL_HumanMotion.poseFrame runs the same keyframes
+  // through a shape-limited C1 spline (exact at every keyframe, no overshoot,
+  // flutter kick included). Mannequin fallback: the original slerp/lerp path.
+  // `swimmer` is null for the ~0.7 s while the human builds — skip the joints.
   // Interpolation style: LINEAR keeps continuous strokes flowing with no
   // pause at keyframes; strokes with a real glide (hold:true) keep easing.
-  const poseT = sd.hold ? easeInOut(localT) : localT;
-  applyPose(swimmer, swimmer.armL, A.L, B.L, poseT, !!sd.supine);
-  applyPose(swimmer, swimmer.armR, A.R, B.R, poseT, !!sd.supine);
-  if (sd.flutter) {
-    applyFlutterKick(u);
-  } else {
-    applyLegPose(swimmer.legL, A.L, B.L, poseT);
-    applyLegPose(swimmer.legR, A.R, B.R, poseT);
+  const HM = (swimmer && swimmer.isHuman && window.TL_HumanMotion) ? TL_HumanMotion : null;
+  if (HM) {
+    HM.poseFrame(swimmer, sd, phases, idx, localT, u);
+  } else if (swimmer) {
+    const poseT = sd.hold ? easeInOut(localT) : localT;
+    applyPose(swimmer, swimmer.armL, A.L, B.L, poseT, !!sd.supine);
+    applyPose(swimmer, swimmer.armR, A.R, B.R, poseT, !!sd.supine);
+    if (sd.flutter) {
+      applyFlutterKick(u);
+    } else {
+      applyLegPose(swimmer.legL, A.L, B.L, poseT);
+      applyLegPose(swimmer.legR, A.R, B.R, poseT);
+    }
   }
   // ── Breathing ─────────────────────────────────────────────────────────
   // b rises 0→1→0 across the breath window of the cycle.
@@ -4268,18 +4269,15 @@ function updateSwimmer(dtPhase) {
     if (bp < sd.breath.dur) b = Math.sin((bp / sd.breath.dur) * Math.PI);
   }
   // ── Body roll (freestyle/backstroke) about the long axis ─────────────
+  let rollY = 0;
   if (sd.rollAmp) {
     const rollPhase = u * Math.PI * 2;
     // Side-breath amplifies the roll while the head turns with it
     const boost = (sd.breath && sd.breath.type === 'side') ? (1 + b * 0.45) : 1;
-    swimmer.root.rotation.y = Math.sin(rollPhase) * sd.rollAmp * DEG * boost;
-    swimmer.root.rotation.z = 0;
-  } else {
-    swimmer.root.rotation.y = 0;
-    swimmer.root.rotation.z = 0;
+    rollY = Math.sin(rollPhase) * sd.rollAmp * DEG * boost;
   }
   // ── Spine wave, chest lift and head motion ────────────────────────────
-  let spineX = 0, bob = 0;
+  let spineX = 0, bob = 0, neckX = 0, neckY = 0;
   if (sd.undulate) {
     const wavePhase = u * Math.PI * 2;
     spineX += Math.sin(wavePhase) * 0.18;
@@ -4289,25 +4287,33 @@ function updateSwimmer(dtPhase) {
     // Breaststroke/butterfly breath: the chest LIFTS and the face comes
     // forward out of the water, riding the body's own lift — then lowers.
     spineX -= b * 0.38;                    // chest rises toward the surface
-    swimmer.neck.rotation.x = -b * 0.55;   // face rotates forward to breathe
-    swimmer.neck.rotation.y = 0;
+    neckX = -b * 0.55;                     // face rotates forward to breathe
     bob += b * 0.055;                      // whole body rides up slightly
   } else if (sd.breath && sd.breath.type === 'side' && b > 0) {
     // Freestyle breath: head rotates WITH the body roll, chin low,
     // one goggle still in the water — never lifted.
-    swimmer.neck.rotation.y = -b * 1.05;
-    swimmer.neck.rotation.x = 0;
-  } else {
-    swimmer.neck.rotation.x = 0;
-    swimmer.neck.rotation.y = 0;
+    neckY = -b * 1.05;
   }
-  swimmer.spine.rotation.x = spineX;
+  if (swimmer) {
+    swimmer.root.rotation.y = rollY;
+    swimmer.root.rotation.z = 0;
+    swimmer.neck.rotation.x = neckX;
+    swimmer.neck.rotation.y = neckY;
+    swimmer.spine.rotation.x = spineX;
+  }
   // Bob happens in WORLD space on the orientation rig, so the body rises
   // and sinks at the waterline instead of sliding along its own length.
-  swimmerOrient.position.y = 0.5 + bob;
-  // Retarget this frame's pose onto the active human model, if any
-  const _ahr = activeHumanRig();
-  if (_ahr) syncHumanRig(_ahr);
+  // sd.depth (metres, set by the motion module's stroke patches) lowers the whole body: 3 cm for the prone strokes so the
+  // water plane clears the face, 35 cm for the underwater dolphin kick (round-2 review).
+  swimmerOrient.position.y = 0.5 + bob - (sd.depth || 0);
+  // Secondary motion (forearm/wrist twist so the palm faces back in the pull,
+  // ankles with the kick, scapular shift, hip counter-roll, head/neck split of
+  // the breath) + self-intersection clearance — joints the driver never sets.
+  // Runs after every driver joint and the bob are final.
+  if (HM) {
+    HM.applySecondary(swimmer, sd, u, b, phases, idx, localT);
+    HM.resolveClearance(swimmer, sd);
+  }
   const e = easeInOut(localT);
   const drag = THREE.MathUtils.lerp(A.drag, B.drag, e);
   const thrust = THREE.MathUtils.lerp(A.thrust, B.thrust, e);
@@ -4375,11 +4381,11 @@ function buildForceArrows() {
   vizForceGroup.add(vizForceGroup.userData.drag, vizForceGroup.userData.thrust, vizForceGroup.userData.lift, vizForceGroup.userData.net);
 }
 let _arrowDir, _arrowZ; // scratch, created after THREE loads (initScratch2)
-function pointArrow(arrowGrp, originY, dirVec, magnitude, maxLen) {
+function pointArrow(arrowGrp, originY, dirVec, magnitude, maxLen, originX, originZ) {
   const len = Math.max(0.001, Math.min(maxLen, magnitude * 0.012));
   arrowGrp.visible = len > 0.04 && vizShowForces3D;
   if (!arrowGrp.visible) return;
-  arrowGrp.position.set(0, originY, 0);
+  arrowGrp.position.set(originX || 0, originY, originZ || 0);
   arrowGrp.scale.set(1, 1, len);
   _arrowDir.copy(dirVec).normalize();
   arrowGrp.quaternion.setFromUnitVectors(_arrowZ, _arrowDir);
@@ -4529,6 +4535,7 @@ function animate3D(){
     if (causticsTex) {
       causticsTex.offset.x = Math.sin(vizTime * 0.12) * 0.25 + vizTime * 0.02;
       causticsTex.offset.y = vizTime * 0.035;
+      if (_humanCausticMats.length) syncHumanCaustics();
     }
     if (particles) {
       const pp = particles.geometry.attributes.position;
@@ -4540,12 +4547,14 @@ function animate3D(){
     }
   }
   if (vizForceGroup && swimmer) {
-    const hipY = swimmerOrient.position.y;
-    pointArrow(vizForceGroup.userData.drag,   hipY, _axNegX, physState.drag,   1.1);
-    pointArrow(vizForceGroup.userData.thrust, hipY, _axPosX, physState.thrust, 1.6);
-    pointArrow(vizForceGroup.userData.lift,   hipY, _axPosY, physState.lift,   0.6);
+    // origins sit OUTSIDE the body: drag/thrust along the underside (16 cm under the hip line), lift/net from the top of the
+    // body (13 cm over it — the back when prone, the chest when supine) so no arrow runs through the torso or head
+    const hipY = swimmerOrient.position.y, under = -0.16, over = 0.13;
+    pointArrow(vizForceGroup.userData.drag,   hipY + under, _axNegX, physState.drag,   1.1, -0.05, 0);
+    pointArrow(vizForceGroup.userData.thrust, hipY + under, _axPosX, physState.thrust, 1.6, -0.55, 0);
+    pointArrow(vizForceGroup.userData.lift,   hipY + over,  _axPosY, physState.lift,   0.6, -0.25, 0);   // round-3: 25 cm BEHIND the hips — never through the head or the recovering arm
     _netDir.set(physState.thrust - physState.drag, physState.lift*0.4, 0);
-    pointArrow(vizForceGroup.userData.net,    hipY, _netDir.lengthSq()>0.001 ? _netDir : _axPosX, _netDir.length(), 1.3);
+    pointArrow(vizForceGroup.userData.net,    hipY + over,  _netDir.lengthSq()>0.001 ? _netDir : _axPosX, _netDir.length(), 1.3, -0.25, 0);
   }
   controls.update();
   renderer.render(scene, camera);
@@ -4568,21 +4577,23 @@ function startViz3D() {
     if(pb){pb.textContent='▶ Play';pb.classList.remove('active');}
   } }catch(e){}
   buildForceArrows();
-  rebuildSwimmer(currentStroke);
+  if (window.TL_HumanMaterials && scene.environment) { try { TL_HumanMaterials.tameEnvironment(scene, 0.25); } catch (e) {} } // arrows exist only now
+  applyStrokePatches();          // measured keyframe corrections, once (before the phase bar: names may change)
+  rebuildSwimmer(currentStroke); // builds the realistic human asynchronously; mannequin if the modules are missing
   buildPhaseBar3D(currentStroke);
-  loadHumanModels(); // fetch the rigged human avatars in the background
   resizeViz3D();
   lastTime3D = performance.now();
   animate3D();
 }
 function ensureViz3DReady() {
   if (viz3DInitialized) { resizeViz3D(); return; }
-  if (window.THREE) { startViz3D(); return; }
+  if (window.THREE) { loadHumanScripts(startViz3D); return; }
   if (threeLoading) return;
   threeLoading = true;
   const s = document.createElement('script');
   s.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
-  s.onload = function(){ installOrbitControls(); startViz3D(); };
+  // The human modules resolve THREE lazily but must EXECUTE after it: chain them here.
+  s.onload = function(){ installOrbitControls(); loadHumanScripts(startViz3D); };
   s.onerror = function(){
     threeLoading = false;
     const c = document.getElementById('viz3d-container');
@@ -4697,7 +4708,9 @@ function tryFallbackMotion(desc){
   return null;
 }
 function loadCustomMotion(motion, statusEl, prefix){
-  STROKES.custom=motion;
+  // Same clone discipline as the built-ins (no STROKE_PATCHES key is 'custom', so this is a deep clone only)
+  STROKES.custom = (window.TL_HumanMotion && typeof TL_HumanMotion.applyPatches === 'function')
+    ? TL_HumanMotion.applyPatches({ custom: motion }).custom : motion;
   currentStroke='custom'; clockT=0;
   document.querySelectorAll('.viz-btn').forEach(b=>{
     if((b.getAttribute('onclick')||'').includes('setStroke3D')) b.classList.remove('active');
@@ -9171,6 +9184,20 @@ window.tl_an_debug = {
 // never point at a page that has not shipped.  Keep the top entry's version
 // in sync with VERSION in sw.js (see NOTES.md / README snippet).
 const UPDATES = [
+  {
+    version: '3.1.0', date: '2026-09-13',
+    title: 'A realistic 3D swimmer',
+    summary: 'The 3D biomechanics lab now shows a realistic human swimmer instead of the segmented mannequin — built in your browser, nothing to download — driven by the same stroke phases, force arrows and AI reconstruction as before.',
+    items: [
+      { tag: 'New',      text: 'Realistic male and female swimmer — wet skin, real swimwear, silicone cap and goggles — driven by the same biomechanics as before.', link: '#visualizer' },
+      { tag: 'New',      text: 'Real hands and feet: fingers pressed together into a paddle with knuckles and finger creases; butted toes, a pointed heel and an arched instep.' },
+      { tag: 'New',      text: 'A sculpted face — straight nose, one continuous jaw line, shaped lips and ears — with fine two-scale skin pores that read under water.' },
+      { tag: 'Improved', text: 'Smoother joint motion between phases, an elbow-led freestyle recovery and no arm-through-body in any stroke.' },
+      { tag: 'New',      text: 'X-ray view and three skin tones in the 3D lab.' },
+      { tag: 'Improved', text: 'Force arrows now start outside the body, and the camera zooms in to 35 cm for close-ups of the catch, the hands and the feet.' },
+      { tag: 'Improved', text: 'Phones and tablets get a lighter version of the swimmer automatically so the lab stays smooth.' }
+    ]
+  },
   {
     version: '3.0.1', date: '2026-09-13',
     title: 'Account privacy and a safer AI coach',

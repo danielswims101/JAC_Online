@@ -14,7 +14,7 @@
    ============================================================ */
 'use strict';
 
-const VERSION      = '3.0.1';
+const VERSION      = '3.1.0';
 const CACHE_PREFIX = 'tidelyne-v';
 const CACHE        = CACHE_PREFIX + VERSION;
 const INDEX        = './index.html';
@@ -22,6 +22,7 @@ const INDEX        = './index.html';
 const PRECACHE = [
   './',
   './index.html',
+  './viz-human.js',
   './privacy.html',
   './terms.html',
   './disclaimer.html',
@@ -123,7 +124,9 @@ function staleWhileRevalidate(event, req){
         try { event.waitUntil(network); } catch(e){}
         return cached;
       }
-      return network.then(function(res){ return res || offlineResponse(); });
+      // Versioned asset URLs (./viz-human.js?v=3.1.0) fall back to the precached un-versioned copy when offline.
+      return network.then(function(res){ return res || cache.match(req, { ignoreSearch: true }); })
+        .then(function(res){ return res || offlineResponse(); });
     });
   });
 }
