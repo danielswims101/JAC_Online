@@ -36,7 +36,7 @@
    texture is generated (seeded, deterministic). Cache-busted by
    index.html as ./viz-human.js?v=<TL_VERSION>; listed in sw.js
    PRECACHE. Bump TL_VERSION (UPDATES[0]) and sw.js VERSION together.
-   Module versions: materials.js 1.4.0, motion.js 1.5.0, body.js 1.5.0
+   Module versions: materials.js 1.4.0, motion.js 1.11.0, body.js 1.5.0
    ============================================================ */
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -1130,14 +1130,18 @@
 //                                                  scapula, hip counter-roll, head redistribution + counter-roll
 //   resolveClearance                               arm vs torso/neck/head (body.js-fitted ellipsoids) guard via a
 //                                                  minimal additive abduction on the RECOVERING shoulder only
-//   STROKE_PATCHES / applyPatches                  coaching corrections to strokes.json (clone, never mutate)
+//   bodyWave                                       travelling trunk wave + bob + breath lift for strokes that define sd.wave
+//                                                  (butterfly + dolphin: sinusoid params; breaststroke: a knot table); every other
+//                                                  stroke gets EXACTLY the page's old single-hinge formula
+//   STROKE_PATCHES / applyPatches                  coaching corrections to strokes.json (clone, never mutate); copies rate / wave / hold; may
+//                                                  append keyframes (butterfly: a 7th `Entry` keyframe at u 0.90, technique pass 4)
 //
 // Body-local axes: +Y head, +X anatomical LEFT, +Z anterior. Prone: +Z = down (water). Supine: +Z = up.
 // Nothing here allocates per frame after the first call (scratch is created lazily once).
 (function () {
   'use strict';
 
-  var VERSION = '1.5.0';   // round-4: elbow-led freestyle recovery (bent-elbow entry), finger spread 3°
+  var VERSION = '1.11.0';  // technique pass 6 (dolphin re-fix): progressive upkick knee (10.5° / 22° at u 0.65 / 0.83), head-node wave (bob / chest lag 0.04 + neckAmp −3°), 96 kicks/min, depth 0.44
   var DEG = Math.PI / 180;
   var TAU = Math.PI * 2;
   function num(v) { v = +v; return v === v && v !== Infinity && v !== -Infinity ? v : 0; }   // finite number or 0
@@ -1232,6 +1236,15 @@
     ankleKickLag: 0.7,               // rad behind the hip phase (= the knee's lag in applyFlutterKick)
     ankleDorsiflex: 0.55,            // rad, breaststroke heel-draw (feet turned out, dorsiflexed)
     footTurnout: 28 * DEG,
+    // breaststroke heel-draw / whip (technique pass 2, strokes whose sd.wave.kick === 'breast'): the feet FLEX over breastFlexKnee (deg)
+    // during the draw to breastDorsiflex (rad; ankleDorsiflex when undefined), TURN OUT over breastTurnoutKnee (breastFlexKnee when
+    // undefined), hold both through the whip until the first phase fraction of breastWhipHold and point again by the second.
+    // Technique pass 5 (critic F2): flat by kn 95 (was 0.55 rad by 122 — the still-pointed feet stood 12 cm out of the water with
+    // the shin vertical), turned out late (real feet flex before they evert), pointed by localT 0.88 of the one-segment whip.
+    breastFlexKnee: [35, 95],
+    breastTurnoutKnee: [95, 124],
+    breastWhipHold: [0.50, 0.88],
+    breastDorsiflex: 0.15,
     footInversionFlutter: 5 * DEG,
     // shoulder girdle
     scapularShift: 0.012,            // m of shoulder-bone elevation on the recovering side (0 disables)
@@ -1515,6 +1528,72 @@
   }
 
   // ═════════════════════════════════════════════════════════════════════════════════
+  // 2b. Body wave (technique pass) — the driver's spine / bob / neck block for strokes that define sd.wave
+  // ═════════════════════════════════════════════════════════════════════════════════
+  // Returns { spineX, bob, neckX } — spineX in rad on the spine pivot (+ = chest DOWN / ventral, the driver's sign), bob in
+  // metres on swimmerOrient (whole body, world y), neckX in rad on the neck (− = face forward / up). The page ADDS these to its
+  // own spineX / bob / neckX, which are 0 when it takes this branch (index.html updateSwimmer, technique pass §11 in
+  // preview/NOTES.md). u = cycle position, b = the driver's breath envelope (0..1).
+  //   sd.wave = { chestAmp (deg), chestPhase (u of the chest-press peak), breathLift (deg of chest-UP folded in with b),
+  //               bobAmp (m), bobPhase (u of the highest hip line), breathBob (m·b), neckBreath (rad·b, face forward),
+  //               neckAmp? (deg, + = face down) at neckPhase? (defaults to chestPhase) — the dolphin's head-node term (pass 6) }
+  //   or      = { kick: 'breast', knots: [[u, spineDeg, bobM, neckDeg], …] } — a knot table (technique pass 2, breaststroke):
+  //             spineDeg > 0 = chest UP, neckDeg < 0 = face forward / up, smoothstep between neighbouring knots (bodyWaveKnots).
+  // Butterfly: chest pressed deepest just after the entry (u 0.05, hips highest), chest-up peak at the exit / breath (u 0.58,
+  // hips lowest) — the Λ then V shapes a coach looks for (RESEARCH §F4 line 442, §F5 line 455). Dolphin (technique pass 3): the
+  // same sinusoid with u = 0 at the top of the kick — chest UP 8.6° / hips lowest at u 0 (the arch, heels up), chest DOWN 8.6° /
+  // hips highest at u 0.5 (the press, legs straight) — plus ankleAmp / anklePhase, which only applySecondary reads (the foot whip).
+  // Technique pass 6 (dolphin re-fix): the bob trails the chest press by 0.04 cycle (bobPhase 0.48 / chestPhase 0.52) and neckAmp −3°
+  // counter-pitches the head (neckX = −0.35 × spineX), so the head is the node of the wave (p-p 0.04 m vs shoulders 0.06, hips 0.16).
+  // Without sd.wave (freestyle, backstroke, every AI motion) this is EXACTLY the page's old formula: the single-hinge sine when
+  // sd.undulate plus the front-breath chest lift — nothing else changes.
+  function bodyWave(sd, u, b) {
+    b = clamp01(num(b)); u = num(u);
+    var w = sd && sd.wave;
+    if (!w) {
+      var spineX = 0, bob = 0, neckX = 0;
+      if (sd && sd.undulate) { spineX += Math.sin(u * TAU) * 0.18; bob += Math.sin(u * TAU + 0.6) * 0.05; }
+      if (sd && sd.breath && sd.breath.type === 'front' && b > 0) { spineX -= b * 0.38; neckX = -b * 0.55; bob += b * 0.055; }
+      return { spineX: spineX, bob: bob, neckX: neckX };
+    }
+    if (w.knots && w.knots.length) return bodyWaveKnots(w.knots, u);
+    var neckX = -num(w.neckBreath) * b;                                                                     // rad, − = face forward / up
+    // Technique pass 6 (dolphin re-fix, coach critic fix 2): an optional head-node term on the neck / head ONLY (never spine.x) —
+    // neckAmp (deg, + = face DOWN / chin tuck) at neckPhase (u of its face-down peak; defaults to chestPhase, so neckAmp = −0.35 × chestAmp
+    // is the counter-pitch neckX = −0.35 × spineX). Only a record that sets neckAmp takes it (the dolphin); the butterfly's result is
+    // untouched bit-for-bit (test 5j compares every input against v1.10.0).
+    if (w.neckAmp) neckX += DEG * num(w.neckAmp) * Math.cos(TAU * (u - num(w.neckPhase !== undefined ? w.neckPhase : w.chestPhase)));
+    return {
+      spineX: DEG * (num(w.chestAmp) * Math.cos(TAU * (u - num(w.chestPhase))) - num(w.breathLift) * b),   // + = chest DOWN (ventral)
+      bob:    num(w.bobAmp) * Math.cos(TAU * (u - num(w.bobPhase))) + num(w.breathBob) * b,                 // m, world, whole body
+      neckX:  neckX
+    };
+  }
+  // Knot-table wave (technique pass 2, breaststroke — technique-breaststroke.md §3.3): knots = [[u, spineDeg, bobM, neckDeg], …]
+  // sorted by u over [0, 1]. spineDeg > 0 = chest UP (returned as spineX = −spineDeg·DEG, the driver's ventral-positive sign),
+  // bob in metres on swimmerOrient, neckDeg < 0 = face forward / up (neckX = neckDeg·DEG; applySecondary splits it 60/40 head/neck).
+  // Smoothstep between neighbouring knots: zero slope at every knot → C1, and a knot placed on an eased (hold) keyframe has zero
+  // velocity there too, so the trunk and the limbs never fight. u ring-wraps; outside the table's u range the nearest end holds.
+  // Breaststroke: the chest rises to 28° with the hips 8 cm down at the in-sweep / breath (u 0.46), the head dives (chin tucks)
+  // into the recovery, the hips ride 2 cm ABOVE the glide line through the squeeze (u 0.66-0.72), then a flat glide.
+  var ZERO4 = [0, 0, 0, 0];
+  function knot(K, i) { var k = K[i]; return (k && k.length !== undefined) ? k : ZERO4; }
+  function knotOut(k) { return { spineX: (0 - num(k[1])) * DEG, bob: num(k[2]), neckX: num(k[3]) * DEG }; }   // (0 − x): never a −0
+  function bodyWaveKnots(K, u) {
+    var n = K.length, i, a, c;
+    u = u - Math.floor(u);
+    if (n === 1 || u <= num(knot(K, 0)[0])) return knotOut(knot(K, 0));
+    for (i = 0; i < n - 1; i++) {
+      a = knot(K, i); c = knot(K, i + 1);
+      if (u <= num(c[0])) {
+        var d = num(c[0]) - num(a[0]), t = d > 0 ? clamp01((u - num(a[0])) / d) : 1, s = t * t * (3 - 2 * t);
+        return { spineX: (0 - lerp(num(a[1]), num(c[1]), s)) * DEG, bob: lerp(num(a[2]), num(c[2]), s), neckX: lerp(num(a[3]), num(c[3]), s) * DEG };
+      }
+    }
+    return knotOut(knot(K, n - 1));
+  }
+
+  // ═════════════════════════════════════════════════════════════════════════════════
   // 3. Secondary motion (joints the driver never touches)
   // ═════════════════════════════════════════════════════════════════════════════════
   function armOk(A) { return !!(A && A.shoulder && A.upperArm && A.elbow && A.forearm && A.wrist && A.hand); }
@@ -1703,12 +1782,46 @@
         ay = -sgn * config.footInversionFlutter;                 // slightly pigeon-toed
       } else {
         var kn = Math.abs(L.knee.rotation.x) / DEG;
-        // pointed foot at rest (streamline = exactly 1.15); more knee bend → more plantarflexion (whip), up to ~1.37 rad
-        var plantar = config.ankleRest + 0.22 * smoothstep(5, 45, kn);
-        // breaststroke heel-draw: feet dorsiflexed and turned out as the heels come up
-        var draw = smoothstep(75, 110, kn);
-        ax = lerp(plantar, config.ankleDorsiflex, draw);
-        ay = sgn * config.footTurnout * draw;
+        if (sd.wave && sd.wave.kick === 'breast') {
+          // Technique pass 2 — breaststroke (technique-breaststroke.md §3.4): the feet flex and turn out late in the heel-draw
+          // (phase 1, config.breastFlexKnee = kn 70 → 122, complete at the top of the draw — the spec's 100 → 128 left the pointed
+          // feet 13 cm out of the water for ~5 % of the cycle with the shin vertical; 70 → 122 keeps the toes ≤ 10 cm up and the heel
+          // just touching the surface, every §4 number still met), stay dorsiflexed + turned out through the
+          // propulsive out-back-round sweep (phase 2 until localT 0.45, SW 7.5) and point for the squeeze / glide (localT ≥ 0.85).
+          // Continuous at both phase boundaries (kn 126 at the 1→2 boundary gives w 1 → 1; 0 → 0 at 2→3). Never the
+          // generic kn-keyed heel-draw below, which flexed the foot from kn 75 and pointed it while the feet were still sweeping.
+          var plantarB = config.ankleRest + 0.22 * smoothstep(5, 45, kn), pi = Math.floor(num(idx)), lt = clamp01(num(localT));
+          var fk = config.breastFlexKnee || ZERO4, tk = config.breastTurnoutKnee || fk, wh = config.breastWhipHold || ZERO4;
+          // technique pass 5 (breaststroke re-fix, critic F2): the foot FLEXES first (breastFlexKnee) and turns out later (breastTurnoutKnee) —
+          // real feet flex before they evert — to a breast-specific target (breastDorsiflex; ankleDorsiflex when unset); both hold through
+          // the whip and point together (breastWhipHold)
+          var wPoint = pi === 2 ? 1 - smoothstep(num(wh[0]), num(wh[1]), lt) : 0;
+          var wB = pi === 1 ? smoothstep(num(fk[0]), num(fk[1]), kn) : wPoint;
+          var wT = pi === 1 ? smoothstep(num(tk[0]), num(tk[1]), kn) : wPoint;
+          ax = lerp(plantarB, config.breastDorsiflex !== undefined ? num(config.breastDorsiflex) : config.ankleDorsiflex, wB);
+          ay = sgn * config.footTurnout * wT;
+        } else if (sd.wave && sd.wave.ankleAmp) {
+          // Technique pass 3 — the underwater dolphin kick (technique-dolphin.md §3.4): the foot whip is keyed to the CYCLE, not to
+          // the knee — peak plantarflexion (ankleRest + ankleAmp = 1.35 rad, 77°) at u = anklePhase (0.30, mid-downkick, the shins
+          // snapping straight), least pointed (0.95 rad, 54°: the water pushing the dorsum through the upkick) half a cycle later,
+          // 62° at the top of the kick (RESEARCH §F5 line 452: peak 64-66°, validation 60-70°). The knee-keyed mappings below
+          // pointed this foot hardest at the TOP with the knees bent — an inverted whip. No turnout.
+          ax = config.ankleRest + num(sd.wave.ankleAmp) * Math.cos(TAU * (u - num(sd.wave.anklePhase)));
+        } else if (sd.wave) {
+          // Technique pass — dolphin-kick strokes that define sd.wave (butterfly): the foot LOADS (less pointed, 44.7°) at the
+          // top of the beat while the knee is bent and WHIPS to its peak plantarflexion (67.6°) at the bottom of the down-beat
+          // as the leg straightens (RESEARCH §F5 line 452: peak 64-66°; validation 60-70°, line 456). The generic mapping
+          // below points the foot MORE when the knee is bent — an inverted whip on a two-beat kick. (Breaststroke's sd.wave
+          // carries kick: 'breast' and takes the branch above.)
+          ax = config.ankleRest + 0.03 - 0.40 * smoothstep(12, 58, kn);
+        } else {
+          // pointed foot at rest (streamline = exactly 1.15); more knee bend → more plantarflexion (whip), up to ~1.37 rad
+          var plantar = config.ankleRest + 0.22 * smoothstep(5, 45, kn);
+          // breaststroke heel-draw: feet dorsiflexed and turned out as the heels come up
+          var draw = smoothstep(75, 110, kn);
+          ax = lerp(plantar, config.ankleDorsiflex, draw);
+          ay = sgn * config.footTurnout * draw;
+        }
       }
       L.ankle.rotation.set(ax, ay, 0);
     }
@@ -1948,7 +2061,9 @@
   // ═════════════════════════════════════════════════════════════════════════════════
   // 5. STROKE_PATCHES — coaching corrections (see NOTES-motion.md for the numbers + sources)
   // ═════════════════════════════════════════════════════════════════════════════════
-  // Format: { [stroke]: { rollAmp?, breath?, depth?, phases?: { [i]: { name?, desc?, dur?, L?: {sh?,el?,hi?,kn?}, R?: {...} } },
+  // Format: { [stroke]: { rollAmp?, breath?, depth?, rate?, wave?, hold?, append?: { at, phases: [full phase objects] }, phases?: { [i]: { name?, desc?, dur?, L?: {sh?,el?,hi?,kn?}, R?: {...} } },
+  //           rate: tempo multiplier on the page's global 0.55 cycles/s clock (technique pass; the page reads sd.rate),
+  //           wave: bodyWave() parameters (technique pass; the page's undulation block reads sd.wave),
   //           phasesAnatomical?: same shape, used instead of `phases` when config.anatomicalElbow is true,
   //           notes: what changed and the measured result, sources: the RESEARCH.md §F entries / rules behind the numbers } }
   // Freestyle keeps the site's opposition rule R[i] = mirror(L[i+3]) (y,z negated).
@@ -2000,41 +2115,127 @@
       }
     },
     breaststroke: {
+      // Technique pass 5 (2026-09-16, technique-breaststroke-review-1.md — the coach critic's round 1 on pass 2): the pass-2 stroke
+      // STOPPED in the middle of its kick (an eased `hold` keyframe at u 0.59 with the knees at 50° — foot speed 8.2 → 0.06 m/cycle, a
+      // 0.3 s freeze at 0.3×), stood its still-pointed feet 12 cm out of the water on the heel-draw (the foot flexed late and only to
+      // 0.55 rad), lifted the whole head out at the breath with the hips only 16 cm deep, and sculled the in-sweep with the elbows
+      // 8.7 cm BELOW the hands (0.285 m deep). Now: the C1 spline instead of the eased lerp (`hold: false` — P4 == P0 keeps the glide
+      // static; every other keyframe carries velocity where its channels are monotone, so the out-sweep corner is a slow-down, not a
+      // stop), the whole whip is ONE segment from the top of the draw (u 0.46) to the squeeze finish (u 0.66: legs straight and
+      // together 11° below the hip line, feet pointed, arms locked out), the foot flexes flat (0.15 rad) as the heels rise (kn 35 → 95)
+      // and turns out late (kn 95 → 124), the hips sink to 0.21 m at the breath (chest 30°, shoulders at the surface, chin at the
+      // water), and the in-sweep keyframes were re-solved (c3-arm-grid.js) so the elbows stay within 2 cm of the hands and never
+      // deeper than 0.22 m — elbows 13 cm deep at the finish. Verified with human/test/c3-breast-design.js (--json prints this block).
+      rate: 1.3,                          // 0.55 × 1.3 = 0.715 Hz = 43 cycles/min (elite 200 m / slow 100 m; 1.40 s per cycle at 1×, 4.7 s at 0.3×)
       depth: 0.03,
-      notes: 'Round 1: kick-recovery arms [3] re-authored — the hands were 14 cm ABOVE the water with the palms facing forward (a braking "surrender"); now the hands are at the surface (+2 cm), 18 cm apart, palms down 0.74 / inward, fingertips leading, elbows 8 cm under water (SW 7.3), and applySecondary turns the palms toward the water through the glide. Out-scull was 40 cm deep with hands 1.14 m apart and elbows 27 cm deep → elbows high near the surface, hands just wider than the shoulders ~20 cm deep. In-sweep (exact-solved): hands come together under the chin 16 cm apart, 17 cm deep with the fingertips 11 cm deep (10 cm clear of the face), elbows 25 cm deep tucking in toward the ribs (were 0.54 m apart, 35 cm deep). Kick recovery: heels drawn to the buttocks at the surface (hip 52°/knee 112° → heels +4 cm, toes +10 cm) instead of 30 cm in the air; knees hip-width. Arms recover forward at the surface during the kick recovery (sh.x 150 while the chest is lifted).',
-      sources: 'RESEARCH §F3: rocketswim + swim-teach (out-sweep to shoulder width or slightly wider, in-sweep with elbows high near the surface and hands below the elbows, hands together under the chin); World Aquatics SW 7.3 (elbows under water, hands on/under the surface, never behind the hip line); sportsacademy/swimrightacademy (heels drawn to the buttocks, knees hip-width, feet dorsiflexed + turned out = SW 7.5).',
+      hold: false,                        // technique pass 5: the C1 spline; the page's mannequin fallback lerps linearly between the same keyframes
+      breath: { type: 'front', start: 0.32, dur: 0.30 },   // b peaks at u 0.47 = the in-sweep keyframe; only applySecondary's head split reads it now
+      wave: { kick: 'breast', knots: [
+        //  u     spine°  bob m   neck°     spine° > 0 = chest UP; neck° < 0 = face forward / up (the head takes 60 %)
+        [0.00,    0,   0.000,    0],
+        [0.20,    0,   0.000,    0],
+        [0.30,    1,  -0.010,    0],       // out-sweep corner: the chin starts to rise
+        [0.38,    9,  -0.080,   -4],
+        [0.46,   30,  -0.128,  -10],       // breath peak = the in-sweep keyframe: chest up 30°, hips 12.8 cm down (0.21 m deep), face forward 10°
+        [0.53,   20,  -0.150,   -2],       // the hips stay deep through the first half of the whip (the feet sweep back-and-down under the surface)
+        [0.59,    8,  -0.076,    6],       // lunge: head diving, chin tucking, as the hands shoot forward (bob on the 0.53 → 0.66 smoothstep: one 16.5 cm rise)
+        [0.66,    0,   0.015,    3],       // the squeeze drives the hips up to 1.5-2 cm ABOVE the glide line
+        [0.72,   -3,   0.020,    0],       // slightly head-down
+        [0.85,    0,  -0.005,    0],       // a 0.5 cm settle in the glide
+        [1.00,    0,   0.000,    0] ] },
+      notes: 'Technique pass 5: five keyframes at u 0 / 0.30 / 0.46 / 0.66 / 0.74 (dur 0.30 0.16 0.20 0.08 0.26), C1 spline (hold false) — Glide & Streamline (hands 0.137 m apart 4.6 cm under, legs together, feet pointed; P4 identical so the glide is static), Out-Sweep & Catch (u 0.30: hands 1.14 m apart 0.17 m deep, arms 6°, elbows 0.14 m deep, the legs relaxed 16° down), In-Sweep, Breath & Heel-Draw (u 0.46: elbows 0.13 m deep and 0.60 m apart, hands 0.15 m apart 7 cm deep in front of the chin, elbow 70°; heels drawn to the buttocks hi [31,−18,8] / kn 126, feet flat 0.15 rad + turned out 28°), Squeeze into the Glide (u 0.66: arms locked [180,2,−12]/5, legs straight hi [11,−3,3] / kn 3, feet pointed), Streamline Glide (u 0.74 = P0). Trunk = bodyWave() knot table: chest up 30° with the hips 12.8 cm below the glide line at u 0.46 (hips 0.208 m deep, shoulders −0.028, head bone +0.054, face 10° forward), 20° / −0.15 at 0.53, 8° / −0.076 at 0.59 (the hips rise 16.5 cm in one smooth sweep from 0.53 to 0.66), hips 1.5-2 cm above the glide line at 0.66-0.72, a 0.5 cm settle at 0.85. Ankle (config.breastFlexKnee / breastTurnoutKnee / breastWhipHold / breastDorsiflex): flat by kn 95 (0.15 rad), turned out over kn 95 → 124, held through the sweep until localT 0.50 of the whip, pointed by 0.88 (u 0.63). Stub rig, 720 samples, page driver semantics (human/test/c3-breast-design.js): toe speed 5.6 m/cycle peak at u 0.53, ≥ 42 % of it until kn ≤ 20 and ≥ 23 mm per 0.02 cycle to kn ≤ 5 (no stall), |dkn/du| ≥ 313°/cycle to kn ≤ 10, kn strictly decreasing; hand forward speed ≥ 30 % of its peak until el ≤ 30 and the hand never moves back; toe tip (page-like, 0.22 m) ≤ +0.010 everywhere, heel marker ≤ +0.002 (the heel pad skin still shows ~4 cm for ~4 % of the cycle mid-draw, u 0.39-0.44, with the ankle joint at the surface); breath peak spineX −30.0 / hips −0.208 / shoulders −0.028 / head bone +0.054 / thigh 33.5° (trunk-thigh 57°) / hands 0.151 apart 7.0 cm deep / elbows −0.134; in-sweep elbow − hand ≥ −0.019 over u 0.30-0.42, elbows ≤ 0.220 deep, hands ≤ 0.243; corner hand speed 23 % of the peak; glide 41 %, feet widest 0.72 at 0.51, toes 0.29 deep at the finish (0.633), zero penetration (max −0.019, 0 engagements), continuity 0.8 mm second difference / 10.6 mm step.',
+      sources: 'RESEARCH §F3 lines 433-438 (cycle pull → breathe → kick → glide; out-sweep to shoulder width or slightly wider with the elbows near the surface; in-sweep with the chin and shoulders rising and the hands meeting in front of the chin; heels to the buttocks, knee 120-130°, hip flexion 40-50°, feet dorsiflexed and turned out; the kick starts slow and ends fast; elite leg glide 46.5 ± 3.6 % of the 100 m cycle; tempo 100 m 43.7-53.3 / 200 m 35.7-43.0 cycles/min); World Aquatics SW 7.2 (one arm stroke and one leg kick in that order), 7.3 (elbows under water, hands on/under the surface, never behind the hip line), 7.4 (the head breaks the surface every cycle), 7.5 (feet turned outwards in the propulsive part of the kick); coaching (rocketswim, swim-teach, swimrightacademy): chest up ~25-30° with the hips sinking at the breath, head dives between the arms into the lunge, hips ride up to the surface as the legs squeeze; technique-breaststroke-review-1.md (coach critic round 1: one continuous accelerating whip, feet in the water on the draw, hips 19-23 cm deep at the breath with the chin at the water, elbows high through the in-sweep).',
       phases: {
-        1: { L: { sh: [150, 0, 30], el: [18] }, R: { sh: [150, 0, -30], el: [18] } },
-        2: { L: { sh: [19, -43, 125], el: [98] }, R: { sh: [19, 43, -125], el: [98] } },
-        3: { desc: 'Heels draw up to the buttocks with the feet turned out as the hands, close together and flat, palms down, start to shoot forward on the surface — elbows still under water.',
-             L: { sh: [113, -43, 16], el: [61], hi: [52, 0, 6], kn: [112] }, R: { sh: [113, 43, -16], el: [61], hi: [52, 0, -6], kn: [112] } },
-        4: { L: { hi: [10, 0, 20], kn: [26] }, R: { hi: [10, 0, -20], kn: [26] } }
+        0: { name: 'Glide & Streamline', dur: 0.30, desc: 'Legs together, feet pointed, hands 14 cm apart just under the surface, head between the arms; the body rides flat for a third of the cycle before the hands slide apart into the out-sweep.',
+             L: { sh: [180, 2, -12], el: [5], hi: [2, 0, 0], kn: [2] }, R: { sh: [180, -2, 12], el: [5], hi: [2, 0, 0], kn: [2] } },
+        1: { name: 'Out-Sweep & Catch', dur: 0.16, desc: 'Hands press out to 1.1 m apart, 17 cm deep, arms straight with the elbows high near the surface; the legs relax a little downward and the chin starts to rise as the hands turn the corner.',
+             L: { sh: [134, -35, 48], el: [6], hi: [16, 0, 0], kn: [10] }, R: { sh: [134, 35, -48], el: [6], hi: [16, 0, 0], kn: [10] } },
+        2: { name: 'In-Sweep, Breath & Heel-Draw', dur: 0.20, desc: 'Elbows stay high near the surface and bend to 70 degrees as the forearms scull in and up under them, the hands meeting in front of the chin; the chest lifts 30 degrees, the hips sink and the shoulders reach the surface; the heels draw to the buttocks with the feet flat and turned out.',
+             L: { sh: [96, -56, 37], el: [70], hi: [31, -18, 8], kn: [126] }, R: { sh: [96, 56, -37], el: [70], hi: [31, 18, -8], kn: [126] } },
+        3: { name: 'Squeeze into the Glide', dur: 0.08, desc: 'One continuous whip has brought the legs straight and together, feet pointed again and still angled a little below the hip line; the arms are locked out, the head is back between the arms and the hips ride up to the surface as the body lunges forward.',
+             L: { sh: [180, 2, -12], el: [5], hi: [11, -3, 3], kn: [3] }, R: { sh: [180, -2, 12], el: [5], hi: [11, 3, -3], kn: [3] } },
+        4: { name: 'Streamline Glide', dur: 0.26, desc: 'The streamline holds: hands stacked just under the surface, head down between the arms, legs together with the feet pointed, the body riding flat and settling for the last quarter of the cycle.',
+             L: { sh: [180, 2, -12], el: [5], hi: [2, 0, 0], kn: [2] }, R: { sh: [180, -2, 12], el: [5], hi: [2, 0, 0], kn: [2] } }
       }
     },
     butterfly: {
-      depth: 0.03,
-      notes: 'Legs: the keyhole-pull keyframe had the feet 38 cm in the air; re-timed as two kicks per cycle (kick 1 during the entry, kick 2 as the hands exit), heels/toes just breaking the surface, toe amplitude ~0.35 m (surface fly). Arms: recovery kept low and straight-ish (el 12) — hands exit past the hips and sweep out wide with the hands/elbows ~18 cm above the water (peak 0.49 m mid-swing) instead of lifting to 19 cm behind the shoulder line.',
-      sources: 'RESEARCH §F4: swimlpac + USMS butterfly guide (two kicks per cycle: kick 1 as the hands enter, kick 2 as they exit; low, straight-ish, relaxed recovery sweeping wide and low); World Aquatics SW 8.2 (arms simultaneous over the water) and SW 8.3 (legs simultaneous); surface toe amplitude 0.35-0.45 m [est] vs 0.45-0.6 m underwater (PMC7739797).',
+      // Technique pass 4 (2026-09-16, technique-butterfly-review-1.md, the coach critic's round 1 on pass 1): the pass-1 fly HOVERED
+      // its arms over the water for the last sixth of the cycle (hand speed 11.8 → 0.5 m/cycle over u 0.65-0.99, 45 % of the cycle
+      // over the water), pinched the hands to 0.28 m right after the entry, caught with a dropped vertical forearm and the hands
+      // OUTSIDE the elbows, stalled then flung at the exit (1.7 → 11.8 m/cycle), recovered a little high (+0.21) and sat on bent
+      // knees for 52 % of the cycle. Now SEVEN keyframes: the ring starts at the press (hands 15 cm under, 0.63 m apart, elbows high)
+      // and the Entry is its own keyframe at u 0.90 just under the surface, so the hands cross the surface at u 0.88 on the spline
+      // at 3+ m/cycle (over-water fraction 0.33), press down and OUT (gap ≥ 0.50 until the in-sweep starts), catch with the hands
+      // inside and behind high wide elbows (108°), push deep and fast to an exit at u 0.556 with the elbow still extending, and
+      // recover in ONE world-axis sweep (Exit → T → Entry = the same 76° rotation about a near-vertical axis: the T keyframe carries
+      // its full spline tangent, the crease faces medial at the exit / back at the T / lateral at the entry = pinky-first exit,
+      // thumbs-down recovery, palms-out entry). Kick 1 bottoms 0.11 after the entry; the knees are bent > 30° for 28 % of the cycle
+      // and the thighs come up through the body line (hip 5-6°) on both up-beats. Every keyframe was solved from WORLD hand /
+      // elbow / crease targets under the wave with human/test/c2-fly-design.js (--json prints this block); the sweep keyframes are
+      // rotations of the Exit frame, so do not re-express any `sh` triple in another Euler form without re-running that tool.
+      rate: 1.6,                          // 0.55 × 1.6 = 0.88 Hz = 52.8 cycles/min (real 100 m 56-61, 200 m 50-55; slow end so 1× stays studyable)
+      depth: 0.027,                       // was 0.03: with bobAmp 0.05 the hip line tops out at −0.025 (buttocks at the surface) and bottoms at −0.125
+      breath: { type: 'front', start: 0.46, dur: 0.24 },   // was 0.44 / 0.28: same peak (u 0.58), the head is back under by u 0.66 (critic F8)
+      wave: { chestAmp: 15, chestPhase: -0.01, breathLift: 7, bobAmp: 0.05, bobPhase: 0, breathBob: 0, neckBreath: 0.42 },   // press peak / hips highest at u 0.99-1.00, right after the entry
+      notes: 'Technique pass 4: 7 keyframes at u 0 / 0.15 / 0.345 / 0.43 / 0.55 / 0.71 / 0.90 (dur 0.15 0.195 0.085 0.12 0.16 0.19 0.10) — Press & Outsweep (u 0: hands 0.15 m under, 0.63 m apart, x 1.06, elbows 8 cm under and high, 28°; the chest at its deepest, hips at the surface, kick 1 at its bottom), Catch (0.15: elbows −0.09 m and 0.81 m apart, hands 0.41 m deep, 0.70 m apart, 8 cm BEHIND and 6 cm inside the elbows, 108°), Keyhole In-sweep (0.345: hands 0.22 m apart under the chest, 0.34 m deep, elbows 122°), Push (0.43: hands 0.31 m deep at x +0.03 driving back — the fastest part of the pull, 5.9 m/cycle), Exit (0.55: hand at x −0.19 just under the surface, elbow 17° and still extending, the crossing at u 0.556 on the spline; kick 2 at its bottom), Recovery (0.71: the T = the Exit frame swept 76° about a near-vertical world axis, hand +0.13 / elbow +0.02, 1.47 m apart, 8°), Entry (0.90: swept 155°, hand 4 cm under at x 1.08, 0.58 m apart, 3°; the crossing at u 0.883 with the hand at 3.2 m/cycle; knee 66° / thigh 31° = the top of kick 1). Trunk = bodyWave(): press +15° / hips −0.025 at u 0.99-1.00, chest-up −20.3° / hips −0.125 at u 0.50-0.55, breath peak u 0.58 (face −24.1°), head bone −0.00 at u 0.66 / −0.08 at 0.74. Stub rig, 720 samples, page driver semantics (human/test/t2-fly-accept.js = c2-fly-design.js on the shipped record): over-water fraction 0.326 (0.556 → 0.883), hand speed ≥ 3.2 m/cycle over the water, (T→entry)/(exit→T) path rate 0.85, exit speed min 2.57 m/cycle over u 0.52-0.70 (max/min 2.7), hand max +0.140 at u 0.77 with the elbow 0.113 below it at the T, min hand gap 0.51 over [entry, 0.22] and 0.85 at u 0.05, deepest hand −0.415 at u 0.154 with the hand 6 cm inside the elbows (0.70 vs 0.82 apart), keyhole gap 0.22 at 0.33, push gap ≤ 0.95, knee > 30° for 28 % of the cycle, hip flexion 5-6° on both up-beats, toe range ≥ 0.055 m in every 0.10 window, kick-1 bottom 0.11 after the entry, toes −0.033 … −0.541 (amplitude 0.51), heels ≤ −0.002, ankle 67.6° / 44.7°, zero penetration (max −0.093, 0 engagements), hand continuity 1.7 mm second difference / 9.6 mm step, both hands at equal height every frame (SW 8.2). Kept from pass 1: the ankle whip mapping, the keyhole, rate 1.6, the sinusoid wave form.',
+      sources: 'RESEARCH §F4 lines 441-448 (undulation from the chest, hips up as the hands go in; simultaneous shoulder-width entry, fingertips first, hands press OUT to the catch; high wide elbows, keyhole out-in-out, hands accelerate to exit at the hips/thighs; low straight-ish simultaneous recovery, thumbs down; two kicks per cycle — down as the hands enter and as they exit; chin forward not lifted; 100 m tempo 56-61 cycles/min) and §F5 lines 450-457 (wave travels head → toe with increasing amplitude; knee peak 59-64°, plantarflexion 64-66°, toe amplitude 0.45-0.6 m); World Aquatics SW 8.2 / 8.3 (arms and legs simultaneous); technique-butterfly-review-1.md (coach critic round 1: over-water fraction 0.30-0.38 with a ballistic recovery, hands never inside 0.50 before the in-sweep, catch hands inside and behind the elbows at 0.38-0.44 deep, continuous exit, recovery 0.14-0.19 high with the elbows within 0.12 of the hands, knees bent > 30° for ≤ 42 %, thighs through the line, toes never dwelling, hips at the surface, head under by u 0.66); arm-coordination phase proportions [Chollet/Seifert, est.].',
       phases: {
-        0: { L: { hi: [28, 0, 0], kn: [56] }, R: { hi: [28, 0, 0], kn: [56] } },
-        1: { L: { sh: [22, -13, 146], el: [100], hi: [26, 0, 0], kn: [8] }, R: { sh: [22, 13, -146], el: [100], hi: [26, 0, 0], kn: [8] } },
-        2: { L: { sh: [12, 2, 11], el: [68], hi: [12, 0, 0], kn: [22] }, R: { sh: [12, -2, -11], el: [68], hi: [12, 0, 0], kn: [22] } },
-        3: { L: { sh: [-14, 0, 10], el: [30], hi: [28, 0, 0], kn: [56] }, R: { sh: [-14, 0, -10], el: [30], hi: [28, 0, 0], kn: [56] } },
-        4: { L: { sh: [-2, -11, 101], el: [0], hi: [26, 0, 0], kn: [8] }, R: { sh: [-2, 11, -101], el: [0], hi: [26, 0, 0], kn: [8] } },
-        5: { L: { sh: [121, -36, 58], el: [25], hi: [12, 0, 0], kn: [22] }, R: { sh: [121, 36, -58], el: [25], hi: [12, 0, 0], kn: [22] } }
-      }
+        0: { name: 'Press & Outsweep', dur: 0.15, desc: 'The hands press down and out from shoulder-width, elbows high and near the surface, as the chest presses to its deepest and the first kick snaps down behind.',
+             L: { sh: [23, 45, 180], el: [28], hi: [24, 0, 0], kn: [4] }, R: { sh: [23, -45, -180], el: [28], hi: [24, 0, 0], kn: [4] } },
+        1: { name: 'Catch', dur: 0.195, desc: 'Elbows stay high and wide near the surface as the forearms press back — the hands now inside and behind the elbows, elbow near 105 degrees.',
+             L: { sh: [4, 6, 136], el: [108], hi: [14, 0, 0], kn: [8] }, R: { sh: [4, -6, -136], el: [108], hi: [14, 0, 0], kn: [8] } },
+        2: { name: 'Keyhole In-sweep', dur: 0.085, desc: 'The keyhole: hands sweep in under the chest until they almost touch, elbows still wide, the chest starting to rise.',
+             L: { sh: [-39, -34, 128], el: [122], hi: [5, 0, 0], kn: [18] }, R: { sh: [-39, 34, -128], el: [122], hi: [5, 0, 0], kn: [18] } },
+        3: { name: 'Push', dur: 0.12, desc: 'The fastest part of the pull — the hands drive back past the hips as the chest lifts and the knees load for the second kick.',
+             L: { sh: [-85, -39, 111], el: [78], hi: [28, 0, 0], kn: [58] }, R: { sh: [-85, 39, -111], el: [78], hi: [28, 0, 0], kn: [58] } },
+        4: { name: 'Exit', dur: 0.16, desc: 'The second kick snaps down as the hands leave the water beside the thighs, little finger first and already swinging out — chin forward for the breath.',
+             L: { sh: [-140, -68, 121], el: [17], hi: [26, 0, 0], kn: [4] }, R: { sh: [-140, 68, -121], el: [17], hi: [26, 0, 0], kn: [4] } },
+        5: { name: 'Recovery', dur: 0.19, desc: 'Straight, relaxed arms sweep low and wide over the water in one continuous swing, thumbs down, as the head goes back under.',
+             L: { sh: [-117, -4, 74], el: [8], hi: [6, 0, 0], kn: [4] }, R: { sh: [-117, 4, -74], el: [8], hi: [6, 0, 0], kn: [4] } }
+      },
+      // the 7th keyframe (strokes.json has six): appended by applyPatches only when the record still has exactly six phases
+      append: { at: 6, phases: [
+        { name: 'Entry', dur: 0.10, drag: 40, thrust: 30, lift: 14, vel: 1.70, eff: 57, desc: 'The hands enter shoulder-width in front of the head with momentum, fingertips first, as the hips rise for the next press and the knees load the first kick.',
+          L: { sh: [-156, 40, 9], el: [3], hi: [31, 0, 0], kn: [66] }, R: { sh: [-156, -40, -9], el: [3], hi: [31, 0, 0], kn: [66] } } ] }
     },
     dolphin: {
-      depth: 0.35,                       // round-2: the UNDERWATER dolphin kick ran at the surface (hands 9 cm in the air at peak streamline)
-      notes: 'Round 1: streamline — the hands were 51 cm apart; sh [-173, 2, ∓13] (exact-solved: arms 13° adducted past the shoulder line and lifted 8° above the head plane) puts the hand centres 10 cm apart with the biceps on the ears and the arm 2 mm clear of the cranium ellipsoid; knee peak 56° (ref 60-65, surface-limited), toe range surface −0.46…+0.03 m (amplitude 0.50, ref 0.45-0.6), heels ≤ +2 cm. Previously: knee flexion peak raised toward 40° (surface fly-kick amplitude; UUS peaks 55-65° but the scene keeps the swimmer at the surface) with the hip range ~6…28°; timed so the heels/toes just break the surface (heels ≤ +3 cm, toes ≤ +5 cm) instead of lifting 15 cm into the air at the upbeat peak.',
-      sources: 'RESEARCH §F5: PMC7739797 (elite UUS toe amplitude 0.45 m, 1.9 Hz) and the national-level kinematics (peak knee flexion 59-64°, hip ROM 32-36°, peak hip flexion 21-23°); the scene keeps the swimmer at the surface (SW 5.3/6.3/8.5 15 m rule), so the amplitude is scaled to a surface fly-kick with the feet just breaking the surface.',
+      // Technique pass 3 (2026-09-16, technique-dolphin.md): the round-2 dolphin was a slow sit-up at 33 kicks/min — the knees bent
+      // under a flat, nose-down plank (u 0.17: hip 34° / knee 56° with the trunk pitched 7° head-DOWN and the hips at their HIGHEST),
+      // then a jackknife (hip 38°, legs straight, trunk straight), 38 % of the cycle a straight-leg glide, the thighs never above the
+      // body line, the hips bobbing AFTER the toes, the head bobbing more than the hips, the foot most pointed with the knees bent.
+      // Now u = 0 at the TOP of the kick (heels up, knees 56°, back arched, hips lowest), a 50 % downkick with the knees snapping
+      // straight and the hips rising as the chest presses, the thighs 12° above the line at u 0.83, the vertical maxima travelling
+      // head → shoulders → hips → knees → ankles → toes. Arms (streamline) untouched.
+      // Technique pass 6 (technique-dolphin-review-1.md — coach critic round 1, 8.3 / 10, no blockers): (1) the upkick knee loads
+      // PROGRESSIVELY — kn 4 → 10.5 at u 0.65 and 12 → 22 at u 0.83 (the leg was board-straight to u 0.72 and then snapped 12 → 56° in the
+      // last sixth); with the thigh still 2° above the line at the top (hi −2 at u 0, the hip passes neutral 0.03 later) the ankle keeps
+      // rising to u 0.93 so the maxima still travel knee (0.80) → ankle (0.93) → toe (0.965). (2) The head is the wave node: the bob now
+      // trails the chest press by 0.04 cycle (bobPhase 0.48 / chestPhase 0.52, were 0.47 / 0.55 — the head's residual 8 cm was the
+      // quadrature part of that 0.08 lag, which no neck term of sane size can cancel) and neckAmp −3° counter-pitches the head
+      // (neckX = −0.35 × spineX: level in the world while the chest pitches ±8.6°) — head p-p 0.041 m < shoulders 0.059 < hips 0.160
+      // (was head 0.084 ≈ shoulders 0.082). (3) Tempo 89 → 96 kicks/min (rate 2.9 — the critic's taste note: a 0.62 m kick at 89/min read
+      // like a warm-up kick; the amplitude is NOT trimmed as well). (4) depth 0.42 → 0.44 so the higher top-of-kick toes stay ≥ 6 cm under.
+      rate: 2.9,                         // 0.55 × 2.9 = 1.595 Hz = 96 kicks/min (RESEARCH §F5 line 452: 1.46 / 1.75 Hz at 70 / 80 % speed — the slow half of real, studyable; 0.627 s per kick at 1×, 2.09 s at 0.3×)
+      depth: 0.44,                       // was 0.35 (round 2) → 0.42 (pass 3) → 0.44 (pass 6): keeps the toes ≥ 6 cm under at the top of the kick with the 56° knee and the 2° thigh carry-over
+      // bodyWave() sinusoid (technique-dolphin.md §3.3 in the module's cos form; pass 6 phases): spineX = 8.6°·cos(2π(u − 0.52)) → −0.149 rad
+      // (chest UP, the arch) at u 0, +0.149 (chest DOWN, the press) at u 0.5, level at u 0.27 / 0.77; bob = 0.08·cos(2π(u − 0.48)) → hips
+      // highest (+0.079 m) at u 0.48, lowest at u 0.98. neckAmp −3 at chestPhase: neck + head pitch = −3°·cos(2π(u − 0.52)) = −0.35 × spineX
+      // (face forward / up as the chest presses, chin down as it rises; the driver writes it on the neck, applySecondary splits it 60 / 40
+      // head / neck — never spine.x). No breath (b ≡ 0). ankleAmp / anklePhase: applySecondary's cycle-keyed foot whip (77° at u 0.30, 54° at u 0.80).
+      wave: { chestAmp: 8.6, chestPhase: 0.52, bobAmp: 0.08, bobPhase: 0.48, neckAmp: -3, ankleAmp: 0.20, anklePhase: 0.30 },
+      notes: 'Technique pass 6 (dolphin re-fix): five keyframes with u = 0 at the TOP of the kick — Heels Up (Load) (u 0, dur 0.20: hip −2° / knee 56°, back arched 8.5° chest-up with the hip line 7.9 cm below its mean, heels drawn up under the surface, foot relaxed 62°), Downbeat Whip (u 0.20, dur 0.25: hip 14° / knee 28° — the thighs press down as the shins snap straight, foot 77° at u 0.30), Downbeat Peak (u 0.45, dur 0.20: hip 20° / knee 6° — legs straight, toes at their lowest, hips highest at u 0.48, chest pressed 8.5° at u 0.52), Upbeat Drive (u 0.65, dur 0.18: hip 6° / knee 10.5° — the legs sweep up through the line as the water starts to fold the knees), Upbeat Peak (u 0.83, dur 0.17: hip −12° / knee 22° — thighs above the body line with the shins lagging, the knees loading 22 → 56° over the last sixth). Arms unchanged on every phase (sh [-173, 2, ∓13] / el 5: hands stacked 0.115 m apart, biceps on the ears). Trunk = bodyWave() sinusoid (chest ±8.6° = 0.149 rad at u 0 / 0.5, hip line ±0.079 m at u 0.98 / 0.48 — lag 0.04) + the head-node counter-pitch (neck + head −3°·cos(2π(u − 0.52))) and the cycle-keyed ankle whip (config.ankleRest + 0.20·cos(2π(u − 0.30))). Tempo rate 2.9 → 96 kicks/min (0.627 s at 1×, 2.09 s at 0.3×). Stub rig, 720 samples, page driver semantics (human/test/t2-dolphin-accept.js): knee 56° at u 0, ≤ 8.0° over u 0.45-0.58, 10.5° at 0.65 (10.3 / 11.2 on the 48-sample grid at 0.646 / 0.667), 22° at 0.83 (22.5 at 0.833), 37.8° at 0.90; hip +20° @0.45 / −12° @0.83 (ROM 32°), hip line p-p 0.160 (max @0.481, min @0.981), trunk line +6.9° @0.02 / −6.9° @0.52, head p-p 0.041 = 0.25 × hips and < shoulders 0.059 (was 0.084 ≈ 0.082), vertical maxima head 0.236 → shoulders 0.410 → hips 0.481 → knee 0.797 → ankle 0.931 → toe 0.965, toe p-p 0.581 (stub toe) / 0.643 (body.js tip marker) = 4.0 × hips, downkick 0.488 of the cycle, heels ≤ −0.20 and toe tip ≤ −0.070 under the surface, hands −0.452…−0.306, head ≤ −0.480, neck + head −3° @0.52 / +3° @0.02, ankle 0.950 rad @0.80 / 1.350 @0.30, zero penetration (measurePenetration ≤ −0.015, 0 engagements), continuity 0.08 mm second difference / 3.5 mm step (toe). Pass 3 kept: the streamline, the 50 % downkick whip, the ankle mapping, the wave amplitudes.',
+      sources: 'RESEARCH §F5 lines 450-457: PMC7739797 (elite UUS toe amplitude 0.45 ± 0.06 m, 1.9 ± 0.3 Hz, downkick 48.5 % of the cycle, pelvic tilt ±1.8°, vertical maxima travelling head → toe with increasing amplitude — chest ≈ 5 cm, hips ≈ 15, knees ≈ 30, toes 45-60) and the national-level kinematics (peak knee flexion 59-64°, hip ROM 32-36°, peak hip flexion 21-23° / extension 11-13°, peak plantarflexion 64-66° at mid-downkick, toe speed 3.6-4.1 m/s, 1.46 / 1.75 / 2.11 Hz at 70 / 80 / 90 % speed — frequency, not amplitude, tracks speed); §F4 line 446 (streamline: hands stacked, shoulder flexion ≈ 180°); depth ≥ 0.6 m removes wave drag (line 454) — the scene keeps the swimmer at 0.44 m to stay in frame; technique-dolphin-review-1.md (coach critic round 1: progressive knee flexion through the upkick — the shin lags the thigh from mid-upkick; the head as the node of the wave, shoulders moving a little more; tempo / amplitude pairing).',
       phases: {
-        0: { name: 'Peak Streamline', desc: 'Hands stacked, arms squeezed against the ears, the whole body one tight line as the wave starts at the chest.',
-             L: { sh: [-173, 2, -13], el: [5], hi: [12, 0, 0], kn: [22] }, R: { sh: [-173, -2, 13], el: [5], hi: [12, 0, 0], kn: [22] } },
-        1: { L: { sh: [-173, 2, -13], el: [5], hi: [34, 0, 0], kn: [56] }, R: { sh: [-173, -2, 13], el: [5], hi: [34, 0, 0], kn: [56] } },
-        2: { L: { sh: [-173, 2, -13], el: [5], hi: [38, 0, 0], kn: [30] }, R: { sh: [-173, -2, 13], el: [5], hi: [38, 0, 0], kn: [30] } },
-        3: { L: { sh: [-173, 2, -13], el: [5], hi: [24, 0, 0], kn: [6] }, R: { sh: [-173, -2, 13], el: [5], hi: [24, 0, 0], kn: [6] } },
-        4: { L: { sh: [-173, 2, -13], el: [5], hi: [8, 0, 0], kn: [4] }, R: { sh: [-173, -2, 13], el: [5], hi: [8, 0, 0], kn: [4] } }
+        0: { name: 'Heels Up (Load)', dur: 0.20, desc: 'Top of the kick: the back arches slightly — chest up, hips at their lowest, the head held level — the knees are bent about 56° with the thighs still a couple of degrees above the line, the heels drawn up under the surface and the feet relaxed. The wave has reached the knees.',
+             L: { sh: [-173, 2, -13], el: [5], hi: [-2, 0, 0], kn: [56] }, R: { sh: [-173, -2, 13], el: [5], hi: [-2, 0, 0], kn: [56] } },
+        1: { name: 'Downbeat Whip', dur: 0.25, desc: 'The thighs press down and the knees snap straight — shins and pointed feet whip down at 3-4 m/s; the reaction lifts the hips.',
+             L: { sh: [-173, 2, -13], el: [5], hi: [14, 0, 0], kn: [28] }, R: { sh: [-173, -2, 13], el: [5], hi: [14, 0, 0], kn: [28] } },
+        2: { name: 'Downbeat Peak', dur: 0.20, desc: 'The feet reach their lowest point, legs straight, toes pointed; the hips are at their highest and the chest presses down — peak thrust.',
+             L: { sh: [-173, 2, -13], el: [5], hi: [20, 0, 0], kn: [6] }, R: { sh: [-173, -2, 13], el: [5], hi: [20, 0, 0], kn: [6] } },
+        3: { name: 'Upbeat Drive', dur: 0.18, desc: 'The legs sweep up through the body line as the hips drop and the chest rises — the thighs lead and the water starts to fold the knees (about 10°); the upkick gives roughly 30 % of the propulsion.',
+             L: { sh: [-173, 2, -13], el: [5], hi: [6, 0, 0], kn: [10.5] }, R: { sh: [-173, -2, 13], el: [5], hi: [6, 0, 0], kn: [10.5] } },
+        4: { name: 'Upbeat Peak', dur: 0.17, desc: 'The thighs pass above the body line (hip extension about 12°) with the knees already bent about 22° and still loading — the shins lag the thighs as the wave passes from the hips into the knees; the feet are at their fastest upward speed.',
+             L: { sh: [-173, 2, -13], el: [5], hi: [-12, 0, 0], kn: [22] }, R: { sh: [-173, -2, 13], el: [5], hi: [-12, 0, 0], kn: [22] } }
       }
     }
   };
@@ -2051,6 +2252,12 @@
       if (P.rollAmp !== undefined) sd.rollAmp = P.rollAmp;
       if (P.breath !== undefined) sd.breath = deepClone(P.breath);
       if (P.depth !== undefined) sd.depth = P.depth;          // metres the driver lowers swimmerOrient (0 = the site's default height)
+      if (P.rate !== undefined) sd.rate = P.rate;             // tempo multiplier on the page's global clock (technique pass)
+      if (P.wave !== undefined) sd.wave = deepClone(P.wave);  // bodyWave() parameters (technique pass)
+      if (P.hold !== undefined) sd.hold = !!P.hold;           // eased per-phase lerp (true) or the C1 spline (false) — technique pass 5 (breaststroke re-fix)
+      // technique pass 4: extra keyframes appended to the ring (butterfly's 7th `Entry`), only when the record has exactly the phase
+      // count the patch was authored for — any other record (an AI motion, a hand-built stub) is left at its own length
+      if (P.append && P.append.phases && P.append.phases.length && sd.phases.length === P.append.at) for (var a = 0; a < P.append.phases.length; a++) sd.phases.push(deepClone(P.append.phases[a]));
       var phasePatch = (config.anatomicalElbow && P.phasesAnatomical) ? P.phasesAnatomical : P.phases;
       if (phasePatch) for (var i in phasePatch) {
         if (!phasePatch.hasOwnProperty(i) || !sd.phases[i] || typeof sd.phases[i] !== 'object') continue;
@@ -2080,6 +2287,8 @@
     applyPose: applyPose, applyLegPose: applyLegPose, applyFlutterKick: applyFlutterKick, applyFlutterKickAnatomical: applyFlutterKickAnatomical,
     // C1 interpolation
     interpolatePhases: interpolatePhases, applyPoseSpline: applyPoseSpline, poseFrame: poseFrame, crWeights: crWeights,
+    // body wave (technique pass; optional — the page falls back to its own formula when absent)
+    bodyWave: bodyWave,
     // secondary + clearance
     applySecondary: applySecondary, resetSecondary: resetSecondary, armAirWeight: armAirWeight,
     resolveClearance: resolveClearance, measurePenetration: measurePenetration, penetrationDepth: penetrationDepth,

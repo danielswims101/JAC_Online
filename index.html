@@ -2991,7 +2991,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <p class="tl-upd-note">Update checks run through your browser's service worker against this site only — nothing about you is sent anywhere. The one thing saved is the version you last read, so the nav dot knows when to appear.</p>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p data-tl-version>Version 3.1.0</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p data-tl-version>Version 3.1.1</p></div></footer>
 </div>
 </main>
 <!-- AUTH — real Supabase email/password accounts. Content is public; an
@@ -3997,7 +3997,7 @@ function loadHumanScripts(done){
     _humanScriptQueue.splice(0).forEach(fn => fn());
   };
   const s = document.createElement('script');
-  s.src = HUMAN_SCRIPT + '?v=' + encodeURIComponent(window.TL_VERSION || '3.1.0');
+  s.src = HUMAN_SCRIPT + '?v=' + encodeURIComponent(window.TL_VERSION || '3.1.1');
   s.async = false;
   s.onload = finish;
   // Offline, blocked or a broken deploy: the page keeps working with the built-in mannequin.
@@ -9193,6 +9193,17 @@ window.tl_an_debug = {
 // never point at a page that has not shipped.  Keep the top entry's version
 // in sync with VERSION in sw.js (see NOTES.md / README snippet).
 const UPDATES = [
+  {
+    version: '3.1.1', date: '2026-09-16',
+    title: 'Technique pass: butterfly, breaststroke and underwater',
+    summary: 'Butterfly, breaststroke and the underwater dolphin kick in the 3D lab were re-authored from coaching references — body wave, kick timing, arm path and breath — and each now runs at its own realistic tempo.',
+    items: [
+      { tag: 'Improved', text: 'Butterfly — the chest presses and the hips lift through the cycle, two timed kicks, a high-elbow catch into the keyhole pull, straight arms clearing the water on the recovery, and a faster tempo (53 cycles a minute).', link: '#visualizer' },
+      { tag: 'Improved', text: 'Breaststroke — the body rises about 30° into the breath and lunges forward into a long glide; the heels draw to the buttocks with the feet turned out, then whip round and squeeze together (43 cycles a minute).' },
+      { tag: 'Improved', text: 'Underwater dolphin kick — a wave that travels from the chest through the hips to the toes with the head held level, at a realistic 96 kicks a minute.' },
+      { tag: 'Improved', text: 'Those three strokes now run at their own tempo (freestyle and backstroke are unchanged); the 0.3× button still slows everything down for study.' }
+    ]
+  },
   {
     version: '3.1.0', date: '2026-09-13',
     title: 'A realistic 3D swimmer',
