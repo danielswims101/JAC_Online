@@ -4278,6 +4278,12 @@ function updateSwimmer(dtPhase) {
   }
   // ── Spine wave, chest lift and head motion ────────────────────────────
   let spineX = 0, bob = 0, neckX = 0, neckY = 0;
+  if (HM && HM.bodyWave && sd.wave) {
+    // Technique pass: a stroke whose motion patch defines `wave` (butterfly) takes its travelling body wave from the
+    // motion module — chest press / hip lift keyed to the arm cycle, the breath lift folded in, and the bob — instead of
+    // the single-hinge sine below. Every other stroke, every AI motion and the mannequin keep the original block.
+    const w = HM.bodyWave(sd, u, b); spineX += w.spineX || 0; bob += w.bob || 0; neckX += w.neckX || 0;
+  } else {
   if (sd.undulate) {
     const wavePhase = u * Math.PI * 2;
     spineX += Math.sin(wavePhase) * 0.18;
@@ -4293,6 +4299,7 @@ function updateSwimmer(dtPhase) {
     // Freestyle breath: head rotates WITH the body roll, chin low,
     // one goggle still in the water — never lifted.
     neckY = -b * 1.05;
+  }
   }
   if (swimmer) {
     swimmer.root.rotation.y = rollY;
@@ -4524,7 +4531,9 @@ function animate3D(){
   // Clamp: after a background-tab pause dt can be seconds — without this the
   // swimmer and water lurch violently on return.
   if (dt > 0.05) dt = 0.05;
-  if (playing) clockT += dt * 0.55 * speed;
+  // Per-stroke tempo (technique pass): the motion module's stroke patches may carry `rate`, a multiplier on the
+  // global 0.55 cycles/s clock (butterfly 1.6 → 52.8 cycles/min). Strokes without it, and AI motions, run as before.
+  if (playing) clockT += dt * 0.55 * speed * ((STROKES[currentStroke] && STROKES[currentStroke].rate) || 1);
   updateSwimmer(dt);
   // Ambient motion (water ripple, caustics, particulate) is gated on `playing`
   // so Pause and prefers-reduced-motion freeze the whole scene, not just the
