@@ -1861,7 +1861,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <input class="form-input" id="motion-prompt" maxlength="300" aria-label="Describe a swimming movement to reconstruct in 3D" placeholder='Describe a movement, e.g. "flip turn"' style="flex:1;min-width:230px">
     <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple-text);font-weight:600"><span aria-hidden="true">✦ </span>AI Reconstruct</button>
   </div>
-  <div id="motion-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px">Try "breaststroke pullout off the wall" or "backstroke start" — the lab rebuilds it joint by joint.</div>
+  <div id="motion-status" role="status" aria-live="polite" data-hint="Try &quot;breaststroke pullout off the wall&quot; or &quot;backstroke start&quot; — the lab rebuilds it joint by joint." style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px">Try "breaststroke pullout off the wall" or "backstroke start" — the lab rebuilds it joint by joint.</div>
   <div class="viz-controls viz-row-view" style="margin-top:8px" role="group" aria-label="Camera view">
     <span class="viz-ctl-lbl" aria-hidden="true">View:</span>
     <button class="viz-btn" data-view="side" aria-pressed="false" onclick="setView3D('side')">Side</button>
@@ -5434,6 +5434,11 @@ function syncInfoPanel3D() {
 // PUBLIC UI API (called from buttons in the visualizer page)
 // ═══════════════════════════════════════════════════════════════════════
 function setStroke3D(s, btn) {
+  if (currentStroke === 'custom') {
+    // Leaving a reconstruction: the "Reconstructed: …" line would otherwise describe a motion that is no longer playing.
+    const ms = document.getElementById('motion-status');
+    if (ms) ms.textContent = ms.getAttribute('data-hint') || '';
+  }
   currentStroke = s; clockT = 0;
   if (viz3DInitialized) rebuildSwimmer(s);
   document.querySelectorAll('.viz-btn').forEach(b => {
@@ -5467,6 +5472,10 @@ function resizeViz3D() {
   const h = container.clientHeight || 520;
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
+  // Browser zoom, a monitor change or OS scaling all move devicePixelRatio after init; re-read it so the
+  // backing store keeps matching the CSS size (setSize below re-applies the ratio) — R6-FUNCTION-10.
+  const pr = Math.min(window.devicePixelRatio || 1, 2);
+  if (renderer.getPixelRatio() !== pr) renderer.setPixelRatio(pr);
   renderer.setSize(w, h);
 }
 let _vizResizeRaf = 0; // resize events are coalesced to one re-size per frame
@@ -5682,7 +5691,7 @@ function loadCustomMotion(motion, statusEl, prefix){
     ? TL_HumanMotion.applyPatches({ custom: motion }).custom : motion;
   currentStroke='custom'; clockT=0;
   document.querySelectorAll('.viz-btn').forEach(b=>{
-    if((b.getAttribute('onclick')||'').includes('setStroke3D')) b.classList.remove('active');
+    if((b.getAttribute('onclick')||'').includes('setStroke3D')) { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); } // no built-in stroke is "pressed" while a custom motion plays
   });
   if(viz3DInitialized) rebuildSwimmer('custom');
   buildPhaseBar3D('custom');
@@ -6601,15 +6610,20 @@ const PR_EVENTS={
   im:['100 IM','200 IM','400 IM']
 };
 function buildPRGrid(stroke){
-  const grid=document.getElementById('pr-grid-'+stroke); if(!grid)return;
+  const grid=document.getElementById('pr-grid-'+stroke); if(!grid)return false;
   grid.innerHTML='';
+  let badPR=false;
   PR_EVENTS[stroke].forEach(event=>{
     const key='pr_'+event.replace(/ /g,'_');
-    const saved=lsGet(key)||'';
+    const saved=String(lsGet(key)||'').slice(0,12);
+    // A stored value that is not a time (an older version, a hand edit, an extension) is shown flagged, not
+    // silently: readPR() ignores it on the planner, so the field must say so too (R6-FUNCTION-15).
+    const bad=!!saved&&parseTime(saved)===null; if(bad) badPR=true;
     const item=document.createElement('div'); item.className='pr-item';
-    item.innerHTML=`<label class="pr-event" for="pr-in-${key}">${event}</label><input id="pr-in-${key}" class="pr-input" placeholder="—" maxlength="12" autocomplete="off" aria-describedby="pr-format-hint" value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value,this)" onchange="savePR('${key}',this.value,this,true)">`;
+    item.innerHTML=`<label class="pr-event" for="pr-in-${key}">${event}</label><input id="pr-in-${key}" class="pr-input" placeholder="—" maxlength="12" autocomplete="off" aria-describedby="pr-format-hint"${bad?' aria-invalid="true"':''} value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value,this)" onchange="savePR('${key}',this.value,this,true)">`;
     grid.appendChild(item);
   });
+  return badPR;
 }
 // "52.30" / "1:52.30" — the input form (no trailing s) for a stored PR.
 function prFmt(sec){ const cs=Math.round(sec*100), m=Math.floor(cs/6000), s=((cs%6000)/100).toFixed(2).padStart(5,'0'); return m>0?m+':'+s:s; }
@@ -6773,15 +6787,28 @@ function importBackup(ev){
       });
       const hasName=typeof d.name==='string'&&d.name.trim()!=='';
       if(hasName) lsSet('swimmer_name', d.name.trim().slice(0,30)); // an empty name in the file never blanks the saved one
-      if(Array.isArray(d.log)){ const clean=sanitizeLogEntries(d.log); skipped+=Math.max(0,d.log.length-clean.length); lsSet('swimiq_log', JSON.stringify(clean)); nLog=clean.length; }
+      let overCap=0;
+      if(Array.isArray(d.log)){ const clean=sanitizeLogEntries(d.log); overCap=clean.overCap||0; skipped+=Math.max(0,d.log.length-clean.length-overCap); lsSet('swimiq_log', JSON.stringify(clean)); nLog=clean.length; }
       // Each settings object is a few hundred bytes: one over 64 KB would eat the ~5 MB quota and make the next log save fail.
       if(d.tl&&typeof d.tl==='object') BACKUP_TL_KEYS.forEach(k=>{ const v=d.tl[k]; if(!v||typeof v!=='object'||Array.isArray(v)) return; const json=JSON.stringify(v); if(json.length>65536){ skipped++; return; } if(lsSet(k, json)) nSet++; });
       if(typeof clearLogUndo==='function') clearLogUndo();
       initProfile(); if(typeof renderLog==='function') renderLog();
-      tlNotice('profile-notice','Backup imported — '+nPR+' PR'+(nPR===1?'':'s')+', '+nLog+' session'+(nLog===1?'':'s')+(hasName?', your name':'')+(nSet?' and '+nSet+' saved setting'+(nSet===1?'':'s'):'')+' restored.'
+      if(!nPR&&!nLog&&!nSet&&!hasName){
+        // A fresh-device export or a wrong file: nothing restored is not a success (R6-FUNCTION-17).
+        tlNotice('profile-notice','That backup holds no PRs, sessions or settings to restore'
+          +(skipped?' — '+skipped+' unreadable item'+(skipped===1?' was':'s were')+' skipped':'')
+          +((haveLog||havePR||haveSet)?'; the data it replaced on this device has been cleared.':' — nothing was changed.'));
+        return;
+      }
+      const msg='Backup imported — '+nPR+' PR'+(nPR===1?'':'s')+', '+nLog.toLocaleString()+' session'+(nLog===1?'':'s')+(hasName?', your name':'')+(nSet?' and '+nSet+' saved setting'+(nSet===1?'':'s'):'')+' restored.'
         +(skipped?' '+skipped+' unreadable item'+(skipped===1?' was':'s were')+' skipped.':'')
-        +(nSet?' Reloading so the timer and planner settings apply…':''),'ok');
-      if(nSet) setTimeout(()=>location.reload(),1500);
+        +(overCap?' The oldest '+overCap.toLocaleString()+' session'+(overCap===1?' was':'s were')+' left out — the log keeps the newest '+LOG_MAX.toLocaleString()+'.':'');
+      tlNotice('profile-notice',msg+(nSet?' Reloading so the timer and planner settings apply…':''),'ok');
+      if(nSet){
+        // The reload would wipe the confirmation 1.5 s after it appeared: carry it across (R6-FUNCTION-11).
+        try{ sessionStorage.setItem('tl_import_notice',msg+' The timer and planner settings are now active.'); }catch(e){}
+        setTimeout(()=>{ if(location.hash!=='#profile') location.hash='#profile'; location.reload(); },1500);
+      }
     }catch(e){ tlNotice('profile-notice','That file is not a valid Tidelyne backup.'); }
   };
   r.readAsText(f);
@@ -6792,11 +6819,14 @@ function initProfile(){
   if(name!==(lsGet('swimmer_name')||'')){ if(name) lsSet('swimmer_name',name); else lsRemove('swimmer_name'); } // write the capped value back once
   const ni=document.getElementById('profile-name'); if(ni) ni.value=name;
   const nd=document.getElementById('profile-name-display'); if(nd) nd.textContent=name||'Swimmer';
-  Object.keys(PR_EVENTS).forEach(s=>buildPRGrid(s));
+  const badPR=Object.keys(PR_EVENTS).map(s=>buildPRGrid(s)).some(Boolean);
+  prHint(badPR?'A stored PR is not a valid time (marked) — retype it as ss.ss or m:ss.ss, or clear it.':'');
 }
 // Stored data must never stop the rest of this script (timers, planner,
 // analytics, palette and the nav bundle all initialise further down).
 try{ initProfile(); }catch(e){ console.error('initProfile failed',e); }
+// An import that carried settings reloads the page: show its confirmation again so it can be re-read.
+try{ const _im=sessionStorage.getItem('tl_import_notice'); if(_im){ sessionStorage.removeItem('tl_import_notice'); tlNotice('profile-notice',_im.slice(0,400),'ok'); } }catch(e){}
 // ─── TRAINING LOG ─────────────────────────────
 // Crash-proof read: renderLog() runs at page load — a single corrupted
 // localStorage entry must never take down the whole site's JavaScript.
@@ -6865,7 +6895,10 @@ function sanitizeLogEntries(list){
     seen.add(id);
     out.push(Object.assign({ id, date }, coerceLogFields(e)));
   });
-  return out.slice(0,LOG_MAX);
+  // Over the cap, keep the newest sessions whatever order the file is in (a merged or hand-built file may be
+  // oldest-first); the count left out rides along so Import can say so instead of calling them unreadable.
+  const kept=sortLogEntries(out).slice(0,LOG_MAX); kept.overCap=out.length-kept.length;
+  return kept;
 }
 // A double-tap, a bounced touch or a held Enter fires Save twice: the second call arrives with the fields
 // already cleared and would log a blank duplicate. Ignore a repeat within 600 ms, and refuse an all-blank
@@ -6992,10 +7025,13 @@ function renderLog(){
   // A real list with a heading per session: screen readers hear "list, N items" and can jump between sessions.
   const shown=Math.min(entries.length,Math.max(LOG_PAGE,_logShown));
   container.innerHTML='<ul class="log-list" aria-label="Logged sessions">'+entries.slice(0,shown).map(logEntryHTML).join('')+'</ul>'+logMoreHTML(entries.length,shown);
-  const now=new Date(), thirtyAgo=new Date(now-30*24*60*60*1000), todayISO=logTodayISO(0);
+  // 30 calendar days including today, compared as ISO strings so the window rolls at local
+  // midnight like Analytics does (new Date('YYYY-MM-DD') is UTC midnight, which made the cut
+  // move with the timezone and hold 28–30 days depending on the hour — R6-FUNCTION-03).
+  const todayISO=logTodayISO(0), fromISO=logTodayISO(-29);
   // The form accepts tomorrow (a session logged the night before): a future date is not "last 30 days",
   // and Analytics leaves it out too — the two pages must agree on whether anything has been swum.
-  const recent=entries.filter(e=>new Date(e.date)>=thirtyAgo&&String(e.date||'').slice(0,10)<=todayISO);
+  const recent=entries.filter(e=>{ const d=String(e.date||'').slice(0,10); return d>=fromISO&&d<=todayISO; });
   if(statsEl&&recent.length>0){
     statsEl.style.display='block';
     const totDist=recent.reduce((a,e)=>a+(Number(e.dist)||0),0);
@@ -7005,7 +7041,8 @@ function renderLog(){
     document.getElementById('stat-sessions').textContent=recent.length;
     document.getElementById('stat-km').textContent=totDist.toLocaleString();
     document.getElementById('stat-hours').textContent=(totDur/60).toFixed(1);
-    document.getElementById('stat-avg-effort').textContent=avgEffort.toFixed(1);
+    // Effort is a 1–10 scale: with no rated session there is no average, and Analytics shows "—" too.
+    document.getElementById('stat-avg-effort').textContent=eff.length?avgEffort.toFixed(1):'—';
   } else if(statsEl){
     statsEl.style.display='none'; // history exists but nothing in the window — never show a stale summary
   }
@@ -7780,8 +7817,14 @@ window.tlt_sendoff=function(){
   var startName=clockReading(startSec), pat=soPattern(interval,startSec), lastLeave=rows[rows.length-1].clock;
   var head=reps+' × '+(dist?dist+' ':'')+'on '+fmtClock(interval)+', first one on the '+startName+'.';
   var lines=[head];
-  if(pat) lines.push(pat.length===1?'Every rep leaves on the '+pat[0]+'.':'Leave on: '+listJoin(pat)+' — repeats every '+pat.length+' reps.');
-  else lines.push('The leave times do not fall into a short pattern — read them off the list.');
+  // The pattern comes from the interval alone: with one rep the head line already says when it leaves, and a
+  // set shorter than one cycle lists only the leaves it actually has (never "repeats every 6 reps" for 2 reps).
+  if(reps>1){
+    if(!pat) lines.push('The leave times do not fall into a short pattern — read them off the list.');
+    else if(pat.length===1) lines.push('Every rep leaves on the '+pat[0]+'.');
+    else if(pat.length>=reps) lines.push('Leave on: '+listJoin(pat.slice(0,reps))+'.');
+    else lines.push('Leave on: '+listJoin(pat)+' — repeats every '+pat.length+' reps.');
+  }
   lines.push('Last rep leaves at '+fmtClock(lastLeave)+' ('+rows[rows.length-1].reading+'); the set is '+fmtMS(reps*interval)+' long on the interval.');
   var warns=[];
   if(pace){
@@ -7789,7 +7832,7 @@ window.tlt_sendoff=function(){
     if(rest<0) warns.push('Holding '+fmtClock(pace)+' is slower than the interval — you would touch '+fmtClock(-rest)+' after the next send-off. Pick a longer interval or a faster pace.');
     else{
       var fpat=soPattern(interval,startSec+pace);
-      lines.push('Holding '+fmtClock(pace)+': '+fmtClock(rest)+' rest each rep'+(fpat?', touching on '+listJoin(fpat):'')+'. Last touch at '+fmtClock(lastLeave+pace)+' ('+rows[rows.length-1].finishReading+').');
+      lines.push('Holding '+fmtClock(pace)+': '+fmtClock(rest)+' rest each rep'+(fpat?', touching on '+listJoin(fpat.slice(0,reps)):'')+'. Last touch at '+fmtClock(lastLeave+pace)+' ('+rows[rows.length-1].finishReading+').');
     }
   }
   // Faster than the 50 m freestyle world-record average (2.39 m/s from a dive): no repeat from a push is swum at 2.2 m/s.
@@ -8164,6 +8207,9 @@ function onGoalInput(input, immediate){
     return;
   } else {
     input.removeAttribute('aria-invalid'); if (card) card.classList.remove('is-error');
+    // On blur/change, store and show the canonical form ("51.0" → "51.00", "1.52.3" → "1:52.30") — the same
+    // normalisation My PRs applies, so the card, tl_goals and the Split Planner's "Use goal" all agree.
+    if (immediate) { raw = fmtPlain(parseT(raw), false); if (input.value !== raw) input.value = raw; }
     if (!saveGoal(ev, raw)) setErr(errId, 'Could not save — browser storage may be full or blocked.');
     else setErr(errId, '');
   }
@@ -8316,7 +8362,7 @@ function runPredict(){
   setErr('pl-pd-err', '');
   var useFit = (pl$('pl-pd-profile') || {}).value === 'fitted', fit = useFit ? readFit() : null;
   var delta = (fit && fit.stroke === stroke) ? fit.delta : 0;
-  var list = events()[stroke] || [], rows = '', nearestUp = null, nearestDown = null;
+  var list = events()[stroke] || [], rows = '', nearestUp = null, nearestDown = null, anyBelowFloor = false;
   list.forEach(function(target){
     var d2 = evDist(target), pr = readPR(target);
     if (d2 === d1) {
@@ -8326,25 +8372,37 @@ function runPredict(){
     var p = predict(stroke, d1, t, d2, delta); if (!p) return;
     if (d2 > d1 && (!nearestUp || d2 < nearestUp.d)) nearestUp = { d:d2, ev:target, p:p, pr:pr };
     if (d2 < d1 && (!nearestDown || d2 > nearestDown.d)) nearestDown = { d:d2, ev:target, p:p, pr:pr };
-    var c = confidence(p.steps), prCell = '—';
+    var c = confidence(p.steps), prCell = '—', floored = belowFloor(p.best, d2);
+    if (floored) anyBelowFloor = true;
     if (pr) {
-      var pos = pr < p.best ? 'faster than range' : (pr > p.conservative ? 'slower than range' : 'inside range');
+      var pos = (pr < p.best && !floored) ? 'faster than range' : (pr > p.conservative ? 'slower than range' : 'inside range');
       prCell = esc(fmtT(pr)) + '<br><span class="pl-hint">' + pos + '</span>';
     }
-    rows += '<tr><td>' + esc(target) + '</td><td class="num best">' + esc(fmtT(p.best)) + '</td><td class="num typ">' + esc(fmtT(p.typical)) + '</td><td class="num cons">' + esc(fmtT(p.conservative)) + '</td><td class="num">' + prCell + '</td><td><span class="pl-tag ' + c.cls + '">' + c.label + '</span></td></tr>';
+    rows += '<tr><td>' + esc(target) + '</td>' + predCell(p.best, d2, 'best') + predCell(p.typical, d2, 'typ') + predCell(p.conservative, d2, 'cons') + '<td class="num">' + prCell + '</td><td><span class="pl-tag ' + c.cls + '">' + c.label + '</span></td></tr>';
   });
   var profileNote = delta ? '<span class="pl-tag info">Fitted profile Δ ' + fmtExpDelta(delta) + '</span>' : '<span class="pl-tag dim">Typical profile</span>';
   var html = '<div class="pl-pred-head"><h5>FROM ' + esc(ev) + ' ' + esc(fmtT(t)) + '</h5>' + profileNote + '</div>' +
     '<div class="table-wrap" style="margin-top:0.5rem"><table class="data-table"><caption class="sr-only">Predicted times from ' + esc(ev) + '</caption><thead><tr><th scope="col">Event</th><th scope="col">Fastest plausible</th><th scope="col">Typical</th><th scope="col">Conservative</th><th scope="col">Your PR</th><th scope="col">Confidence</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
-    '<p class="pl-hint" style="margin-top:0.5rem">Fastest plausible / conservative use the low and high exponent for every step. Confidence: High = one step on the event ladder, Medium = two, Low = three or more. Same course as the input time.</p>' +
+    '<p class="pl-hint" style="margin-top:0.5rem">Fastest plausible / conservative use the low and high exponent for every step. Confidence: High = one step on the event ladder, Medium = two, Low = three or more. Same course as the input time.' +
+    (anyBelowFloor ? ' <strong>&lt; WR</strong> = under ' + PACE_FLOOR + ' s per 100, faster than any world record: the ladder breaks down over that many steps, so read those rows as "faster than the model can see", not as a time.' : '') + '</p>' +
     renderInterpretation(stroke, ev, d1, t, nearestUp, nearestDown, delta);
   out.innerHTML = html;
   plSyncHeadings();
 }
+var PACE_FLOOR = 34;   // s per 100: clears every world record in every course (SCY 50 free is ~17.6, i.e. 35.2 per 100)
+// The ladder is a power law that keeps going where no swimmer can: three steps down from a 1500
+// it offers a 50 under the world record. A predicted time under the input floor is shown as
+// "< WR", never as a plausible target (R6-FUNCTION-08).
+function belowFloor(sec, dist){ return sec / (dist / 100) < PACE_FLOOR; }
+function predCell(sec, dist, cls){
+  return belowFloor(sec, dist)
+    ? '<td class="num ' + cls + '"><abbr title="Under ' + PACE_FLOOR + ' s per 100 — faster than any world record">&lt; WR</abbr></td>'
+    : '<td class="num ' + cls + '">' + esc(fmtT(sec)) + '</td>';
+}
 function sanityPace(dist, t){
   var per100 = t / (dist / 100);
   // 34 s/100 clears every record in every course (SCY 50 free is ~17.6, i.e. 35.2 per 100).
-  if (per100 < 34) return 'That works out to under 34 s per 100 — faster than any world record in any course. Check the distance and time.';
+  if (per100 < PACE_FLOOR) return 'That works out to under ' + PACE_FLOOR + ' s per 100 — faster than any world record in any course. Check the distance and time.';
   if (per100 > 240) return 'That works out to over 4 minutes per 100 — check the distance and time.';
   return '';
 }
@@ -8366,8 +8424,10 @@ function renderInterpretation(stroke, ev, d1, t, up, down, delta){
     } else {
       ps.push('Add a ' + esc(up.ev) + ' PR on <a href="#profile">My PRs</a> to see which side of the range you sit on.');
     }
+  } else if (belowFloor(down.p.typical, down.d)) {
+    ps.push('Your <strong>' + esc(ev) + ' of ' + esc(fmtT(t)) + '</strong> is faster than the ladder can convert to a ' + esc(down.ev) + ': the typical prediction lands under ' + PACE_FLOOR + ' s per 100, faster than any world record. Check the distance, time and course — or fit your own profile from two of your swims.');
   } else {
-    ps.push('Your <strong>' + esc(ev) + ' of ' + esc(fmtT(t)) + '</strong> is consistent with a <strong>' + esc(down.ev) + ' around ' + esc(fmtT(down.p.typical)) + '</strong> (' + esc(fmtT(down.p.best)) + '–' + esc(fmtT(down.p.conservative)) + '). Predicting downward assumes the shorter race gets the same start and turn quality; a weak start shows up here first.');
+    ps.push('Your <strong>' + esc(ev) + ' of ' + esc(fmtT(t)) + '</strong> is consistent with a <strong>' + esc(down.ev) + ' around ' + esc(fmtT(down.p.typical)) + '</strong> (' + (belowFloor(down.p.best, down.d) ? '&lt; WR' : esc(fmtT(down.p.best))) + '–' + esc(fmtT(down.p.conservative)) + '). Predicting downward assumes the shorter race gets the same start and turn quality; a weak start shows up here first.');
     if (down.pr) ps.push('Your actual ' + esc(down.ev) + ' PR is <strong>' + esc(fmtT(down.pr)) + '</strong> — ' + (down.pr < down.p.best ? 'faster than the range: the ' + esc(down.ev) + ' is the stronger event and the ' + esc(ev) + ' likely has room' : (down.pr > down.p.conservative ? 'slower than the range: raw speed and the start are the likely limiters' : 'inside the range')) + '.');
   }
   if (bTyp) ps.push('Model detail: this step uses a typical exponent of ' + bTyp.toFixed(3) + (delta ? ' shifted by your fitted Δ ' + fmtExpDelta(delta) : '') + ', so the time scales by (' + target.d + '/' + d1 + ')<sup>' + (bTyp + (delta || 0)).toFixed(3) + '</sup> = ×' + Math.pow(ratio, bTyp + (delta || 0)).toFixed(3) + '. It cannot see your stroke count, underwaters, or training age — treat it as a conversation starter with your coach, not a target.');
@@ -8695,6 +8755,7 @@ function renderPatternTable(){
 // TAB 4 — MEET COUNTDOWN
 // ═══════════════════════════════════════════════════════════════════════
 var TAPER_LABEL = { sprint:'Sprint taper (14–21 days)', distance:'Distance taper (7–14 days)' };
+var MEET_RANGE_DAYS = 731;   // a meet is saved only within two years of today, either way
 function parseISODate(s){
   var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || '')); if (!m) return null;
   var d = new Date(+m[1], +m[2] - 1, +m[3]);
@@ -8768,6 +8829,11 @@ function saveMeet(){
   if (!date) { setErr('pl-mt-status', 'Enter the first day of the meet.'); return; }
   if (!parseISODate(date)) { setErr('pl-mt-status', 'That date is not valid.'); return; }
   if (date2 && !parseISODate(date2)) { setErr('pl-mt-status', 'The second meet date is not valid.'); return; }
+  // A mistyped year (1999, 2099) is the only way to get a five-digit countdown, and the taper phase
+  // and checkpoints mean nothing that far out — bound both meets like every other date on the site.
+  var farOff = function(d){ var n = daysUntil(d); return n === null || Math.abs(n) > MEET_RANGE_DAYS; };
+  if (farOff(date)) { setErr('pl-mt-status', 'Check the year — meets are planned within two years of today.'); return; }
+  if (date2 && farOff(date2)) { setErr('pl-mt-status', 'Check the second meet\'s year — meets are planned within two years of today.'); return; }
   if (name2 && !date2) { setErr('pl-mt-status', 'Add a date for the second meet, or clear its name.'); return; }
   var ok = lsPut(KEY_MEET, JSON.stringify({ v:1, name:name, date:date, course:course, taper:taper, name2:name2, date2:date2 }));
   var summary = renderMeet();
@@ -8783,6 +8849,9 @@ function fillMeetForm(){
   var m = readMeet();
   var set = function(id, v){ var el = pl$(id); if (el) el.value = v; };
   set('pl-mt-name', m.name); set('pl-mt-date', m.date); set('pl-mt-course', m.course); set('pl-mt-taper', m.taper); set('pl-mt-name2', m.name2); set('pl-mt-date2', m.date2);
+  // Native pickers get the same two-year bounds saveMeet enforces, so a wrong year is caught before Save.
+  var n = new Date(), t = n.getFullYear() + '-' + (n.getMonth() < 9 ? '0' : '') + (n.getMonth() + 1) + '-' + (n.getDate() < 10 ? '0' : '') + n.getDate();
+  ['pl-mt-date', 'pl-mt-date2'].forEach(function(id){ var el = pl$(id); if (el) { el.min = addDays(t, -MEET_RANGE_DAYS); el.max = addDays(t, MEET_RANGE_DAYS); } });
 }
 // Writes only when the markup changed: renderMeet runs on every planner visit, tab return and
 // midnight tick, and an unchanged card must not flicker or re-read. Returns a one-line summary
@@ -8802,10 +8871,10 @@ function renderMeet(){
   if (!first) { setMeetHtml(card, 'card', ''); setMeetHtml(cps, 'cps', ''); return ''; }
   var days = first.days, tw = taperWindow(days, m.taper), name = first.name === 'Meet' || first.name === 'Second meet' ? 'Next meet' : first.name;
   var cls = days < 0 ? ' past' : (days === 0 ? ' today' : '');
-  var big = days < 0 ? String(-days) : String(days);
+  var big = Math.abs(days).toLocaleString();
   var lbl = days < 0 ? (days === -1 ? 'day ago' : 'days ago') : (days === 0 ? 'race day' : (days === 1 ? 'day to go' : 'days to go'));
   var wk = Math.floor(days / 7), wd = days % 7;
-  var weeks = days > 13 ? wk + (wk === 1 ? ' week' : ' weeks') + (wd ? ' ' + wd + (wd === 1 ? ' day' : ' days') : '') : '';
+  var weeks = days > 13 ? wk.toLocaleString() + (wk === 1 ? ' week' : ' weeks') + (wd ? ' ' + wd + (wd === 1 ? ' day' : ' days') : '') : '';
   var second = '';
   if (other) {
     var d2 = other.days, gap = daysUntil(other.date, parseISODate(first.date));
@@ -8819,7 +8888,7 @@ function renderMeet(){
     second + '</div></div>');
   setMeetHtml(cps, 'cps', renderCheckpoints({ name:name, date:first.date }, days));
   plSyncHeadings();
-  return name + ': ' + big + ' ' + lbl + (tw ? ' — ' + tw.phase : '') + '.';
+  return name + ': ' + (days === 0 ? lbl : big + ' ' + lbl) + (tw ? ' — ' + tw.phase : '') + '.';   // "race day", never "0 race day"
 }
 function renderCheckpoints(m, days){
   if (days < 0) return '';
@@ -8981,7 +9050,8 @@ function dayIndex(d){ return (d.getDay() + 6) % 7; } // Mon=0 … Sun=6
 function weeksBetween(later, earlier){ return Math.round((later - earlier) / (7 * DAY)); }
 function fmtInt(n){ return Math.round(n).toLocaleString(); }
 function fmtDec(n, dp){ return (Math.round(n * Math.pow(10, dp)) / Math.pow(10, dp)).toFixed(dp); }
-function fmtSigned(p){ return (p > 0 ? '+' : (p < 0 ? '−' : '')) + Math.abs(Math.round(p)) + '%'; }
+// Round before choosing the sign so a −0.2 % week reads "0%", never "−0%" (R6-FUNCTION-04).
+function fmtSigned(p){ var r = Math.round(p) || 0; return (r > 0 ? '+' : (r < 0 ? '−' : '')) + Math.abs(r) + '%'; }
 function anFmtDate(d, opts){
   try { return d.toLocaleDateString(undefined, opts || { month:'short', day:'numeric' }); } catch (e) { return ymd(d); }
 }
@@ -9304,7 +9374,7 @@ function renderSummary(m){
   var dayName = anFmtDate(m.today, { weekday:'short' });
   var deltaRow = function(label, cur, ref){
     if (!(ref > 0)) return '<div><span>' + label + '</span><strong>—</strong></div>';
-    var p = (cur - ref) / ref * 100, cls = p > 0 ? 'up' : (p < 0 ? 'down' : '');
+    var p = (cur - ref) / ref * 100, r = Math.round(p) || 0, cls = r > 0 ? 'up' : (r < 0 ? 'down' : '');  // colour from the rounded figure: a flat week is not a decline
     return '<div><span>' + label + '</span><strong class="' + cls + '">' + fmtInt(ref) + ' (' + fmtSigned(p) + ')</strong></div>';
   };
   var card = function(title, range, big, rows){
@@ -10070,6 +10140,7 @@ window.tl_an_debug = {
     iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
     iframe.setAttribute('width', '100%');
     iframe.setAttribute('height', '100%');
+    restoreOthers(null);                       // one player at a time: never two audio tracks (R6-FUNCTION-09)
     facade.parentNode.replaceChild(iframe, facade);
     if (players) players.set(iframe, facade);
     try { iframe.focus({ preventScroll: true }); } catch (e) { try { iframe.focus(); } catch (e2) {} }
@@ -10079,6 +10150,24 @@ window.tl_an_debug = {
   function isHidden(el) {
     if (!el || !document.contains(el)) return true;
     return typeof el.getClientRects === 'function' && el.getClientRects().length === 0;
+  }
+
+  // Every live player except `keep` goes back to its facade (a second tap must not start a second video
+  // while the first keeps playing; the facade is the same element the swimmer tapped, so a replay is one tap).
+  function restoreOthers(keep) {
+    if (!players) return 0;
+    var n = 0;
+    var list = document.querySelectorAll('iframe.yt-lite-player');
+    for (var i = 0; i < list.length; i++) {
+      var iframe = list[i];
+      if (iframe === keep) continue;
+      var facade = players.get(iframe);
+      if (!facade || !iframe.parentNode) continue;
+      iframe.parentNode.replaceChild(facade, iframe);
+      players.delete(iframe);
+      n++;
+    }
+    return n;
   }
 
   // Any player inside a hidden page/tab panel goes back to its facade.
@@ -10150,7 +10239,8 @@ window.tl_an_debug = {
 // enclosing tab, scrolls the target into view and rings it for 1.5 s.
 // Public API (all idempotent, all safe to call before the markup exists):
 //   window.initPalette()          — wires listeners; the integrator calls it on DOMContentLoaded
-//   window.openPalette(opts)      — opts.query pre-fills the box
+//   window.openPalette(opts)      — opts.query pre-fills the box; opts.opener names the
+//                                   control focus returns to (defaults to activeElement)
 //   window.closePalette()         — returns focus to the element that opened it
 //   window.togglePalette()
 // Storage: tl_recent_search (JSON array of the last 8 selected result keys).
@@ -10818,7 +10908,9 @@ window.tl_an_debug = {
     if (!root || !inp || authGateOpen()) return;
     if (state.open){ inp.focus(); inp.select(); return; }
     if (typeof window.closeNavDrawer === 'function') window.closeNavDrawer();   // one body-scroll lock at a time: never stack the drawer's under the palette's
-    state.opener = document.activeElement;
+    // The phone drawer opens the palette from a row that is parked (display:none) by the
+    // time it closes, so callers may name a control that stays visible (R6-FUNCTION-01).
+    state.opener = (opts && opts.opener && typeof opts.opener.focus === 'function') ? opts.opener : document.activeElement;
     ensureIndex();
     root.hidden = false;
     state.open = true;
@@ -10840,7 +10932,16 @@ window.tl_an_debug = {
     unlockScroll();
     setPalInert(false);
     var op = state.opener; state.opener = null;
-    if (restoreFocus !== false && op && op !== document.body && typeof op.focus === 'function' && document.contains(op)){
+    if (restoreFocus === false) return;
+    // Never hand focus to hidden UI: if the opener is gone or not rendered (a parked drawer
+    // row, a link on a page that has since been hidden) fall back to a visible nav control,
+    // then to the page itself, so Tab never restarts from the top of the document.
+    var visible = function(el){ return !!(el && el !== document.body && typeof el.focus === 'function' && document.contains(el) && el.getClientRects().length && !el.hidden); };
+    if (!visible(op)){
+      op = visible($('nav-menu-btn')) ? $('nav-menu-btn') : (visible($('nav-search-btn')) ? $('nav-search-btn') : $('main'));
+      if (op && op.id === 'main' && !op.hasAttribute('tabindex')) op.setAttribute('tabindex', '-1');
+    }
+    if (op && typeof op.focus === 'function'){
       try { op.focus({ preventScroll: true }); } catch(e){ try { op.focus(); } catch(e2){} }
     }
   };
@@ -11818,7 +11919,9 @@ if (window.__TL_TEST__ === true){
     if (t.closest('#tl-nav-search')) {
       e.preventDefault();
       closeDrawer(false);
-      if (typeof window.openPalette === 'function') setTimeout(function(){ window.openPalette(); }, 0);
+      // The search row is inside the drawer that is being parked, so name the hamburger
+      // (always visible at this width) as the control focus returns to when the palette closes.
+      if (typeof window.openPalette === 'function') setTimeout(function(){ window.openPalette({ opener: byId('nav-menu-btn') }); }, 0);
       return;
     }
     var gb = t.closest('.nav-group-btn');
