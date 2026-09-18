@@ -2075,7 +2075,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="legend-item"><div class="legend-dot" style="background:#4488ff"></div>Lift (vertical support)</div>
     <div class="legend-item"><div class="legend-dot" style="background:#ffaa00"></div>Net Force (+ accelerating / − decelerating)</div>
   </div>
-  <p style="font-size:0.7rem;color:var(--white4);margin-top:0.5rem;font-family:var(--fm)">Force and velocity values are illustrative teaching approximations, not measured data — glide-phase drag in particular is shown well below measured passive drag (about 50–70 N at 2 m/s) so the propulsive phases stay readable. Efficiency is an illustrative economy index — the share of a phase's effort that becomes forward motion, so a passive streamline reads highest — not measured propelling efficiency. Lift here is the vertical support the stroke and kick give the body (it keeps the hips high), shown separately from thrust — not the lift component of the hand force that propulsion papers describe.</p>
+  <p style="font-size:0.7rem;color:var(--white4);margin-top:0.5rem;font-family:var(--fm)">Force and velocity values are illustrative teaching approximations, not measured data — glide-phase drag in particular is shown well below measured passive drag (about 50–70 N at 2 m/s) so the propulsive phases stay readable. Efficiency is an illustrative economy index — the share of a phase's effort that becomes forward motion, so a passive streamline reads highest — not measured propelling efficiency. Lift here is the vertical support the stroke and kick give the body (it keeps the hips high), shown separately from thrust — not the lift component of the hand force that propulsion papers describe. The numbers are keyed to an elite male swimmer; the female model shares them — elite women swim about 7–10% slower at the same technique.</p>
   <div id="viz-info-panel" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r12)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
       <h3 id="viz-phase-name" style="font-family:var(--fh);font-weight:400;font-size:1.4rem;letter-spacing:1px;color:var(--cyan)">Select a stroke</h3>
@@ -2119,6 +2119,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         </div>
         <button class="btn-sm btn-primary" id="viz-gen-btn" onclick="generateVisualization()">Generate Analysis <span aria-hidden="true">✦</span></button>
         <p class="form-notice" id="viz-notice" role="alert" hidden></p>
+        <p class="gen-caution">AI-generated from general biomechanics knowledge — angles, depths and forces are typical values, not measurements of you or of the lab above; check anything you act on with your coach.</p>
       </div>
       <div class="imggen-result" id="viz-result">
         <div class="imggen-placeholder">
@@ -2134,7 +2135,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not coaching advice. The lab's forces are teaching approximations and the AI analysis can be wrong; check technique changes with your coach.</p></div></footer>
 </div>
 <!-- TECHNIQUE PAGE -->
 <div class="page" id="page-technique">
@@ -2154,7 +2155,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel active" id="t-fr">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>ENTRY & HIGH ELBOW CATCH</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Hand enters narrow (inside shoulder line) at 10–15° downward. The high elbow catch is the single highest-ROI skill in swimming. Elbow rises and flares outward while wrist presses down, creating a large vertical forearm surface against still water.</p>
+    <div class="acc-body open"><p>Hand enters in line with the shoulder — between the shoulder line and the head, never across the centreline — at 10–15° downward. The high elbow catch is the single highest-ROI skill in swimming. Elbow rises and flares outward while wrist presses down, creating a large vertical forearm surface against still water.</p>
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Cue: "Reach around a barrel." Elbow sets high and wide before the hand moves back at all.</div>
     <dl class="key-grid">
       <div class="key-point"><dt class="kp-label">Entry angle</dt><dd>10–15° below horizontal.</dd></div>
@@ -2190,7 +2191,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="t-fly">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>UNDULATION — THE WAVE FROM CHEST TO FEET</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Butterfly is wave-driven, not arm-driven. The movement: chest presses DOWN → hips rise → feet drive DOWN. Hip amplitude: about 10–20 cm — the wave grows toward the feet (toes 45–60 cm).</p>
+    <div class="acc-body open"><p>Butterfly is wave-driven, not arm-driven. The movement: chest presses DOWN → hips rise → feet drive DOWN. Hip amplitude: about 10–20 cm — the wave grows toward the feet (toes 45–60 cm — larger than the underwater kick because the surface kick also drives the body wave).</p>
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Cue: "Chest DOWN first — everything else follows."</div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>2-2-2 DRILL & ONE-ARM FLY</h4><span class="chevron">▾</span></div>
     <div class="acc-body"><p>2-2-2 drill: 2 right-arm strokes, 2 left-arm strokes, 2 full butterfly strokes. Isolates each side's pull pattern and makes bilateral asymmetries obvious immediately.</p><p>One-arm fly: the full body wave and both kicks with one arm stroking and the other extended in front (breathe to the side or to the front), 25 m on each arm — it isolates the kick timing against the pull and shows which side's catch collapses.</p></div></div>
@@ -2201,7 +2202,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Every rep is a race simulation. Count kicks per 15 m weekly.</div>
     <dl class="key-grid">
       <div class="key-point"><dt class="kp-label">Streamline</dt><dd>Hands stacked dominant-on-top, arms past ears, core rigid.</dd></div>
-      <div class="key-point"><dt class="kp-label">Kick amplitude</dt><dd>About 45–55 cm toe-to-toe at the feet (the hips move only ~15 cm). Hip-driven.</dd></div>
+      <div class="key-point"><dt class="kp-label">Kick amplitude</dt><dd>About 40–50 cm toe-to-toe at the feet (0.45 ± 0.06 m in elite sprinters; the hips move only ~15 cm). Hip-driven.</dd></div>
       <div class="key-point"><dt class="kp-label">Swim depth</dt><dd>0.5–0.6 m below surface.</dd></div>
       <div class="key-point"><dt class="kp-label">Elite rate</dt><dd>About 1.9 Hz on average at race speed (≈115 kicks/min), with the fastest sprinters at 2.0–2.5 Hz (120–150). Rate, not amplitude, is what rises with speed.</dd></div>
     </dl></div></div>
@@ -2326,7 +2327,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-speed">
-    <div class="warn-box">Speed work is Zone 4–5. <strong>Full recovery mandatory — 2–5 min between efforts, longer for longer reps.</strong></div>
+    <div class="warn-box">Speed work is Zone 5 — alactic speed and lactate production, the two kinds on the Zones page. <strong>Full recovery mandatory — 2–5 min between efforts, longer for longer reps.</strong></div>
     <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Set</th><th scope="col" role="columnheader">Details</th><th scope="col" role="columnheader">Purpose</th></tr></thead><tbody role="rowgroup">
       <tr role="row"><td role="cell" data-label="Set">10×25 Sprint</td><td role="cell" data-label="Details">Full rest 2–3 min · max effort each rep</td><td role="cell" data-label="Purpose"><span class="ptag">Pure Velocity</span>Maximum neuromuscular output.</td></tr>
       <tr role="row"><td role="cell" data-label="Set">8×50 Race Pace</td><td role="cell" data-label="Details">Target 100 race pace · 3–4 min rest</td><td role="cell" data-label="Purpose"><span class="ptag">Race-Pace Specificity</span>Trains exact neuromuscular patterns.</td></tr>
@@ -2349,7 +2350,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="dl-card"><h4><span class="dl-day">Day 3 — Thursday</span> EXPLOSIVE POWER</h4><ul>
       <li><span class="reps">4×4</span>Box Jumps</li><li><span class="reps">4×6</span>Hang Power Clean</li><li><span class="reps">3×8</span>Lat Pulldown + Pause</li><li><span class="reps">3×12</span>Hip Thrust</li><li><span class="reps">3×15</span>Serratus Punch</li></ul></div>
     <div class="dl-card"><h4><span class="dl-day">Day 4 — Friday</span> SHOULDER HEALTH</h4><ul>
-      <li><span class="reps">3×15</span>Sidelying External Rotation</li><li><span class="reps">3×12</span>Y-T-W-L on Incline</li><li><span class="reps">3×30 s</span>Sleeper Stretch (for GIRD — limited internal rotation)</li><li><span class="reps">3×20</span>Ankle Circles + Toe Spreads</li></ul></div>
+      <li><span class="reps">3×15</span>Sidelying External Rotation</li><li><span class="reps">3×12</span>Y-T-W-L on Incline</li><li><span class="reps">3×30 s</span>Cross-body stretch — sleeper stretch only if a coach or physio has measured limited internal rotation (GIRD); skip it if your shoulders are loose</li><li><span class="reps">3×20</span>Ankle Circles + Toe Spreads</li></ul></div>
     <div class="dl-card"><h4><span class="dl-day">Daily</span> MOBILITY ROUTINE</h4><ul>
       <li><span class="reps">2 min</span>Ankle Plantarflexion Loading</li><li><span class="reps">2 min</span>Thoracic Rotation</li><li><span class="reps">3 min</span>Shoulder CARs</li><li><span class="reps">1 min</span>Hip 90/90 Switches</li></ul></div>
   </div>
@@ -2407,8 +2408,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel active" id="c-golf">
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>GOLF SCORE CALCULATOR</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label>50 <span class="th-unit">m</span> Split <span class="th-unit">(seconds)</span></label><input class="form-input" id="golf-split" enterkeyhint="done" type="number" step="any" placeholder="e.g. 32" min="20.9" max="120"></div>
-        <div class="form-group" style="margin-bottom:1rem"><label>Stroke Count <span class="th-unit">(per 50 m — each arm in free/back, one per cycle in fly/breast)</span></label><input class="form-input" id="golf-strokes" enterkeyhint="done" type="number" placeholder="e.g. 28" min="8" max="80"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>50 Split <span class="th-unit">(seconds — one length of a 50 m pool, or two of a 25 m/yd pool)</span></label><input class="form-input" id="golf-split" enterkeyhint="done" type="number" step="any" placeholder="e.g. 32" min="20.9" max="120"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Stroke Count <span class="th-unit">(per 50 — each arm in free/back, one per cycle in fly/breast)</span></label><input class="form-input" id="golf-strokes" enterkeyhint="done" type="number" placeholder="e.g. 28" min="8" max="80"></div>
         <button class="calc-btn" onclick="calcGolf()">Calculate <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="golf-notice" role="alert" hidden></p>
         <div class="calc-result" id="golf-result" aria-live="polite" aria-atomic="true"><div class="big" id="golf-score">—</div><div class="sub">Golf Score</div><p style="margin-top:1rem;font-size:0.84rem;color:var(--white2);line-height:1.7" id="golf-rating"></p></div>
@@ -2422,7 +2423,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
           <tr><td>75–84</td><td>Developing</td></tr>
           <tr><td style="color:var(--red)">85+</td><td>Beginner — major gains available</td></tr>
         </tbody></table></div>
-        <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--white3);line-height:1.7">Bands assume a 50 at 100-pace effort in a 50 m pool with every hand entry counted; fly and breast (one count per cycle) read about 15 lower, so compare those against your own trend.</p>
+        <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--white3);line-height:1.7">Bands assume a 50 at 100-pace effort in a 50 m pool with every hand entry counted; fly and breast (one count per cycle) read about 15 lower, so compare those against your own trend. In a 25-yard pool a 50 reads about 10 points lower (two push-offs, and 8.6% shorter) — compare yard scores with yard scores, or add about 10 before reading the bands.</p>
       </div>
     </div>
   </div>
@@ -2441,12 +2442,12 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="c-pace">
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>TRAINING PACE ZONES</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label>Best 100 <span class="th-unit">m</span> Freestyle <span class="th-unit">(ss.ss or m:ss.ss)</span></label><input class="form-input" id="pace-100" enterkeyhint="done" placeholder="e.g. 55.50 or 1:02.00"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Best 100 Freestyle <span class="th-unit">(m or yd · ss.ss or m:ss.ss)</span></label><input class="form-input" id="pace-100" enterkeyhint="done" placeholder="e.g. 55.50 or 1:02.00"></div>
         <button class="calc-btn" onclick="calcPaceZones()">Calculate Zones <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="pace-notice" role="alert" hidden></p>
       </div>
-      <div class="calc-panel"><h4>ZONE TABLE</h4><div id="pace-result" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Enter your best 100 m time to see your zone paces.</div>
-        <p style="font-size:0.76rem;color:var(--white3);margin-top:1rem;line-height:1.6">Reference paces scaled from your best 100, not lab-tested lactate zones — the drop-off from a best time varies by swimmer, so adjust to feel, heart rate and how the set actually goes. For a measured threshold pace, run the <a href="#analytics" onclick="showPageTab('analytics','an-css');return false;">Critical Swim Speed test in Analytics</a>.</p>
+      <div class="calc-panel"><h4>ZONE TABLE</h4><div id="pace-result" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Enter your best 100 time to see your zone paces.</div>
+        <p style="font-size:0.76rem;color:var(--white3);margin-top:1rem;line-height:1.6">Reference paces scaled from your best 100 (same unit in, same unit out — metres or yards), not lab-tested lactate zones — the drop-off from a best time varies by swimmer, so adjust to feel, heart rate and how the set actually goes. For a measured threshold pace, run the <a href="#analytics" onclick="showPageTab('analytics','an-css');return false;">Critical Swim Speed test in Analytics</a>. The HR counts assume a maximum heart rate near 200 (teens and young adults); if yours is lower — most masters swimmers — multiply each count by (your max ÷ 200).</p>
       </div>
     </div>
   </div>
@@ -2480,7 +2481,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="zone-row"><div class="zone-name">Anaerobic</div><div class="zone-track"><div class="zone-fill z5">Z5 Sprint</div></div><div class="zone-info">8.0+ mmol on lactate work · rest-dependent</div></div>
     </div>
   </div>
-  <div class="info-box" style="margin:1.25rem 0 2rem"><strong>Read the HR numbers as a 10-second count, not bpm.</strong> Stop, find your pulse, count for 10 seconds — "HR 24–28" means 24–28 beats in that 10 seconds (roughly 144–168 bpm). Lactate values are typical ranges from the literature, not measurements of you.</div>
+  <div class="info-box" style="margin:1.25rem 0 2rem"><strong>Read the HR numbers as a 10-second count, not bpm.</strong> Stop, find your pulse, count for 10 seconds — "HR 24–28" means 24–28 beats in that 10 seconds (roughly 144–168 bpm). These counts assume a maximum heart rate near 200 (typical for teens and young adults). If yours is lower — most masters swimmers — scale every band by your own max: multiply the count by (your max ÷ 200), or set zones from a measured max. Lactate values are typical ranges from the literature, not measurements of you.</div>
   <div style="display:flex;flex-direction:column;gap:1.25rem">
     <div class="card"><h3><span class="badge green">Zone 1</span> RECOVERY</h3><p><strong>Lactate:</strong> below 2.0 mmol/L · <strong>HR:</strong> under 24 on the 10-second count · Easy enough to hold a full conversation. Warm-up, cool-down, recovery between hard sets — and a large share of base volume: elite programs log about 40% of their meters here (Hellard et al. 2019). Going too hard in what should be Zone 1 is the most common way swimmers blunt the next quality set.</p></div>
     <div class="card"><h3><span class="badge cyan">Zone 2 — <span style="text-transform:none">AeT</span></span> AEROBIC THRESHOLD</h3><p><strong>Lactate:</strong> 2.0–3.0 mmol/L · <strong>HR:</strong> 24–28 on the 10-second count · <strong>Zones 1–2 together carry 80%+ of total training volume.</strong> Builds mitochondrial density, oxidative enzyme capacity, cardiac output.</p></div>
@@ -2500,9 +2501,12 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:2rem">
     <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
       <div style="width:58px;height:58px;border-radius:50%;background:var(--cyan-dim);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0" aria-hidden="true">🏊</div>
-      <div style="min-width:0;flex:1 1 200px"><h2 id="profile-name-display" style="font-family:var(--fh);font-size:1.75rem;letter-spacing:1px;overflow-wrap:anywhere">Swimmer</h2><p style="font-size:0.8rem;color:var(--white3);margin-top:3px">PRs auto-saved in your browser</p></div>
+      <div style="min-width:0;flex:1 1 200px"><h2 id="profile-name-display" style="font-family:var(--fh);font-size:1.75rem;letter-spacing:1px;overflow-wrap:anywhere">Swimmer</h2><p style="font-size:0.8rem;color:var(--white3);margin-top:3px">PRs auto-saved in your browser <span class="badge cyan" id="pr-course-badge" style="margin:0;padding:2px 8px">SCY</span></p></div>
     </div>
-    <div class="form-group" style="max-width:300px"><label>Swimmer Name</label><input class="form-input" id="profile-name" placeholder="Your name" maxlength="30" autocomplete="name" oninput="saveName()"></div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap">
+      <div class="form-group" style="flex:1 1 200px;max-width:300px"><label>Swimmer Name</label><input class="form-input" id="profile-name" placeholder="Your name" maxlength="30" autocomplete="name" oninput="saveName()"></div>
+      <div class="form-group" style="flex:1 1 200px;max-width:300px"><label for="pr-course">My PRs are in</label><select class="form-select" id="pr-course" onchange="savePRCourse()" aria-describedby="pr-course-help"><option value="SCY">SCY — 25 yd</option><option value="SCM">SCM — 25 m</option><option value="LCM">LCM — 50 m</option></select><p id="pr-course-help" style="font-size:0.74rem;color:var(--white3);margin-top:5px;line-height:1.5">One course for the whole grid — SCY and LCM times differ by 10–14%. The Race Planner reads this and warns when a plan is in a different course.</p></div>
+    </div>
   </div>
   <h2 class="section-eyebrow" style="margin-top:0">Freestyle</h2><div class="pr-grid" id="pr-grid-fr"></div>
   <h2 class="section-eyebrow" style="margin-top:1.5rem">Backstroke</h2><div class="pr-grid" id="pr-grid-bk"></div>
@@ -2578,8 +2582,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel active" id="n-daily"><div class="nutr-grid">
     <div class="nutr-card"><h4><span class="nutr-time">Pre-AM Session (60–90 min before)</span> MORNING FUEL</h4><ul><li>1–2 slices white toast + jam (fast carbs)</li><li>Banana or 200 ml orange juice</li><li>250 ml water on waking</li><li>Avoid high-fat, high-fiber foods</li></ul></div>
-    <div class="nutr-card"><h4><span class="nutr-time">Recovery Window</span> POST-SESSION</h4><ul><li>Within 30 min: ~1 g/kg carbs (45–60 g for a 45–60 kg swimmer, 60–80 g at 60–80 kg) + 0.3 g/kg protein (15–25 g)</li><li>Chocolate milk, Greek yogurt + banana</li><li>1–1.5 L water over the next 2 hours</li></ul></div>
-    <div class="nutr-card"><h4><span class="nutr-time">Pre-PM Session (2–3 h before)</span> AFTERNOON FUEL</h4><ul><li>80–100 g carbs, 30 g protein, low fat</li><li>Chicken + rice + vegetables</li><li>500 ml water in the 2 hours before</li></ul></div>
+    <div class="nutr-card"><h4><span class="nutr-time">Recovery Window</span> POST-SESSION</h4><ul><li>Within 30 min: 1–1.2 g/kg carbs (45–70 g for a 45–60 kg swimmer, 60–95 g at 60–80 kg) + 0.3–0.4 g/kg protein (15–30 g)</li><li>Chocolate milk, Greek yogurt + banana</li><li>1–1.5 L water over the next 2 hours</li></ul></div>
+    <div class="nutr-card"><h4><span class="nutr-time">Pre-PM Session (2–3 h before)</span> AFTERNOON FUEL</h4><ul><li>1.5–2 g/kg carbs (70–90 g at 45 kg, 120–160 g at 80 kg), 0.3–0.4 g/kg protein, low fat</li><li>Chicken + rice + vegetables</li><li>500 ml water in the 2 hours before</li></ul></div>
   </div>
   <div class="divider"></div>
   <div class="grid-2">
@@ -2618,9 +2622,11 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel active" id="r-meetday"><div class="grid-2">
     <div class="content-block"><h4>MEET DAY TIMELINE</h4><ul>
       <li><strong style="color:var(--cyan)">T−3 h:</strong> Pre-meet meal. Carb-heavy, familiar, low fiber/fat.</li>
-      <li><strong style="color:var(--cyan)">T−75 min:</strong> Begin warm-up. Never skip.</li>
+      <li><strong style="color:var(--cyan)">T−75 min:</strong> Begin warm-up (before your <em>first</em> race; use the pool's warm-up slot if it is fixed). Never skip.</li>
       <li><strong style="color:var(--cyan)">T−30 min:</strong> Complete warm-up. Dry off, stay warm, hydrate.</li>
       <li><strong style="color:var(--cyan)">T−10 min:</strong> Behind the blocks. Controlled breathing.</li>
+      <li><strong style="color:var(--cyan)">After each race:</strong> swim down 200–400 easy within 10–15 min (or 5 min of easy walking and arm swings if there is no warm-down pool) — clears lactate faster than sitting.</li>
+      <li><strong style="color:var(--cyan)">Next race more than 45 min away:</strong> re-warm 10–15 min before it — 100–200 easy with 2×15 m builds, or on deck: arm swings, 3–5 jump squats, 20 s of fast arm action. Racing speed drops once the gap from warm-up passes about 45 minutes.</li>
     </ul></div>
     <div class="content-block"><h4>BEHIND THE BLOCKS</h4><ul>
       <li>Focus only on what you control: first 5 strokes, your turn, your pace</li>
@@ -2662,6 +2668,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="section-wrap">
   <div class="section-eyebrow">Peak for Competition</div>
   <h1 class="section-title">TAPER & <span>RECOVERY</span></h1>
+  <p class="section-intro">A full taper is for the one or two championship meets of a season; in-season meets are swum through with at most a couple of easier days.</p>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'tp-protocol')">Taper Protocol</button>
     <button class="tab-btn" onclick="switchTab(this,'tp-recovery')">Recovery Modalities</button>
@@ -2671,17 +2678,18 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="content-block"><h4>SPRINT TAPER (14–21 days)</h4><ul>
       <li>Week 3 before: volume down 20–30%, speed and power work kept</li>
       <li>Week 2 before: volume down 40–50%, race-pace and power touches in every session</li>
-      <li>Week 1 before: volume down 60–70%, short fast work, full rest</li>
+      <li>Week 1 before: volume down 60–70%, short fast work, full rest — keep every session, shorten them</li>
       <li>Day before: 20–30 min easy + 4–6×25 race-pace</li>
       <li>Avoid long rest — 7+ days completely off makes sprinters feel slow</li>
     </ul></div>
     <div class="content-block"><h4>DISTANCE TAPER (7–14 days)</h4><ul>
       <li>Week 2 before: volume down 20–30%, keep one solid aerobic set</li>
-      <li>Week 1 before: volume down 40–50%, keep the daily aerobic rhythm and race-pace 100s/200s</li>
+      <li>Week 1 before: volume down 40–50%, keep the daily aerobic rhythm and race-pace 100s/200s — keep every session, shorten them</li>
       <li>Day before: 30–40 min easy with a few builds</li>
       <li>Trust the process — feeling sluggish mid-taper is normal</li>
     </ul></div>
   </div>
+  <div class="info-box"><strong>Scale it to your load.</strong> These windows are for swimmers on a full senior load (8+ sessions and 40 km+ a week). Age-group and club swimmers on 4–6 sessions have less fatigue to shed and detrain on a three-week cut — they usually taper 3–7 days. Keep the number of practices: the taper is volume per session, not sessions per week (Mujika &amp; Padilla 2003: volume down 41–60%, intensity kept, frequency kept or cut by no more than about 20%).</div>
   <div class="info-box"><strong>Why sprinters taper longer.</strong> Sprinters carry more muscle and need longer to freshen; distance swimmers lose aerobic feel with too little volume, so their taper is shorter and shallower.</div>
   <div class="info-box"><strong>The taper "flat" is normal.</strong> Most swimmers feel terrible mid-taper. This almost always resolves by race day. Do NOT extend training because taper feels bad.</div>
   </div>
@@ -3205,9 +3213,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="metric-card"><span class="val" id="pl-gs-closest">—</span><span class="lbl">Closest goal</span><span class="sub" id="pl-gs-closest-sub">Smallest gap to PR</span></div>
       <div class="metric-card"><span class="val" id="pl-gs-biggest">—</span><span class="lbl">Biggest gap</span><span class="sub" id="pl-gs-biggest-sub">Longest road</span></div>
     </div>
-    <div class="info-box" style="margin-top:0">Current PRs come from <a href="#profile">My PRs</a>. Type a goal as <strong>ss.ss</strong> or <strong>m:ss.ss</strong> — the gap and the average pace you would need per 50 and per 100 update as you type. Quick-fill buttons take a fixed percentage off the PR.</div>
+    <div class="info-box" style="margin-top:0">Current PRs come from <a href="#profile">My PRs</a> <span class="pl-tag info" id="pl-goal-course">PRs in SCY</span>. Goals are in the same course as your PRs. Type a goal as <strong>ss.ss</strong> or <strong>m:ss.ss</strong> — the gap and the average pace you would need per 50 and per 100 update as you type. Quick-fill buttons take a fixed percentage off the PR.</div>
     <div id="pl-goal-groups"></div>
-    <p class="pl-fine">Pace per 50 and per 100 assumes the same course as the PR. World-ranked senior swimmers typically improve about 0.6–1% between seasons; developing swimmers improve more, so use the quick-fill buttons as starting points, not targets. Informational only — not coaching advice. Everything on this page saves in this browser only and is included in the <a href="#profile">My PRs</a> backup.</p>
+    <p class="pl-fine">Pace per 50 and per 100 assumes the same course as the PR (set on My PRs — SCY, SCM or LCM). World-ranked senior swimmers typically improve about 0.6–1% between seasons; developing swimmers improve more, so use the quick-fill buttons as starting points, not targets. Informational only — not coaching advice. Everything on this page saves in this browser only and is included in the <a href="#profile">My PRs</a> backup.</p>
   </div>
 
   <!-- ─── TAB 2: RACE PREDICTOR ─────────────────────────────────────── -->
@@ -3299,7 +3307,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-date">First day of the next meet</label><input class="form-input" id="pl-mt-date" type="date"></div>
         <div class="pl-two">
           <div class="form-group"><label for="pl-mt-course">Course</label><select class="form-select" id="pl-mt-course"><option value="SCY">SCY — 25 yd</option><option value="SCM">SCM — 25 m</option><option value="LCM">LCM — 50 m</option></select></div>
-          <div class="form-group"><label for="pl-mt-taper">Taper type</label><select class="form-select" id="pl-mt-taper"><option value="sprint">Sprint (14–21 days)</option><option value="distance">Distance (7–14 days)</option></select></div>
+          <div class="form-group"><label for="pl-mt-taper">Taper type</label><select class="form-select" id="pl-mt-taper"><option value="sprint">Sprint (14–21 days)</option><option value="distance">Distance (7–14 days)</option><option value="none">In-season meet — train through (no taper)</option></select></div>
         </div>
       </div>
       <div class="calc-panel"><h4>SECOND MEET (OPTIONAL)</h4>
@@ -3489,7 +3497,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
           </div>
         </div>
         <div class="calc-panel"><h4>ELITE FREESTYLE REFERENCE</h4>
-          <p class="an-panel-p">Approximate mid-pool race values for finalists and semi-finalists at the 2019 European Short-Course Championships (25 m pool, 324 swimmers; Staunton, Ruiz-Navarro &amp; Born 2025). Read from published density plots, so treat the bands as rounded. Rate is in cycles per minute; distance per cycle is per two arm strokes.</p>
+          <p class="an-panel-p">Approximate mid-pool race values for the 324 swimmers who raced the individual freestyle events at the 2019 European Short-Course Championships (25 m pool, all rounds; Staunton, Ruiz-Navarro &amp; Born 2025). Read from published density plots, so treat the bands as rounded. Rate is in cycles per minute; distance per cycle is per two arm strokes.</p>
           <div class="table-wrap an-ref-wrap"><table class="data-table an-ref-table"><thead><tr><th scope="col" rowspan="2">Event</th><th scope="colgroup" colspan="2">Men</th><th scope="colgroup" colspan="2">Women</th></tr><tr><th scope="col">Rate</th><th scope="col">Per cycle</th><th scope="col">Rate</th><th scope="col">Per cycle</th></tr></thead><tbody id="an-ref-body"></tbody></table></div>
           <ul class="an-list">
             <li><strong>Measure a mid-pool segment.</strong> Time and count strokes between two marks (for example the 15 m and 45 m lines, or flags to flags). A full length includes the push-off and glide, which inflates distance per stroke.</li>
@@ -5040,7 +5048,7 @@ const STROKES = {
     // third of a second later (R7-DOMAIN-01) — the descs say so.
     phases: [
       { name:'Entry & Extension', dur:0.16, drag:52, thrust:56, lift:16, vel:1.94, eff:66,
-        desc:'Hand enters narrow at 10–15° and extends overhead while the OTHER hand drives through the middle of its pull; that hand finishes past the hip about a third of a second later — front-quadrant timing, not a windmill. Shoulder roll ~30–60° depending on distance — less in a sprint, more at distance pace (the model shows a compact ~22° whole-body roll).',
+        desc:'Hand enters in line with the shoulder at 10–15° and extends overhead while the OTHER hand drives through the middle of its pull; that hand finishes past the hip about a third of a second later — front-quadrant timing, not a windmill. Shoulder roll ~30–60° depending on distance — less in a sprint, more at distance pace (the model shows a compact ~22° whole-body roll).',
         L:{ sh:[170,0,8],   el:[8],   hi:[8,0,0], kn:[8] },
         R:{ sh:[-12,0,-2],  el:[20],  hi:[8,0,0], kn:[8] } },
       { name:'Catch', dur:0.14, drag:46, thrust:28, lift:24, vel:1.84, eff:62,
@@ -6125,7 +6133,23 @@ window.addEventListener('online', function(){ if (!vizLabActive()) return; if (d
 // ─── AI MOTION DIRECTOR — text prompt → reconstructed 3D animation ──────
 // The AI returns joint keyframes in the same schema as the built-in strokes;
 // they're validated/clamped here, then played by the existing engine.
-function validateMotion(obj){
+// AI-supplied physics: the model's drag/thrust are kept (clamped) but its velocities are re-derived from them, so an
+// AI motion's readout obeys the rule every curated stroke and fallback was audited for — velocity moves with the mean
+// net force over each interval and the cycle nets to zero (R8-DOMAIN-07). 75 kg body; the model's cycle-mean velocity
+// is kept, so the numbers stay in its range. Fallback motions are hand-checked and skip this.
+function deriveMotionVel(phases){
+  const n=phases.length, m=75; if(n<2) return phases;
+  const net=phases.map(p=>p.thrust-p.drag), dur=phases.map(p=>p.dur);
+  let T=0, sum=0; for(let i=0;i<n;i++){ const j=(i+1)%n; T+=dur[i]; sum+=dur[i]*(net[i]+net[j])/2; }
+  if(!(T>0)) return phases;
+  const nbar=sum/T; // subtracting the cycle-mean net makes the integrated velocity periodic
+  const v=[0]; for(let i=0;i<n-1;i++) v.push(v[i]+dur[i]*((net[i]-nbar)+(net[i+1]-nbar))/2/m);
+  let vm=0, vd=0; for(let i=0;i<n;i++){ const j=(i+1)%n; vm+=dur[i]*(phases[i].vel+phases[j].vel)/2; vd+=dur[i]*(v[i]+v[j])/2; }
+  const shift=(vm-vd)/T;
+  phases.forEach((p,i)=>{ p.vel=Math.round(Math.max(0,Math.min(3.5,v[i]+shift))*100)/100; });
+  return phases;
+}
+function validateMotion(obj, opts){
   if(!obj || !Array.isArray(obj.phases) || obj.phases.length < 2) throw new Error('bad phases');
   const clamp = (v,lo,hi)=>Math.max(lo,Math.min(hi,Number(v)||0));
   const fixSide = (s)=>({
@@ -6142,6 +6166,7 @@ function validateMotion(obj){
     desc: String(p.desc||'').slice(0,400),
     L: fixSide(p.L), R: fixSide(p.R)
   }));
+  if(opts && opts.deriveVel) deriveMotionVel(phases);
   const out = {
     color: 0xa855f7,
     rollAmp: clamp(obj.rollAmp,0,40),
@@ -6344,8 +6369,8 @@ async function generateMotion(){
     fullText=fullText.replace(/```[a-zA-Z]*\n?/g,'');
     const jsonStart=fullText.indexOf('{'), jsonEnd=fullText.lastIndexOf('}');
     if(jsonStart<0||jsonEnd<=jsonStart) throw new Error('no JSON in response');
-    const motion=validateMotion(JSON.parse(fullText.slice(jsonStart,jsonEnd+1)));
-    loadCustomMotion(motion, statusEl);
+    const motion=validateMotion(JSON.parse(fullText.slice(jsonStart,jsonEnd+1)), { deriveVel:true });
+    loadCustomMotion(motion, statusEl, 'AI estimate — forces illustrative. Reconstructed: ');
   }catch(e){
     guard.end();
     const fb=tryFallbackMotion(desc);
@@ -6376,14 +6401,14 @@ const SEASON_MEETS = [
   { name: 'Toyota National Championships',               start: '2027-06-08', end: '2027-06-12', course: 'LCM',        tag: 'Senior · Indianapolis · expected 2027 Worlds selection meet' },
   { name: 'World Aquatics Championships — Swimming',     start: '2027-07-10', end: '2027-07-18', course: 'LCM',        tag: 'International · Budapest' },
   { name: 'Pan American Games — Swimming',               start: '2027-07-26', end: '2027-07-30', course: 'LCM',        tag: 'International · Lima' },
-  { name: 'TYR Futures Championships',                   start: '2027-07-28', end: '2027-07-31', course: 'LCM',        tag: 'Zoned · host sites not yet published' },
+  { name: 'TYR Futures Championships',                   start: '2027-07-28', end: '2027-07-31', course: 'LCM',        tag: 'Zoned · Carmel, IN · Cary, NC · Minneapolis, MN · Ocala, FL · Sacramento, CA' },
   { name: 'Speedo Junior National Championships',        start: '2027-08-02', end: '2027-08-06', course: 'LCM',        tag: 'Junior · Huntsville, AL' }
 ];
 // Announcements still pending. Rendered as a short "Still to be announced"
 // list under the table so the page says so instead of guessing. `expected`
 // is free text; `url` must be https or the entry renders without a link.
 const SEASON_TBA = [
-  // Futures 2027 sits in the table above with its 'host sites not yet published' tag; nothing is pending twice.
+  // Futures 2027 sits in the table above with its five published host sites; nothing is pending twice.
 ];
 // Season label derived from the data ("2026–27"), so the page copy never
 // goes stale when the array is swapped for the next season.
@@ -6830,7 +6855,7 @@ MAIN SET (Xm):
 COOL-DOWN (Xm):
 TOTAL: Xm
 COACH NOTES:
-Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g. 24–28 = AeT). Volume target: ${volTargets}.`;
+Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g. 24–28 = AeT). Volume target: ${volTargets}.${level==='masters'?' Masters athlete: give HR targets as a percentage of maximum heart rate (e.g. 70-80% max = AeT), not the 10-second counts used for age-group swimmers (max HR measured, or estimated from age).':''}`;
   const guard=aiStreamGuard();
   let fullText=''; // outside the try: a stream that breaks mid-session keeps what arrived
   try{
@@ -6911,7 +6936,7 @@ const VIZ_CONCEPTS={
   'backstroke-entry':'Backstroke pinky-first entry — hand orientation, entry position relative to shoulder, arm extension phase.',
   'breaststroke-kick':'Breaststroke kick sequence — complete circular path, foot position each phase, timing relative to pull, common errors.',
   'butterfly-undulation':'Butterfly undulation wave — chest-down initiation, hip amplitude (~0.1-0.2 m, growing to 0.45-0.6 m at the toes), wave propagation.',
-  'dolphin-kick':'Underwater dolphin kick — hip-driven wave, optimal depth (0.5-0.6m), kick amplitude (~0.45-0.55m toe-to-toe at the feet, hips ~0.15m), kick rate (~1.9 Hz elite mean), ankle role.',
+  'dolphin-kick':'Underwater dolphin kick — hip-driven wave, optimal depth (0.5-0.6m), kick amplitude (~0.40-0.50m toe-to-toe at the feet, 0.45 ± 0.06 m in elite sprinters; hips ~0.15m), kick rate (~1.9 Hz elite mean), ankle role.',
   'flip-turn':'Freestyle flip turn — approach through push-off: speed, flip distance, compactness, foot depth (0.4-0.6m), UW dolphin kick.',
   'streamline':'Perfect streamline — hand stacking, arm past ears, core tension, drag leak testing.',
   'drag-reduction':'Drag reduction strategies — body position, surface area minimization, turbulence avoidance, time savings.',
@@ -6964,7 +6989,7 @@ Use these EXACT section headers with emoji:
 ❌ COMMON ERRORS
 🎯 COACHING CUE
 💪 DRILL PROGRESSION
-Use specific numbers (angles, distances, timing). Premium coaching quality.`;
+Use specific numbers (angles, distances, timing) as typical ranges, not single precise values, and say which figures are typical estimates rather than measurements. Premium coaching quality.`;
   const resultDiv=document.getElementById('viz-result');
   const outputDiv=document.getElementById('viz-output');
   const contentDiv=document.getElementById('viz-content');
@@ -7029,7 +7054,7 @@ function formatVizOutput(text){
       <h3 style="font-family:var(--fh);font-weight:400;font-size:1.2rem;letter-spacing:1px;color:var(--cyan);margin-bottom:0.85rem">${header}</h3>
       <div style="font-size:0.88rem;color:var(--white2);line-height:1.85;white-space:pre-line;font-weight:300">${body}</div>
     </div>`;
-  }).join('');
+  }).join('')+'<p class="gen-caution">AI-generated from general biomechanics knowledge — the figures are typical estimates, not measurements of you or of the lab above; check anything you act on with your coach.</p>';
 }
 // ─── CALCULATORS ──────────────────────────────
 function parseTime(str){
@@ -7068,7 +7093,7 @@ function formatTime(secs){
 // A failed run never leaves the previous result on screen under the error:
 // the result block goes back to its placeholder (or loses .show) before the
 // notice appears, so a stale table can never be read as the answer.
-const CALC_PLACEHOLDERS={'split-result':'Enter your target time above.','pace-result':'Enter your best 100 m time to see your zone paces.','conv-result':'Fill in the form above.'};
+const CALC_PLACEHOLDERS={'split-result':'Enter your target time above.','pace-result':'Enter your best 100 time to see your zone paces.','conv-result':'Fill in the form above.'};
 function calcFail(noticeId,msg,focusId,resultId){
   const r=document.getElementById(resultId);
   if(r){ if(r.classList.contains('calc-result')) r.classList.remove('show'); else if(resultId in CALC_PLACEHOLDERS) r.textContent=CALC_PLACEHOLDERS[resultId]; }
@@ -7085,11 +7110,11 @@ function calcGolf(){
   // tlNotice tracks one field per notice; the second field flagged when both were empty is cleared here (R7-A11Y-16).
   const golfStrokes=document.getElementById('golf-strokes');
   if(golfStrokes.getAttribute('aria-describedby')==='golf-notice'){ golfStrokes.removeAttribute('aria-invalid'); golfStrokes.removeAttribute('aria-describedby'); }
-  if(isNaN(split)&&isNaN(strokes)){calcFail('golf-notice','Enter both values — the 50 m split and the stroke count.','golf-split','golf-result'); golfStrokes.setAttribute('aria-invalid','true'); golfStrokes.setAttribute('aria-describedby','golf-notice'); return;}
-  if(isNaN(split)){calcFail('golf-notice','Enter the 50 m split in seconds.','golf-split','golf-result');return;}
-  if(isNaN(strokes)){calcFail('golf-notice','Enter the stroke count per 50 m.','golf-strokes','golf-result');return;}
-  if(split<GOLF_LIMITS.split[0]||split>GOLF_LIMITS.split[1]){calcFail('golf-notice','50 m split should be between '+GOLF_LIMITS.split[0]+' and '+GOLF_LIMITS.split[1]+' seconds.','golf-split','golf-result');return;}
-  if(strokes<GOLF_LIMITS.strokes[0]||strokes>GOLF_LIMITS.strokes[1]){calcFail('golf-notice','Stroke count should be between '+GOLF_LIMITS.strokes[0]+' and '+GOLF_LIMITS.strokes[1]+' per 50 m.','golf-strokes','golf-result');return;}
+  if(isNaN(split)&&isNaN(strokes)){calcFail('golf-notice','Enter both values — the 50 split and the stroke count.','golf-split','golf-result'); golfStrokes.setAttribute('aria-invalid','true'); golfStrokes.setAttribute('aria-describedby','golf-notice'); return;}
+  if(isNaN(split)){calcFail('golf-notice','Enter the 50 split in seconds.','golf-split','golf-result');return;}
+  if(isNaN(strokes)){calcFail('golf-notice','Enter the stroke count per 50.','golf-strokes','golf-result');return;}
+  if(split<GOLF_LIMITS.split[0]||split>GOLF_LIMITS.split[1]){calcFail('golf-notice','The 50 split should be between '+GOLF_LIMITS.split[0]+' and '+GOLF_LIMITS.split[1]+' seconds.','golf-split','golf-result');return;}
+  if(strokes<GOLF_LIMITS.strokes[0]||strokes>GOLF_LIMITS.strokes[1]){calcFail('golf-notice','Stroke count should be between '+GOLF_LIMITS.strokes[0]+' and '+GOLF_LIMITS.strokes[1]+' per 50.','golf-strokes','golf-result');return;}
   tlNotice('golf-notice','');
   const score=Math.round(split+strokes); // rated on the whole number the swimmer sees (31.6+28 shows "60" and must read as the 60–66 band), so the result never sits in a different band from the guide table
   document.getElementById('golf-score').textContent=String(score);
@@ -7119,8 +7144,11 @@ function calcSplits(){
   let splits=[];
   if(strategy==='surge'){
     // first quarter held back, middle surged, last quarter eased — per-50
-    // weights renormalised so the total still matches the target.
-    const w=[]; for(let i=0;i<n;i++) w.push(i<n/4?1.015:(i<n*3/4?0.99:1.005));
+    // weights renormalised so the total still matches the target. From 400 m up the
+    // finish is not eased: Pacing Science has the lift coming at the end (the 1500
+    // pattern's final third is faster than its middle), so the surge is held home
+    // and lifted a touch (R8-DOMAIN-17).
+    const w=[]; for(let i=0;i<n;i++) w.push(i<n/4?1.015:(i<n*3/4?0.99:(dist>=400?0.985:1.005)));
     const k=(totalSecs+bonus)/w.reduce((a,b)=>a+b*avg,0);
     splits=w.map((x,i)=>x*avg*k-(i===0?bonus:0));
   } else {
@@ -7141,14 +7169,14 @@ function calcSplits(){
   let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">'+escapeHTML(summary)+'</caption><thead><tr><th scope="col">Distance</th><th scope="col">50 <span class="th-unit">m</span> Split</th><th scope="col">Cumulative</th></tr></thead><tbody>';
   let cum=0;
   splits.forEach((s,i)=>{cum+=s; html+=`<tr><td class="tl-nowrap">${(i+1)*50} m</td><td class="tl-nowrap">${formatTime(s)}</td><td class="tl-nowrap">${formatTime(cum)}</td></tr>`;});
-  html+=`</tbody></table></div><div class="info-box" style="margin-top:1rem">Target: <strong>${formatTime(totalSecs)}</strong> &nbsp;·&nbsp; Avg 50 m: <strong>${formatTime(avg)}</strong> &nbsp;·&nbsp; First 50 includes the dive (−${bonus.toFixed(1)} s) &nbsp;·&nbsp; Long-course pattern — use the <a href="#planner" onclick="showPageTab('planner','pl-splits');return false;">Race Planner</a> for short course</div>`;
+  html+=`</tbody></table></div><div class="info-box" style="margin-top:1rem">Target: <strong>${formatTime(totalSecs)}</strong> &nbsp;·&nbsp; Avg 50 m: <strong>${formatTime(avg)}</strong> &nbsp;·&nbsp; First 50 includes the dive (−${bonus.toFixed(1)} s)${strategy==='surge'?(dist>=400?' &nbsp;·&nbsp; Surge middle: first quarter held back, the surge held home with a final lift (distance pacing: even 100s, lift at the end)':' &nbsp;·&nbsp; Surge middle: first quarter held back, middle surged, last quarter eased'):''} &nbsp;·&nbsp; Long-course pattern — use the <a href="#planner" onclick="showPageTab('planner','pl-splits');return false;">Race Planner</a> for short course</div>`;
   document.getElementById('split-result').innerHTML=html;
 }
 function calcPaceZones(){
   const rawPace=String(document.getElementById('pace-100').value||'').trim();
   const t=parseTime(rawPace);
-  if(!t){calcFail('pace-notice',/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100 m time as m:ss.ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100 m time (ss.ss or m:ss.ss).','pace-100','pace-result');return;}
-  if(t<40||t>240){calcFail('pace-notice','A 100 m time between 40 s and 4:00 is expected — check the value (use m:ss for minutes).','pace-100','pace-result');return;}
+  if(!t){calcFail('pace-notice',/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100 time as m:ss.ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100 time (ss.ss or m:ss.ss).','pace-100','pace-result');return;}
+  if(t<40||t>240){calcFail('pace-notice','A 100 time between 40 s and 4:00 is expected — check the value (use m:ss for minutes).','pace-100','pace-result');return;}
   tlNotice('pace-notice','');
   const zones=[ // the Z1–Z5 names are the log's own zone labels
     {name:'Z1 Recovery',pct:[1.35,1.50],color:'#00e599',desc:'HR <24 · <2 mmol'},
@@ -7160,14 +7188,14 @@ function calcPaceZones(){
   // Three columns — the zone (its note beneath the name), per 100, per 50 — with the time ranges never breaking at their dash:
   // four columns in the 376px result panel wrapped every cell ('1:23.70–' / '1:33.00'). On phones (tl-stack) each zone is a
   // card with the two paces side by side; the roles keep table semantics when the cells go display:block.
-  const summary=zones.length+' training pace zones from a best 100 m of '+formatTime(t);
+  const summary=zones.length+' training pace zones from a best 100 of '+formatTime(t);
   if(typeof tlAnnounce==='function') tlAnnounce(summary+' — table below.');
-  let html='<div class="table-wrap"><table class="data-table tl-stack tl-zones" role="table"><caption class="sr-only">'+escapeHTML(summary)+'</caption><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Zone</th><th scope="col" role="columnheader">Per 100 <span class="th-unit">m</span></th><th scope="col" role="columnheader">Per 50 <span class="th-unit">m</span></th></tr></thead><tbody role="rowgroup">';
+  let html='<div class="table-wrap"><table class="data-table tl-stack tl-zones" role="table"><caption class="sr-only">'+escapeHTML(summary)+'</caption><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Zone</th><th scope="col" role="columnheader">Per 100</th><th scope="col" role="columnheader">Per 50</th></tr></thead><tbody role="rowgroup">';
   zones.forEach(z=>{
     const fast=t*z.pct[0], slow=t*z.pct[1];
-    html+=`<tr role="row"><td role="cell" data-label="Zone"><span class="tl-zone-name" style="color:${z.color}">${z.name}</span><span class="tl-zone-note">${z.desc}</span></td><td role="cell" data-label="Per 100 m" class="tl-nowrap">${formatTime(fast)}–${formatTime(slow)}</td><td role="cell" data-label="Per 50 m" class="tl-nowrap">${formatTime(fast/2)}–${formatTime(slow/2)}</td></tr>`;
+    html+=`<tr role="row"><td role="cell" data-label="Zone"><span class="tl-zone-name" style="color:${z.color}">${z.name}</span><span class="tl-zone-note">${z.desc}</span></td><td role="cell" data-label="Per 100" class="tl-nowrap">${formatTime(fast)}–${formatTime(slow)}</td><td role="cell" data-label="Per 50" class="tl-nowrap">${formatTime(fast/2)}–${formatTime(slow/2)}</td></tr>`;
   });
-  html+='</tbody></table></div>';   // the caveat and the Critical Swim Speed pointer are the standing note under this box (R8-COPY-19: it was printed twice)
+  html+='</tbody></table></div>';   // the caveat, the unit note, the HR-max note and the Critical Swim Speed pointer are the standing note under this box (R8-COPY-19: it was printed twice; R8-DOMAIN-01/08 wording lives there)
   document.getElementById('pace-result').innerHTML=html;
 }
 function convertTime(){
@@ -7347,6 +7375,18 @@ function savePR(key,value,el,normalize){
 // The one reader for the stored name: trimmed and capped like saveName()/import write it, so a name saved
 // by a pre-cap version (or written into storage) can never fill the My PRs heading or the analytics summary.
 function readSwimmerName(){ return String(lsGet('swimmer_name')||'').trim().slice(0,30); }
+// The course the PR grid is in (one for the whole grid; the pr_* keys stay course-less). Stored as a small
+// object so it travels in the backup's settings section like the other tl_* keys. Default SCY for the US audience.
+const PR_COURSES=['SCY','SCM','LCM'];
+function readPRCourse(){ try{ const v=JSON.parse(lsGet('tl_pr_course')||'null'); return v&&PR_COURSES.indexOf(v.course)>=0?v.course:'SCY'; }catch(e){ return 'SCY'; } }
+function showPRCourse(){ const c=readPRCourse(); const s=document.getElementById('pr-course'); if(s) s.value=c; const b=document.getElementById('pr-course-badge'); if(b) b.textContent=c; }
+function savePRCourse(){
+  const s=document.getElementById('pr-course'); const c=s&&PR_COURSES.indexOf(s.value)>=0?s.value:'SCY';
+  if(!lsSet('tl_pr_course',JSON.stringify({v:1,course:c}))){ tlNotice('profile-notice','Could not save the PR course — your device storage may be full or blocked.',null,'pr-course'); showPRCourse(); return; }
+  showPRCourse();
+  prHint('PRs marked as '+c+'.');
+  if(window.tlPlanner&&typeof window.tlPlanner.onPRCourseChange==='function'){ try{ window.tlPlanner.onPRCourseChange(); }catch(e){} }
+}
 function saveName(){
   const n=String(document.getElementById('profile-name').value||'').trim().slice(0,30); // Import trims and caps the same way
   let ok=true;
@@ -7374,7 +7414,7 @@ function clearAllPRs(){
 // survive a browser-data clear. Referenced by the Privacy Policy / Terms.
 // Planner / timer / analytics settings travel with the backup (version 2);
 // version-1 files (name + PRs + log only) still import.
-const BACKUP_TL_KEYS=['tl_goals','tl_meet','tl_pred_fit','tl_split_last','tl_tempo','tl_interval','tl_paceclock','tl_an_prefs'];
+const BACKUP_TL_KEYS=['tl_goals','tl_meet','tl_pred_fit','tl_split_last','tl_tempo','tl_interval','tl_paceclock','tl_an_prefs','tl_pr_course'];
 function exportBackup(){
   // The whole body is guarded: where storage access itself throws (Safari "Block all cookies",
   // some webviews) the button must say so instead of silently doing nothing.
@@ -7466,6 +7506,7 @@ function initProfile(){
   if(name!==(lsGet('swimmer_name')||'')){ if(name) lsSet('swimmer_name',name); else lsRemove('swimmer_name'); } // write the capped value back once
   const ni=document.getElementById('profile-name'); if(ni) ni.value=name;
   const nd=document.getElementById('profile-name-display'); if(nd) nd.textContent=name||'Swimmer';
+  showPRCourse();
   const badPR=Object.keys(PR_EVENTS).map(s=>buildPRGrid(s)).some(Boolean);
   prHint(badPR?'A stored PR is not a valid time (marked) — retype it as ss.ss or m:ss.ss, or clear it.':'');
 }
@@ -7800,7 +7841,7 @@ document.addEventListener('visibilitychange',function(){ if(!document.hidden) se
 window.addEventListener('storage',function(e){
   const k=e&&e.key;
   if(k===null||k==='swimiq_log'){ try{ renderLog(); }catch(err){ console.error(err); } }
-  if(k===null||k==='swimmer_name'||(typeof k==='string'&&k.indexOf('pr_')===0)){ try{ initProfile(); }catch(err){ console.error(err); } }
+  if(k===null||k==='swimmer_name'||k==='tl_pr_course'||(typeof k==='string'&&k.indexOf('pr_')===0)){ try{ initProfile(); }catch(err){ console.error(err); } }
 });
 // Delete and "Show more" buttons are delegated (no inline onclick built from stored ids).
 (function(){ const c=document.getElementById('log-entries'); if(!c) return; c.addEventListener('click',function(ev){
@@ -8858,6 +8899,8 @@ function strokeOfEvent(ev){
 }
 function prKey(ev){ return 'pr_' + ev.replace(/ /g, '_'); }
 function readPR(ev){ return parseT(lsGet(prKey(ev)) || ''); }
+// The course the My PRs grid is marked as (tl_pr_course, default SCY): every PR the planner reads is in it.
+function prCourse(){ return typeof window.readPRCourse === 'function' ? window.readPRCourse() : 'SCY'; }
 function readGoals(){ var g = readJSON(KEY_GOALS, {}); return Array.isArray(g) ? {} : g; }
 function goalSeconds(ev){ var g = readGoals(); return parseT(g[ev] || ''); }
 function totalEventCount(){ var n = 0, all = events(); for (var s in all) n += all[s].length; return n; }
@@ -8907,6 +8950,7 @@ function renderGoals(){
     return '<div class="pl-group"><h4 class="section-eyebrow">' + esc(STROKE_NAMES[s]) + '</h4><div class="pl-grid">' +
       all[s].map(function(ev){ return renderGoalCard(ev, goals); }).join('') + '</div></div>';
   }).join('');
+  plSetText('pl-goal-course', 'PRs in ' + prCourse());
   renderGoalSummary();
   plSyncHeadings();
 }
@@ -9073,7 +9117,7 @@ function autoFill(inputId, hintId, ev){
   var inp = pl$(inputId); if (!inp) return;
   if (inp.value && inp.getAttribute('data-auto') !== '1') return; // user typed — leave it
   var pr = ev ? readPR(ev) : null;
-  if (pr) { inp.value = fmtPlain(pr, false); inp.setAttribute('data-auto', '1'); if (hintId) plSetText(hintId, 'Filled from My PRs (' + ev + '). Edit it to test another time.'); }
+  if (pr) { inp.value = fmtPlain(pr, false); inp.setAttribute('data-auto', '1'); if (hintId) plSetText(hintId, 'Filled from My PRs (' + ev + ', ' + prCourse() + '). Edit it to test another time.'); }
   else { if (inp.getAttribute('data-auto') === '1') inp.value = ''; inp.removeAttribute('data-auto'); if (hintId) plSetText(hintId, ev ? 'No PR saved for ' + ev + ' — type a time.' : ''); }
 }
 function syncPredictorSelects(){
@@ -9141,9 +9185,10 @@ function runPredict(){
     rows += '<tr><td>' + esc(target) + '</td>' + predCell(p.best, d2, 'best') + predCell(p.typical, d2, 'typ') + predCell(p.conservative, d2, 'cons') + '<td class="num">' + prCell + '</td><td><span class="pl-tag ' + c.cls + '">' + c.label + '</span></td></tr>';
   });
   var profileNote = delta ? '<span class="pl-tag info">Fitted profile Δ ' + fmtExpDelta(delta) + '</span>' : '<span class="pl-tag dim">Typical profile</span>';
+  var prc = prCourse();
   var html = '<div class="pl-pred-head"><h5>FROM ' + esc(ev) + ' ' + esc(fmtT(t)) + '</h5>' + profileNote + '</div>' +
-    '<div class="table-wrap" style="margin-top:0.5rem"><table class="data-table"><caption class="sr-only">Predicted times from ' + esc(ev) + '</caption><thead><tr><th scope="col">Event</th><th scope="col">Fastest plausible</th><th scope="col">Typical</th><th scope="col">Conservative</th><th scope="col">Your PR</th><th scope="col">Confidence</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
-    '<p class="pl-hint" style="margin-top:0.5rem">Fastest plausible / conservative use the low and high exponent for every step. Confidence: High = one step on the event ladder, Medium = two, Low = three or more. Same course as the input time.' +
+    '<div class="table-wrap" style="margin-top:0.5rem"><table class="data-table"><caption class="sr-only">Predicted times from ' + esc(ev) + '</caption><thead><tr><th scope="col">Event</th><th scope="col">Fastest plausible</th><th scope="col">Typical</th><th scope="col">Conservative</th><th scope="col">Your PR <span class="th-unit">(' + esc(prc) + ')</span></th><th scope="col">Confidence</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<p class="pl-hint" style="margin-top:0.5rem">Fastest plausible / conservative use the low and high exponent for every step. Confidence: High = one step on the event ladder, Medium = two, Low = three or more. Same course as the input time; the PR column is in ' + esc(prc) + ' (set on My PRs), so compare only when the input is too.' +
     (anyBelowFloor ? ' <strong>&lt; WR</strong> = under ' + PACE_FLOOR + ' s per 100, faster than any world record: the ladder breaks down over that many steps, so read those rows as "faster than the model can see", not as a time.' : '') + '</p>' +
     renderInterpretation(stroke, ev, d1, t, nearestUp, nearestDown, delta);
   out.innerHTML = html;
@@ -9298,10 +9343,20 @@ function buildSplits(o){
   else if (usePattern) {
     mode = 'elite';
     var per = N / pat.segs.length;
+    // Per-length mean pace of each segment (the opening segment as swum, i.e. with the dive bonus added back).
+    var segPace = pat.segs.map(function(e, s){ return (T * e / 100 + (s === 0 ? B : 0)) / per; });
     for (var s = 0; s < pat.segs.length; s++) {
-      var S = T * pat.segs[s] / 100;
+      // Lengths inside a segment ramp at the pattern's own slope (central difference of the neighbouring segment paces),
+      // zero-sum within the segment so its share is untouched: in a 25 m/yd pool the fade continues inside each 50
+      // instead of stopping at the segment boundary (R8-DOMAIN-18). IM legs stay even — the step between legs is the
+      // stroke change, not fatigue.
+      var slope = 0;
+      if (per > 1 && !pat.legs) {
+        var lo = Math.max(0, s - 1), hi = Math.min(pat.segs.length - 1, s + 1);
+        slope = (segPace[hi] - segPace[lo]) / ((hi - lo) * per);
+      }
       for (var i = 0; i < per; i++) {
-        var base = (s === 0) ? (S + B) / per : S / per;
+        var base = segPace[s] + slope * (i - (per - 1) / 2);
         if (s === 0 && i === 0) base -= B;
         lengths.push(base);
       }
@@ -9389,14 +9444,15 @@ function useGoalOrPR(){
   var inp = pl$('pl-sp-goal'), src = pl$('pl-sp-goalsrc'); if (!inp) return;
   var ev = evName(stroke, dist);
   if (!ev) { if (src) src.textContent = 'No ' + STROKE_ABBR[stroke] + ' ' + dist + ' event in My PRs — enter a time.'; return; }
-  var g = goalSeconds(ev), pr = readPR(ev);
-  if (g) { inp.value = fmtPlain(g, false); if (src) src.textContent = 'Goal from Goal Times (' + ev + ').' + courseNote(course); }
-  else if (pr) { inp.value = fmtPlain(pr, false); if (src) src.textContent = 'No goal set — using your PR (' + ev + ').' + courseNote(course); }
+  var g = goalSeconds(ev), pr = readPR(ev), prc = prCourse();
+  // Goals and PRs are both in the My PRs course: a 25-yard time dropped into an LCM plan is 10–14% off.
+  var mismatch = course !== prc ? ' Your PRs and goals are ' + prc + ' but this plan is ' + course + ' — convert first (Calculator › Pool Converter) or change the course.' : '';
+  if (g) { inp.value = fmtPlain(g, false); inp.setAttribute('data-src-course', prc); if (src) src.textContent = 'Goal from Goal Times (' + ev + ', ' + prc + ').' + mismatch; }
+  else if (pr) { inp.value = fmtPlain(pr, false); inp.setAttribute('data-src-course', prc); if (src) src.textContent = 'No goal set — using your PR (' + ev + ', ' + prc + ').' + mismatch; }
   else if (src) src.textContent = 'No goal or PR for ' + ev + ' yet.';
 }
 // My PRs and Goal Times store one time per event with no course: a long-course PR dropped into a yards plan
 // gives 25-yd splits ~10% too slow, so both sources and both entry points (the button and "Plan splits →") say so.
-function courseNote(course){ return course === 'SCY' ? ' PRs and goals carry no course — check this time is a yards swim (the Pool Converter on the Calculator page converts LCM/SCM to SCY).' : ''; }
 function runSplits(){
   var out = pl$('pl-sp-out'), cmp = pl$('pl-sp-compare'), copy = pl$('pl-sp-copy'); if (!out) return;
   // Raw strings first: +'' is 0, which would quietly plan four identical 50s with no dive bonus (and remember the zeros).
@@ -9453,6 +9509,7 @@ function renderCompare(r){
   else verdict = '<strong>In line with elite finals.</strong> Your opening segment is within ±' + tol + ' points of the reference share, which is where most championship swims sit.';
   var closing = last > tol ? ' The final segment carries more than the reference — plan to hold form rather than count on a sprint that late.' : (last < -tol ? ' The final segment is lighter than the reference, which means a strong close — make sure the middle can support it.' : '');
   var raw = r.mode === 'elite' ? '' : ' Compared with the swum-length plan, the reference includes the dive in the opening segment, so a perfectly even swim still shows a faster first split.';
+  if (r.mode === 'elite' && !pat.legs && r.N > pat.segs.length) raw += ' Lengths inside each segment ramp at the pattern\'s own slope, so the second length of a 50 is a touch slower than the first.';
   var mapNote = (pat && r.patternKey && r.patternKey.split(' ')[0] !== String(r.dist)) ? ' Reference is the ' + esc(r.patternKey) + ' shape applied to ' + r.dist + ' ' + r.unit + '.' : '';
   return '<div class="pl-compare content-block" style="margin-bottom:0"><h5>YOUR PLAN VS ELITE ' + esc(r.patternKey) + '</h5><div class="pl-compare-sub">Share of total time per segment. Cyan bar = your plan; gold dashed line = elite typical (±' + tol + ').' + mapNote + '</div><div class="pl-bars">' + bars + '</div><p class="pl-verdict">' + verdict + closing + raw + '</p></div>';
 }
@@ -9478,15 +9535,15 @@ function sendToSplits(ev){
   var stroke = strokeOfEvent(ev), dist = evDist(ev); if (!stroke) return;
   var cs = pl$('pl-sp-course'), ss = pl$('pl-sp-stroke'), ds = pl$('pl-sp-dist'), gi = pl$('pl-sp-goal'), st = pl$('pl-sp-strategy');
   if (!cs || !ss || !ds || !gi) return;
-  // Keep the current course if the event exists there; otherwise the first course that has it (100 IM is short-course only).
-  var courses = [cs.value, 'LCM', 'SCM', 'SCY'];
+  // The goal/PR is in the My PRs course, so plan there when the event exists in it; otherwise keep the current
+  // course, then the first course that has it (100 IM is short-course only).
+  var courses = [prCourse(), cs.value, 'LCM', 'SCM', 'SCY'];
   for (var ci = 0; ci < courses.length; ci++) if (courses[ci] in DISTS && distsFor(courses[ci], stroke).indexOf(dist) >= 0) { cs.value = courses[ci]; break; }
   ss.value = stroke; syncDistOptions(); ds.value = String(dist);
   if (st) st.removeAttribute('data-user');
   var fd = pl$('pl-sp-fade'); if (fd) fd.removeAttribute('data-user');
   syncStrategyUI();
-  var g = goalSeconds(ev) || readPR(ev); if (g) gi.value = fmtPlain(g, false);
-  var src = pl$('pl-sp-goalsrc'); if (src) src.textContent = (goalSeconds(ev) ? 'Goal from Goal Times (' + ev + ').' : 'No goal set — using your PR (' + ev + ').') + courseNote(cs.value);
+  useGoalOrPR();   // fills the goal (or PR) with its course and warns if the plan's course differs
   var tab = pl$('pl-tab-splits'); if (tab && typeof window.switchTab === 'function') window.switchTab(tab, 'pl-splits');
   runSplits();
   var h = pl$('pl-sp-heading'); if (h) { try { h.focus({ preventScroll:false }); } catch (e) {} }
@@ -9517,7 +9574,8 @@ function renderPatternTable(){
 // ═══════════════════════════════════════════════════════════════════════
 // TAB 4 — MEET COUNTDOWN
 // ═══════════════════════════════════════════════════════════════════════
-var TAPER_LABEL = { sprint:'Sprint taper (14–21 days)', distance:'Distance taper (7–14 days)' };
+var TAPER_LABEL = { sprint:'Sprint taper (14–21 days)', distance:'Distance taper (7–14 days)', none:'In-season — train through' };
+var TAPER_TYPES = ['sprint', 'distance', 'none'];
 var MEET_RANGE_DAYS = 731;   // a meet is saved only within two years of today, either way
 function parseISODate(s){
   var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || '')); if (!m) return null;
@@ -9546,31 +9604,36 @@ function taperWindow(days, type){
   if (days === null || days === undefined || !isFinite(days)) return null;
   if (days < 0) return { phase:'Meet completed', detail:'This date has passed. Enter the next meet to restart the countdown.', tone:'past' };
   if (days === 0) return { phase:'Race day', detail:'Warm-up, routine, race. Nothing new today — follow the Meet Day timeline on the Race Strategy page.', tone:'race' };
+  if (type === 'none') {
+    // In-season meets are swum through: no volume cut, at most a couple of easier days. A full taper is for the one or two championship meets of a season.
+    if (days > 2) return { phase:'Train through — normal week', detail:'No taper for an in-season meet: normal volume and quality. Ease only the last 1–2 days (short race-pace touches, full rest). Save the full taper for the one or two championship meets of the season.', tone:'train' };
+    return { phase:'Ease off — last 1–2 days', detail:'Normal week done; these last days are lighter — short race-pace touches, full rest, no new work. Sleep, fuel, and rehearse the race plan.', tone:'taper' };
+  }
   if (type === 'distance') {
     if (days > 14) return { phase:'Pre-taper — full training', detail:'More than two weeks out: normal volume and quality. The distance taper begins around 14 days — shorter and shallower than a sprint taper, because aerobic feel fades with too little volume. Lock the event lineup.', tone:'train' };
     if (days > 7) return { phase:'Taper week 2 — volume down 20–30%', detail:'Quality maintained, volume trimmed; keep one solid aerobic set. Last chance for a genuinely hard aerobic set.', tone:'taper' };
-    return { phase:'Taper week 1 — volume down 40–50%', detail:'Keep the daily aerobic rhythm and race-pace 100s/200s. Feeling flat here is normal and resolves by race day. Sleep, fuel, and rehearse the race plan.', tone:'taper' };
+    return { phase:'Taper week 1 — volume down 40–50%', detail:'Keep the daily aerobic rhythm and race-pace 100s/200s. Keep every session — shorten them, do not skip them. Feeling flat here is normal and resolves by race day. Sleep, fuel, and rehearse the race plan.', tone:'taper' };
   }
   if (days > 21) return { phase:'Pre-taper — full training', detail:'More than three weeks out: normal volume and quality. The sprint taper begins around 21 days out. Train normally; lock the event lineup.', tone:'train' };
   if (days > 14) return { phase:'Taper week 3 — volume down 20–30%', detail:'Speed and power work stay in, volume trims. This is the last genuinely heavy week.', tone:'taper' };
   if (days > 7) return { phase:'Taper week 2 — volume down 40–50%', detail:'Race-pace and power touches in every session. Feeling flat in this window is normal and resolves by race day. Do not add training because it feels bad.', tone:'taper' };
-  return { phase:'Taper week 1 — volume down 60–70%', detail:'Short, fast work with full rest. Avoid long rest — 7+ days completely off makes sprinters feel slow. Sleep, fuel, and rehearse the race plan.', tone:'taper' };
+  return { phase:'Taper week 1 — volume down 60–70%', detail:'Short, fast work with full rest. Keep every session — shorten them, do not skip them. Avoid long rest — 7+ days completely off makes sprinters feel slow. Sleep, fuel, and rehearse the race plan.', tone:'taper' };
 }
 var CHECKPOINTS = [
   { d:28, title:'Entries and eligibility', desc:'Confirm entries, qualifying times, and the meet\'s own entry deadline — check the meet information; deadlines vary.' },
-  { d:21, title:'Last big block', desc:'For a sprint taper this is where the final heavy week ends and volume starts down 20–30%. Distance swimmers keep training fully for another week.', link:'#taper', linkText:'Taper protocol' },
-  { d:14, title:'Volume drops', desc:'Taper proper for everyone: sprinters step volume down 40–50%, distance swimmers begin theirs at 20–30% down. Intensity maintained. Start shifting sleep toward race-day wake time.', link:'#taper', linkText:'Taper protocol' },
+  { d:21, taperOnly:true, title:'Last big block', desc:'For a sprint taper this is where the final heavy week ends and volume starts down 20–30%. Distance swimmers keep training fully for another week.', link:'#taper', linkText:'Taper protocol' },
+  { d:14, taperOnly:true, title:'Volume drops', desc:'Taper proper for everyone: sprinters step volume down 40–50%, distance swimmers begin theirs at 20–30% down. Intensity maintained. Start shifting sleep toward race-day wake time.', link:'#taper', linkText:'Taper protocol' },
   { d:10, title:'Sharpen and finalize', desc:'Race-pace work sharpens. Lock the event lineup and write the split plan for each race.', link:'#planner', linkText:'Split Planner', tab:'pl-tab-splits' },
-  { d:7, title:'Final week', desc:'Volume at its lowest — sprinters down 60–70%, distance swimmers 40–50%, with the aerobic rhythm kept. Gear check: two pairs of goggles, spare cap, race suit tried on. Nothing new from here.' },
+  { d:7, title:'Final week', desc:'Volume at its lowest — sprinters down 60–70%, distance swimmers 40–50%, with the aerobic rhythm kept. Keep every practice — shorter, not fewer. Gear check: two pairs of goggles, spare cap, race suit tried on. Nothing new from here.', noneDesc:'Normal training week — no volume cut for an in-season meet; ease only the last day or two. Gear check: two pairs of goggles, spare cap, race suit tried on.' },
   { d:3, title:'Fuel up', desc:'Carbohydrate intake up to 8–10 g/kg on the day before racing (start two days out for a multi-day meet), hydrate steadily, no new foods.', link:'#nutrition', linkText:'Race-day nutrition', pageTab:'n-race' },
   { d:2, title:'Travel and logistics', desc:'Heat sheets, warm-up windows, session times, transport and check-in. Pack the night before you leave.' },
   { d:1, title:'Day before', desc:'20–30 min easy plus 4–6×25 at race pace (distance: 30–40 min easy with a few builds). Early night. Lay out your gear.', link:'#taper', linkText:'Taper protocol' },
-  { d:0, title:'Race day', desc:'Pre-meet meal about 3 h out, warm-up from T−75 min, box breathing behind the blocks, two focus cues at most.', link:'#race', linkText:'Meet-day timeline' }
+  { d:0, title:'Race day', desc:'Pre-meet meal about 3 h out, warm-up from T−75 min before your first race, swim down after each race and re-warm when the next one is more than 45 min away, box breathing behind the blocks, two focus cues at most.', link:'#race', linkText:'Meet-day timeline' }
 ];
 function readMeet(){
   var m = readJSON(KEY_MEET, {}); if (Array.isArray(m)) m = {};
   return { name:String(m.name || '').slice(0, 60), date:parseISODate(m.date) ? m.date : '', course:['SCY','SCM','LCM'].indexOf(m.course) >= 0 ? m.course : 'LCM',
-    taper:m.taper === 'distance' ? 'distance' : 'sprint', name2:String(m.name2 || '').slice(0, 60), date2:parseISODate(m.date2) ? m.date2 : '' };
+    taper:TAPER_TYPES.indexOf(m.taper) >= 0 ? m.taper : 'sprint', name2:String(m.name2 || '').slice(0, 60), date2:parseISODate(m.date2) ? m.date2 : '' };
 }
 // Both meets with day counts, nearest upcoming first (past meets last).
 function meetList(m, now){
@@ -9642,24 +9705,26 @@ function renderMeet(){
   if (other) {
     var d2 = other.days, gap = daysUntil(other.date, parseISODate(first.date));
     second = '<div class="pl-second"><strong>' + esc(other.name) + '</strong> — ' + esc(fmtDateShort(other.date)) + ' · ' + (d2 < 0 ? (-d2) + (d2 === -1 ? ' day ago' : ' days ago') : d2 === 0 ? 'today' : d2 + (d2 === 1 ? ' day to go' : ' days to go')) +
-      (gap !== null && gap > 0 && days >= 0 ? ' · ' + gap + (gap === 1 ? ' day after ' : ' days after ') + esc(name) + (gap <= 14 ? ' — closely spaced meets are usually held, not fully re-tapered; ask your coach how to bridge them' : '') : '') + '</div>';
+      (gap !== null && gap > 0 && days >= 0 ? ' · ' + gap + (gap === 1 ? ' day after ' : ' days after ') + esc(name) + (gap <= 28 && m.taper !== 'none' ? ' — meets this close are usually not both fully tapered: set the taper type to "In-season meet — train through" for ' + esc(name) + ', then re-save with the full taper once it has passed; ask your coach how to bridge them' : '') : '') + '</div>';
   }
   setMeetHtml(card, 'card', '<div class="pl-countdown' + cls + '"><div class="pl-days-wrap"><div class="pl-days">' + big + '</div><div class="pl-days-lbl">' + lbl + '</div></div>' +
     '<div><h2 class="pl-meet-name">' + esc(name) + '</h2><div class="pl-meet-date">' + esc(fmtDate(first.date)) + (weeks ? ' · ' + weeks : '') + '</div>' +
     '<div class="pl-meet-tags"><span class="pl-tag info">' + esc(m.course) + '</span><span class="pl-tag dim">' + esc(TAPER_LABEL[m.taper]) + '</span></div>' +
     (tw ? '<div class="pl-phase"><div class="pl-phase-name">' + esc(tw.phase) + '</div><div class="pl-phase-detail">' + esc(tw.detail) + ' <a href="#taper">Taper page <span aria-hidden="true">→</span></a>' + (days === 0 ? ' <a href="#race">Warm-up timeline <span aria-hidden="true">→</span></a>' : '') + '</div></div>' : '') +
     second + '</div></div>');
-  setMeetHtml(cps, 'cps', renderCheckpoints({ name:name, date:first.date }, days));
+  setMeetHtml(cps, 'cps', renderCheckpoints({ name:name, date:first.date, taper:m.taper }, days));
   plSyncHeadings();
   return name + ': ' + (days === 0 ? lbl : big + ' ' + lbl) + (tw ? ' — ' + tw.phase : '') + '.';   // "race day", never "0 race day"
 }
 function renderCheckpoints(m, days){
   if (days < 0) return '';
-  var items = CHECKPOINTS.map(function(c){
+  var trainThrough = m.taper === 'none';
+  var items = CHECKPOINTS.filter(function(c){ return !(trainThrough && c.taperOnly); }).map(function(c){
+    var desc = trainThrough && c.noneDesc ? c.noneDesc : c.desc;
     var state = days > c.d ? 'upcoming' : (days === c.d ? 'today' : 'done');
     var tag = state === 'today' ? '<span class="pl-tag good">Today</span>' : (state === 'done' ? '<span class="pl-tag dim">Done</span>' : '<span class="pl-tag info">In ' + (days - c.d) + (days - c.d === 1 ? ' day' : ' days') + '</span>');
     var link = c.link ? ' <a href="' + esc(c.link) + '"' + (c.tab ? ' data-tab="' + esc(c.tab) + '"' : '') + (c.pageTab ? ' data-page-tab="' + esc(c.pageTab) + '"' : '') + '>' + esc(c.linkText) + ' <span aria-hidden="true">→</span></a>' : '';
-    return '<li class="' + state + '"><div class="pl-cp-when">' + (c.d === 0 ? 'Race day' : c.d + (c.d === 1 ? ' day out' : ' days out')) + ' · ' + esc(fmtDateShort(addDays(m.date, -c.d))) + ' ' + tag + '</div><div class="pl-cp-title">' + esc(c.title) + '</div><div class="pl-cp-desc">' + esc(c.desc) + link + '</div></li>';
+    return '<li class="' + state + '"><div class="pl-cp-when">' + (c.d === 0 ? 'Race day' : c.d + (c.d === 1 ? ' day out' : ' days out')) + ' · ' + esc(fmtDateShort(addDays(m.date, -c.d))) + ' ' + tag + '</div><div class="pl-cp-title">' + esc(c.title) + '</div><div class="pl-cp-desc">' + esc(desc) + link + '</div></li>';
   }).join('');
   // h2, not h5: the list belongs beside "Next meet", not under "Second meet (optional)" (R8-A11Y-06).
   return '<div class="pl-cp-wrap"><h2>CHECKPOINTS TO ' + esc((m.name || 'THE MEET').toUpperCase()) + '</h2><ul class="pl-timeline" role="list">' + items + '</ul></div>';
@@ -9709,7 +9774,13 @@ function init(){
   syncPredictorSelects();
   renderExpTable();
   // Split planner
-  on('pl-sp-course', 'change', function(){ syncDistOptions(); syncStrategyUI(); });
+  on('pl-sp-course', 'change', function(){
+    // A goal filled from Goal Times / My PRs re-checks its course when the plan's course changes (same event only).
+    var gi = pl$('pl-sp-goal'), ds = pl$('pl-sp-dist'), fromPR = !!(gi && gi.value && gi.getAttribute('data-src-course')), distBefore = ds ? ds.value : '';
+    syncDistOptions(); syncStrategyUI();
+    if (fromPR && ds && ds.value === distBefore) useGoalOrPR();
+  });
+  on('pl-sp-goal', 'input', function(){ this.removeAttribute('data-src-course'); });
   // Event changes re-derive the default fade (it depends on the event) but keep a strategy the user chose.
   on('pl-sp-stroke', 'change', function(){ var fd = pl$('pl-sp-fade'); if (fd) fd.removeAttribute('data-user'); syncDistOptions(); syncStrategyUI(); });
   on('pl-sp-dist', 'change', function(){ var fd = pl$('pl-sp-fade'); if (fd) fd.removeAttribute('data-user'); syncStrategyUI(); });
@@ -9749,7 +9820,8 @@ window.onPageChange = function(n){ if (typeof prevPageChange === 'function') { t
 // Pure model surface (tests + other pages)
 window.tlPlanner = { EXP:EXP, PATTERNS:PATTERNS, predict:predict, fitExponent:fitExponent, typicalExponent:typicalExponent, profileOf:profileOf, chainSegs:chainSegs,
   buildSplits:buildSplits, START_BONUS:START_BONUS, patternKey:patternKey, splitsAsText:splitsAsText, defaultFade:defaultFade, daysUntil:daysUntil, taperWindow:taperWindow, parseISODate:parseISODate,
-  addDays:addDays, nextMeet:nextMeet, meetList:meetList, readMeet:readMeet, distsFor:distsFor, goalStats:goalStats, readGoals:readGoals, sanityPace:sanityPace, fmtPlain:fmtPlain, init:init };
+  addDays:addDays, nextMeet:nextMeet, meetList:meetList, readMeet:readMeet, distsFor:distsFor, goalStats:goalStats, readGoals:readGoals, sanityPace:sanityPace, fmtPlain:fmtPlain, init:init,
+  onPRCourseChange:function(){ plSetText('pl-goal-course', 'PRs in ' + prCourse()); } };
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ init(); });
 else init();
 })();
