@@ -26,6 +26,8 @@ a.btn{display:inline-block;background:#00d4ff;color:#040d18;text-decoration:none
 a.btn:hover{background:#00b0d8}
 a.btn:focus-visible{outline:2px solid #eef3f8;outline-offset:3px} /* the UA ring is invisible on the cyan fill */
 .small{font-size:0.8rem;color:#8ba5bd;margin-top:1.25rem}
+/* Print: black on white (see the legal pages) */
+@media print{html{color-scheme:light}body{background:#fff!important;color:#000!important;min-height:0;display:block}h1{color:#000!important}a.btn{background:none;color:#000;text-decoration:underline;padding:0}.small{color:#333}}
 </style>
 </head>
 <body>
