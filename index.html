@@ -176,8 +176,10 @@ THREE.OrbitControls = function (camera, domElement) {
   --border:rgba(0,212,255,0.15);--border2:rgba(0,212,255,0.07);
   --fh:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
   --r8:8px;--r12:12px;--r16:16px;
+  --fs-micro:0.62rem; /* floor for uppercase mono micro-labels (tags, badges, captions) */
 }
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:72px} /* programmatic scrolls and anchors land below the 56px sticky nav */
+#tlt-tempo-card,#viz-output,.tab-panel{scroll-margin-top:72px}
 body{background:var(--navy);color:var(--white);font-family:var(--fb);min-height:100vh;overflow-x:hidden;line-height:1.6}
 ::selection{background:rgba(0,212,255,0.25)}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--navy2)}::-webkit-scrollbar-thumb{background:var(--cyan2);border-radius:3px}
@@ -218,7 +220,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .btn-hero-ghost{background:transparent;color:var(--cyan);border:1.5px solid rgba(0,212,255,0.4);border-radius:var(--r8);padding:13px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:500;transition:all 0.25s;text-transform:uppercase;cursor:pointer}
 .btn-hero-ghost:hover{background:var(--cyan-dim);transform:translateY(-3px);border-color:var(--cyan)}
 .hero-stats{display:flex;gap:3rem;justify-content:center;flex-wrap:wrap;position:relative}
-.hstat{text-align:center}.hstat-val{font-family:var(--fh);font-size:2.6rem;color:var(--cyan);display:block;line-height:1;letter-spacing:1px}.hstat-lbl{font-family:var(--fm);font-size:0.56rem;letter-spacing:3px;color:var(--white3);text-transform:uppercase;margin-top:5px;display:block}
+.hstat{text-align:center}.hstat-val{font-family:var(--fh);font-size:2.6rem;color:var(--cyan);display:block;line-height:1;letter-spacing:1px}.hstat-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--white3);text-transform:uppercase;margin-top:5px;display:block}
 /* LAYOUT */
 .section-wrap{max-width:1240px;margin:0 auto;padding:5rem 2rem}.section-wrap.narrow{max-width:960px}
 .section-eyebrow{font-family:var(--fm);font-size:0.6rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.75rem;opacity:0.85}
@@ -233,14 +235,14 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;transition:border-color 0.3s,transform 0.25s,box-shadow 0.3s}
 .card:hover{border-color:var(--border)}
 @media(hover:hover){.card[onclick]:hover,.card[role="button"]:hover,.card.card-clickable:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.35)}}
-.card-icon{font-size:2rem;margin-bottom:1rem;display:block}.card-tag{font-family:var(--fm);font-size:0.58rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.85rem}
+.card-icon{font-size:2rem;margin-bottom:1rem;display:block}.card-tag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.85rem}
 .card h3{font-family:var(--fh);font-size:1.5rem;letter-spacing:1px;margin-bottom:0.85rem;line-height:1.1}
 .card-clickable{position:relative;cursor:pointer}.card-link{color:inherit;text-decoration:none}.card-link::after{content:"";position:absolute;inset:0}.card-clickable:has(.card-link:focus-visible){outline:2px solid var(--cyan);outline-offset:2px}@supports selector(:has(a)){.card-link:focus-visible{outline:none}}
 .card p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.85rem}
 .card ul{list-style:none}.card ul li{font-size:0.83rem;color:var(--white2);padding:6px 0;border-bottom:1px solid var(--border2);display:flex;align-items:flex-start;gap:10px;line-height:1.6}
 .card ul li:before{content:'→';color:var(--cyan);flex-shrink:0;font-size:0.75rem;margin-top:2px}.card ul li:last-child{border-bottom:none}
 /* BADGES */
-.badge{display:inline-block;font-family:var(--fm);font-size:0.58rem;letter-spacing:2px;padding:4px 11px;border-radius:4px;text-transform:uppercase;margin-bottom:1rem}
+.badge{display:inline-block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;padding:4px 11px;border-radius:4px;text-transform:uppercase;margin-bottom:1rem}
 .badge.cyan{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,212,255,0.25)}.badge.gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(245,166,35,0.25)}.badge.green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,229,153,0.25)}.badge.red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,82,82,0.25)}.badge.purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,0.25)}
 /* TABS */
 .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2.5rem;overflow-x:auto;gap:0;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
@@ -260,22 +262,22 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 /* COACHING CUES */
 .cue-box{background:rgba(0,212,255,0.06);border-left:3px solid var(--cyan);border-radius:0 var(--r8) var(--r8) 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.87rem;color:var(--cyan);line-height:1.75}
 .key-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0.85rem;margin:1.25rem 0}
-.key-point{background:var(--navy3);border-radius:var(--r8);padding:1rem 1.1rem;border:1px solid var(--border2)}.key-point .kp-label{font-family:var(--fm);font-size:0.57rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:6px;display:block}.key-point p{font-size:0.82rem;color:var(--white2);line-height:1.65;margin-bottom:0}
+.key-point{background:var(--navy3);border-radius:var(--r8);padding:1rem 1.1rem;border:1px solid var(--border2)}.key-point .kp-label{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:6px;display:block}.key-point p{font-size:0.82rem;color:var(--white2);line-height:1.65;margin-bottom:0}
 .info-box{background:var(--cyan-dim);border:1px solid rgba(0,212,255,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.info-box strong{color:var(--cyan)}
 .warn-box{background:var(--gold-dim);border:1px solid rgba(245,166,35,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.warn-box strong{color:var(--gold)}
 .success-box{background:var(--green-dim);border:1px solid rgba(0,229,153,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.success-box strong{color:var(--green)}
 /* TABLES */
-.table-wrap{overflow-x:auto;border-radius:var(--r12);border:1px solid var(--border2);margin:1.25rem 0}
+.table-wrap{position:relative;overflow-x:auto;border-radius:var(--r12);border:1px solid var(--border2);margin:1.25rem 0}
 .data-table{width:100%;border-collapse:collapse;font-size:0.84rem}.data-table th{background:var(--navy3);color:var(--cyan);font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--white2);vertical-align:top;line-height:1.6}.data-table tr:hover td{background:rgba(0,212,255,0.03)}.data-table td:first-child{color:var(--white);font-weight:500}
-.ptag{font-family:var(--fm);font-size:0.58rem;letter-spacing:1px;color:var(--cyan);display:block;margin-bottom:3px}
+.ptag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1px;color:var(--cyan);display:block;margin-bottom:3px}
 /* METRICS */
 .metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:1rem;margin-bottom:3rem}
-.metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border)}@media(hover:hover){.metric-card[onclick]:hover{transform:translateY(-3px)}}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4}
+.metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border)}@media(hover:hover){.metric-card[onclick]:hover{transform:translateY(-3px)}}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4}
 /* VIDEO */
-.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}.video-grid>.video-card:only-child{grid-column:1/-1;max-width:640px}
 .video-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);overflow:hidden;transition:border-color 0.3s,transform 0.25s}.video-card:hover{border-color:var(--border);transform:translateY(-3px)}
 .video-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}.video-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
-.video-info{padding:1.25rem}.video-info h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;margin-bottom:0.5rem}.video-info p{font-size:0.84rem;color:var(--white2);line-height:1.75;font-weight:300}.video-tag{font-family:var(--fm);font-size:0.58rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem;display:block}
+.video-info{padding:1.25rem}.video-info h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;margin-bottom:0.5rem}.video-info p{font-size:0.84rem;color:var(--white2);line-height:1.75;font-weight:300}.video-tag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem;display:block}
 /* TECH IMAGE CARDS */
 /* ============================================================
    3D VISUALIZER
@@ -294,9 +296,13 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .phase-step.active{color:var(--cyan)}
 .viz-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem}
 .viz-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:7px 14px;min-height:34px;display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1.2;font-family:var(--fm);font-size:0.65rem;letter-spacing:0.8px;cursor:pointer;transition:all 0.2s;text-transform:uppercase}
-.viz-btn.active,.viz-btn:hover{background:var(--cyan-dim);color:var(--cyan);border-color:rgba(0,212,255,0.4)}
+.viz-btn.active{background:var(--cyan-dim);color:var(--cyan);border-color:rgba(0,212,255,0.4)}
+/* Hover is a lighter cue than the filled "selected" look so the current choice in each toggle row stays unambiguous */
+@media(hover:hover){.viz-btn:hover:not(.active){color:var(--white);border-color:rgba(0,212,255,0.4)}}
 /* 3D lab: swimmer model / skin-tone controls */
-.viz-ctl-lbl{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px}
+.viz-ctl-lbl{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px}.viz-btn+.viz-ctl-lbl{margin-left:6px}
+/* The three speed buttons travel as one unit so they never split across wrapped rows */
+.viz-group{display:contents}
 .viz-tone{display:inline-flex;align-items:center;gap:7px;padding-left:10px}
 .tone-swatch{width:12px;height:12px;border-radius:50%;border:1px solid rgba(255,255,255,0.35);flex:0 0 auto}
 .viz-btn.viz-busy{opacity:.55;cursor:progress}
@@ -313,8 +319,17 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .ai-header-text h3{font-family:var(--fh);font-size:1.3rem;letter-spacing:1.5px}.ai-header-text p{font-size:0.71rem;color:var(--white3);font-weight:300}
 .ai-mode-btns{display:flex;gap:5px;flex-wrap:wrap}
 .ai-mode-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:5px 11px;font-family:var(--fm);font-size:0.63rem;letter-spacing:0.8px;transition:all 0.2s;text-transform:uppercase;cursor:pointer}
-.ai-mode-btn.active,.ai-mode-btn:hover{background:var(--cyan-dim);color:var(--cyan);border-color:rgba(0,212,255,0.3)}
+.ai-mode-btn.active{background:var(--cyan-dim);color:var(--cyan);border-color:rgba(0,212,255,0.3)}
+@media(hover:hover){.ai-mode-btn:hover:not(.active){color:var(--white);border-color:rgba(0,212,255,0.3)}}
 .ai-messages{height:calc(100dvh - 400px);min-height:340px;max-height:1100px;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;scroll-behavior:smooth}
+/* Keep the composer in view: the chat card is capped to the viewport below the page title and the message pane
+   gives way first (the card sits 136px down on desktop, ~150px on phones). Very short viewports keep the flowing layout. */
+@media(min-height:600px){
+  .ai-wrapper{display:flex;flex-direction:column;max-height:calc(100dvh - 148px)}
+  .ai-messages{flex:1 1 auto;min-height:180px}
+  .ai-header,.quick-prompts,.ai-input-row{flex-shrink:0}
+}
+@media(min-height:600px) and (max-width:480px){.ai-wrapper{max-height:calc(100dvh - 190px)}}
 .ai-messages::-webkit-scrollbar{width:4px}.ai-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .msg{display:flex;gap:10px;align-items:flex-start;animation:fadeUp 0.3s ease}.msg.user{flex-direction:row-reverse}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -330,7 +345,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-7px);opacity:1}}
 .quick-prompts{padding:0.75rem 1.1rem;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border2)}
 .qp{background:var(--navy3);border:1px solid var(--border2);border-radius:20px;padding:5px 13px;font-size:0.71rem;color:var(--white3);cursor:pointer;transition:all 0.2s;font-family:var(--fm);letter-spacing:0.3px}.qp:hover{color:var(--cyan);border-color:rgba(0,212,255,0.4);background:var(--cyan-dim)}
-.ai-input-row{border-top:1px solid var(--border);padding:1rem 1.25rem;display:flex;gap:10px;align-items:center}
+.ai-input-row{border-top:1px solid var(--border);padding:1rem 1.25rem;display:flex;gap:10px;align-items:stretch}
 .ai-input{flex:1;background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:11px 14px;color:var(--white);font-size:0.88rem;outline:none;transition:border-color 0.2s}.ai-input::placeholder{color:var(--white4)}.ai-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
 .ai-send{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px 22px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.ai-send:hover:not(:disabled){background:var(--cyan2);box-shadow:0 4px 18px rgba(0,212,255,0.3)}.ai-send:disabled{opacity:0.4;cursor:not-allowed}
 /* WORKOUT GENERATOR */
@@ -343,12 +358,14 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 /* FORM ELEMENTS */
 .form-group{display:flex;flex-direction:column;gap:6px}.form-group label{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}
 .form-select,.form-input,.form-textarea{background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:10px 12px;color:var(--white);font-size:0.875rem;outline:none;transition:border-color 0.2s;appearance:none;-webkit-appearance:none}
-.form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300d4ff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300d4ff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;min-width:0;max-width:100%}
+/* One height for every single-line control so date pickers, selects and number inputs align in a row (the ≤768 min-height:44px still wins on touch) */
+.form-select,.form-input{height:40px;line-height:18px}
 .form-select:focus,.form-input:focus,.form-textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}.form-select option{background:var(--navy2)}.form-textarea{resize:vertical;min-height:80px;line-height:1.6}
 /* CALCULATOR */
 .calc-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 @media(max-width:700px){.calc-wrapper{grid-template-columns:1fr}}
-.calc-panel{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.75rem}.calc-panel h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem}
+.calc-panel{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.75rem;min-width:0}.calc-panel h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem}
 .calc-result{background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:1.25rem;margin-top:1.25rem;text-align:center;display:none}.calc-result.show{display:block}
 .calc-result .big{font-family:var(--fh);font-size:3rem;color:var(--cyan);letter-spacing:2px;line-height:1}.calc-result .sub{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px}
 .calc-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:all 0.2s;text-transform:uppercase;width:100%;margin-top:0.5rem;cursor:pointer}.calc-btn:hover{background:var(--cyan2)}
@@ -367,7 +384,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 /* DRYLAND */
 .dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem}
 .dl-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.4rem;transition:border-color 0.3s,transform 0.2s}.dl-card:hover{border-color:var(--border);transform:translateY(-2px)}
-.dl-card h4{font-family:var(--fh);font-size:1.15rem;letter-spacing:1px;margin-bottom:0.4rem;color:var(--gold)}.dl-day{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-bottom:0.85rem}
+.dl-card h4{font-family:var(--fh);font-size:1.15rem;letter-spacing:1px;margin-bottom:0.4rem;color:var(--gold)}.dl-day{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-bottom:0.85rem}
 .dl-card ul{list-style:none}.dl-card ul li{font-size:0.82rem;color:var(--white2);padding:5px 0;display:flex;gap:9px;align-items:flex-start;border-bottom:1px solid var(--border2);line-height:1.6}.dl-card ul li:last-child{border-bottom:none}
 .reps{font-family:var(--fm);color:var(--gold);font-size:0.71rem;flex-shrink:0;min-width:48px}
 /* TRAINING LOG */
@@ -379,7 +396,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 /* NUTRITION */
 .nutr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem}
 .nutr-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.4rem;transition:border-color 0.3s}.nutr-card:hover{border-color:var(--border)}
-.nutr-card h4{font-family:var(--fh);font-size:1.15rem;letter-spacing:1px;margin-bottom:0.4rem;color:var(--green)}.nutr-time{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-bottom:0.85rem}
+.nutr-card h4{font-family:var(--fh);font-size:1.15rem;letter-spacing:1px;margin-bottom:0.4rem;color:var(--green)}.nutr-time{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-bottom:0.85rem}
 .nutr-card ul{list-style:none}.nutr-card ul li{font-size:0.82rem;color:var(--white2);padding:5px 0;border-bottom:1px solid var(--border2);line-height:1.6}.nutr-card ul li:last-child{border-bottom:none}
 /* CONTENT BLOCKS */
 .content-block{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;margin-bottom:1.25rem}.content-block h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1rem;color:var(--white)}.content-block p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.85rem}.content-block p:last-child{margin-bottom:0}
@@ -391,8 +408,13 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .footer-col h4{font-family:var(--fm);font-size:0.61rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:1rem}
 .footer-col ul{list-style:none}.footer-col ul li{font-size:0.83rem;padding:2px 0}.footer-col ul li a{display:inline-block;padding:5px 0;color:var(--white3);text-decoration:none;transition:color 0.2s}.footer-col ul li a:hover,.footer-col ul li a:focus-visible{color:var(--cyan)}
 .footer-bottom{max-width:1240px;margin:0 auto;padding-top:1.5rem;border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-.footer-bottom p{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white4);text-transform:uppercase}
+.footer-bottom p{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white4);text-transform:uppercase}
 .footer-bottom a{display:inline-block;padding:10px 4px;font-size:0.7rem;color:var(--white3);transition:color 0.2s}.footer-bottom a:hover{color:var(--cyan)}
+/* The legal-links line reads at the links' own size (separators included) instead of the 9.9px tracked uppercase of the brand line */
+.footer-bottom .footer-links{font-size:0.7rem;letter-spacing:0.5px;text-transform:none}
+/* Sub-page footers carry one brand line and the legal links, so they do not need the home footer's 160px of padding */
+.page:not(#page-home) footer{padding:1.25rem 2rem}
+.page:not(#page-home) .footer-bottom{padding-top:0;border-top:0}
 /* IMGGEN */
 .imggen-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2rem}
 .imggen-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.5rem}
@@ -405,6 +427,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 /* MISC BUTTONS */
 .btn-sm{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:8px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;font-weight:600;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.btn-sm:hover{background:var(--cyan2)}
 .btn-ghost-sm{background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.35);border-radius:6px;padding:7px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.btn-ghost-sm:hover{background:var(--cyan-dim)}
+/* Same 30px box whether the control is a <button>, an <a> (which would inherit the body line-height) or carries an emoji glyph */
+.btn-sm,.btn-ghost-sm{line-height:1.2;min-height:30px}
 /* RESPONSIVE */
 @media(max-width:768px){
   nav{height:52px}
@@ -422,6 +446,17 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .metrics-row{grid-template-columns:repeat(2,1fr)}
   .viz-phase-bar{display:none}
   #viz3d-container{height:320px}
+  /* HUD: one translucent strip along the top (was a 2×2 block over 56% of the canvas width) */
+  .viz-overlay-stats{grid-template-columns:repeat(4,1fr);left:8px;right:8px;gap:4px}
+  .vos-item{padding:4px 4px;border-radius:6px}
+  .vos-val{font-size:0.8rem}
+  .vos-lbl{letter-spacing:0.5px;margin-top:2px;white-space:nowrap}
+  /* Control rows wrap on a grid instead of raggedly: strokes/views 2-up, speed trio on its own line, labels flush */
+  .viz-row-strokes>.viz-btn,.viz-row-view>.viz-btn,#vbtn-play,#vbtn-forces{flex:1 1 calc(50% - 4px)}
+  .viz-row-strokes>.viz-btn:last-child:nth-child(odd),.viz-row-view>span{flex-basis:100%}
+  .viz-group{display:flex;gap:8px;flex:1 1 100%;order:1}
+  .viz-group>.viz-btn{flex:1 1 0;padding-left:6px;padding-right:6px}
+  .viz-btn+.viz-ctl-lbl{margin-left:0}
   .ai-header{padding:0.9rem 1rem}
   .ai-mode-btns{gap:4px;flex:1 1 100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
   .ai-mode-btns::-webkit-scrollbar{display:none}
@@ -653,6 +688,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #page-timers .tlt-transport.three .tlt-btn:first-child{grid-column:1/-1}
   #page-timers .tlt-opts .form-group{flex-basis:100%}
   #page-timers .tlt-pc-sync .btn-ghost-sm{flex:1 1 100%}
+  /* Preset table fits the phone: "s per cycle" is 60 ÷ cycles/min, so drop it and let the Load column stay on screen */
+  #page-timers .tlt-preset-table th:nth-child(3),#page-timers .tlt-preset-table td:nth-child(3){display:none}
+  #page-timers .tlt-preset-table td:nth-child(4){white-space:normal}
 }
 @media(prefers-reduced-motion:reduce){
   #page-timers .tlt-pulse{transition:none}
@@ -708,7 +746,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-goal-pr strong{color:var(--white);font-weight:500}
 #page-planner .pl-goal-pr a{color:var(--white3);text-decoration:underline;text-underline-offset:2px}
 #page-planner .pl-goal-pr a:hover{color:var(--cyan)}
-#page-planner .pl-goal-label{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase}
+#page-planner .pl-goal-label{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase}
 #page-planner .pl-goal-input{background:var(--navy2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.55rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s;min-height:44px}
 #page-planner .pl-goal-input::placeholder{color:var(--white4);font-size:1rem;letter-spacing:0}
 #page-planner .pl-goal-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
@@ -811,6 +849,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #page-planner .pl-two{grid-template-columns:1fr}
   #page-planner .pl-grid{grid-template-columns:1fr}
   #page-planner .pl-summary{grid-template-columns:1fr 1fr}
+  #page-planner .pl-summary>:last-child:nth-child(odd){grid-column:1/-1}
   #page-planner .pl-bar-row{grid-template-columns:1fr;gap:3px}
   #page-planner .pl-bar-lbl{text-align:left}
 }
@@ -945,7 +984,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-list li strong{color:var(--white);font-weight:500}
 #page-analytics .an-panel-p{font-size:0.83rem;color:var(--white2);line-height:1.7;font-weight:300;margin-bottom:0.5rem}
 #page-analytics .an-ref-wrap{margin-top:0.75rem}
-#page-analytics .an-ref-table td,#page-analytics .an-ref-table th{padding:8px 10px;font-size:0.76rem;white-space:nowrap}
+#page-analytics .an-ref-table td,#page-analytics .an-ref-table th{padding:8px;font-size:0.76rem;white-space:nowrap}#page-analytics .an-ref-table th{white-space:normal}
 #page-analytics .an-css-table-wrap{margin:1rem 0 0}
 #page-analytics .an-css-table td,#page-analytics .an-css-table th{padding:8px 10px;font-size:0.76rem;white-space:nowrap;text-align:left}
 #page-analytics .an-css-table td{font-family:var(--fm);font-variant-numeric:tabular-nums}
@@ -1030,7 +1069,7 @@ html.tl-pal-lock{overflow:hidden}
 .tl-pal-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px;scroll-padding:8px}
 .tl-pal-list::-webkit-scrollbar{width:5px}
 .tl-pal-groupwrap{padding-bottom:4px}
-.tl-pal-group{font-family:var(--fm);font-size:0.56rem;letter-spacing:2.5px;color:var(--white3);text-transform:uppercase;padding:10px 12px 4px}
+.tl-pal-group{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2.5px;color:var(--white3);text-transform:uppercase;padding:10px 12px 4px}
 .tl-pal-opt{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:var(--r8);cursor:pointer;min-height:44px;border-left:2px solid transparent}
 .tl-pal-opt[aria-selected="true"]{background:var(--cyan-dim);border-left-color:var(--cyan)}
 .tl-pal-ico{width:26px;height:26px;border-radius:6px;background:var(--navy3);border:1px solid var(--border2);color:var(--white3);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -1107,7 +1146,7 @@ html.tl-pal-lock{overflow:hidden}
 #page-updates .tl-upd-app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.85rem}
 #page-updates .tl-upd-stat{background:var(--navy3);border:1px solid var(--border2);border-radius:var(--r8);padding:0.9rem 0.6rem;text-align:center}
 #page-updates .tl-upd-stat-val{display:block;font-family:var(--fh);font-size:clamp(1.4rem,3.2vw,1.9rem);letter-spacing:1px;color:var(--cyan);line-height:1;white-space:nowrap}
-#page-updates .tl-upd-stat-lbl{display:block;font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:6px}
+#page-updates .tl-upd-stat-lbl{display:block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:6px}
 #page-updates .tl-upd-offline-note{font-size:0.8rem;color:var(--white3);line-height:1.7;margin-top:0.9rem}
 #page-updates .tl-upd-offline-note:empty{display:none}
 #page-updates .tl-upd-offline-note strong{color:var(--white2);font-weight:500}
@@ -1135,7 +1174,7 @@ html.tl-pal-lock{overflow:hidden}
 #page-updates .tl-upd-rel.latest.unseen::before{background:var(--cyan);border-color:var(--cyan)}
 #page-updates .tl-upd-rel-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 #page-updates .tl-upd-ver{font-family:var(--fh);font-size:clamp(1.6rem,3vw,2rem);letter-spacing:1px;color:var(--cyan);line-height:1}
-#page-updates .tl-upd-badge{font-family:var(--fm);font-size:0.55rem;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid;line-height:1.4}
+#page-updates .tl-upd-badge{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid;line-height:1.4}
 #page-updates .tl-upd-badge.latest{color:var(--cyan);background:var(--cyan-dim);border-color:rgba(0,212,255,0.3)}
 #page-updates .tl-upd-badge.unseen{color:var(--gold);background:var(--gold-dim);border-color:rgba(245,166,35,0.3)}
 #page-updates .tl-upd-date{margin-left:auto;font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--white3);text-transform:uppercase;white-space:nowrap}
@@ -1149,11 +1188,11 @@ html.tl-pal-lock{overflow:hidden}
 #page-updates .tl-upd-items a::after{content:' →';color:var(--cyan);font-size:0.8em}
 #page-updates .tl-upd-items a:hover,#page-updates .tl-upd-items a:focus-visible{color:var(--white);border-bottom-color:var(--cyan)}
 #page-updates .tl-upd-items a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:2px}
-#page-updates .tl-upd-tag{font-family:var(--fm);font-size:0.55rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 0;border-radius:4px;border:1px solid;flex:0 0 74px;text-align:center;margin-top:3px;line-height:1.4}
+#page-updates .tl-upd-tag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;padding:3px 0;border-radius:4px;border:1px solid;flex:0 0 74px;text-align:center;margin-top:3px;line-height:1.4}
 #page-updates .tl-upd-tag.new{color:var(--green);background:var(--green-dim);border-color:rgba(0,229,153,0.3)}
 #page-updates .tl-upd-tag.improved{color:var(--cyan);background:var(--cyan-dim);border-color:rgba(0,212,255,0.3)}
 #page-updates .tl-upd-tag.fixed{color:var(--gold);background:var(--gold-dim);border-color:rgba(245,166,35,0.3)}
-#page-updates .tl-upd-counts{font-family:var(--fm);font-size:0.58rem;letter-spacing:2px;color:var(--white4);text-transform:uppercase;margin-top:0.9rem}
+#page-updates .tl-upd-counts{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white4);text-transform:uppercase;margin-top:0.9rem}
 #page-updates .tl-upd-more{display:inline-block;margin:0.25rem 0 0 1.75rem}
 #page-updates .tl-upd-note{font-size:0.76rem;color:var(--white4);line-height:1.7;margin-top:2rem;max-width:620px}
 
@@ -1233,6 +1272,12 @@ nav #nav-search-btn[hidden]{display:none}
 /* ---------- Mobile / tablet: hamburger + slide-in drawer ---------- */
 @media(max-width:899px){
   nav{gap:8px}
+  /* The parked drawer leaves three flex children, so pull the action cluster over to the burger instead of
+     letting space-between float it mid-bar; draw the pills at 34px (a ::before keeps the 44px hit area). */
+  nav .nav-right{margin-left:auto}
+  nav .nav-ai-btn,nav #nav-login-btn{min-height:34px;padding:6px 10px;font-size:0.66rem;letter-spacing:0.6px;position:relative}
+  nav .nav-ai-btn::before{content:"";position:absolute;inset:-5px}
+  nav #nav-logout-btn{min-width:44px}
   nav .nav-burger{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;min-height:44px;padding:0;order:99;position:relative;flex-shrink:0}
   nav .nav-burger-bars{position:relative;display:block;width:18px;height:14px}
   nav .nav-burger-bars span{position:absolute;left:0;top:6px;width:18px;height:2px;border-radius:1px;background:currentColor;transition:transform 0.2s ease,opacity 0.2s ease}
@@ -1279,6 +1324,7 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-group-btn .nav-caret{transform:translateY(-1px) rotate(45deg)}
   nav .nav-group-btn[aria-expanded="true"] .nav-caret{transform:translateY(2px) rotate(225deg)}
   nav .nav-menu{position:static;display:none;grid-template-columns:1fr 1fr;gap:6px;min-width:0;padding:2px 0 6px;background:none;border:0;border-radius:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+  nav .nav-menu>li:last-child:nth-child(odd){grid-column:1/-1}
   nav .nav-menu.flip{left:auto;right:auto}
   nav .nav-group-btn[aria-expanded="true"]+.nav-menu{display:grid;animation:none}
   nav .nav-menu a{min-height:46px;padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:8px;white-space:normal;font-size:0.8rem}
@@ -1291,8 +1337,10 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-brand{font-size:1.2rem;letter-spacing:2px;gap:7px}
   nav .nav-mark{width:24px;height:24px}
   nav #nav-search-btn{display:none}   /* the drawer carries a full-width Search row instead */
-  nav .nav-ai-btn{padding:6px 8px;font-size:0.6rem;letter-spacing:0.5px}
+  nav .nav-ai-btn{padding:6px 8px}
   nav .nav-drawer{width:min(340px,90vw)}
+  /* The drawer head matches the 52px phone bar so the ✕ lands exactly where the burger was */
+  nav .nav-drawer-head{height:52px;padding-right:12px}
 }
 @media (prefers-reduced-motion: reduce){
   nav .nav-drawer,nav .nav-drawer.open,nav .nav-scrim,nav .nav-burger-bars span,nav .nav-caret{transition:none}
@@ -1316,12 +1364,19 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 /* Tab strips wrap on desktop so the last tab is never clipped; below that the strip still
    swipes, and enhanceA11y() adds .tl-scroll-more while more items sit past the right edge. */
 @media(min-width:900px){.tabs{flex-wrap:wrap}}
+/* A tab strip that follows the page title directly gets the same breathing room an intro paragraph would give it */
+.section-title+.tabs{margin-top:2rem}
+/* Technique's eight tabs (909px at the default 16px padding) fit the 896px narrow container on one line;
+   in the 900-999px band the container is narrower still, so tighten a little more instead of orphaning "IM". */
+@media(min-width:900px){#page-technique .tab-btn{padding:11px 13px}}
+@media(min-width:900px) and (max-width:999px){#page-technique .tab-btn{padding:11px 10px}}
 .tl-scroll-more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent)}
 /* Logged out the username span is empty — do not leave its padding as a phantom gap. */
 #current-username-display:empty{display:none}
 /* Orphan tiles: keep grids full at tablet/phone widths */
 @media(max-width:899px){
   .footer-inner{grid-template-columns:repeat(2,1fr)}
+  .footer-inner>:last-child:nth-child(odd){grid-column:1/-1}
   .key-grid{grid-template-columns:repeat(2,1fr)}
   .nutr-grid{grid-template-columns:repeat(2,1fr)}
   .nutr-grid>.nutr-card:last-child:nth-child(odd){grid-column:1/-1}
@@ -1343,6 +1398,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   #page-home .metrics-row .metric-card:last-child:nth-child(odd){grid-column:1/-1}
   /* Phone hero: above-the-fold headline, full-width CTAs, an even 2×2 stat grid */
   .hero{padding:3.5rem 1.25rem 3rem;min-height:auto}
+  .hero-eyebrow{font-size:0.6rem;letter-spacing:1.5px;line-height:1.5;text-wrap:balance}
   .hero-btns{flex-direction:column;align-items:stretch;width:100%;max-width:340px;gap:10px;margin-bottom:2.5rem}
   .btn-hero,.btn-hero-ghost{width:100%}
   .hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem 1rem;width:100%;max-width:340px}
@@ -1350,9 +1406,27 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   /* Phone forms: give the inputs the width back; PR cards stay two-up */
   .gen-form,.gen-output,.imggen-wrap,.calc-panel,.tl-panel{padding:1.1rem}
   .pr-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
-  /* Season meet table fits the phone without a sideways scroll */
+  /* Log entries: date and delete share the first line so the content spans the card instead of a 157px column */
+  .log-entry{flex-wrap:wrap;gap:0.35rem 1rem;padding:1rem 1.1rem}
+  .log-date{flex:1 1 auto;order:0;align-self:center}
+  .log-del{order:1;margin:-10px -10px -10px 0}
+  .log-content{flex:1 1 100%;order:2}
   .data-table th,.data-table td{padding:9px 10px}
-  #season-meet-table td:nth-child(2){white-space:normal}
+  /* Season meet table: one card per meet instead of four columns of one-word lines (roles in the markup keep table semantics) */
+  #season-meet-table thead{display:none}
+  #season-meet-table,#season-meet-table tbody{display:block;width:100%}
+  #season-meet-table tr{display:grid;grid-template-columns:1fr auto;column-gap:12px;row-gap:2px;align-items:baseline;padding:12px 14px;border-bottom:1px solid var(--border2)}
+  #season-meet-table tr:last-child{border-bottom:0}
+  #season-meet-table td{display:block;padding:0;border:0;white-space:normal;background:none}
+  #season-meet-table td:first-child{grid-column:1/-1;margin-bottom:4px;line-height:1.45}
+  #season-meet-table td:first-child span{display:block;margin-top:3px;line-height:1.5}
+  #season-meet-table td:nth-child(2){grid-column:1;grid-row:2;font-size:0.8rem;color:var(--white)}
+  #season-meet-table td:nth-child(3){grid-column:1;grid-row:3;font-family:var(--fm);font-size:0.66rem;letter-spacing:1px;text-transform:uppercase;color:var(--white3)}
+  #season-meet-table td:nth-child(4){grid-column:2;grid-row:2/4;text-align:right;font-family:var(--fm);font-size:0.72rem;letter-spacing:0.5px;white-space:nowrap}
+  #season-meet-table td:nth-child(n+2)::before{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  #season-meet-table td:nth-child(2)::before{content:"Dates: "}
+  #season-meet-table td:nth-child(3)::before{content:"Course: "}
+  #season-meet-table td:nth-child(4)::before{content:"Status: "}
 }
 </style>
 </head>
@@ -1507,7 +1581,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="footer-col"><h4>Tools</h4><ul><li><a href="#calculator">Pace Calculator</a></li><li><a href="#timers">Timers</a></li><li><a href="#planner">Race Planner</a></li><li><a href="#analytics">Training Analytics</a></li></ul></div>
     <div class="footer-col"><h4>Compete</h4><ul><li><a href="#race">Race Strategy</a></li><li><a href="#nutrition">Nutrition</a></li><li><a href="#mental">Mental Performance</a></li><li><a href="#taper">Taper Protocol</a></li><li><a href="#injury">Injury Prevention</a></li><li><a href="#season">Season Calendar</a></li></ul></div>
   </div>
-  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p><a href="#updates">What's New</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a></p><p>Educational information only — not medical advice</p></div>
+  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p class="footer-links"><a href="#updates">What's New</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a></p><p>Educational information only — not medical advice</p></div>
 </footer>
 </div>
 <!-- 3D VISUALIZER PAGE -->
@@ -1524,11 +1598,11 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="tab-btn" onclick="switchTab(this,'vd-fly')"><span aria-hidden="true">🦋 </span>Butterfly</button>
     <button class="tab-btn" onclick="switchTab(this,'vd-uw')"><span aria-hidden="true">🌊 </span>Underwater</button>
   </div>
-  <div class="tab-panel active" id="vd-fr"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="Q0vq-34dWF0" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/Q0vq-34dWF0/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Freestyle · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Freestyle · Demo</span><p>Division I coach breakdown of front crawl technique.</p></div></div></div>
-  <div class="tab-panel" id="vd-bk"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="YkjOvxHsY1g" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/YkjOvxHsY1g/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Backstroke · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Backstroke · Demo</span><p>Six elements of backstroke with perfect technique.</p></div></div></div>
-  <div class="tab-panel" id="vd-br"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="RbgiTaVUqMk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/RbgiTaVUqMk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Breaststroke · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Breaststroke · Demo</span><p>Pull-breathe-kick-glide timing and coordination.</p></div></div></div>
-  <div class="tab-panel" id="vd-fly"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="o6Pnv10wyHk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/o6Pnv10wyHk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Butterfly · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Butterfly · Demo</span><p>Olympian Dylan Carter on mastering butterfly undulation.</p></div></div></div>
-  <div class="tab-panel" id="vd-uw"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="bjDfI0NMVY8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/bjDfI0NMVY8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Underwater · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
+  <div class="tab-panel active" id="vd-fr"><div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="Q0vq-34dWF0" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/Q0vq-34dWF0/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Freestyle · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Freestyle · Demo</span><p>Division I coach breakdown of front crawl technique.</p></div></div></div>
+  <div class="tab-panel" id="vd-bk"><div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="YkjOvxHsY1g" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/YkjOvxHsY1g/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Backstroke · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Backstroke · Demo</span><p>Six elements of backstroke with perfect technique.</p></div></div></div>
+  <div class="tab-panel" id="vd-br"><div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="RbgiTaVUqMk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/RbgiTaVUqMk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Breaststroke · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Breaststroke · Demo</span><p>Pull-breathe-kick-glide timing and coordination.</p></div></div></div>
+  <div class="tab-panel" id="vd-fly"><div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="o6Pnv10wyHk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/o6Pnv10wyHk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Butterfly · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Butterfly · Demo</span><p>Olympian Dylan Carter on mastering butterfly undulation.</p></div></div></div>
+  <div class="tab-panel" id="vd-uw"><div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="bjDfI0NMVY8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/bjDfI0NMVY8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Underwater · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
   <div class="divider"></div>
   <div class="section-eyebrow">Study It — Interactive 3D Biomechanics Lab</div>
   <p class="section-intro" style="margin-bottom:1.5rem">A realistic human swimmer — built in your browser from real athlete proportions, with wet skin, race swimwear, silicone cap and goggles — swimming underwater in caustic light and depth haze, every joint driven by elite stroke-phase timing. Slow it down, orbit any angle, zoom in on a hand or a foot, isolate a single phase, switch between the male and female swimmer or X-ray the skeleton, or describe any movement and the AI reconstructs it. It exists so you can see what video moves too fast to show.</p>
@@ -1542,7 +1616,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <div class="viz-phase-bar" id="viz-phase-bar" role="group" aria-label="Stroke phases"></div>
   </div>
-  <div class="viz-controls" style="margin-top:1rem">
+  <div class="viz-controls viz-row-strokes" style="margin-top:1rem">
     <button class="viz-btn active" onclick="setStroke3D('freestyle',this)"><span aria-hidden="true">🏊 </span>Freestyle</button>
     <button class="viz-btn" onclick="setStroke3D('backstroke',this)"><span aria-hidden="true">🔄 </span>Backstroke</button>
     <button class="viz-btn" onclick="setStroke3D('breaststroke',this)"><span aria-hidden="true">🐸 </span>Breaststroke</button>
@@ -1554,7 +1628,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple-text);font-weight:600"><span aria-hidden="true">✦ </span>AI Reconstruct</button>
   </div>
   <div id="motion-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px">Try "breaststroke pullout off the wall" or "backstroke start" — the lab rebuilds it joint by joint.</div>
-  <div class="viz-controls" style="margin-top:8px">
+  <div class="viz-controls viz-row-view" style="margin-top:8px">
     <span style="font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px">View:</span>
     <button class="viz-btn" data-view="side" aria-pressed="false" onclick="setView3D('side')">Side</button>
     <button class="viz-btn" data-view="front" aria-pressed="false" onclick="setView3D('front')">Front</button>
@@ -1566,16 +1640,18 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="viz-btn active" id="vbtn-model-male" aria-pressed="true" onclick="setHumanModel('male')">♂ Male</button>
     <button class="viz-btn" id="vbtn-model-female" aria-pressed="false" onclick="setHumanModel('female')">♀ Female</button>
     <button class="viz-btn" id="vbtn-xray" aria-pressed="false" title="Show the skeleton and joints inside the swimmer" onclick="toggleXray3D()">🩻 X-ray</button>
-    <span class="viz-ctl-lbl" style="margin-left:6px" aria-hidden="true">Skin:</span>
+    <span class="viz-ctl-lbl" aria-hidden="true">Skin:</span>
     <button class="viz-btn viz-tone" id="vbtn-tone-light" aria-pressed="false" aria-label="Light skin tone" onclick="setSkinTone3D('light')"><span class="tone-swatch" style="background:#e8b99a"></span>Light</button>
     <button class="viz-btn viz-tone active" id="vbtn-tone-medium" aria-pressed="true" aria-label="Medium skin tone" onclick="setSkinTone3D('medium')"><span class="tone-swatch" style="background:#c9915f"></span>Medium</button>
     <button class="viz-btn viz-tone" id="vbtn-tone-deep" aria-pressed="false" aria-label="Deep skin tone" onclick="setSkinTone3D('deep')"><span class="tone-swatch" style="background:#6b3f22"></span>Deep</button>
   </div>
   <div class="viz-controls" style="margin-top:8px">
     <button class="viz-btn active" id="vbtn-play" onclick="togglePlay3D()">⏸ Pause</button>
+    <div class="viz-group" role="group" aria-label="Playback speed">
     <button class="viz-btn" data-speed aria-pressed="false" onclick="setSpeed3D(0.3,this)">0.3× Slow</button>
     <button class="viz-btn active" data-speed aria-pressed="true" onclick="setSpeed3D(1,this)">1× Normal</button>
     <button class="viz-btn" data-speed aria-pressed="false" onclick="setSpeed3D(2,this)">2× Fast</button>
+    </div>
     <button class="viz-btn active" id="vbtn-forces" onclick="toggleForces3D(this)">Forces: On</button>
   </div>
   <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px">🖱 Drag to orbit · Scroll to zoom · Tap a phase below to jump to it</p>
@@ -2380,7 +2456,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="section-eyebrow" id="season-calendar-eyebrow" style="margin-top:0">National Meet Calendar</div>
   <div class="warn-box" id="season-archive-note" style="display:none"></div>
-  <div class="table-wrap"><table class="data-table" id="season-meet-table"><thead><tr><th scope="col">Meet</th><th scope="col">Dates</th><th scope="col">Course</th><th scope="col">Status</th></tr></thead><tbody>
+  <div class="table-wrap"><table class="data-table" id="season-meet-table" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Meet</th><th scope="col" role="columnheader">Dates</th><th scope="col" role="columnheader">Course</th><th scope="col" role="columnheader">Status</th></tr></thead><tbody role="rowgroup">
     <!-- filled by JS using real dates, with live countdown/status -->
   </tbody></table></div>
   <p id="season-calendar-note" style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;line-height:1.6">Dates reflect the published USA Swimming national events calendar and are subject to official updates — always confirm with usaswimming.org before planning travel.</p>
@@ -3510,9 +3586,9 @@ function enhanceA11y(){
     if('ResizeObserver' in window) new ResizeObserver(fade).observe(strip); else window.addEventListener('resize', fade);
     fade();
   });
-  // Horizontal strips (AI mode chips, quick prompts, phase bar; tab bars above) hide their scrollbar, so show a
-  // right-edge fade only while more items sit past the edge; cleared once scrolled to the end.
-  const fadeStrips=[...document.querySelectorAll('.ai-mode-btns,.quick-prompts,.viz-phase-bar')];
+  // Horizontal strips (AI mode chips, quick prompts, phase bar; tab bars above) hide their scrollbar, and wide tables
+  // scroll inside .table-wrap, so show a right-edge fade only while more sits past the edge; cleared once scrolled to the end.
+  const fadeStrips=[...document.querySelectorAll('.ai-mode-btns,.quick-prompts,.viz-phase-bar,.table-wrap')];
   const syncFade=el=>el.classList.toggle('tl-scroll-more', el.scrollWidth-el.clientWidth-el.scrollLeft>2);
   const syncAllFades=()=>fadeStrips.forEach(syncFade);
   fadeStrips.forEach(el=>{ el.addEventListener('scroll',()=>syncFade(el),{passive:true}); syncFade(el); });
@@ -3573,7 +3649,7 @@ function enhanceA11y(){
   // Every view's footer should reach the legal pages (only the home footer did)
   document.querySelectorAll('.footer-bottom').forEach(fb=>{
     if(!fb.querySelector('a[href="privacy.html"]')){
-      const p=document.createElement('p');
+      const p=document.createElement('p'); p.className='footer-links';
       p.innerHTML='<a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a>';
       fb.appendChild(p);
     }
@@ -3613,7 +3689,7 @@ function initReveal(){
   if(!_revealObs){
     _revealObs=new IntersectionObserver(entries=>{
       entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible'); _revealObs.unobserve(e.target);}});
-    },{threshold:0.1});
+    },{threshold:0,rootMargin:'0px 0px -60px 0px'}); // fire once the top edge is 60px into the viewport, however tall the container
   }
   els.forEach(el=>_revealObs.observe(el));
 }
@@ -5108,7 +5184,7 @@ function renderSeasonPage(now) {
       if (isNaN(start.getTime()) || isNaN(end.getTime())) {
         // Malformed row: never print "In NaN days"; show the raw strings escaped.
         const raw = escapeHTML(String(m.start || '')) + (m.end ? '–' + escapeHTML(String(m.end)) : '');
-        return `<tr><td>${escapeHTML(m.name || '')}<br><span style="font-size:0.7rem;color:var(--white3)">${escapeHTML(m.tag || '')}</span></td><td>${raw || 'TBA'}</td><td>${escapeHTML(m.course || '')}</td><td style="color:var(--white3)">Dates TBA</td></tr>`;
+        return `<tr role="row"><td role="cell">${escapeHTML(m.name || '')}<br><span style="font-size:0.7rem;color:var(--white3)">${escapeHTML(m.tag || '')}</span></td><td role="cell">${raw || 'TBA'}</td><td role="cell">${escapeHTML(m.course || '')}</td><td role="cell" style="color:var(--white3)">Dates TBA</td></tr>`;
       }
       if (now > end) { status = 'Completed'; statusColor = 'var(--white4)'; }
       else if (now >= start && now <= end) { status = 'Happening now'; statusColor = 'var(--green)'; }
@@ -5118,7 +5194,7 @@ function renderSeasonPage(now) {
         statusColor = days <= 21 ? 'var(--gold)' : 'var(--cyan)';
       }
       const dateStr = start.toLocaleDateString(undefined,{month:'short',day:'numeric'}) + '–' + end.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
-      return `<tr><td>${escapeHTML(m.name || '')}<br><span style="font-size:0.7rem;color:var(--white3)">${escapeHTML(m.tag || '')}</span></td><td>${dateStr}</td><td>${escapeHTML(m.course || '')}</td><td style="color:${statusColor}">${status}</td></tr>`;
+      return `<tr role="row"><td role="cell">${escapeHTML(m.name || '')}<br><span style="font-size:0.7rem;color:var(--white3)">${escapeHTML(m.tag || '')}</span></td><td role="cell">${dateStr}</td><td role="cell">${escapeHTML(m.course || '')}</td><td role="cell" style="color:${statusColor}">${status}</td></tr>`;
     }).join('');
   }
   renderSeasonTBA();
