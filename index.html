@@ -340,6 +340,7 @@ h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-w
 #page-home .grid-3>.card{display:flex;flex-direction:column}#page-home .grid-3>.card>ul{margin-top:auto}
 /* BADGES */
 .badge{display:inline-block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;padding:4px 11px;border-radius:4px;text-transform:uppercase;margin-bottom:1rem}
+h3>.badge{display:block;width:max-content;max-width:100%;font-weight:400;line-height:1.6} /* the zone badge is part of its heading (R8-A11Y-10): still a pill on its own line */
 .badge.cyan{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,212,255,0.25)}.badge.gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(245,166,35,0.25)}.badge.green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,229,153,0.25)}.badge.red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,82,82,0.25)}
 /* TABS */
 .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2.5rem;overflow-x:auto;gap:0;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
@@ -380,7 +381,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 @media(min-width:664px) and (max-width:1011px){.video-grid>.video-card:last-child:nth-child(odd):not(:only-child){grid-column:1/-1;max-width:calc(50% - 0.75rem);justify-self:center;width:100%}} /* the two-column band (grid 624–947px wide): a 2+1 tab's odd card is centred on its own row at the same size as its siblings (half the grid minus half the gap) — neither an orphan at the left nor a 640px hero twice their size; three-up desktops keep their rows */
 .video-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);overflow:hidden;transition:border-color 0.3s,transform 0.25s}.video-card:hover{border-color:var(--border);transform:translateY(-3px)}
 .video-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}.video-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
-.video-info{padding:1.25rem}.video-info h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;margin-bottom:0.5rem}.video-info p{font-size:0.84rem;color:var(--white2);line-height:1.75;font-weight:300}.video-tag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem;display:block}
+.video-info{padding:1.25rem}.video-info h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;margin-bottom:0.5rem}.video-info p{font-size:0.84rem;color:var(--white2);line-height:1.75;font-weight:300}.video-tag{font-family:var(--fm);font-weight:400;font-size:var(--fs-micro);letter-spacing:2px;line-height:1.6;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem;display:block}
 /* TECH IMAGE CARDS */
 /* ============================================================
    3D VISUALIZER
@@ -436,7 +437,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .ai-dot{width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:pulse 2s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,212,255,0.5)}60%{opacity:0.8;box-shadow:0 0 0 9px transparent}}
 .ai-header-text h3{font-family:var(--fh);font-size:1.3rem;letter-spacing:1.5px}.ai-header-text p{font-size:0.71rem;color:var(--white3);font-weight:300}
-.ai-mode-btns{display:flex;gap:5px;flex-wrap:wrap}
+.ai-mode-btns{display:flex;gap:5px;flex-wrap:wrap}.ai-mode-group{display:contents} /* the group is semantic only: its chips lay out in the strip exactly as before (R8-A11Y-13) */
 .ai-mode-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:5px 11px;font-family:var(--fm);font-size:0.63rem;letter-spacing:0.8px;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}
 .ai-mode-btn.active{background:var(--cyan-dim);color:var(--cyan);border-color:var(--cyan);box-shadow:inset 0 0 0 1px var(--cyan)}
 @media(hover:hover){.ai-mode-btn:hover:not(.active){color:var(--white);border-color:rgba(0,212,255,0.3)}}
@@ -528,7 +529,7 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 /* Four-column desktops (≥1164px): the fifth "Daily" card runs full width under the four days with its routine in two columns, instead of sitting alone at 25% beside an empty row (the ≤768 block does the same for the 2+2+1 case) */
 @media(min-width:1164px){.dl-grid>.dl-card:last-child:nth-child(odd){grid-column:1/-1}.dl-grid>.dl-card:last-child:nth-child(odd) ul{columns:2;column-gap:2.5rem}.dl-grid>.dl-card:last-child:nth-child(odd) ul li{break-inside:avoid}}
 .dl-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.4rem;transition:border-color 0.3s,transform 0.2s}.dl-card:hover{border-color:var(--border);transform:translateY(-2px)}
-.dl-card h4{font-family:var(--fh);font-size:1.15rem;letter-spacing:1px;margin-bottom:0.4rem;color:var(--gold)}.dl-day{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-bottom:0.85rem}
+.dl-card h4{font-family:var(--fh);font-size:1.15rem;letter-spacing:1px;margin-bottom:0.4rem;color:var(--gold)}.dl-day{display:block;font-family:var(--fm);font-weight:400;font-size:var(--fs-micro);letter-spacing:2px;line-height:1.6;color:var(--white3);text-transform:uppercase;margin-bottom:0.85rem} /* inside the h4 since R8-A11Y-10, drawn as before */
 .dl-card ul{list-style:none}.dl-card ul li{font-size:0.82rem;color:var(--white2);padding:5px 0;display:flex;gap:9px;align-items:flex-start;border-bottom:1px solid var(--border2);line-height:1.6}.dl-card ul li:last-child{border-bottom:none}
 .reps{font-family:var(--fm);color:var(--gold);font-size:0.71rem;flex-shrink:0;min-width:48px}
 /* TRAINING LOG */
@@ -540,7 +541,7 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 /* NUTRITION */
 .nutr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem}
 .nutr-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.4rem;transition:border-color 0.3s}.nutr-card:hover{border-color:var(--border)}
-.nutr-card h4{font-family:var(--fh);font-size:1.15rem;letter-spacing:1px;margin-bottom:0.4rem;color:var(--green)}.nutr-time{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-bottom:0.85rem}
+.nutr-card h4{font-family:var(--fh);font-size:1.15rem;letter-spacing:1px;margin-bottom:0.4rem;color:var(--green)}.nutr-time{display:block;font-family:var(--fm);font-weight:400;font-size:var(--fs-micro);letter-spacing:2px;line-height:1.6;color:var(--white3);text-transform:uppercase;margin-bottom:0.85rem} /* inside the h4 since R8-A11Y-10 */
 .nutr-card ul{list-style:none}.nutr-card ul li{font-size:0.82rem;color:var(--white2);padding:5px 0;border-bottom:1px solid var(--border2);line-height:1.6}.nutr-card ul li:last-child{border-bottom:none}
 /* CONTENT BLOCKS */
 .content-block{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;margin-bottom:1.25rem}.content-block h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1rem;color:var(--white)}.content-block p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.85rem}.content-block p:last-child{margin-bottom:0}
@@ -578,6 +579,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .imggen-controls{display:flex;flex-direction:column;gap:1rem;min-width:0}.imggen-controls .form-select,.imggen-controls .form-textarea{width:100%;min-width:0}
 /* REVEAL ANIMATION */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}.reveal.visible{opacity:1;transform:none}
+.reveal:focus-within{opacity:1;transform:none;transition:none} /* a card tabbed to before the observer fired must not hold focus while invisible (R8-A11Y-07) */
 /* MISC BUTTONS */
 .btn-sm{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:8px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;font-weight:500;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}.btn-sm:hover{background:var(--cyan2)}
 .btn-ghost-sm{background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.35);border-radius:6px;padding:7px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}.btn-ghost-sm:hover{background:var(--cyan-dim)}
@@ -789,6 +791,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-timers .tlt-opts .form-group{flex:1 1 200px}
 #page-timers .tlt-check{display:inline-flex;align-items:center;gap:9px;font-size:0.85rem;color:var(--white2);min-height:44px;cursor:pointer;user-select:none}
 #page-timers .tlt-check input{width:24px;height:24px;accent-color:var(--cyan);cursor:pointer;margin:0}
+#page-timers .tlt-check.is-disabled{color:var(--white3);cursor:not-allowed}#page-timers .tlt-check input:disabled{cursor:not-allowed;opacity:0.5}
+#page-timers .tlt-check-hint{width:100%;font-size:0.78rem;color:var(--white3);line-height:1.5} /* shown only where the Wake Lock API is missing (R8-A11Y-12) */
 #page-timers .tlt-tap{min-height:44px;padding:0 18px}
 
 /* ── transport buttons ── */
@@ -1022,7 +1026,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-days-wrap{text-align:center;min-width:120px}
 #page-planner .pl-days{font-family:var(--fh);font-size:clamp(3.4rem,13vw,6.2rem);line-height:0.9;color:var(--cyan);letter-spacing:2px;text-shadow:0 0 60px rgba(0,212,255,0.35)}
 #page-planner .pl-days-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--white3);text-transform:uppercase;margin-top:8px}
-#page-planner .pl-meet-name{font-family:var(--fh);font-size:clamp(1.5rem,4.5vw,2.3rem);letter-spacing:1px;line-height:1.05;overflow-wrap:anywhere}
+#page-planner .pl-meet-name{font-family:var(--fh);font-weight:400;font-size:clamp(1.5rem,4.5vw,2.3rem);letter-spacing:1px;line-height:1.05;overflow-wrap:anywhere} /* an h2 since R8-A11Y-06; weight kept as the div had it */
 #page-planner .pl-meet-date{font-family:var(--fm);font-size:0.72rem;color:var(--white2);margin-top:5px;letter-spacing:0.3px}
 #page-planner .pl-meet-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:0.75rem}
 #page-planner .pl-phase{margin-top:0.9rem;padding:0.85rem 1rem;background:rgba(4,13,24,0.45);border:1px solid var(--border2);border-radius:var(--r8)}
@@ -1034,7 +1038,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-countdown-empty{font-size:0.9rem;color:var(--white2);line-height:1.8;font-weight:300}
 #page-planner .pl-countdown-empty strong{color:var(--cyan);font-weight:500}
 #page-planner .pl-cp-wrap{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.5rem}
-#page-planner .pl-cp-wrap h5{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:1rem;overflow-wrap:anywhere}
+#page-planner .pl-cp-wrap h2{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:1rem;overflow-wrap:anywhere}
 #page-planner .pl-timeline{list-style:none;margin:0 0 0 8px;padding:0;border-left:2px solid var(--border)}
 #page-planner .pl-timeline li{position:relative;padding:0 0 1.15rem 1.35rem}
 #page-planner .pl-timeline li:last-child{padding-bottom:0}
@@ -1607,6 +1611,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 #access-gate{align-items:flex-start;justify-content:center;padding:2rem;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .auth-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1);padding:2.75rem 2.25rem}
 .auth-card .form-group{margin-bottom:0.9rem;text-align:left}.auth-card .form-group.auth-fg-last{margin-bottom:1rem}
+.auth-hint{font-family:var(--fm);font-size:0.68rem;color:var(--white3);letter-spacing:0.3px;line-height:1.45;margin:0} /* field rules stated before submit, not only in the error (R8-A11Y-04) */
 .auth-btn{width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:500;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem}
 #screen-signup .auth-btn{margin-bottom:0.6rem} /* the legal line sits right under it */
 .auth-msg{font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;margin-bottom:0.85rem;line-height:1.5} /* the scripts toggle display and recolour a success green */
@@ -2182,28 +2187,28 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="tab-btn" onclick="switchTab(this,'v-race')">Race Analysis</button>
   </div>
   <div class="tab-panel active" id="v-fr"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="Q0vq-34dWF0" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/Q0vq-34dWF0/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: FREESTYLE STROKE BREAKDOWN"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Freestyle · Full Stroke</span><h4>FREESTYLE STROKE BREAKDOWN</h4><p>A Division I swim coach breaks down front crawl technique step by step.</p></div></div>
-    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="omkBPOvAuu8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/omkBPOvAuu8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: HIGH ELBOW SWIMMING — 4 TIPS"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Freestyle · Catch</span><h4>HIGH ELBOW SWIMMING — 4 TIPS</h4><p>Global Triathlon Network on the single most impactful freestyle skill.</p></div></div>
-    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="MC9m8wp1dqs" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/MC9m8wp1dqs/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: FRONT CRAWL 6-BEAT KICK"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Freestyle · Kick</span><h4>FRONT CRAWL 6-BEAT KICK</h4><p>Step-by-step guide to the 6-beat kick rhythm and mechanics.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="Q0vq-34dWF0" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/Q0vq-34dWF0/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: FREESTYLE STROKE BREAKDOWN"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><h4><span class="video-tag">Freestyle · Full Stroke</span> FREESTYLE STROKE BREAKDOWN</h4><p>A Division I swim coach breaks down front crawl technique step by step.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="omkBPOvAuu8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/omkBPOvAuu8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: HIGH ELBOW SWIMMING — 4 TIPS"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><h4><span class="video-tag">Freestyle · Catch</span> HIGH ELBOW SWIMMING — 4 TIPS</h4><p>Global Triathlon Network on the single most impactful freestyle skill.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="MC9m8wp1dqs" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/MC9m8wp1dqs/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: FRONT CRAWL 6-BEAT KICK"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><h4><span class="video-tag">Freestyle · Kick</span> FRONT CRAWL 6-BEAT KICK</h4><p>Step-by-step guide to the 6-beat kick rhythm and mechanics.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-bk"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="YkjOvxHsY1g" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/YkjOvxHsY1g/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: BACKSTROKE WITH PERFECT TECHNIQUE"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Backstroke · Full Stroke</span><h4>BACKSTROKE WITH PERFECT TECHNIQUE</h4><p>Six elements of backstroke: body position, rotation, entry, pull, kick, and timing.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="YkjOvxHsY1g" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/YkjOvxHsY1g/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: BACKSTROKE WITH PERFECT TECHNIQUE"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><h4><span class="video-tag">Backstroke · Full Stroke</span> BACKSTROKE WITH PERFECT TECHNIQUE</h4><p>Six elements of backstroke: body position, rotation, entry, pull, kick, and timing.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-br"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="RbgiTaVUqMk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/RbgiTaVUqMk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: BREASTSTROKE TIMING &amp; COORDINATION"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Breaststroke · Timing</span><h4>BREASTSTROKE TIMING & COORDINATION</h4><p>The pull-breathe-kick-glide sequence explained clearly.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="RbgiTaVUqMk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/RbgiTaVUqMk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: BREASTSTROKE TIMING &amp; COORDINATION"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><h4><span class="video-tag">Breaststroke · Timing</span> BREASTSTROKE TIMING & COORDINATION</h4><p>The pull-breathe-kick-glide sequence explained clearly.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-fly"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="o6Pnv10wyHk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/o6Pnv10wyHk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: MASTER BUTTERFLY UNDULATION"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Butterfly · Undulation</span><h4>MASTER BUTTERFLY UNDULATION</h4><p>Olympic Channel: Olympian Dylan Carter on the chest-down wave that drives butterfly.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="o6Pnv10wyHk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/o6Pnv10wyHk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: MASTER BUTTERFLY UNDULATION"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><h4><span class="video-tag">Butterfly · Undulation</span> MASTER BUTTERFLY UNDULATION</h4><p>Olympic Channel: Olympian Dylan Carter on the chest-down wave that drives butterfly.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-uw"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="bjDfI0NMVY8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/bjDfI0NMVY8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: GRETCHEN WALSH&#x27;S UNDERWATER DOLPHIN KICK"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Underwater · Dolphin Kick</span><h4>GRETCHEN WALSH'S UNDERWATER DOLPHIN KICK</h4><p>Breakdown of one of the fastest underwaters in the world — the 5th stroke.</p></div></div>
-    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="GoyXk3xMfKY" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/GoyXk3xMfKY/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: HOW TO FLIP TURN"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Underwater · Turns</span><h4>HOW TO FLIP TURN</h4><p>Every component of the freestyle flip turn broken down.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="bjDfI0NMVY8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/bjDfI0NMVY8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: GRETCHEN WALSH&#x27;S UNDERWATER DOLPHIN KICK"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><h4><span class="video-tag">Underwater · Dolphin Kick</span> GRETCHEN WALSH'S UNDERWATER DOLPHIN KICK</h4><p>Breakdown of one of the fastest underwaters in the world — the 5th stroke.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="GoyXk3xMfKY" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/GoyXk3xMfKY/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: HOW TO FLIP TURN"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><h4><span class="video-tag">Underwater · Turns</span> HOW TO FLIP TURN</h4><p>Every component of the freestyle flip turn broken down.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-dry"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="IKWGF4kP8Cs" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/IKWGF4kP8Cs/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: 30-MINUTE DRYLAND WORKOUT"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Dryland · Strength</span><h4>30-MINUTE DRYLAND WORKOUT</h4><p>Complete no-equipment dryland session built for swimmers.</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="IKWGF4kP8Cs" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/IKWGF4kP8Cs/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: 30-MINUTE DRYLAND WORKOUT"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><h4><span class="video-tag">Dryland · Strength</span> 30-MINUTE DRYLAND WORKOUT</h4><p>Complete no-equipment dryland session built for swimmers.</p></div></div>
   </div></div>
   <div class="tab-panel" id="v-race"><div class="video-grid">
-    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="3oZo0I4oLfU" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/3oZo0I4oLfU/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: POPOVICI WORLD-RECORD ANALYSIS"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Race · Analysis</span><h4>POPOVICI WORLD-RECORD ANALYSIS</h4><p>Technique analysis of David Popovici's 2022 world-record 100 m freestyle (46.86, since beaten).</p></div></div>
+    <div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="3oZo0I4oLfU" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/3oZo0I4oLfU/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: POPOVICI WORLD-RECORD ANALYSIS"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><h4><span class="video-tag">Race · Analysis</span> POPOVICI WORLD-RECORD ANALYSIS</h4><p>Technique analysis of David Popovici's 2022 world-record 100 m freestyle (46.86, since beaten).</p></div></div>
   </div></div>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
@@ -2275,15 +2280,15 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <h1 class="section-title">DRYLAND <span>PROGRAMMING</span></h1>
   <p class="section-intro">Four principles that transfer directly to water: scapular stability, rotational power, hip hinge strength, and core anti-rotation.</p>
   <div class="dl-grid reveal">
-    <div class="dl-card"><div class="dl-day">Day 1 — Monday</div><h4>PULL STRENGTH</h4><ul>
+    <div class="dl-card"><h4><span class="dl-day">Day 1 — Monday</span> PULL STRENGTH</h4><ul>
       <li><span class="reps">4×6</span>Weighted Pull-Ups</li><li><span class="reps">3×10</span>Single-Arm Cable Row</li><li><span class="reps">3×12</span>Face Pulls with Band</li><li><span class="reps">3×8</span>Trap Bar Deadlift</li><li><span class="reps">4×30 s</span>Dead Bug</li></ul></div>
-    <div class="dl-card"><div class="dl-day">Day 2 — Tuesday</div><h4>ROTATIONAL POWER</h4><ul>
+    <div class="dl-card"><h4><span class="dl-day">Day 2 — Tuesday</span> ROTATIONAL POWER</h4><ul>
       <li><span class="reps">4×8</span>Med Ball Rotational Throws</li><li><span class="reps">3×10</span>Cable Chops High-Low</li><li><span class="reps">3×10</span>Pallof Press</li><li><span class="reps">3×8</span>Single-Leg RDL</li><li><span class="reps">3×20 s</span>Copenhagen Plank</li></ul></div>
-    <div class="dl-card"><div class="dl-day">Day 3 — Thursday</div><h4>EXPLOSIVE POWER</h4><ul>
+    <div class="dl-card"><h4><span class="dl-day">Day 3 — Thursday</span> EXPLOSIVE POWER</h4><ul>
       <li><span class="reps">4×4</span>Box Jumps</li><li><span class="reps">4×6</span>Hang Power Clean</li><li><span class="reps">3×8</span>Lat Pulldown + Pause</li><li><span class="reps">3×12</span>Hip Thrust</li><li><span class="reps">3×15</span>Serratus Punch</li></ul></div>
-    <div class="dl-card"><div class="dl-day">Day 4 — Friday</div><h4>SHOULDER HEALTH</h4><ul>
+    <div class="dl-card"><h4><span class="dl-day">Day 4 — Friday</span> SHOULDER HEALTH</h4><ul>
       <li><span class="reps">3×15</span>Sidelying External Rotation</li><li><span class="reps">3×12</span>Y-T-W-L on Incline</li><li><span class="reps">3×30 s</span>Sleeper Stretch (for GIRD — limited internal rotation)</li><li><span class="reps">3×20</span>Ankle Circles + Toe Spreads</li></ul></div>
-    <div class="dl-card"><div class="dl-day">Daily</div><h4>MOBILITY ROUTINE</h4><ul>
+    <div class="dl-card"><h4><span class="dl-day">Daily</span> MOBILITY ROUTINE</h4><ul>
       <li><span class="reps">2 min</span>Ankle Plantarflexion Loading</li><li><span class="reps">2 min</span>Thoracic Rotation</li><li><span class="reps">3 min</span>Shoulder CARs</li><li><span class="reps">1 min</span>Hip 90/90 Switches</li></ul></div>
   </div>
 </div>
@@ -2368,7 +2373,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button class="calc-btn" onclick="calcSplits()">Generate Splits <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="split-notice" role="alert" hidden></p>
       </div>
-      <div class="calc-panel"><h4>SPLIT TABLE</h4><div id="split-result" aria-live="polite" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Enter your target time above.</div></div>
+      <div class="calc-panel"><h4>SPLIT TABLE</h4><div id="split-result" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Enter your target time above.</div></div>
     </div>
   </div>
   <div class="tab-panel" id="c-pace">
@@ -2378,7 +2383,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button class="calc-btn" onclick="calcPaceZones()">Calculate Zones <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="pace-notice" role="alert" hidden></p>
       </div>
-      <div class="calc-panel"><h4>ZONE TABLE</h4><div id="pace-result" aria-live="polite" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Enter your best 100 m time to see your zone paces.</div>
+      <div class="calc-panel"><h4>ZONE TABLE</h4><div id="pace-result" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Enter your best 100 m time to see your zone paces.</div>
         <p style="font-size:0.76rem;color:var(--white3);margin-top:1rem;line-height:1.6">Rough reference paces derived from your 100 m time, not lab-tested lactate zones. Use them as a starting point and adjust to feel, heart rate, and how the set actually goes.</p>
       </div>
     </div>
@@ -2391,7 +2396,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button class="calc-btn" onclick="convertTime()">Convert <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="conv-notice" role="alert" hidden></p>
       </div>
-      <div class="calc-panel"><h4>CONVERSION RESULTS</h4><div id="conv-result" aria-live="polite" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Fill in the form above.</div>
+      <div class="calc-panel"><h4>CONVERSION RESULTS</h4><div id="conv-result" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Fill in the form above.</div>
       <div class="info-box" style="margin-top:1.5rem"><strong>Note:</strong> LCM is ~2–3% slower than SCM because of fewer turns. These are flat approximations for training reference — they are <strong>not</strong> the official USA Swimming conversion factors, which vary by event and distance. For anything that counts (cuts, entries, seeding), use the official conversion on <a href="https://www.usaswimming.org" target="_blank" rel="noopener">usaswimming.org</a>.</div></div>
     </div>
   </div>
@@ -2415,10 +2420,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="info-box" style="margin:1.25rem 0 2rem"><strong>Read the HR numbers as a 10-second count, not bpm.</strong> Stop, find your pulse, count for 10 seconds — "HR 24–28" means 24–28 beats in that 10 seconds (roughly 144–168 bpm). Lactate values are typical ranges from the literature, not measurements of you.</div>
   <div style="display:flex;flex-direction:column;gap:1.25rem">
-    <div class="card"><div class="badge green">Zone 1</div><h3>RECOVERY</h3><p><strong>Lactate:</strong> below 2.0 mmol/L · <strong>HR:</strong> under 24 on the 10-second count · Easy enough to hold a full conversation. Warm-up, cool-down, recovery between hard sets — and a large share of base volume: elite programs log about 40% of their meters here (Hellard et al. 2019). Going too hard in what should be Zone 1 is the most common way swimmers blunt the next quality set.</p></div>
-    <div class="card"><div class="badge cyan">Zone 2 — <span style="text-transform:none">AeT</span></div><h3>AEROBIC THRESHOLD</h3><p><strong>Lactate:</strong> 2.0–3.0 mmol/L · <strong>HR:</strong> 24–28 on the 10-second count · <strong>Zones 1–2 together carry 80%+ of total training volume.</strong> Builds mitochondrial density, oxidative enzyme capacity, cardiac output.</p></div>
-    <div class="card"><div class="badge gold">Zone 3</div><h3>THRESHOLD</h3><p><strong>Lactate:</strong> 3.0–5.0 mmol/L · <strong>HR:</strong> 28–31 on the 10-second count · <strong>Three-to-four-word sentences at most.</strong> Typically introduced around Week 4 of a season and expanded progressively through Meso II.</p></div>
-    <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX &amp; SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · HR 31–33 on the 10-second count · 3–8 min intervals · 48–72 h recovery. <strong>Zone 5:</strong> sprint / anaerobic — two kinds. Alactic speed: 10–30 s efforts on full rest; lactate stays low and HR is not the guide. Lactate production: 50–100 m maximal efforts (8.0+ mmol/L, HR near max), 2–5 min rest, 1–2× a week at most.</p></div>
+    <div class="card"><h3><span class="badge green">Zone 1</span> RECOVERY</h3><p><strong>Lactate:</strong> below 2.0 mmol/L · <strong>HR:</strong> under 24 on the 10-second count · Easy enough to hold a full conversation. Warm-up, cool-down, recovery between hard sets — and a large share of base volume: elite programs log about 40% of their meters here (Hellard et al. 2019). Going too hard in what should be Zone 1 is the most common way swimmers blunt the next quality set.</p></div>
+    <div class="card"><h3><span class="badge cyan">Zone 2 — <span style="text-transform:none">AeT</span></span> AEROBIC THRESHOLD</h3><p><strong>Lactate:</strong> 2.0–3.0 mmol/L · <strong>HR:</strong> 24–28 on the 10-second count · <strong>Zones 1–2 together carry 80%+ of total training volume.</strong> Builds mitochondrial density, oxidative enzyme capacity, cardiac output.</p></div>
+    <div class="card"><h3><span class="badge gold">Zone 3</span> THRESHOLD</h3><p><strong>Lactate:</strong> 3.0–5.0 mmol/L · <strong>HR:</strong> 28–31 on the 10-second count · <strong>Three-to-four-word sentences at most.</strong> Typically introduced around Week 4 of a season and expanded progressively through Meso II.</p></div>
+    <div class="card"><h3><span class="badge red">Zone 4–5</span> VO₂ MAX &amp; SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · HR 31–33 on the 10-second count · 3–8 min intervals · 48–72 h recovery. <strong>Zone 5:</strong> sprint / anaerobic — two kinds. Alactic speed: 10–30 s efforts on full rest; lactate stays low and HR is not the guide. Lactate production: 50–100 m maximal efforts (8.0+ mmol/L, HR near max), 2–5 min rest, 1–2× a week at most.</p></div>
   </div>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
@@ -2512,9 +2517,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="tab-btn" onclick="switchTab(this,'n-hydration')">Hydration</button>
   </div>
   <div class="tab-panel active" id="n-daily"><div class="nutr-grid">
-    <div class="nutr-card"><div class="nutr-time">Pre-AM Session (60–90 min before)</div><h4>MORNING FUEL</h4><ul><li>1–2 slices white toast + jam (fast carbs)</li><li>Banana or 200 ml orange juice</li><li>250 ml water on waking</li><li>Avoid high-fat, high-fiber foods</li></ul></div>
-    <div class="nutr-card"><div class="nutr-time">Recovery Window</div><h4>POST-SESSION</h4><ul><li>Within 30 min: ~1 g/kg carbs (45–60 g for a 45–60 kg swimmer, 60–80 g at 60–80 kg) + 0.3 g/kg protein (15–25 g)</li><li>Chocolate milk, Greek yogurt + banana</li><li>1–1.5 L water over the next 2 hours</li></ul></div>
-    <div class="nutr-card"><div class="nutr-time">Pre-PM Session (2–3 h before)</div><h4>AFTERNOON FUEL</h4><ul><li>80–100 g carbs, 30 g protein, low fat</li><li>Chicken + rice + vegetables</li><li>500 ml water in the 2 hours before</li></ul></div>
+    <div class="nutr-card"><h4><span class="nutr-time">Pre-AM Session (60–90 min before)</span> MORNING FUEL</h4><ul><li>1–2 slices white toast + jam (fast carbs)</li><li>Banana or 200 ml orange juice</li><li>250 ml water on waking</li><li>Avoid high-fat, high-fiber foods</li></ul></div>
+    <div class="nutr-card"><h4><span class="nutr-time">Recovery Window</span> POST-SESSION</h4><ul><li>Within 30 min: ~1 g/kg carbs (45–60 g for a 45–60 kg swimmer, 60–80 g at 60–80 kg) + 0.3 g/kg protein (15–25 g)</li><li>Chocolate milk, Greek yogurt + banana</li><li>1–1.5 L water over the next 2 hours</li></ul></div>
+    <div class="nutr-card"><h4><span class="nutr-time">Pre-PM Session (2–3 h before)</span> AFTERNOON FUEL</h4><ul><li>80–100 g carbs, 30 g protein, low fat</li><li>Chicken + rice + vegetables</li><li>500 ml water in the 2 hours before</li></ul></div>
   </div>
   <div class="divider"></div>
   <div class="grid-2">
@@ -2524,9 +2529,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="n-race">
     <div class="success-box"><strong>Race day nutrition is PRACTICE nutrition.</strong> Never try anything new on race day.</div>
     <div class="nutr-grid">
-      <div class="nutr-card"><div class="nutr-time">Night Before</div><h4>CARB LOADING</h4><ul><li>High-carb dinner: pasta, rice, bread</li><li>Low fiber, low fat</li><li>8–10 g/kg over the day</li></ul></div>
-      <div class="nutr-card"><div class="nutr-time">Morning of Race</div><h4>PRE-MEET MEAL</h4><ul><li>3–4 h before: 1–2 g/kg carbs</li><li>600 ml water with breakfast</li><li>Caffeine (adult athletes): 3 mg/kg 60 min before — not advised for junior/adolescent swimmers</li></ul></div>
-      <div class="nutr-card"><div class="nutr-time">Between Events</div><h4>INTRA-MEET</h4><ul><li>30–60 g simple carbs every 60–90 min</li><li>250–350 ml water every 30–45 min</li><li>Avoid heavy food within 90 min of any event</li></ul></div>
+      <div class="nutr-card"><h4><span class="nutr-time">Night Before</span> CARB LOADING</h4><ul><li>High-carb dinner: pasta, rice, bread</li><li>Low fiber, low fat</li><li>8–10 g/kg over the day</li></ul></div>
+      <div class="nutr-card"><h4><span class="nutr-time">Morning of Race</span> PRE-MEET MEAL</h4><ul><li>3–4 h before: 1–2 g/kg carbs</li><li>600 ml water with breakfast</li><li>Caffeine (adult athletes): 3 mg/kg 60 min before — not advised for junior/adolescent swimmers</li></ul></div>
+      <div class="nutr-card"><h4><span class="nutr-time">Between Events</span> INTRA-MEET</h4><ul><li>30–60 g simple carbs every 60–90 min</li><li>250–350 ml water every 30–45 min</li><li>Avoid heavy food within 90 min of any event</li></ul></div>
     </div>
   </div>
   <div class="tab-panel" id="n-recovery">
@@ -2621,9 +2626,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="info-box"><strong>The taper "flat" is normal.</strong> Most swimmers feel terrible mid-taper. This almost always resolves by race day. Do NOT extend training because taper feels bad.</div>
   </div>
   <div class="tab-panel" id="tp-recovery"><div class="nutr-grid">
-    <div class="nutr-card"><div class="nutr-time">Evidence: Strong</div><h4>SLEEP</h4><ul><li>The strongest recovery tool there is</li><li>Hours, naps and sleep hygiene: see the <a href="#taper" onclick="showPageTab('taper','tp-sleep');return false;">Sleep tab</a></li></ul></div>
-    <div class="nutr-card"><div class="nutr-time">Evidence: Moderate</div><h4>COLD WATER</h4><ul><li>10–15 min at 10–15°C post-training</li><li>Avoid after strength training</li><li>Best within 30 min of finishing</li><li>Useful in a meet or a hard week, not a daily habit</li></ul></div>
-    <div class="nutr-card"><div class="nutr-time">Evidence: Moderate</div><h4>ACTIVE RECOVERY</h4><ul><li>Easy pool swim 800–1,200 m (15–25 min), Zone 1</li><li>HR below 22 on the 10-second count</li><li>Even 10–20 min beats complete inactivity</li></ul></div>
+    <div class="nutr-card"><h4><span class="nutr-time">Evidence: Strong</span> SLEEP</h4><ul><li>The strongest recovery tool there is</li><li>Hours, naps and sleep hygiene: see the <a href="#taper" onclick="showPageTab('taper','tp-sleep');return false;">Sleep tab</a></li></ul></div>
+    <div class="nutr-card"><h4><span class="nutr-time">Evidence: Moderate</span> COLD WATER</h4><ul><li>10–15 min at 10–15°C post-training</li><li>Avoid after strength training</li><li>Best within 30 min of finishing</li><li>Useful in a meet or a hard week, not a daily habit</li></ul></div>
+    <div class="nutr-card"><h4><span class="nutr-time">Evidence: Moderate</span> ACTIVE RECOVERY</h4><ul><li>Easy pool swim 800–1,200 m (15–25 min), Zone 1</li><li>HR below 22 on the 10-second count</li><li>Even 10–20 min beats complete inactivity</li></ul></div>
   </div></div>
   <div class="tab-panel" id="tp-sleep">
     <div class="content-block"><h4>SLEEP OPTIMIZATION</h4><ul>
@@ -2869,14 +2874,17 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="ai-dot"></div>
         <div class="ai-header-text"><h3>COACH CHAT</h3><p>Expert coaching knowledge · the 20-message limit keeps it free for everyone</p></div>
       </div>
-      <div class="ai-mode-btns" role="group" aria-label="Coach mode">
+      <div class="ai-mode-btns">
+        <!-- The six mode chips are the group; Clear (an action, not a seventh mode) sits beside it in the same strip (R8-A11Y-13) -->
+        <div class="ai-mode-group" role="group" aria-label="Coach mode">
         <button class="ai-mode-btn active" id="mode-coach" aria-pressed="true" onclick="setMode('coach',this)"><span aria-hidden="true">🏊 </span>Coaching</button>
         <button class="ai-mode-btn" id="mode-tech" aria-pressed="false" onclick="setMode('technique',this)"><span aria-hidden="true">⚙️ </span>Technique</button>
         <button class="ai-mode-btn" id="mode-race" aria-pressed="false" onclick="setMode('race',this)"><span aria-hidden="true">🏁 </span>Race</button>
         <button class="ai-mode-btn" id="mode-science" aria-pressed="false" onclick="setMode('science',this)"><span aria-hidden="true">🔬 </span>Science</button>
         <button class="ai-mode-btn" id="mode-nutrition" aria-pressed="false" onclick="setMode('nutrition',this)"><span aria-hidden="true">🥗 </span>Nutrition</button>
         <button class="ai-mode-btn" id="mode-mental" aria-pressed="false" onclick="setMode('mental',this)"><span aria-hidden="true">🧠 </span>Mental</button>
-        <button class="ai-mode-btn" id="mode-clear" onclick="clearChat()"><span aria-hidden="true">✕ </span>Clear</button>
+        </div>
+        <button class="ai-mode-btn" id="mode-clear" aria-label="Clear conversation" onclick="clearChat()"><span aria-hidden="true">✕ </span>Clear</button>
       </div>
     </div>
     <p class="sr-only" id="ai-messages-hint">Scrollable conversation. When focused, use the arrow keys to scroll it.</p>
@@ -2923,7 +2931,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <!-- ══════════════ TAB 1 · TEMPO TRAINER ══════════════ -->
   <div class="tab-panel active" id="tlt-tab-tempo">
-    <div class="tlt-card" id="tlt-tempo-card" tabindex="0" role="group" aria-label="Tempo trainer" aria-describedby="tlt-tempo-keys">
+    <div class="tlt-card" id="tlt-tempo-card" tabindex="0" role="group" aria-labelledby="tlt-tempo-h" aria-describedby="tlt-tempo-keys">
+      <h2 class="sr-only" id="tlt-tempo-h">Tempo trainer</h2><!-- each tool is a heading too, so H-key navigation and the rotor find it (R8-A11Y-05) -->
       <div class="tlt-seg" role="group" aria-label="Tempo unit">
         <button type="button" id="tlt-mode-spm" aria-pressed="true" onclick="tlt_setMode('spm')">Strokes / min<small>one beep per arm stroke</small></button>
         <button type="button" id="tlt-mode-cpm" aria-pressed="false" onclick="tlt_setMode('cpm')">Cycles / min<small>one beep per full cycle</small></button>
@@ -2982,7 +2991,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <!-- ══════════════ TAB 2 · INTERVAL / CIRCUIT TIMER ══════════════ -->
   <div class="tab-panel" id="tlt-tab-interval">
-    <div class="tlt-int-display" id="tlt-int-display" data-phase="idle" data-paused="false" tabindex="0" role="group" aria-label="Interval timer" aria-describedby="tlt-int-keys">
+    <div class="tlt-int-display" id="tlt-int-display" data-phase="idle" data-paused="false" tabindex="0" role="group" aria-labelledby="tlt-int-h" aria-describedby="tlt-int-keys">
+      <h2 class="sr-only" id="tlt-int-h">Interval timer</h2>
       <div class="tlt-int-top">
         <div class="tlt-int-phase" id="tlt-int-phase">READY</div>
         <div class="tlt-int-round" id="tlt-int-round">—</div>
@@ -3027,7 +3037,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <!-- ══════════════ TAB 3 · PACE CLOCK ══════════════ -->
   <div class="tab-panel" id="tlt-tab-pace">
-    <div class="tlt-card tlt-pc">
+    <div class="tlt-card tlt-pc" role="group" aria-labelledby="tlt-pc-h">
+      <h2 class="sr-only" id="tlt-pc-h">Pace clock</h2>
       <div class="tlt-pc-grid">
         <div class="tlt-pc-digital">
           <div class="tlt-pc-sec" id="tlt-pc-sec">:00</div>
@@ -3052,6 +3063,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button type="button" class="btn-ghost-sm" onclick="tlt_pcSync(30)">Deck clock is on the bottom now</button>
         <button type="button" class="btn-ghost-sm" onclick="tlt_pcSync(null)">Reset to wall clock</button>
         <label class="tlt-check" for="tlt-pc-awake"><input type="checkbox" id="tlt-pc-awake"> Keep screen awake</label>
+        <span class="tlt-check-hint" id="tlt-pc-awake-hint" hidden></span>
       </div>
       <div class="tlt-status" id="tlt-pc-status" role="status" aria-live="polite"></div>
     </div>
@@ -3306,9 +3318,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button type="button" class="btn-ghost-sm an-table-btn" id="an-table-btn" aria-expanded="false" aria-controls="an-table-wrap" onclick="tl_an_toggleTable()">Show as table</button>
       </div>
       <div class="an-chart-wrap" id="an-chart-wrap">
-        <canvas id="an-chart" class="an-chart-canvas" role="application" tabindex="0" aria-describedby="an-chart-help" aria-label="Weekly training volume, last 12 weeks"></canvas>
+        <canvas id="an-chart" class="an-chart-canvas" role="application" tabindex="0" aria-describedby="an-chart-summary an-chart-help" aria-label="Weekly training volume, last 12 weeks"></canvas>
         <div class="an-tooltip" id="an-tooltip" hidden></div>
       </div>
+      <p id="an-chart-summary" class="an-sr"></p><!-- the computed data summary: a description, not the chart's name (R8-A11Y-08) -->
       <p id="an-chart-help" class="an-sr">Stacked bar chart of weekly training volume for the last 12 weeks with a four-week rolling average line. Focus the chart and use the left and right arrow keys to read each week, Home and End for the first and last week, and Escape to clear. The same data is available as a table with the Show as table button.</p>
       <div id="an-chart-live" class="an-sr" role="status" aria-live="polite"></div>
       <div class="an-legend" id="an-legend"></div>
@@ -3374,7 +3387,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
             <input class="form-input" id="an-sw-strokes" type="number" inputmode="numeric" min="3" max="80" step="1" placeholder="e.g. 16"></div>
           <button class="calc-btn" type="button" onclick="tl_an_calcSwolf()">Calculate SWOLF <span aria-hidden="true">→</span></button>
           <p class="an-err" id="an-sw-err" role="status" aria-live="polite"></p>
-          <div class="calc-result" id="an-sw-result" aria-live="polite">
+          <div class="calc-result" id="an-sw-result">
             <div class="big" id="an-sw-score">—</div>
             <div class="sub" id="an-sw-sub">SWOLF</div>
             <p class="an-result-note" id="an-sw-note"></p>
@@ -3410,7 +3423,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
             <input class="form-input" id="an-sr-count" type="number" inputmode="numeric" min="2" max="2000" step="1" placeholder="e.g. 36"></div>
           <button class="calc-btn" type="button" onclick="tl_an_calcStroke()">Calculate <span aria-hidden="true">→</span></button>
           <p class="an-err" id="an-sr-err" role="status" aria-live="polite"></p>
-          <div class="calc-result an-result-left" id="an-sr-result" aria-live="polite">
+          <div class="calc-result an-result-left" id="an-sr-result">
             <div class="an-kv" id="an-sr-kv"></div>
             <p class="an-result-note" id="an-sr-note"></p>
           </div>
@@ -3440,11 +3453,11 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
             <input class="form-input" id="an-css-200" autocomplete="off" placeholder="e.g. 2:12.8" maxlength="10"></div>
           <button class="calc-btn" type="button" onclick="tl_an_calcCSS()">Calculate CSS <span aria-hidden="true">→</span></button>
           <p class="an-err" id="an-css-err" role="status" aria-live="polite"></p>
-          <div class="calc-result" id="an-css-result" aria-live="polite">
+          <div class="calc-result" id="an-css-result">
             <div class="big" id="an-css-pace">—</div>
             <div class="sub" id="an-css-sub">CSS pace per 100</div>
             <div class="an-kv an-kv-center" id="an-css-kv"></div>
-            <div class="table-wrap an-css-table-wrap"><table class="data-table an-css-table" id="an-css-table"><thead><tr><th scope="col">Reference</th><th scope="col">Per 50</th><th scope="col">Per 100</th><th scope="col">Per 200</th><th scope="col">Per 400</th></tr></thead><tbody></tbody></table></div>
+            <div class="table-wrap an-css-table-wrap"><table class="data-table an-css-table" id="an-css-table"><caption class="sr-only" id="an-css-caption">Paces per 50, 100, 200 and 400 at CSS and at your own 400 and 200 pace</caption><thead><tr><th scope="col">Reference</th><th scope="col">Per 50</th><th scope="col">Per 100</th><th scope="col">Per 200</th><th scope="col">Per 400</th></tr></thead><tbody></tbody></table></div>
             <p class="an-result-note" id="an-css-note"></p>
           </div>
         </div>
@@ -3650,7 +3663,7 @@ function showAuthScreen(name) {
     var el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
-  document.querySelectorAll('#access-gate [aria-invalid]').forEach(function(i){ i.removeAttribute('aria-invalid'); i.removeAttribute('aria-describedby'); });
+  document.querySelectorAll('#access-gate [aria-invalid]').forEach(function(i){ i.removeAttribute('aria-invalid'); authDescribe(i); });
   ['login-btn', 'signup-btn', 'forgot-btn', 'newpass-btn'].forEach(function(id){ var b = document.getElementById(id); if (b) b.disabled = _authNoLib; });
   if (_authNoLib) showAuthError(name, AUTH_NOLIB_MSG);
   var gate = document.getElementById('access-gate'), shown = document.getElementById('screen-' + name);
@@ -3673,6 +3686,13 @@ function tlAuthMsg(el, message) {
   el.style.display = 'block';
   _authMsgT[el.id] = setTimeout(function(){ delete _authMsgT[el.id]; el.textContent = message; }, 40);
 }
+// aria-describedby on an auth field = its standing rule hint (data-hint: "3–24 characters…", "At least 8
+// characters.") plus, only while the field is flagged, the error paragraph — so clearing an error never
+// drops the hint (R8-A11Y-04).
+function authDescribe(input, errId) {
+  var ids = []; var hint = input.getAttribute('data-hint'); if (hint) ids.push(hint); if (errId) ids.push(errId);
+  if (ids.length) input.setAttribute('aria-describedby', ids.join(' ')); else input.removeAttribute('aria-describedby');
+}
 function showAuthError(screenPrefix, message, field) {
   var el = document.getElementById(screenPrefix + '-error') || document.getElementById(screenPrefix + '-msg');
   if (!el) return;
@@ -3681,11 +3701,11 @@ function showAuthError(screenPrefix, message, field) {
   // Flag the field(s) so assistive tech links them to the message — and clear
   // a previous flag first, so fixing the username never leaves it marked red.
   document.querySelectorAll('#screen-' + screenPrefix + ' input').forEach(function(i){
-    i.removeAttribute('aria-invalid'); if (i.getAttribute('aria-describedby') === el.id) i.removeAttribute('aria-describedby');
+    i.removeAttribute('aria-invalid'); if ((' ' + (i.getAttribute('aria-describedby') || '') + ' ').indexOf(' ' + el.id + ' ') >= 0) authDescribe(i);
   });
   var targets = field === null ? [] : (typeof field === 'string' ? [document.getElementById(field)].filter(Boolean)
     : Array.prototype.slice.call(document.querySelectorAll('#screen-' + screenPrefix + ' input:not([type="checkbox"])')));
-  targets.forEach(function(i){ i.setAttribute('aria-invalid', 'true'); i.setAttribute('aria-describedby', el.id); });
+  targets.forEach(function(i){ i.setAttribute('aria-invalid', 'true'); authDescribe(i, el.id); });
   // One named field: put focus on it so keyboard and screen-reader users land on what needs fixing.
   if (typeof field === 'string' && targets[0]) { try { targets[0].focus({ preventScroll: true }); } catch (e) { try { targets[0].focus(); } catch (e2) {} } }
 }
@@ -3958,11 +3978,13 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne — Free Account</div>
     <h2 id="auth-h-signup" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;line-height:1;margin-bottom:1.5rem">CREATE YOUR <br><span style="color:var(--cyan)">ACCOUNT</span></h2>
     <div class="form-group"><label>Choose a Username</label>
-      <input id="signup-username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
+      <input id="signup-username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" aria-describedby="signup-username-hint" data-hint="signup-username-hint" onkeydown="if(tlPlainEnter(event))doSignup()">
+      <p class="auth-hint" id="signup-username-hint">3–24 characters: letters, numbers and underscore.</p></div>
     <div class="form-group"><label>Email</label>
       <input id="signup-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
     <div class="form-group auth-fg-last"><label>Choose a Password</label>
-      <input id="signup-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
+      <input id="signup-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" aria-describedby="signup-password-hint" data-hint="signup-password-hint" onkeydown="if(tlPlainEnter(event))doSignup()">
+      <p class="auth-hint" id="signup-password-hint">At least 8 characters.</p></div>
     <label class="auth-consent">
       <input type="checkbox" id="signup-age"> I confirm I am 13 years of age or older.
     </label>
@@ -3987,7 +4009,8 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <h2 id="auth-h-newpass" style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:0.75rem">CHOOSE A NEW <br><span style="color:var(--cyan)">PASSWORD</span></h2>
     <p style="font-size:0.82rem;color:var(--white3);line-height:1.5;margin-bottom:1.1rem">Your reset link checked out. Pick a new password for your account.</p>
     <div class="form-group"><label>New Password</label>
-      <input id="newpass-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(tlPlainEnter(event))doSetNewPassword()"></div>
+      <input id="newpass-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" aria-describedby="newpass-password-hint" data-hint="newpass-password-hint" onkeydown="if(tlPlainEnter(event))doSetNewPassword()">
+      <p class="auth-hint" id="newpass-password-hint">At least 8 characters.</p></div>
     <div class="form-group auth-fg-last"><label>Confirm New Password</label>
       <input id="newpass-confirm" type="password" autocomplete="new-password" class="form-input" placeholder="Type it again" onkeydown="if(tlPlainEnter(event))doSetNewPassword()"></div>
     <button id="newpass-btn" onclick="doSetNewPassword()" class="auth-btn">SET NEW PASSWORD <span aria-hidden="true">→</span></button>
@@ -4115,7 +4138,31 @@ function showPageTab(page, tabId, elId){
   if(btn) switchTab(btn, tabId);
   // Optional third id: an accordion inside that tab — open it and bring it into view
   // (activatePage's scroll-to-top runs on hashchange, so the scroll waits for it).
-  const el=elId?document.getElementById(elId):null; if(!el) return;
+  const el=elId?document.getElementById(elId):null;
+  if(!el){
+    if(!btn) return;
+    // No inner target: land on the tab that was just selected and say so — the route's own focus move only
+    // names the page ("Pace Calculators page"), which left the selected tab undiscovered (R8-A11Y-14).
+    // A same-page hop lands at once (the router does not move focus for a view that is already showing);
+    // a cross-page hop waits for the (async) activation and its focus move, and a caller that has focused
+    // a field of its own by then keeps it.
+    const pg=document.getElementById('page-'+page);
+    const land=function(){
+      try{ btn.focus({preventScroll:true}); }catch(e){}
+      if(typeof tlAnnounce==='function'){
+        const pt=String((typeof PAGE_TITLES!=='undefined'&&PAGE_TITLES[page])||page).split(' — ')[0];
+        const tn=(panel.getAttribute('data-tab-title')||btn.textContent||'').replace(/\s+/g,' ').trim();
+        tlAnnounce(pt+' page — '+tn+' tab');
+      }
+    };
+    if(pg&&pg.classList.contains('active')){ land(); return; }
+    let tries=0;
+    (function step(){
+      if(!pg||!pg.classList.contains('active')){ if(++tries<120) setTimeout(step,16); return; }
+      setTimeout(function(){ const ae=document.activeElement; if(ae&&ae!==document.body&&ae!==pg) return; land(); },40);
+    })();
+    return;
+  }
   const hdr=el.classList.contains('acc-header')?el:el.querySelector('.acc-header');
   if(hdr){ const body=hdr.nextElementSibling; if(body&&!body.classList.contains('open')) toggleAcc(hdr); }
   setTimeout(function(){
@@ -4228,7 +4275,7 @@ function tlUnshout(s){
   return s.replace(/[A-Za-z][A-Za-z'’₂]*/g,(w,i)=>{
     if(w!==w.toUpperCase()||TL_KEEP_CAPS.test(w)) return w;
     const lower=w.toLowerCase(), lead=s.slice(0,i), rest=s.slice(i+w.length);
-    if(/\d$/.test(lead)) return lower; // 5TH → 5th, 100M → 100m
+    if(/\d$/.test(lead)) return /^\d/.test(rest)?w:lower; // 5TH → 5th, 100M → 100m; a letter between digits is a code and keeps its case (2K1)
     if(TL_SMALL_WORDS.test(lower)&&lead&&!/[—–:(]\s*$/.test(lead)&&/\S/.test(rest)) return lower;
     return w.charAt(0)+lower.slice(1);
   });
@@ -4349,6 +4396,33 @@ function enhanceA11y(){
   // it are exposed at the next level down (aria-level) so heading navigation
   // reads h1 > h2 > h3 with no skipped levels and no CSS churn.
   document.querySelectorAll('.page').forEach(tlSyncHeadingLevels);
+  // WebKit drops list/listitem semantics from a list styled list-style:none (nearly every list here: cards,
+  // nav menus, footer columns, timelines) unless it carries an explicit role, so VoiceOver on iPhone gave no
+  // "list, 5 items" and no item navigation. Restore the role; lists built later by script set it themselves
+  // (renderLog, planner checkpoints, What's New). AI answers keep their bullets and are left alone (R8-A11Y-03).
+  document.querySelectorAll('ul,ol').forEach(l=>{
+    if(l.hasAttribute('role')||l.closest('.msg-bubble')) return;
+    if(getComputedStyle(l).listStyleType==='none') l.setAttribute('role','list');
+  });
+  // Home card links, accordion buttons, the auth buttons and Send are typed in caps for the display face and
+  // were read as shouting or spelled out (the tab and table names got tlUnshout in R7-A11Y-12). Name them from
+  // the title-cased text; the visible text is untouched, so label-in-name still matches. The auth buttons
+  // rewrite their text while busy ("Creating account…"), so the label follows the text (R8-A11Y-09).
+  const unshoutName=el=>{
+    const c=el.cloneNode(true); c.querySelectorAll('[aria-hidden="true"]').forEach(x=>x.remove());
+    const t=c.textContent.replace(/\s+/g,' ').trim(), u=tlUnshout(t);
+    if(u!==t) el.setAttribute('aria-label',u); else if(el.hasAttribute('data-tl-unshout')) el.removeAttribute('aria-label');
+    el.setAttribute('data-tl-unshout','1');
+  };
+  const nameObs=(typeof MutationObserver==='function')?new MutationObserver(muts=>{
+    const done=new Set();
+    muts.forEach(m=>{ const n=m.target.nodeType===1?m.target:m.target.parentElement; const b=n&&n.closest('[data-tl-unshout]'); if(b&&!done.has(b)){ done.add(b); unshoutName(b); } });
+  }):null;
+  document.querySelectorAll('.card-link,.acc-btn,.auth-btn,#ai-send-btn,#tlt-sp-main').forEach(el=>{
+    if(el.hasAttribute('aria-label')) return;
+    unshoutName(el);
+    if(nameObs) nameObs.observe(el,{childList:true,characterData:true,subtree:true});
+  });
   markNewTabLinks(document);
   document.querySelectorAll('.qp').forEach(qp=>{
     qp.setAttribute('role','button'); qp.setAttribute('tabindex','0');
@@ -4422,7 +4496,12 @@ function initReveal(){
       entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible'); _revealObs.unobserve(e.target);}});
     },{threshold:0,rootMargin:'0px 0px -60px 0px'}); // fire once the top edge is 60px into the viewport, however tall the container
   }
-  els.forEach(el=>_revealObs.observe(el));
+  els.forEach(el=>{
+    _revealObs.observe(el);
+    // Keyboard focus inside a block that has not scrolled into view yet reveals it for good (the CSS
+    // :focus-within rule shows it at once; this keeps it shown after focus leaves) (R8-A11Y-07).
+    if(!el.__tlRevealFocus){ el.__tlRevealFocus=1; el.addEventListener('focusin',()=>{ el.classList.add('visible'); _revealObs.unobserve(el); }); }
+  });
 }
 document.addEventListener('DOMContentLoaded',initReveal);
 // Hero particles
@@ -6190,7 +6269,7 @@ function renderSeasonTBA() {
   box.innerHTML =
     '<div style="margin-top:0.85rem;padding:0.85rem 1rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r8)">' +
       '<span class="ptag" style="margin-bottom:6px">Still to be announced</span>' +
-      '<ul style="list-style:none;margin:0;padding:0;font-size:0.82rem;color:var(--white2);line-height:1.7">' +
+      '<ul role="list" style="list-style:none;margin:0;padding:0;font-size:0.82rem;color:var(--white2);line-height:1.7">' +
       items.map(t => {
         const name = escapeHTML(t.name || '');
         const expected = escapeHTML(t.expected || '');
@@ -6863,7 +6942,12 @@ function calcSplits(){
   const fastest=Math.min.apply(null,splits);
   if(fastest<20.91){calcFail('split-notice','The fastest 50 in this plan would be '+fastest.toFixed(2)+' s — under the 50 m freestyle world record of 20.91 s. Check the distance and time.','split-time','split-result');return;}
   tlNotice('split-notice','');
-  let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">Race splits</caption><thead><tr><th scope="col">Distance</th><th scope="col">50 <span class="th-unit">m</span> Split</th><th scope="col">Cumulative</th></tr></thead><tbody>';
+  // The result panel is not a live region: a whole table read as one run of text has no row/column
+  // structure and cannot be interrupted. One sentence is announced instead and doubles as the table's
+  // caption, so table navigation lands on the same summary (R8-A11Y-02).
+  const summary='Race splits for '+dist+' m: '+n+' × 50 m, average '+formatTime(avg)+' per 50';
+  if(typeof tlAnnounce==='function') tlAnnounce(summary+' — table below.');
+  let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">'+escapeHTML(summary)+'</caption><thead><tr><th scope="col">Distance</th><th scope="col">50 <span class="th-unit">m</span> Split</th><th scope="col">Cumulative</th></tr></thead><tbody>';
   let cum=0;
   splits.forEach((s,i)=>{cum+=s; html+=`<tr><td>${(i+1)*50} m</td><td>${formatTime(s)}</td><td>${formatTime(cum)}</td></tr>`;});
   html+=`</tbody></table></div><div class="info-box" style="margin-top:1rem">Target: <strong>${formatTime(totalSecs)}</strong> &nbsp;·&nbsp; Avg 50 m: <strong>${formatTime(avg)}</strong> &nbsp;·&nbsp; First 50 includes the dive (−${bonus.toFixed(1)} s) &nbsp;·&nbsp; Long-course pattern — use the <a href="#planner" onclick="showPageTab('planner','pl-splits');return false;">Race Planner</a> for short course</div>`;
@@ -6882,7 +6966,9 @@ function calcPaceZones(){
     {name:'Zone 4 — VO₂ max',pct:[1.04,1.12],color:'#ff7043',desc:'HR 31–33 · 5–8 mmol'},
     {name:'Zone 5 — Sprint',pct:[0.90,1.04],color:'#ff5252',desc:'Speed & lactate work · rest-dependent'}
   ];
-  let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">Training pace zones</caption><thead><tr><th scope="col">Zone</th><th scope="col">Per 100 <span class="th-unit">m</span></th><th scope="col">Per 50 <span class="th-unit">m</span></th><th scope="col">Notes</th></tr></thead><tbody>';
+  const summary=zones.length+' training pace zones from a best 100 m of '+formatTime(t);
+  if(typeof tlAnnounce==='function') tlAnnounce(summary+' — table below.');
+  let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">'+escapeHTML(summary)+'</caption><thead><tr><th scope="col">Zone</th><th scope="col">Per 100 <span class="th-unit">m</span></th><th scope="col">Per 50 <span class="th-unit">m</span></th><th scope="col">Notes</th></tr></thead><tbody>';
   zones.forEach(z=>{
     const fast=t*z.pct[0], slow=t*z.pct[1];
     html+=`<tr><td style="color:${z.color}">${z.name}</td><td>${formatTime(fast)}–${formatTime(slow)}</td><td>${formatTime(fast/2)}–${formatTime(slow/2)}</td><td style="color:var(--white3);font-size:0.76rem">${z.desc}</td></tr>`;
@@ -6897,7 +6983,10 @@ function convertTime(){
   tlNotice('conv-notice','');
   const factors={scy:1.00,scm:1.11,lcm:1.14};
   const labels={scy:'SCY — 25 yd',scm:'SCM — 25 m',lcm:'LCM — 50 m'};   // same form as the menu above
-  let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">Converted times by pool format</caption><thead><tr><th scope="col">Pool Format</th><th scope="col">Equivalent Time</th><th scope="col">Difference</th></tr></thead><tbody>';
+  const others=Object.keys(factors).filter(k=>k!==from).map(k=>k.toUpperCase()+' '+formatTime(t*(factors[k]/factors[from])));
+  const summary=formatTime(t)+' '+from.toUpperCase()+' converts to '+others.join(' and ');
+  if(typeof tlAnnounce==='function') tlAnnounce(summary+' — table below.');
+  let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">'+escapeHTML(summary)+'</caption><thead><tr><th scope="col">Pool Format</th><th scope="col">Equivalent Time</th><th scope="col">Difference</th></tr></thead><tbody>';
   Object.keys(factors).forEach(to=>{
     const conv=t*(factors[to]/factors[from]);
     const diff=((conv-t)/t*100);
@@ -6960,7 +7049,7 @@ function lsRemove(k){ try{ localStorage.removeItem(k); }catch(e){} }
 // Optional 4th arg: the offending field (element or id). It gets aria-invalid
 // + aria-describedby=<notice id> so the message is read together with the
 // field when focus moves there; the flag is cleared on the next call for that notice.
-const _tlNoticeFields={};
+const _tlNoticeFields={}, _tlNoticeT={};
 function tlNotice(id,msg,kind,field){
   const el=document.getElementById(id);
   if(!el){ if(msg) alert(msg); return; }
@@ -6968,9 +7057,14 @@ function tlNotice(id,msg,kind,field){
   // Set before the text so the announcement carries the right politeness (R6-A11Y-06).
   const role=el.getAttribute('role');
   if(role==='alert'||role==='status'){ const want=(msg&&kind==='ok')?'status':'alert'; if(role!==want) el.setAttribute('role',want); }
-  el.textContent=msg||'';
+  clearTimeout(_tlNoticeT[id]);
   el.classList.toggle('is-ok',kind==='ok');
-  el.hidden=!msg;
+  // The notices start `hidden`: text written into a display:none live region arrives "already there"
+  // when the region joins the accessibility tree and most screen readers say nothing (same defect the
+  // update toast and auth status had). Show the empty region first, then write the message a beat later;
+  // a region that is already visible is written synchronously (R8-A11Y-01).
+  if(msg&&el.hidden){ el.textContent=''; el.hidden=false; _tlNoticeT[id]=setTimeout(function(){ el.textContent=msg; },40); }
+  else { el.textContent=msg||''; el.hidden=!msg; }
   const prev=_tlNoticeFields[id];
   if(prev){ prev.removeAttribute('aria-invalid'); if(prev.getAttribute('aria-describedby')===id) prev.removeAttribute('aria-describedby'); delete _tlNoticeFields[id]; }
   const pm=document.getElementById(id+'-field'); if(pm) pm.remove();
@@ -7084,6 +7178,10 @@ function exportBackup(){
     a.download='tidelyne-backup-'+logTodayISO(0)+'.json'; // local date like every other date on the site (toISOString() is UTC: an evening export in the Americas was dated tomorrow)
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    // The download itself is silent (and invisible to a screen reader): say what was saved, like every
+    // other data action on this page (R8-A11Y-11).
+    const n=data.log.length, p=Object.keys(data.prs).length;
+    tlNotice('profile-notice','Backup downloaded: '+a.download+' ('+n+(n===1?' session, ':' sessions, ')+p+(p===1?' PR':' PRs')+') — keep it somewhere safe.','ok');
   }catch(e){ tlNotice('profile-notice','Could not create the backup file on this device.'); }
 }
 function importBackup(ev){
@@ -7313,6 +7411,8 @@ function fmtLogDate(iso){
 // Every stored field is coerced or escaped: a crafted backup must render as text, never as markup. A partial entry
 // (an older backup, a hand-edited one) shows "Session" / "Unknown date" rather than an empty heading or "undefined";
 // blank distance, duration, zone and effort are simply left off the meta line.
+// The delete button's title is its full accessible name: a tooltip for the ✕ without a second, shorter
+// "Delete session" being read as the button's description (R8-A11Y-15).
 function logEntryHTML(e){
     const f=coerceLogFields(e), id=Number(e.id)||0, type=f.type.trim()||'Session';
     const isoDate=/^\d{4}-\d{2}-\d{2}$/.test(String(e.date||'')), shownDate=String(fmtLogDate(e.date)||'').trim()||'Unknown date';
@@ -7326,7 +7426,7 @@ function logEntryHTML(e){
         ${f.mainset?`<div class="log-notes" style="color:var(--cyan)">${escapeHTML(f.mainset)}</div>`:''}
         ${f.notes?`<div class="log-notes">${escapeHTML(f.notes)}</div>`:''}
       </div>
-      <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(shownDate)} ${escapeHTML(type)}" title="Delete session"><span aria-hidden="true">✕</span></button>
+      <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(shownDate)} ${escapeHTML(type)}" title="Delete session ${escapeHTML(shownDate)} ${escapeHTML(type)}"><span aria-hidden="true">✕</span></button>
     </li>`;
 }
 // The history is paged: a two-year daily log is 600 cards (≈100 k px on a phone) and the 2,000-session cap is
@@ -7367,7 +7467,7 @@ function renderLog(){
   }
   // A real list with a heading per session: screen readers hear "list, N items" and can jump between sessions.
   const shown=Math.min(entries.length,Math.max(LOG_PAGE,_logShown));
-  container.innerHTML='<ul class="log-list" aria-label="Logged sessions">'+entries.slice(0,shown).map(logEntryHTML).join('')+'</ul>'+logMoreHTML(entries.length,shown);
+  container.innerHTML='<ul class="log-list" role="list" aria-label="Logged sessions">'+entries.slice(0,shown).map(logEntryHTML).join('')+'</ul>'+logMoreHTML(entries.length,shown);
   // 30 calendar days including today, compared as ISO strings so the window rolls at local
   // midnight like Analytics does (new Date('YYYY-MM-DD') is UTC midnight, which made the cut
   // move with the timezone and hold 28–30 days depending on the hour — R6-FUNCTION-03).
@@ -7667,7 +7767,12 @@ function wlAcquire(){
   try{
     nav.wakeLock.request('screen').then(function(s){
       WL.pending=false; WL.sentinel=s;
-      try{ s.addEventListener('release',function(){ if(WL.sentinel===s) WL.sentinel=null; }); }catch(e){}
+      try{ s.addEventListener('release',function(){
+        if(WL.sentinel!==s) return; // our own release (tab switch, box unticked) says nothing
+        WL.sentinel=null;
+        // The system took the lock back while the clock is still on screen (low battery, OS policy): say so (R8-A11Y-12).
+        if(WL.reasons.pace&&PC.keepAwake&&TAB==='pace'&&!document.hidden) setStatus('tlt-pc-status','The screen may sleep again — this device released the wake lock.');
+      }); }catch(e){}
       wlUpdate(); // reasons may have cleared while the request was pending
     }).catch(function(){ WL.pending=false; });
   }catch(e){ WL.pending=false; }
@@ -8378,7 +8483,15 @@ function ensureInit(){
   itPreview(itReadCfg()); itButtons();
   // pace clock
   var aw=$('tlt-pc-awake'); if(aw) aw.checked=PC.keepAwake;
-  on('tlt-pc-awake','change',function(){ PC.keepAwake=!!aw.checked; if(PC.keepAwake&&TAB==='pace') wlHold('pace'); else wlDrop('pace'); pcSave(); });
+  // No Wake Lock API (Firefox before 126, older Safari and webviews, insecure contexts): a ticked box that does
+  // nothing would promise a screen that still sleeps on deck. Disable it and say what to do instead (R8-A11Y-12).
+  var awHint=$('tlt-pc-awake-hint');
+  if(aw&&!(navigator.wakeLock&&navigator.wakeLock.request)){
+    aw.checked=false; aw.disabled=true; var awLb=aw.closest('label'); if(awLb) awLb.classList.add('is-disabled');
+    if(awHint){ awHint.hidden=false; awHint.textContent='This browser cannot keep the screen awake — turn off auto-lock in your phone\'s display settings while you use the clock.'; aw.setAttribute('aria-describedby','tlt-pc-awake-hint'); }
+  }
+  on('tlt-pc-awake','change',function(){ PC.keepAwake=!!aw.checked; if(PC.keepAwake&&TAB==='pace') wlHold('pace'); else wlDrop('pace');
+    setStatus('tlt-pc-status',PC.keepAwake?'Screen will stay awake while the pace clock is open.':'Screen may sleep as usual.'); pcSave(); });
   if(PC.so){ ['reps','dist','int','start','pace'].forEach(function(key){ var el=$('tlt-so-'+key); if(el&&PC.so[key]!=null&&PC.so[key]!=='') el.value=String(PC.so[key]).slice(0,12); }); }
   var sd=$('tlt-sp-dist'); if(sd&&PC.spDist>=0&&isFinite(PC.spDist)) sd.value=String(PC.spDist);
   on('tlt-sp-dist','change',function(){ spRender(); pcSave(); });
@@ -9294,7 +9407,7 @@ function renderMeet(){
       (gap !== null && gap > 0 && days >= 0 ? ' · ' + gap + (gap === 1 ? ' day after ' : ' days after ') + esc(name) + (gap <= 14 ? ' — closely spaced meets are usually held, not fully re-tapered; ask your coach how to bridge them' : '') : '') + '</div>';
   }
   setMeetHtml(card, 'card', '<div class="pl-countdown' + cls + '"><div class="pl-days-wrap"><div class="pl-days">' + big + '</div><div class="pl-days-lbl">' + lbl + '</div></div>' +
-    '<div><div class="pl-meet-name">' + esc(name) + '</div><div class="pl-meet-date">' + esc(fmtDate(first.date)) + (weeks ? ' · ' + weeks : '') + '</div>' +
+    '<div><h2 class="pl-meet-name">' + esc(name) + '</h2><div class="pl-meet-date">' + esc(fmtDate(first.date)) + (weeks ? ' · ' + weeks : '') + '</div>' +
     '<div class="pl-meet-tags"><span class="pl-tag info">' + esc(m.course) + '</span><span class="pl-tag dim">' + esc(TAPER_LABEL[m.taper]) + '</span></div>' +
     (tw ? '<div class="pl-phase"><div class="pl-phase-name">' + esc(tw.phase) + '</div><div class="pl-phase-detail">' + esc(tw.detail) + ' <a href="#taper">Taper page <span aria-hidden="true">→</span></a>' + (days === 0 ? ' <a href="#race">Warm-up timeline <span aria-hidden="true">→</span></a>' : '') + '</div></div>' : '') +
     second + '</div></div>');
@@ -9310,7 +9423,8 @@ function renderCheckpoints(m, days){
     var link = c.link ? ' <a href="' + esc(c.link) + '"' + (c.tab ? ' data-tab="' + esc(c.tab) + '"' : '') + (c.pageTab ? ' data-page-tab="' + esc(c.pageTab) + '"' : '') + '>' + esc(c.linkText) + ' <span aria-hidden="true">→</span></a>' : '';
     return '<li class="' + state + '"><div class="pl-cp-when">' + (c.d === 0 ? 'Race day' : c.d + (c.d === 1 ? ' day out' : ' days out')) + ' · ' + esc(fmtDateShort(addDays(m.date, -c.d))) + ' ' + tag + '</div><div class="pl-cp-title">' + esc(c.title) + '</div><div class="pl-cp-desc">' + esc(c.desc) + link + '</div></li>';
   }).join('');
-  return '<div class="pl-cp-wrap"><h5>CHECKPOINTS TO ' + esc((m.name || 'THE MEET').toUpperCase()) + '</h5><ul class="pl-timeline">' + items + '</ul></div>';
+  // h2, not h5: the list belongs beside "Next meet", not under "Second meet (optional)" (R8-A11Y-06).
+  return '<div class="pl-cp-wrap"><h2>CHECKPOINTS TO ' + esc((m.name || 'THE MEET').toUpperCase()) + '</h2><ul class="pl-timeline" role="list">' + items + '</ul></div>';
 }
 var midnightTimer = 0;
 function clearMidnight(){ if (midnightTimer) { clearTimeout(midnightTimer); midnightTimer = 0; } }
@@ -9964,9 +10078,12 @@ function updateChartAria(D){
   D.totals.forEach(function(t, i){ if (t > best) { best = t; bi = i; } });
   var lastFull = data.length >= 2 ? D.totals[data.length - 2] : 0;
   var roll = D.rolls[data.length - 1];
-  canvas.setAttribute('aria-label', 'Weekly ' + unit + ', last 12 weeks, stacked by ' + (state.stack === 'zone' ? 'training zone' : 'session type') +
+  // The name stays the short static one; the numbers go into the description so every Tab stop is not a
+  // 160-character sentence before "application" (the 3D lab's R4-A11Y-10 pattern) (R8-A11Y-08).
+  var summary = an$('an-chart-summary'); if (!summary) return;
+  summary.textContent = 'Weekly ' + unit + ', stacked by ' + (state.stack === 'zone' ? 'training zone' : 'session type') +
     '. Latest complete week ' + fmtInt(lastFull) + (roll != null ? '; four-week rolling average ' + fmtInt(roll) : '') +
-    (best > 0 ? '; highest week ' + fmtInt(best) + ' starting ' + anFmtDate(data[bi].week.start) : '; no volume logged') + '.');
+    (best > 0 ? '; highest week ' + fmtInt(best) + ' starting ' + anFmtDate(data[bi].week.start) : '; no volume logged') + '.';
 }
 function renderLegend(){
   var el = an$('an-legend'); if (!el) return;
@@ -10321,6 +10438,8 @@ window.tl_an_calcSwolf = function(){
   if (note) note.textContent = fmtDec(r.time, 1) + ' s + ' + r.strokes + ' strokes = ' + fmtDec(r.swolf, 1) + ' (about ' + fmtDec(r.secondsPerStroke, 2) + ' s per stroke). ' +
     'Track this at the same pool length, pace and start type: a lower score at the same pace means a more efficient stroke. A 50 m score is roughly double a 25 m score, so never compare across pool lengths.';
   if (res) res.classList.add('show');
+  // Result panels are not live regions (R8-A11Y-02): one sentence is announced, the panel is read on demand.
+  if (typeof tlAnnounce === 'function') tlAnnounce('SWOLF ' + fmtDec(r.swolf, 1) + ' for one ' + r.pool + ' length — result below.');
 };
 
 var STROKE_INFO = {
@@ -10381,6 +10500,7 @@ window.tl_an_calcStroke = function(){
     item(fmtDec(r.si, 2), 'm²/s', 'Stroke index (speed × per cycle)');
   if (note) note.textContent = r.stroke + ' over ' + r.dist + ' ' + r.unit + ' in ' + fmtPace(r.time) + ' with ' + r.count + (r.perArm ? ' arm strokes (' + fmtDec(r.cycles, 1) + ' cycles). ' : ' strokes. ') + r.compare;
   if (res) res.classList.add('show');
+  if (typeof tlAnnounce === 'function') tlAnnounce(r.stroke + ': ' + fmtDec(r.cpm, 1) + ' cycles per minute, ' + fmtDec(r.dpc, 2) + ' ' + r.unit + ' per cycle, stroke index ' + fmtDec(r.si, 2) + ' — results below.');
 };
 
 function calcCSSValues(o){
@@ -10428,10 +10548,12 @@ window.tl_an_calcCSS = function(){
     tbody.innerHTML = row('At CSS', r.pace100) +
       row('Your 400 pace', r.pace400) +
       row('Your 200 pace', r.pace200);
+    var cap = an$('an-css-caption'); if (cap) cap.textContent = 'Paces per 50, 100, 200 and 400 at CSS (' + fmtPace(r.pace100) + ' per 100 ' + r.unit + ') and at your own 400 and 200 pace';
   }
   if (note) note.textContent = 'CSS = 200 ÷ (' + fmtPace(r.t400) + ' − ' + fmtPace(r.t200) + ') = ' + fmtDec(r.css, 3) + ' ' + r.unit + '/s. ' +
     'Repeats held at this pace are hard threshold work: CSS sits slightly above the speed at maximal lactate steady state (Dekerle et al. 2005). How far above or below it to train, and with what rest, is your coach\'s call.' + (r.warn ? ' ' + r.warn : '');
   if (res) res.classList.add('show');
+  if (typeof tlAnnounce === 'function') tlAnnounce('CSS pace ' + fmtPace(r.pace100) + ' per 100 ' + r.unit + ' (' + fmtDec(r.css, 3) + ' ' + r.unit + ' per second)' + (r.warn ? ' — check the note below the table.' : ' — table below.'));
 };
 
 // ─── page lifecycle ───────────────────────────────────────────────────────
@@ -10682,7 +10804,7 @@ window.tl_an_debug = {
   // Containers whose headings are dynamic, user-typed or chrome — never indexed.
   // Live regions / outputs are dynamic by definition (contract rule 4), so any
   // bundle's result boxes are skipped without having to list their ids here.
-  var EXCLUDE = 'footer, nav, #ai-messages, #gen-result, #gen-output, #viz-content, #viz-output, #log-entries, #log-stats, #split-result, #pace-result, #conv-result, #profile-name-display, #access-gate, .tl-pal, [aria-live], [role="status"], [role="log"], [role="alert"], output';
+  var EXCLUDE = 'footer, nav, #ai-messages, #gen-result, #gen-output, #viz-content, #viz-output, #log-entries, #log-stats, #split-result, #pace-result, #conv-result, .calc-result, #pl-mt-card, #pl-mt-checkpoints, #profile-name-display, #access-gate, .tl-pal, [aria-live], [role="status"], [role="log"], [role="alert"], output';
   var KIND_PRIOR = { page: 6, action: 5, tab: 2, section: 0, video: 0, keypoint: -2 };
   var KIND_LABEL = { page: 'Page', action: 'Action', tab: 'Tab', section: 'Section', video: 'Video', keypoint: 'Key point' };
   // Extra search terms per page so the words swimmers actually type resolve
@@ -10981,6 +11103,11 @@ window.tl_an_debug = {
       if (h) return titleCaseCaps(clean(h.textContent));
       return titleCaseCaps(clean(el.textContent).replace(/\s*[▾▸▴▿]\s*$/, ''));
     }
+    // An eyebrow inside its heading (day, meal time, video tag, zone badge — R8-A11Y-10) is not part of the title.
+    if (el.querySelector('.dl-day, .nutr-time, .video-tag, .badge')){
+      var c = el.cloneNode(true); c.querySelectorAll('.dl-day, .nutr-time, .video-tag, .badge').forEach(function(x){ x.remove(); });
+      return titleCaseCaps(clean(c.textContent));
+    }
     return titleCaseCaps(clean(el.textContent));
   }
   function snippetFor(el){
@@ -11035,7 +11162,7 @@ window.tl_an_debug = {
         if (el.closest(EXCLUDE)) continue;
         if (/^H[234]$/.test(el.tagName) && el.closest('.acc-header')) continue;   // header row carries it
         var isVideo = !!el.closest('.video-card');
-        if (el.classList.contains('video-tag') && el.parentElement && el.parentElement.querySelector('h4')) continue; // card already indexed by its h4
+        if (el.classList.contains('video-tag') && (el.closest('h4') || (el.parentElement && el.parentElement.querySelector('h4')))) continue; // card already indexed by its h4
         var text = headingText(el);
         if (!text || text.length < 2) continue;
         var kind = el.classList.contains('acc-header') ? 'section'
@@ -11706,7 +11833,7 @@ function renderRelease(rel, i){
     + '</div>'
     + '<h3 class="tl-upd-rel-title">' + esc(rel.title) + '</h3>'
     + (rel.summary ? '<p class="tl-upd-rel-summary">' + esc(rel.summary) + '</p>' : '')
-    + (items ? '<ul class="tl-upd-items">' + items + '</ul>' : '')
+    + (items ? '<ul class="tl-upd-items" role="list">' + items + '</ul>' : '')
     + '<div class="tl-upd-counts">' + esc(countsText(counts)) + '</div>'
     + '</li>';
 }
