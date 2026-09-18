@@ -5,8 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Page not found — Tidelyne</title>
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#040d18">
+<meta name="color-scheme" content="dark">
 <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
 <style>
+html{color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#040d18;color:#b0c4d8;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem;line-height:1.7}
 .wrap{max-width:460px}
@@ -25,8 +28,19 @@ a.btn:hover{background:#00b0d8}
 <p class="small">Redirecting you home in a moment…</p>
 </div>
 <script>
-// Send mistyped/old deep links back into the app after a short pause.
-setTimeout(function(){ location.replace('./'); }, 2500);
+// GitHub Pages serves this file AT the missing URL, so relative links resolve
+// against that path (for /JAC_Online/foo/bar/ the old './' pointed back at the
+// 404 itself and reloaded it every 2.5 s). Work out the site root once — the
+// project folder on *.github.io, the origin root anywhere else — and use it for
+// the button, the icon and the redirect. The static href="./" stays as the no-JS fallback.
+(function(){
+  var ROOT = /\.github\.io$/i.test(location.hostname) ? '/' + (location.pathname.split('/')[1] || '') + '/' : '/';
+  if (ROOT === '//') ROOT = '/';
+  var btn = document.querySelector('a.btn'); if (btn) btn.href = ROOT;
+  var ic = document.querySelector('link[rel="icon"]'); if (ic) ic.href = ROOT + 'logo-mark.svg';
+  if (location.pathname !== ROOT) setTimeout(function(){ location.replace(ROOT); }, 2500);
+  else { var s = document.querySelector('.small'); if (s) s.textContent = ''; }
+})();
 </script>
 </body>
 </html>

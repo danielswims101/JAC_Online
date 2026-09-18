@@ -19,21 +19,43 @@ const CACHE_PREFIX = 'tidelyne-v';
 const CACHE        = CACHE_PREFIX + VERSION;
 const INDEX        = './index.html';
 
+// Numeric dotted-version compare ("3.10.0" > "3.9.1"); mirrors cmpVer in index.html.
+function cmpVer(a, b){
+  const pa = String(a || '').split('.').map(function(n){ return parseInt(n, 10) || 0; });
+  const pb = String(b || '').split('.').map(function(n){ return parseInt(n, 10) || 0; });
+  const n = Math.max(pa.length, pb.length);
+  for (let i = 0; i < n; i++){ const x = pa[i] || 0, y = pb[i] || 0; if (x !== y) return x < y ? -1 : 1; }
+  return 0;
+}
+// Every navigation to the shell ('./', './?x', './index.html') is stored once, under INDEX.
+function shellKey(req){
+  try {
+    const p = new URL(req.url).pathname;
+    if (p.charAt(p.length - 1) === '/' || /\/index\.html$/i.test(p)) return INDEX;
+  } catch(e){}
+  return req;
+}
+// Cache-busted assets ('./viz-human.js?v=3.1.1') share one entry with the precached un-versioned file.
+function assetKey(req){
+  try {
+    const u = new URL(req.url);
+    if (/(^|[?&])v=/.test(u.search)) return u.origin + u.pathname;
+  } catch(e){}
+  return req;
+}
+
 const PRECACHE = [
-  './',
   './index.html',
   './viz-human.js',
   './privacy.html',
   './terms.html',
   './disclaimer.html',
-  './404.html',
   './site.webmanifest',
   './logo-mark.svg',
   './logo-full.svg',
   './favicon-32.png',
   './favicon-192.png',
   './apple-touch-180.png',
-  './og.png',
   './icon-512.png',
   './icon-512-maskable.png'
 ];
@@ -57,7 +79,8 @@ self.addEventListener('activate', function(event){
   event.waitUntil(
     caches.keys().then(function(keys){
       const old = keys.filter(function(k){ return k.indexOf(CACHE_PREFIX) === 0 && k !== CACHE; });
-      const previous = old.length ? old[old.length - 1].slice(CACHE_PREFIX.length) : null;
+      // caches.keys() order is unspecified: pick the newest stale version, not an arbitrary one.
+      const previous = old.length ? old.map(function(k){ return k.slice(CACHE_PREFIX.length); }).sort(cmpVer).pop() : null;
       return Promise.all(old.map(function(k){ return caches.delete(k); }))
         .then(function(){ return self.clients.claim(); })
         .then(function(){ return self.clients.matchAll({ type: 'window', includeUncontrolled: true }); })
@@ -95,28 +118,27 @@ self.addEventListener('fetch', function(event){
 });
 
 function networkFirst(req){
+  const key = shellKey(req);
   return caches.open(CACHE).then(function(cache){
     return fetch(req).then(function(res){
       // A real answer (including 404) is returned as-is; only good ones are cached.
-      if (res && res.ok) cache.put(req, res.clone()).catch(function(){});
+      if (res && res.ok) cache.put(key, res.clone()).catch(function(){});
       return res;
     }).catch(function(){
-      return cache.match(req, { ignoreSearch: true }).then(function(hit){
+      return cache.match(key, { ignoreSearch: true }).then(function(hit){
         if (hit) return hit;
-        return cache.match(INDEX).then(function(index){
-          if (index) return index;
-          return cache.match('./').then(function(root){ return root || offlineResponse(); });
-        });
+        return cache.match(INDEX).then(function(index){ return index || offlineResponse(); });
       });
     });
   });
 }
 
 function staleWhileRevalidate(event, req){
+  const key = assetKey(req);
   return caches.open(CACHE).then(function(cache){
-    return cache.match(req).then(function(cached){
+    return cache.match(key).then(function(cached){
       const network = fetch(req).then(function(res){
-        if (res && res.ok) cache.put(req, res.clone()).catch(function(){});
+        if (res && res.ok) cache.put(key, res.clone()).catch(function(){});
         return res;
       }).catch(function(){ return null; });
       if (cached){
@@ -124,8 +146,7 @@ function staleWhileRevalidate(event, req){
         try { event.waitUntil(network); } catch(e){}
         return cached;
       }
-      // Versioned asset URLs (./viz-human.js?v=3.1.0) fall back to the precached un-versioned copy when offline.
-      return network.then(function(res){ return res || cache.match(req, { ignoreSearch: true }); })
+      return network.then(function(res){ return res || cache.match(key, { ignoreSearch: true }); })
         .then(function(res){ return res || offlineResponse(); });
     });
   });
