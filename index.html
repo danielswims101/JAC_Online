@@ -5604,7 +5604,7 @@ function calcPaceZones(){
   if(t<35||t>240){tlNotice('pace-notice','A 100m time between 35 s and 4:00 is expected — check the value (use m:ss for minutes).');document.getElementById('pace-100').focus();return;}
   tlNotice('pace-notice','');
   const zones=[
-    {name:'Zone 1 — Recovery',pct:[1.35,1.50],color:'#00e599',desc:'HR <23 · <1.5 mmol'},
+    {name:'Zone 1 — Recovery',pct:[1.35,1.50],color:'#00e599',desc:'HR <22 · <1.5 mmol'},
     {name:'Zone 2 — AeT Base',pct:[1.22,1.35],color:'#00d4ff',desc:'HR 24–28 · 2–3 mmol'},
     {name:'Zone 3 — Threshold',pct:[1.12,1.20],color:'#f5a623',desc:'HR 27–31 · 3–5 mmol'},
     {name:'Zone 4 — VO2 Max',pct:[1.04,1.10],color:'#ff7043',desc:'HR 30–33 · 5–8 mmol'},
