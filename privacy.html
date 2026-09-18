@@ -75,7 +75,8 @@ Export Backup button (and an Import to restore it on another device).</p>
 <li>Your swimmer name and personal records</li>
 <li>Your training log entries and the weekly-volume totals derived from them</li>
 <li>Your Race Planner goals and meet dates, timer settings, analytics chart preferences, recent
-searches, and the last release you read on the What's New page</li>
+searches, the last release you read on the What's New page, and small interface preferences such
+as the search shortcut</li>
 </ul>
 
 <h2>3. What is sent to a server</h2>
@@ -84,7 +85,7 @@ searches, and the last release you read on the What's New page</li>
 <tr><td>Email address</td><td>Only if you create an account</td><td>To sign you in and let you reset your password</td></tr>
 <tr><td>Password</td><td>Only if you create an account</td><td>Stored hashed by our authentication provider — never in readable form, and never visible to us</td></tr>
 <tr><td>Username you choose</td><td>Only if you create an account</td><td>To show who is signed in</td></tr>
-<tr><td>Messages you send the AI coach</td><td>Each time you use an AI feature</td><td>To generate the reply</td></tr>
+<tr><td>Text you send to the AI features (coach messages, workout-generator settings and notes, visualizer prompts, 3D-reconstruction cues)</td><td>Each time you use an AI feature</td><td>To generate the reply</td></tr>
 <tr><td>A count of your AI requests</td><td>Each AI request</td><td>To enforce the 20-messages-per-5-hours limit that keeps the site free</td></tr>
 <tr><td>Your username and email address, in one notification email to the site owner</td><td>Once, when you create an account</td><td>So we know a real person signed up; it is not used for marketing and is not shared</td></tr>
 </table>
@@ -92,7 +93,7 @@ searches, and the last release you read on the What's New page</li>
 <h2>4. Processors we use</h2>
 <ul>
 <li><strong>Supabase</strong> — accounts, authentication, and the AI usage counter.</li>
-<li><strong>Anthropic</strong> — processes the text of your AI coach messages to generate replies.</li>
+<li><strong>Anthropic</strong> — processes the text you send to the AI features to generate replies.</li>
 <li><strong>Resend</strong> — delivers the single signup-notification email to the site owner.</li>
 <li><strong>GitHub Pages</strong> — hosts the site files; server logs may include IP addresses.</li>
 <li><strong>YouTube (privacy-enhanced mode)</strong> — technique videos are embedded through

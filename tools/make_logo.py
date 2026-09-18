@@ -9,17 +9,19 @@ between the favicon, the app icon and the share image.
 
 Outputs:
     logo-mark.svg        the mark alone (scalable, used as favicon.svg)
-    logo-full.svg        mark + wordmark lockup
     favicon-32.png       browser tab
     favicon-192.png      Android / PWA
     apple-touch-180.png  iOS home screen
     og.png               1200x630 link preview
 
+    logo-full.svg (mark + wordmark lockup) is opt-in — `python3 make_logo.py --full` —
+    because the site no longer references it (removed in 40e227d).
+
 THE MARK: three waves in a rounded-square badge. "Tide" + "lyne" — the middle
 cyan wave is the waterline, the ones above and below are the swell. It reads as
 water at 16px, which a swimmer emoji does not.
 """
-import math, os
+import math, os, sys
 from PIL import Image, ImageDraw, ImageFont
 
 NAVY   = (4, 13, 24)
@@ -192,10 +194,12 @@ def make_og(path):
 
 if __name__ == "__main__":
     write_mark_svg("logo-mark.svg")
-    write_full_svg("logo-full.svg")
+    full = "--full" in sys.argv[1:]   # the lockup is unreferenced by the site; only write it on request
+    if full:
+        write_full_svg("logo-full.svg")
     for px, name in ((32, "favicon-32.png"), (192, "favicon-192.png"), (180, "apple-touch-180.png")):
         draw_mark(px).save(name, "PNG", optimize=True)
     make_og("og.png")
-    print("Wrote: logo-mark.svg logo-full.svg favicon-32.png favicon-192.png "
+    print("Wrote: logo-mark.svg " + ("logo-full.svg " if full else "") + "favicon-32.png favicon-192.png "
           "apple-touch-180.png og.png")
     print("Display font used:", DISPLAY or "(default)")
