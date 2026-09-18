@@ -3763,17 +3763,8 @@ function enhanceA11y(){
     el.setAttribute('role','button'); el.setAttribute('tabindex','0');
     el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } });
   });
-  // Enter in a calculator / generator field submits that panel (the site has
-  // no <form> elements): fires the panel's primary button unless the field
-  // already handled Enter itself (auth, AI and planner inputs do).
-  document.addEventListener('keydown',e=>{
-    if(e.key!=='Enter'||e.defaultPrevented||e.isComposing||e.shiftKey||e.altKey||e.ctrlKey||e.metaKey) return;
-    const t=e.target; if(!t||t.tagName!=='INPUT') return;
-    const type=(t.type||'text').toLowerCase(); if(/^(checkbox|radio|button|submit|file|range|color)$/.test(type)) return;
-    const panel=t.closest('.calc-panel,.gen-form'); if(!panel) return;
-    const btn=panel.querySelector('.calc-btn,#gen-btn'); if(!btn||btn.disabled) return;
-    e.preventDefault(); btn.click();
-  });
+  // Enter-to-submit for calculator / generator / log panels: one delegated
+  // handler lives next to the calculators (see 'Enter in a calculator' below).
   // Associate every form label with its control (add for/id where missing)
   let _fid=0;
   document.querySelectorAll('.form-group').forEach(g=>{
@@ -5949,17 +5940,17 @@ function convertTime(){
   html+='</tbody></table></div>';
   document.getElementById('conv-result').innerHTML=html;
 }
-// Enter in a calculator / log / analytics field runs that panel's action
-// button, as the planner, auth and AI fields already do — keyboard users no
-// longer have to Tab to the button. Fields with their own Enter handler
+// Enter in a calculator / generator / log / analytics field runs that panel's
+// action button, as the planner, auth and AI fields already do — keyboard users
+// no longer have to Tab to the button. Fields with their own Enter handler
 // (they call preventDefault) and real <form>s are left alone.
 document.addEventListener('keydown',function(e){
   if(e.key!=='Enter'||e.defaultPrevented||e.isComposing||e.altKey||e.ctrlKey||e.metaKey||e.shiftKey) return;
   const t=e.target; if(!t||t.tagName!=='INPUT'||t.closest('form')) return;
   const type=(t.getAttribute('type')||'text').toLowerCase();
   if(type!=='text'&&type!=='number'&&type!=='date'&&type!=='search'&&type!=='tel') return;
-  const panel=t.closest('.calc-panel, #page-log .tl-panel'); if(!panel) return;
-  const btn=panel.querySelector('.calc-btn')||panel.querySelector('.btn-sm'); if(!btn||btn.disabled||btn.hidden) return;
+  const panel=t.closest('.calc-panel, .gen-form, #page-log .tl-panel'); if(!panel) return;
+  const btn=panel.querySelector('.calc-btn, #gen-btn')||panel.querySelector('.btn-sm'); if(!btn||btn.disabled||btn.hidden) return;
   e.preventDefault(); btn.click();
 });
 // ─── PR TRACKER ───────────────────────────────
