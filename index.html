@@ -230,7 +230,7 @@ input,textarea,select{font-family:var(--fb)}
 /* NAV */
 nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;gap:8px}
 .nav-brand{font-family:var(--fh);font-size:1.45rem;letter-spacing:3px;color:var(--cyan);cursor:pointer;flex-shrink:0;white-space:nowrap;text-decoration:none}
-.nav-brand span{color:var(--white)}
+.nav-word>span{color:var(--white)}
 .nav-brand{display:flex;align-items:center;gap:9px}
 .nav-mark{border-radius:6px;flex-shrink:0;display:block}
 .nav-links{display:flex;list-style:none;gap:0;width:max-content}
@@ -238,7 +238,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .nav-links li a:hover,.nav-links li a.active{color:var(--cyan);border-bottom-color:var(--cyan)}
 .nav-right{display:flex;gap:6px;align-items:center;flex-shrink:0}
 @media(min-width:769px){.nav-right>button{min-height:30px;display:inline-flex;align-items:center;justify-content:center}}
-.nav-ai-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:6px 10px;font-family:var(--fm);font-size:0.65rem;letter-spacing:1px;font-weight:600;text-transform:uppercase;transition:background 0.2s;cursor:pointer;white-space:nowrap}
+.nav-ai-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:6px 10px;font-family:var(--fm);font-size:0.65rem;letter-spacing:1px;font-weight:600;text-transform:uppercase;transition:background 0.2s;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:4px} /* gap: the star span is a flex item, so the trailing space of the text node would collapse */
 .nav-ai-btn:hover{background:var(--cyan2)}
 .nav-key-btn{background:var(--navy3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--white3);font-size:0.8rem;cursor:pointer;transition:all 0.2s;flex-shrink:0}
 .nav-key-btn:hover{color:var(--cyan);border-color:var(--cyan)}
@@ -274,6 +274,7 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1.5rem}
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;transition:border-color 0.3s,transform 0.25s,box-shadow 0.3s}
+.card-lg{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem}
 .card:hover{border-color:var(--border)}
 @media(hover:hover){.card[onclick]:hover,.card[role="button"]:hover,.card.card-clickable:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.35)}}
 .card-icon{font-size:2rem;margin-bottom:1rem;display:block}.card-tag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.85rem}
@@ -333,7 +334,7 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .viz-overlay-stats{position:absolute;top:12px;right:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px;pointer-events:none}
 .vos-item{background:rgba(4,13,24,0.85);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center;backdrop-filter:blur(8px)}
 .vos-val{font-family:var(--fm);font-size:1.1rem;color:var(--cyan);display:block;line-height:1;letter-spacing:0.5px}
-.vos-lbl{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;margin-top:3px;display:block}
+.vos-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;margin-top:3px;display:block}
 .viz-phase-bar{position:absolute;bottom:0;left:0;right:0;height:40px;background:rgba(4,13,24,0.85);border-top:1px solid var(--border);display:flex;align-items:stretch;gap:0;backdrop-filter:blur(8px)}
 .phase-step{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;background:none;border:0;border-right:1px solid var(--border2);border-radius:0;font-family:var(--fm);font-size:0.62rem;letter-spacing:0.5px;color:var(--white3);text-transform:uppercase;padding:0 4px;transition:color 0.3s,background 0.2s;cursor:pointer;line-height:1.3}
 .phase-step:last-child{border-right:none}
@@ -346,7 +347,7 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 /* Hover is a lighter cue than the filled "selected" look so the current choice in each toggle row stays unambiguous */
 @media(hover:hover){.viz-btn:hover:not(.active){color:var(--white);border-color:rgba(0,212,255,0.4)}}
 /* 3D lab: swimmer model / skin-tone controls */
-.viz-ctl-lbl{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px}.viz-btn+.viz-ctl-lbl{margin-left:6px}
+.viz-ctl-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px}.viz-btn+.viz-ctl-lbl{margin-left:6px}
 /* The three speed buttons travel as one unit so they never split across wrapped rows */
 .viz-group{display:contents}
 .viz-tone{display:inline-flex;align-items:center;gap:7px;padding-left:10px}
@@ -381,7 +382,7 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
   .ai-messages{flex:1 1 auto;min-height:180px}
   .ai-header,.quick-prompts,.ai-input-row{flex-shrink:0}
 }
-@media(min-height:600px) and (max-width:480px){.ai-wrapper{max-height:calc(100dvh - 190px)}}
+@media(min-height:600px) and (max-width:480px){.ai-wrapper{max-height:calc(100dvh - 172px)}}
 .ai-messages::-webkit-scrollbar{width:4px}.ai-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .msg{display:flex;gap:10px;align-items:flex-start;animation:fadeUp 0.3s ease}.msg.user{flex-direction:row-reverse}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -464,11 +465,11 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .content-block ul{list-style:none}.content-block ul li{font-size:0.85rem;color:var(--white2);padding:7px 0;border-bottom:1px solid var(--border2);display:flex;gap:10px;align-items:flex-start;line-height:1.6}.content-block ul li:before{content:'→';color:var(--cyan);flex-shrink:0;font-size:0.75rem;margin-top:2px}.content-block ul li:last-child{border-bottom:none}
 /* FOOTER */
 footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2rem}
-.footer-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2rem;margin-bottom:2rem}
+.footer-inner{max-width:1176px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2rem;margin-bottom:2rem}
 .footer-brand h3{font-family:var(--fh);font-size:1.8rem;letter-spacing:2px;color:var(--cyan);margin-bottom:0.75rem}.footer-brand h3 span{color:var(--white)}.footer-brand p{font-size:0.83rem;color:var(--white3);line-height:1.8;max-width:300px}
-.footer-col h4{font-family:var(--fm);font-size:0.61rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:1rem}
+.footer-col h4{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:1rem}
 .footer-col ul{list-style:none}.footer-col ul li{font-size:0.83rem;padding:2px 0}.footer-col ul li a{display:inline-block;padding:5px 0;color:var(--white3);text-decoration:none;transition:color 0.2s}.footer-col ul li a:hover,.footer-col ul li a:focus-visible{color:var(--cyan)}
-.footer-bottom{max-width:1240px;margin:0 auto;padding-top:1.5rem;border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-bottom{max-width:1176px;margin:0 auto;padding-top:1.5rem;border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 .footer-bottom p{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white4);text-transform:uppercase}
 .footer-bottom a{display:inline-block;padding:10px 4px;font-size:0.7rem;color:var(--white3);transition:color 0.2s}.footer-bottom a:hover{color:var(--cyan)}
 /* The legal-links line reads at the links' own size (separators included) instead of the 9.9px tracked uppercase of the brand line */
@@ -500,6 +501,9 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 @media(max-width:768px){
   nav{height:52px}
   .section-wrap{padding:3rem 1.25rem}
+  /* Footer gutter follows the page gutter (20px) so its columns line up with the content column */
+  footer{padding:2.5rem 1.25rem}
+  .page:not(#page-home) footer{padding:1.25rem}
   .ai-messages{height:calc(100dvh - 320px);min-height:280px}
   #ai-section{padding:0 1.25rem 2rem}
   #page-ai .ai-title-wrap{padding:1.5rem 1.25rem 0.75rem}
@@ -522,6 +526,9 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .viz-row-strokes>.viz-btn:last-child:nth-child(odd),.viz-row-view>span{flex-basis:100%}
   .viz-group{display:flex;gap:8px;flex:1 1 100%;order:1}
   .viz-group>.viz-btn{flex:1 1 0;padding-left:6px;padding-right:6px}
+  /* Swimmer / Skin row: each label on its own line, its three buttons sharing the width like the rows above */
+  .viz-row-model>.viz-ctl-lbl{flex-basis:100%;margin-right:0}
+  .viz-row-model>.viz-btn{flex:1 1 0;padding-left:6px;padding-right:6px}
   .viz-btn+.viz-ctl-lbl{margin-left:0}
   .ai-header{padding:0.9rem 1rem}
   .ai-mode-btns{gap:4px;flex:1 1 100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
@@ -532,7 +539,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .qp{flex:0 0 auto;white-space:nowrap}
   .ai-messages{height:calc(100dvh - 300px);padding:14px;gap:0.85rem}
   /* Bubbles take the full width beside the avatar (80% of a 265px row was a 212px column that made the welcome 409px tall) */
-  .msg-bubble{max-width:calc(100% - 42px);padding:0.75rem 0.9rem;line-height:1.6}
+  .msg-bubble{max-width:calc(100% - 42px);padding:0.75rem 0.9rem;line-height:1.5}
 }
 /* Landscape phone (812×375, 667×375): the message pane's height floor pushed the composer far below the fold and the
    3D canvas kept a taller-than-screen height (the phone overrides above are max-width rules) — after them so it wins. */
@@ -628,7 +635,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* id+class specificity already beats the site's ≤768px `.btn-ghost-sm{display:inline-flex}` rule */
 #page-timers .tlt-hidden{display:none}
 #page-timers .tlt-copytext{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
-#page-timers .tlt-th-sub{display:block;font-size:0.6rem;letter-spacing:1px;color:var(--white3);margin-top:2px;text-transform:none}
+#page-timers .tlt-th-sub{display:block;font-size:var(--fs-micro);letter-spacing:1px;color:var(--white3);margin-top:2px;text-transform:none}
 #page-timers .tlt-td-sub{display:block;font-size:0.7rem;color:var(--white3);font-weight:300;margin-top:2px}
 #page-timers .tlt-num-table td{font-family:var(--fm);font-size:0.8rem;font-variant-numeric:tabular-nums;white-space:nowrap}
 #page-timers .tlt-num-table td:first-child{color:var(--white2);font-weight:400}
@@ -775,6 +782,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   /* Preset table fits the phone: "s per cycle" is 60 ÷ cycles/min, so drop it and let the Load column stay on screen */
   #page-timers .tlt-preset-table th:nth-child(3),#page-timers .tlt-preset-table td:nth-child(3){display:none}
   #page-timers .tlt-preset-table td:nth-child(4){white-space:normal}
+  /* The "single-arm, free & back" sub-line made the header row 98px over 63px data rows: keep it for screen readers only */
+  #page-timers .tlt-preset-table th br{display:none}
+  #page-timers .tlt-th-sub{position:absolute;width:1px;height:1px;margin:0;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 }
 @media(prefers-reduced-motion:reduce){
   #page-timers .tlt-pulse{transition:none}
@@ -843,12 +853,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-quick .btn-ghost-sm{flex:1;padding:6px 4px;font-size:0.62rem;letter-spacing:0.5px}
 #page-planner .pl-goal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0}
 #page-planner .pl-goal-stats div{background:var(--navy3);border-radius:6px;padding:6px 7px;border:1px solid var(--border2);min-width:0}
-#page-planner .pl-goal-stats dt{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase}
+#page-planner .pl-goal-stats dt{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;color:var(--white3);text-transform:uppercase}
 #page-planner .pl-goal-stats dd{font-family:var(--fm);font-size:0.78rem;color:var(--white);margin:2px 0 0;line-height:1.35;overflow-wrap:anywhere}
 #page-planner .pl-goal-stats dd.gain{color:var(--green)}
 #page-planner .pl-goal-stats dd.slower{color:var(--gold)}
 #page-planner .pl-goal-stats dd.muted{color:var(--white4)}
 #page-planner .pl-nopr{display:inline-block;padding:5px 0}
+/* Touch: the only action in an empty goal card and the intro's My PRs links get a 44px tap area without moving the line */
+@media(hover:none) and (pointer:coarse){
+  #page-planner .pl-nopr{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;margin:-8px -6px}
+  #page-planner .info-box a,#page-planner .pl-fine a{display:inline-block;padding:12px 0;margin:-12px 0}
+}
 #page-planner .pl-to-splits{align-self:flex-start;padding:6px 12px;font-size:0.62rem}
 
 /* ─── predictor ─── */
@@ -870,7 +885,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-fifty span{color:var(--white3)}
 #page-planner .pl-halves{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:0.85rem}
 #page-planner .pl-halves div{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;padding:8px 10px;text-align:center}
-#page-planner .pl-halves .k{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;display:block}
+#page-planner .pl-halves .k{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;display:block}
 #page-planner .pl-halves .v{font-family:var(--fh);font-size:1.35rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1.1;margin-top:3px}
 #page-planner .pl-compare h4{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:0.25rem}
 #page-planner .pl-compare .pl-compare-sub{font-size:0.8rem;color:var(--white3);margin-bottom:0.75rem;line-height:1.6}
@@ -913,8 +928,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-timeline li.today::before{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 12px rgba(0,212,255,0.7)}
 #page-planner .pl-timeline li.done::before{background:var(--green);border-color:var(--green)}
 #page-planner .pl-timeline li.done .pl-cp-title,#page-planner .pl-timeline li.done .pl-cp-desc{opacity:0.6}
-#page-planner .pl-cp-when{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-#page-planner .pl-cp-when .pl-tag{font-size:0.6rem;padding:2px 6px}
+#page-planner .pl-cp-when{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#page-planner .pl-cp-when .pl-tag{font-size:var(--fs-micro);padding:2px 6px}
 #page-planner .pl-cp-title{font-family:var(--fh);font-size:1.1rem;letter-spacing:1px;margin:3px 0 2px;line-height:1.15}
 #page-planner .pl-cp-desc{font-size:0.83rem;color:var(--white2);line-height:1.65}
 #page-planner .pl-cp-desc a{color:var(--cyan)}
@@ -979,7 +994,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-periods{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
 #page-analytics .an-period{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.2rem 1.25rem;transition:border-color 0.3s}
 #page-analytics .an-period:hover{border-color:var(--border)}
-#page-analytics .an-period-lbl{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;display:flex;flex-direction:column;gap:2px;margin-bottom:0.6rem}
+#page-analytics .an-period-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;display:flex;flex-direction:column;gap:2px;margin-bottom:0.6rem}
 #page-analytics .an-period-lbl span{color:var(--white3);letter-spacing:0.5px;text-transform:none;font-size:0.66rem}
 #page-analytics .an-period-big{font-family:var(--fh);font-size:clamp(2rem,4.5vw,2.7rem);color:var(--white);letter-spacing:1px;line-height:1;margin-bottom:0.75rem;font-variant-numeric:tabular-nums}
 #page-analytics .an-period-big small{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--white3);text-transform:none;margin-left:4px} /* unit symbols are case-sensitive: m/yd, not M/YD */
@@ -999,12 +1014,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-seg-btn{background:transparent;border:none;border-left:1px solid var(--border2);color:var(--white3);font-family:var(--fm);font-size:0.65rem;letter-spacing:0.8px;text-transform:uppercase;padding:9px 13px;cursor:pointer;transition:background 0.2s,color 0.2s;white-space:nowrap;min-height:36px}
 #page-analytics .an-seg-btn:hover{color:var(--white)}
 #page-analytics .an-seg-btn[aria-pressed="true"]{background:var(--cyan-dim);color:var(--cyan);font-weight:600}
-#page-analytics .an-table-btn{margin-left:auto}
+#page-analytics .an-table-btn{margin-left:auto;min-height:38px} /* same height as the segmented pills beside it (36px buttons + border) */
 #page-analytics .an-chart-wrap{position:relative;width:100%;height:300px}
 #page-analytics .an-chart-canvas{display:block;width:100%;height:100%;touch-action:pan-y;border-radius:8px;cursor:crosshair}
 #page-analytics .an-chart-canvas:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
 #page-analytics .an-tooltip{position:absolute;z-index:5;pointer-events:none;background:rgba(8,21,38,0.97);border:1px solid var(--border);border-radius:8px;padding:9px 12px;min-width:150px;max-width:230px;box-shadow:0 10px 30px rgba(0,0,0,0.45);font-size:0.76rem;color:var(--white2);line-height:1.5}
-#page-analytics .an-tt-title{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;margin-bottom:4px}
+#page-analytics .an-tt-title{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;margin-bottom:4px}
 #page-analytics .an-tt-total{font-family:var(--fh);font-size:1.35rem;color:var(--white);letter-spacing:1px;line-height:1.1;margin-bottom:5px}
 #page-analytics .an-tt-total small{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1px;color:var(--white3);margin-left:4px}
 #page-analytics .an-tt-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--fm);font-size:0.68rem;padding:1px 0}
@@ -1081,7 +1096,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #page-analytics .an-periods{grid-template-columns:1fr 1fr}
   #page-analytics .an-metrics{grid-template-columns:repeat(3,1fr)}
   #page-analytics .an-seg-btn{min-height:44px;padding:9px 14px}
-  #page-analytics .an-table-btn{margin-left:0;min-height:44px}
+  #page-analytics .an-table-btn{margin-left:0;min-height:46px}
   #page-analytics .an-chart-wrap{height:270px}
   #page-analytics .an-chart-card{padding:1rem 0.85rem 0.85rem}
   #page-analytics .an-insight{grid-template-columns:1fr}
@@ -1089,11 +1104,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #page-analytics .an-tag{justify-self:start}
 }
 @media(max-width:480px){
+  #page-analytics .an-period,#page-analytics .an-insight{padding:1.1rem 1rem} /* one phone card rhythm with .card / .content-block */
   #page-analytics .an-periods{grid-template-columns:1fr}
-  #page-analytics .an-metrics{grid-template-columns:repeat(3,1fr);gap:0.6rem}
-  #page-analytics .an-metrics .metric-card{padding:1rem 0.5rem}
+  /* 2 + 1 like the planner summary: three-across gave 105px tiles with three-line 10.5px subtitles */
+  #page-analytics .an-metrics{grid-template-columns:repeat(2,1fr);gap:0.6rem}
+  #page-analytics .an-metrics>:last-child:nth-child(odd){grid-column:1/-1}
+  #page-analytics .an-metrics .metric-card{padding:1rem 0.75rem}
   #page-analytics .an-metrics .metric-card .val{font-size:1.9rem}
-  #page-analytics .an-metrics .metric-card .sub{font-size:0.66rem}
   #page-analytics .an-chart-wrap{height:240px}
   #page-analytics .an-seg{width:100%}
   #page-analytics .an-seg-btn{flex:1}
@@ -1167,14 +1184,14 @@ html.tl-pal-lock{overflow:hidden}
 .tl-pal-kind-page .tl-pal-ico{color:var(--cyan)}
 .tl-pal-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .tl-pal-title{font-family:var(--fh);font-size:1.08rem;letter-spacing:1px;line-height:1.15;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tl-pal-crumb{font-family:var(--fm);font-size:0.6rem;letter-spacing:0.5px;color:var(--white3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-pal-crumb{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:0.5px;color:var(--white3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tl-pal-snip{font-size:0.78rem;color:var(--white2);font-weight:300;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tl-pal-mark{background:none;color:var(--cyan);font-weight:600}
 .tl-pal-kindtag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;color:var(--white4);flex-shrink:0}
 .tl-pal-opt[aria-selected="true"] .tl-pal-kindtag{color:var(--white3)}
 .tl-pal-empty{padding:18px 14px 6px;font-size:0.88rem;color:var(--white2);line-height:1.7;font-weight:300}
 /* Footer hints */
-.tl-pal-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid var(--border2);background:var(--card2);font-family:var(--fm);font-size:0.6rem;letter-spacing:0.5px;color:var(--white3)}
+.tl-pal-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid var(--border2);background:var(--card2);font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:0.5px;color:var(--white3)}
 .tl-pal-foot kbd{display:inline-block;font-family:var(--fm);font-size:var(--fs-micro);color:var(--white2);background:var(--navy3);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin-right:4px;line-height:1.6}
 .tl-pal-foot-r{margin-left:auto}
 .tl-pal-slash{display:inline-flex;align-items:center;gap:4px;cursor:pointer;color:inherit}.tl-pal-slash input{accent-color:var(--cyan);margin:0 4px 0 0;width:14px;height:14px;cursor:pointer}.tl-pal-slash input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
@@ -1278,6 +1295,8 @@ html.tl-pal-lock{overflow:hidden}
 #page-updates .tl-upd-items a::after{content:' →';color:var(--cyan);font-size:0.8em}
 #page-updates .tl-upd-items a:hover,#page-updates .tl-upd-items a:focus-visible{color:var(--white);border-bottom-color:var(--cyan)}
 #page-updates .tl-upd-items a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:2px}
+/* Touch: a single-line release link is a 24px flex item in a 44px row — pad it to the row without moving the text */
+@media(hover:none) and (pointer:coarse){#page-updates .tl-upd-items a{padding:10px 0;margin:-10px 0}}
 #page-updates .tl-upd-tag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;padding:3px 0;border-radius:4px;border:1px solid;flex:0 0 74px;text-align:center;margin-top:3px;line-height:1.4}
 #page-updates .tl-upd-tag.new{color:var(--green);background:var(--green-dim);border-color:rgba(0,229,153,0.3)}
 #page-updates .tl-upd-tag.improved{color:var(--cyan);background:var(--cyan-dim);border-color:rgba(0,212,255,0.3)}
@@ -1337,6 +1356,14 @@ html.tl-pal-lock{overflow:hidden}
    site's 768px phone rules and the width the six top-level items need. */
 nav{overflow:visible}
 nav .nav-drawer{flex:1 1 auto;min-width:0;display:flex;align-items:stretch;justify-content:center}
+/* Desktop: a 1fr / auto / 1fr grid gives the brand and the action cluster equal flanks, so the link group
+   sits on the page's centre line (centred in the leftover flex space it landed ~45px left of it, against
+   the centred hero and titles); the brand keeps its content width so only the wordmark is clickable. */
+@media(min-width:900px){
+  nav{display:grid;grid-template-columns:1fr auto 1fr}
+  nav>.nav-brand{justify-self:start}
+  nav>.nav-right{justify-self:end}
+}
 nav .nav-drawer-head,nav .nav-drawer-search,nav .nav-scrim,nav .nav-burger{display:none}
 nav .nav-drawer-scroll{display:flex;align-items:center;min-width:0}
 nav .nav-links{display:flex;align-items:center;list-style:none;margin:0;padding:0;gap:2px;width:auto}
@@ -1368,12 +1395,13 @@ nav #nav-search-btn[hidden]{display:none}
 @media(max-width:899px){
   nav{gap:8px}
   /* The parked drawer leaves three flex children, so pull the action cluster over to the burger instead of
-     letting space-between float it mid-bar; draw the pills at 34px (a ::before keeps the 44px hit area). */
+     letting space-between float it mid-bar; pills, logout and burger all draw at 40px on one top edge
+     (a ::before keeps the 44px hit area). */
   nav .nav-right{margin-left:auto}
-  nav .nav-ai-btn,nav #nav-login-btn{min-height:34px;padding:6px 10px;font-size:0.66rem;letter-spacing:0.6px;position:relative}
-  nav .nav-ai-btn::before{content:"";position:absolute;inset:-5px}
-  nav #nav-logout-btn{min-width:44px}
-  nav .nav-burger{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;min-height:44px;padding:0;order:99;position:relative;flex-shrink:0}
+  nav .nav-ai-btn,nav #nav-login-btn{min-height:40px;padding:6px 10px;font-size:0.66rem;letter-spacing:0.6px;position:relative}
+  nav .nav-ai-btn::before,nav .nav-burger::before{content:"";position:absolute;inset:-2px}
+  nav #nav-logout-btn{min-width:40px;min-height:40px}
+  nav .nav-burger{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;min-height:40px;padding:0;order:99;position:relative;flex-shrink:0}
   nav .nav-burger-bars{position:relative;display:block;width:18px;height:14px}
   nav .nav-burger-bars span{position:absolute;left:0;top:6px;width:18px;height:2px;border-radius:1px;background:currentColor;transition:transform 0.2s ease,opacity 0.2s ease}
   nav .nav-burger-bars span:nth-child(1){transform:translateY(-6px)}
@@ -1413,9 +1441,9 @@ nav #nav-search-btn[hidden]{display:none}
   nav #nav-updates{margin-top:8px}
   /* Groups become headed, collapsible sections (the current page's section is expanded when the drawer opens). */
   nav .nav-group{margin-top:8px}
-  nav .nav-group-btn{display:flex;width:100%;justify-content:space-between;align-items:center;min-height:44px;padding:0 12px;line-height:1.2;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--cyan);opacity:0.85;border:0;border-radius:8px}
+  /* Group heads share the Home / What's New row voice (DM Sans, 48px) so the drawer reads as one list; open or current = cyan */
+  nav .nav-group-btn{display:flex;width:100%;justify-content:space-between;align-items:center;min-height:48px;padding:0 12px;line-height:1.3;font-family:var(--fb);font-size:0.78rem;letter-spacing:0.5px;color:var(--white2);border:0;border-radius:8px}
   nav .nav-group-btn:hover,nav .nav-group-btn[aria-expanded="true"],nav .nav-group-btn.active{color:var(--cyan);border-bottom-color:transparent}
-  nav .nav-group-btn.active{opacity:1}
   nav .nav-group-btn .nav-caret{transform:translateY(-1px) rotate(45deg)}
   nav .nav-group-btn[aria-expanded="true"] .nav-caret{transform:translateY(2px) rotate(225deg)}
   nav .nav-menu{position:static;display:none;grid-template-columns:1fr 1fr;gap:6px;min-width:0;padding:2px 0 6px;background:none;border:0;border-radius:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
@@ -1455,6 +1483,11 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
    margin:auto on the card keeps it centred whenever it fits. */
 #access-gate{align-items:flex-start;justify-content:center;padding:2rem;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .auth-card{padding:2.75rem 2.25rem}
+/* Sign-up consent: a 20px box in a 44px label (the native 13px box sat in a 19px line beside 44px inputs); legal links get a taller tap area without moving the line */
+.auth-consent{display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 0;margin-bottom:0.6rem;font-size:0.82rem;color:var(--white3);text-align:left;cursor:pointer;line-height:1.5}
+.auth-consent input{width:20px;height:20px;flex:0 0 auto;margin:0;accent-color:var(--cyan);cursor:pointer}
+.auth-legal{font-size:0.78rem;color:var(--white4);text-align:left;line-height:1.5;margin-bottom:0.85rem}
+.auth-legal a{color:var(--cyan);display:inline-block;padding:6px 0;margin:-6px 0}
 .tl-panel{padding:1.75rem}
 .auth-links{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 6px}
 .tl-linkbtn{background:none;border:0;padding:0 6px;min-height:44px;color:var(--cyan);font:inherit;cursor:pointer;border-radius:6px}
@@ -1493,8 +1526,6 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   .footer-inner{grid-template-columns:repeat(2,1fr);gap:1.5rem 1rem;margin-bottom:1.5rem}
   .footer-inner>.footer-brand{grid-column:1/-1}
   .footer-inner>.footer-col:last-child:nth-child(odd){grid-column:auto}
-  footer{padding:2.5rem 1.25rem}
-  .page:not(#page-home) footer{padding:1.25rem}
   .footer-bottom{padding-top:1rem}
   .key-grid{grid-template-columns:1fr}
   #page-home .metrics-row{grid-template-columns:repeat(2,1fr);gap:0.75rem}
@@ -1502,18 +1533,18 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   #page-home .metrics-row .metric-card:last-child:nth-child(odd){grid-column:1/-1}
   /* Phone hero: above-the-fold headline, full-width CTAs, an even 2×2 stat grid */
   .hero{padding:3.5rem 1.25rem 3rem;min-height:auto}
-  .hero-eyebrow{font-size:0.6rem;letter-spacing:1.5px;line-height:1.5;text-wrap:balance}
+  .hero-eyebrow{font-size:var(--fs-micro);letter-spacing:1.5px;line-height:1.5;text-wrap:balance}
   .hero-btns{flex-direction:column;align-items:stretch;width:100%;max-width:340px;gap:10px;margin-bottom:2.5rem}
   .btn-hero,.btn-hero-ghost{width:100%}
   .hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem 1rem;width:100%;max-width:340px}
   .hstat{min-width:0}
   /* Phone forms: give the inputs the width back; PR cards stay two-up */
-  .gen-form,.gen-output,.imggen-wrap,.calc-panel,.tl-panel{padding:1.1rem}
+  .gen-form,.gen-output,.imggen-wrap,.calc-panel,.tl-panel{padding:1.1rem 1rem}
   /* Action rows: buttons share the width two-up (was 2+1+1 at four different widths); the form's primary CTA spans the panel like .calc-btn */
   .tl-actions>button{flex:1 1 calc(50% - 5px)}
   #gen-btn,#log-save-btn{width:100%}
   /* Phone reading surfaces: 16px side padding instead of 28px, so body text and key-point tiles get a 301px column instead of 277px */
-  .acc-body,.card,.content-block,#viz-info-panel{padding:1.1rem 1rem}
+  .acc-body,.card,.card-lg,.content-block,#viz-info-panel,.nutr-card,.dl-card,.video-info{padding:1.1rem 1rem}
   .acc-header{padding:0.9rem 1rem}
   .pr-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
   /* Log entries: date and delete share the first line so the content spans the card instead of a 157px column */
@@ -1557,7 +1588,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="noise"></div>
 <!-- NAV -->
 <nav aria-label="Primary">
-  <a class="nav-brand" href="#home" aria-label="Tidelyne — home"><img src="logo-mark.svg" alt="" width="26" height="26" class="nav-mark">TIDE<span>LYNE</span></a>
+  <a class="nav-brand" href="#home" aria-label="Tidelyne — home"><img src="logo-mark.svg" alt="" width="26" height="26" class="nav-mark"><span class="nav-word">TIDE<span>LYNE</span></span></a>
   <!-- One markup tree for both layouts: inline group buttons with dropdowns at >=900px,
        a slide-in drawer with headed (collapsible) sections below that. Disclosure pattern
        throughout — button[aria-expanded][aria-controls] + a plain list of links. -->
@@ -1749,7 +1780,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div id="motion-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px">Try "breaststroke pullout off the wall" or "backstroke start" — the lab rebuilds it joint by joint.</div>
   <div class="viz-controls viz-row-view" style="margin-top:8px" role="group" aria-label="Camera view">
-    <span style="font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px" aria-hidden="true">View:</span>
+    <span class="viz-ctl-lbl" aria-hidden="true">View:</span>
     <button class="viz-btn" data-view="side" aria-pressed="false" onclick="setView3D('side')">Side</button>
     <button class="viz-btn" data-view="front" aria-pressed="false" onclick="setView3D('front')">Front</button>
     <button class="viz-btn" data-view="top" aria-pressed="false" onclick="setView3D('top')">Below</button>
@@ -1757,7 +1788,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="viz-btn" onclick="zoomView3D(1)" title="Zoom in (plus key on the swimmer)"><span aria-hidden="true">＋ </span>Zoom in</button>
     <button class="viz-btn" onclick="zoomView3D(-1)" title="Zoom out (minus key on the swimmer)"><span aria-hidden="true">－ </span>Zoom out</button>
   </div>
-  <div class="viz-controls" style="margin-top:8px" role="group" aria-label="Swimmer model and skin tone">
+  <div class="viz-controls viz-row-model" style="margin-top:8px" role="group" aria-label="Swimmer model and skin tone">
     <span class="viz-ctl-lbl" aria-hidden="true">Swimmer:</span>
     <button class="viz-btn active" id="vbtn-model-male" aria-pressed="true" onclick="setHumanModel('male')"><span aria-hidden="true">♂ </span>Male</button>
     <button class="viz-btn" id="vbtn-model-female" aria-pressed="false" onclick="setHumanModel('female')"><span aria-hidden="true">♀ </span>Female</button>
@@ -1838,7 +1869,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
   </div>
   <div id="viz-output" style="display:none">
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem">
+    <div class="card-lg">
       <div id="viz-content"></div>
     </div>
   </div>
@@ -2147,12 +2178,15 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
   </div>
   <div class="tab-panel" id="c-pace">
-    <div class="calc-panel" style="max-width:560px"><h4>TRAINING PACE ZONES</h4>
-      <div class="form-group" style="margin-bottom:1rem"><label>Best 100 m Freestyle (m:ss)</label><input class="form-input" id="pace-100" enterkeyhint="done" placeholder="e.g. 0:55.5 or 1:02.0"></div>
-      <button class="calc-btn" onclick="calcPaceZones()">Calculate Zones →</button>
-      <p class="form-notice" id="pace-notice" role="alert" hidden></p>
-      <div id="pace-result" aria-live="polite" style="margin-top:1.5rem"></div>
-      <p style="font-size:0.76rem;color:var(--white3);margin-top:1rem;line-height:1.6">Rough reference paces derived from your 100 m time, not lab-tested lactate zones. Use them as a starting point and adjust to feel, heart rate, and how the set actually goes.</p>
+    <div class="calc-wrapper">
+      <div class="calc-panel"><h4>TRAINING PACE ZONES</h4>
+        <div class="form-group" style="margin-bottom:1rem"><label>Best 100 m Freestyle (m:ss)</label><input class="form-input" id="pace-100" enterkeyhint="done" placeholder="e.g. 0:55.5 or 1:02.0"></div>
+        <button class="calc-btn" onclick="calcPaceZones()">Calculate Zones →</button>
+        <p class="form-notice" id="pace-notice" role="alert" hidden></p>
+      </div>
+      <div class="calc-panel"><h4>ZONE TABLE</h4><div id="pace-result" aria-live="polite" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Enter your best 100 m time to see your zone paces.</div>
+        <p style="font-size:0.76rem;color:var(--white3);margin-top:1rem;line-height:1.6">Rough reference paces derived from your 100 m time, not lab-tested lactate zones. Use them as a starting point and adjust to feel, heart rate, and how the set actually goes.</p>
+      </div>
     </div>
   </div>
   <div class="tab-panel" id="c-convert">
@@ -2176,7 +2210,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="section-eyebrow">Physiology Made Visual</div>
   <h1 class="section-title">TRAINING <span>ZONES</span></h1>
   <div class="info-box"><strong>Read the HR numbers as a 10-second count, not bpm.</strong> Stop, find your pulse, count for 10 seconds — "HR 24–28" means 24–28 beats in that 10 seconds (roughly 144–168 bpm). Lactate values are typical ranges from the literature, not measurements of you.</div>
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2.5rem">
+  <div class="card-lg" style="margin-bottom:2.5rem">
     <div class="zone-bars">
       <div class="zone-row"><div class="zone-name">Recovery</div><div class="zone-track"><div class="zone-fill z1">Z1</div></div><div class="zone-info">&lt;2.0 mmol · HR &lt;22</div></div>
       <div class="zone-row"><div class="zone-name"><span style="text-transform:none">AeT</span> / Base</div><div class="zone-track"><div class="zone-fill z2">Z2 AeT</div></div><div class="zone-info">2.0–3.0 mmol · HR 24–28</div></div>
@@ -2259,7 +2293,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <h2 style="font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:1rem;color:var(--cyan)">30-DAY SUMMARY</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem">
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-sessions" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Sessions</div></div>
-      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-km" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Distance <span style="text-transform:none">(m or yd)</span></div></div>
+      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-km" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Distance <span style="text-transform:none">m/yd</span></div></div>
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-hours" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Hours</div></div>
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-avg-effort" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">—</div><div class="log-stat-lbl">Avg Effort</div></div>
     </div>
@@ -2352,7 +2386,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="r-pacing">
-    <div class="content-block"><h4>PACING SCIENCE</h4><p><strong>100 m:</strong> the first 50 is normally 1.5–3 s faster than the second (about 2 s in freestyle, closer to 3 s in fly and breast) — the dive and the underwater do that for you, so the job is to minimize the fade, not to negative split. A freestyle second 50 more than ~3 s slower means you went out too hard. <strong>200 m:</strong> the second 100 is normally 2–3% (2–3 s) slower than the first in every elite final, so the target is to hold the third 50 at the pace of the second; butterfly and breaststroke 200s fade more — the second 100 is typically 5–6% slower in breaststroke and 8–10% slower in butterfly, so holding the third 50 is a stretch target there. <strong>400 m and up:</strong> even 100s, with the lift coming at the end. The championship-final split patterns behind these targets are in the <a href="#planner" onclick="showPageTab('planner','pl-splits','pl-sp-ref');return false;">Race Planner's split reference</a>.</p></div>
+    <div class="content-block"><h4>PACING SCIENCE</h4><p><strong>100 m:</strong> the first 50 is normally 1.5–3 s faster than the second (about 2 s in freestyle, closer to 3 s in fly and breast) — the dive and the underwater do that for you, so the job is to minimize the fade, not to negative split. A freestyle second 50 more than ~3 s slower means you went out too hard.</p>
+    <p><strong>200 m:</strong> the second 100 is normally 2–3% (2–3 s) slower than the first in every elite final, so the target is to hold the third 50 at the pace of the second; butterfly and breaststroke 200s fade more — the second 100 is typically 5–6% slower in breaststroke and 8–10% slower in butterfly, so holding the third 50 is a stretch target there.</p>
+    <p><strong>400 m and up:</strong> even 100s, with the lift coming at the end. The championship-final split patterns behind these targets are in the <a href="#planner" onclick="showPageTab('planner','pl-splits','pl-sp-ref');return false;">Race Planner's split reference</a>.</p></div>
   </div>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
@@ -2648,7 +2684,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="ai-messages" id="ai-messages" tabindex="0" aria-describedby="ai-messages-hint">
       <div class="msg">
         <div class="msg-avatar ai-av">AI</div>
-        <div class="msg-bubble">Welcome. I'm your AI swim coach — covering swimming science, meso-cycle programming, technique biomechanics, race strategy, nutrition, mental performance, and competitive physiology.<br><br>Responses stream in real time. Ask me anything. (AI answers can be wrong — always confirm health or injury questions with a coach or physician.)</div>
+        <div class="msg-bubble">Welcome. I'm your AI swim coach — covering swimming science, meso-cycle programming, technique biomechanics, race strategy, nutrition, mental performance, and competitive physiology.<br><br>Ask me anything. (AI answers can be wrong — always confirm health or injury questions with a coach or physician.)</div>
       </div>
     </div>
     <div class="quick-prompts" role="group" aria-label="Suggested questions">
@@ -2878,7 +2914,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Plan the Swim</div>
   <h1 class="section-title">RACE <span>PLANNER</span></h1>
-  <p class="section-intro">Set goal times against your PRs, see what one swim implies about the others, plan every length of a race, and count down to the meet. Everything here saves in this browser only and is included in the <a href="#profile">My PRs</a> backup.</p>
+  <p class="section-intro">Set goal times against your PRs, see what one swim implies about another, plan every length of a race and count down to the meet.</p>
   <div class="tabs">
     <button class="tab-btn active" id="pl-tab-goals" onclick="switchTab(this,'pl-goals')">Goal Times</button>
     <button class="tab-btn" id="pl-tab-predict" onclick="switchTab(this,'pl-predict')">Race Predictor</button>
@@ -2895,7 +2931,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <div class="info-box" style="margin-top:0">Current PRs come from <a href="#profile">My PRs</a>. Type a goal as <strong>ss.ss</strong> or <strong>m:ss.ss</strong> — the gap and the average pace you would need per 50 and per 100 update as you type. Quick-fill buttons take a fixed percentage off the PR.</div>
     <div id="pl-goal-groups"></div>
-    <p class="pl-fine">Pace per 50 and per 100 assumes the same course as the PR. World-ranked senior swimmers typically improve about 0.6–1% between seasons; developing swimmers improve more, so use the quick-fill buttons as starting points, not targets. Informational only — not coaching advice.</p>
+    <p class="pl-fine">Pace per 50 and per 100 assumes the same course as the PR. World-ranked senior swimmers typically improve about 0.6–1% between seasons; developing swimmers improve more, so use the quick-fill buttons as starting points, not targets. Informational only — not coaching advice. Everything on this page saves in this browser only and is included in the <a href="#profile">My PRs</a> backup.</p>
   </div>
 
   <!-- ─── TAB 2: RACE PREDICTOR ─────────────────────────────────────── -->
@@ -3008,7 +3044,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Training Analytics</div>
   <h1 class="section-title">VOLUME, CONSISTENCY <span>&amp; EFFICIENCY</span></h1>
-  <p class="section-intro">Everything on this page is computed in your browser from the Training Log — weekly volume, consistency, intensity distribution and a set of rule-based observations — plus three pool-deck efficiency calculators. Distances are shown in whatever unit you log (meters or yards). Nothing is sent anywhere.</p>
+  <p class="section-intro">Weekly volume, consistency, intensity distribution and rule-based observations from your Training Log, plus three pool-deck efficiency calculators — all computed in your browser.</p>
 
   <div class="an-toolbar">
     <button class="btn-sm" type="button" id="an-copy-btn" onclick="tl_an_copySummary()">Copy summary</button>
@@ -3041,7 +3077,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <div class="an-periods" id="an-periods"></div>
     <div class="an-metrics" id="an-metrics"></div>
-    <p class="an-hint">Weeks run Monday to Sunday (ISO weeks). Distance is in the unit you log — meters or yards; pick one and stick to it, and every number here is in that unit. A streak counts consecutive weeks with at least one logged session of any type; the current week does not break a streak until it ends.</p>
+    <p class="an-hint">Weeks run Monday to Sunday (ISO weeks). Distance is in the unit you log — meters or yards; pick one and stick to it, and every number here is in that unit. A streak counts consecutive weeks with at least one logged session of any type; the current week does not break a streak until it ends. Nothing on this page is sent anywhere.</p>
 
     <div class="divider an-divider"></div>
 
@@ -3249,7 +3285,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Release Notes</div>
   <h1 class="section-title">WHAT'S <span>NEW</span></h1>
-  <p class="section-intro">Every Tidelyne release, newest first — what was added, what got better, what was fixed. New versions download in the background; when one lands you get a small prompt to reload, never an interruption mid-set.</p>
+  <p class="section-intro">Every Tidelyne release, newest first — what was added, what got better, what was fixed.</p>
 
   <div class="tl-upd-app" id="tl-upd-app">
     <div class="tl-upd-app-grid">
@@ -3275,7 +3311,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <ol class="tl-upd-timeline" id="tl-upd-timeline" aria-label="Release history"></ol>
   <button class="btn-ghost-sm tl-upd-more" type="button" id="tl-upd-more" onclick="tlShowAllUpdates()" hidden>Show older releases</button>
 
-  <p class="tl-upd-note">Update checks run through your browser's service worker against this site only — nothing about you is sent anywhere. The one thing saved is the version you last read, so the nav dot knows when to appear.</p>
+  <p class="tl-upd-note">New versions download in the background; when one lands you get a small prompt to reload, never an interruption mid-set. Update checks run through your browser's service worker against this site only — nothing about you is sent anywhere. The one thing saved is the version you last read, so the nav dot knows when to appear.</p>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p><p data-tl-version>Version 3.1.1</p></div></footer>
 </div>
@@ -3693,11 +3729,11 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
       <input id="signup-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Choose a Password</label>
       <input id="signup-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
-    <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:1rem;font-size:0.78rem;color:var(--white3);text-align:left;cursor:pointer;line-height:1.5">
-      <input type="checkbox" id="signup-age" style="margin-top:2px;accent-color:var(--cyan)"> I confirm I am 13 years of age or older.
+    <label class="auth-consent">
+      <input type="checkbox" id="signup-age"> I confirm I am 13 years of age or older.
     </label>
     <button id="signup-btn" onclick="doSignup()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.6rem">CREATE ACCOUNT →</button>
-    <p style="font-size:0.72rem;color:var(--white4);text-align:left;line-height:1.5;margin-bottom:0.85rem">By creating an account you agree to our <a href="terms.html" target="_blank" rel="noopener" style="color:var(--cyan)">Terms of Use</a> and <a href="privacy.html" target="_blank" rel="noopener" style="color:var(--cyan)">Privacy Policy</a>.</p>
+    <p class="auth-legal">By creating an account you agree to our <a href="terms.html" target="_blank" rel="noopener">Terms of Use</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</p>
     <p id="signup-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><span>Already have an account?</span> <button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Log in</button></p>
   </div>
@@ -5157,7 +5193,7 @@ function buildPhysicsRow() {
   const box = (id, label, color, border, unit) => `
     <div style="background:var(--navy3);border-radius:var(--r8);padding:.75rem;text-align:center;border:1px solid ${border}">
       <div class="viz-phys-lbl" style="color:${color}">${label}</div>
-      <div style="font-family:var(--fh);font-size:1.4rem;color:${color}"><span id="${id}">—</span><span style="font-size:.7rem">${unit}</span></div>
+      <div style="font-family:var(--fh);font-size:1.4rem;color:${color}"><span id="${id}">—</span><span style="font-size:.7rem;margin-left:${unit === '%' ? 0 : 3}px">${unit}</span></div>
     </div>`;
   physRow.innerHTML =
     box('pr-drag','Drag','#ff4444','rgba(255,68,68,.3)','N') +
@@ -6166,7 +6202,7 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
       }),
       signal:guard.signal
     });
-    resultDiv.innerHTML='<div style="padding:1.25rem;text-align:center"><div style="font-family:var(--fm);font-size:0.6rem;letter-spacing:3px;color:var(--green)">✓ STREAMING</div></div>';
+    resultDiv.innerHTML='<div style="padding:1.25rem;text-align:center"><div style="font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--green)">✓ STREAMING</div></div>';
     if(!resp.ok){
       const err=await resp.json().catch(()=>({}));
       const errMsg=aiServerText(err.error) || (resp.status===429 ? AI_LIMIT_MSG : 'The AI service returned an error. Try again shortly.');
@@ -6202,7 +6238,7 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
     // Format after done
     contentDiv.innerHTML=formatVizOutput(fullText);
     contentDiv.removeAttribute('aria-busy');
-    resultDiv.innerHTML='<div style="padding:1.25rem;text-align:left"><div style="font-family:var(--fm);font-size:0.6rem;letter-spacing:3px;color:var(--cyan);margin-bottom:0.5rem">Analysis Complete ✓</div><p style="font-size:0.8rem;color:var(--white3)">Scroll down to read the full breakdown.</p></div>';
+    resultDiv.innerHTML='<div style="padding:1.25rem;text-align:left"><div style="font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--cyan);margin-bottom:0.5rem">Analysis Complete ✓</div><p style="font-size:0.8rem;color:var(--white3)">Scroll down to read the full breakdown.</p></div>';
     tlAnnounce('Analysis complete.');
     outputDiv.scrollIntoView({behavior:tlReducedMotion()?'auto':'smooth',block:'start'}); // was reducedMotion(): private to the Timers block, so a finished analysis threw and showed the network error
   }catch(e){
@@ -6260,7 +6296,7 @@ function formatTime(secs){
 // A failed run never leaves the previous result on screen under the error:
 // the result block goes back to its placeholder (or loses .show) before the
 // notice appears, so a stale table can never be read as the answer.
-const CALC_PLACEHOLDERS={'split-result':'Enter your target time above.','pace-result':'','conv-result':'Fill in the form above.'};
+const CALC_PLACEHOLDERS={'split-result':'Enter your target time above.','pace-result':'Enter your best 100 m time to see your zone paces.','conv-result':'Fill in the form above.'};
 function calcFail(noticeId,msg,focusId,resultId){
   const r=document.getElementById(resultId);
   if(r){ if(r.classList.contains('calc-result')) r.classList.remove('show'); else if(resultId in CALC_PLACEHOLDERS) r.textContent=CALC_PLACEHOLDERS[resultId]; }
@@ -9194,10 +9230,11 @@ function bindChart(){
   });
   canvas.addEventListener('blur', function(){ state.kbLock = false; setActive(-1); });
   if (typeof window.ResizeObserver === 'function') {
-    state.ro = new ResizeObserver(function(){ scheduleDraw(); });
+    state.ro = new ResizeObserver(function(){ scheduleDraw(); fitZoneLabels(); });
     state.ro.observe(wrap);
+    var zbar = an$('an-zone-bar'); if (zbar) state.ro.observe(zbar);
   } else {
-    window.addEventListener('resize', scheduleDraw);
+    window.addEventListener('resize', function(){ scheduleDraw(); fitZoneLabels(); });
   }
 }
 function loadPrefs(){
@@ -9211,6 +9248,20 @@ function applyToggleUI(){
 }
 
 // ─── rendering: zones ─────────────────────────────────────────────────────
+// Segment labels are shown by pixel fit, not by share: a label that would be
+// clipped by its segment is blanked (the title/aria keep the value), and the
+// ResizeObserver re-runs this so labels come back when the bar grows.
+function fitZoneLabels(){
+  var bar = an$('an-zone-bar'); if (!bar || typeof document.createRange !== 'function') return;
+  var segs = bar.querySelectorAll('.an-zone-seg'), i, s;
+  for (i = 0; i < segs.length; i++) { s = segs[i]; var lbl = s.getAttribute('data-lbl') || ''; if (s.textContent !== lbl) s.textContent = lbl; }
+  if (!bar.clientWidth) return;
+  for (i = 0; i < segs.length; i++) {
+    s = segs[i]; if (!s.firstChild) continue;
+    var r = document.createRange(); r.selectNodeContents(s);
+    if (r.getBoundingClientRect().width > s.clientWidth - 4) s.textContent = '';
+  }
+}
 function renderZones(m){
   var bar = an$('an-zone-bar'), list = an$('an-zone-list'), read = an$('an-zone-read');
   if (!bar || !list || !read) return;
@@ -9227,8 +9278,8 @@ function renderZones(m){
     var mins = z.minutes[s.key] || 0, share = mins / z.total, pctV = Math.round(share * 100);
     var dim = s.key === 'Mixed' || s.key === '__other';
     if (mins > 0) {
-      segs += '<div class="an-zone-seg' + (dim ? ' dim' : '') + '" style="width:' + (share * 100).toFixed(2) + '%;background:' + s.color + '" title="' + anEsc(s.label) + ' ' + pctV + '%">' +
-        (share >= 0.09 ? anEsc(s.key === '__other' ? '?' : s.key) + ' ' + pctV + '%' : '') + '</div>';
+      var lbl = anEsc(s.key === '__other' ? '?' : s.key) + ' ' + pctV + '%';
+      segs += '<div class="an-zone-seg' + (dim ? ' dim' : '') + '" style="width:' + (share * 100).toFixed(2) + '%;background:' + s.color + '" title="' + anEsc(s.label) + ' ' + pctV + '%" data-lbl="' + lbl + '">' + lbl + '</div>';
       aria.push(s.label + ' ' + pctV + '%');
     }
     if (mins > 0 || s.key.charAt(0) === 'Z') {
@@ -9236,6 +9287,7 @@ function renderZones(m){
     }
   });
   bar.innerHTML = segs;
+  fitZoneLabels();
   bar.setAttribute('aria-label', 'Share of pool minutes by zone, last four weeks: ' + aria.join(', ') + '. Total ' + fmtInt(z.total) + ' minutes over ' + z.sessions + ' sessions.');
   list.innerHTML = items;
   read.innerHTML = zoneReading(z).html;
