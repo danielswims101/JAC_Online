@@ -1,7 +1,7 @@
 {
   "name": "Tidelyne",
   "short_name": "Tidelyne",
-  "description": "3D stroke lab, technique library and pace tools for competitive swimmers.",
+  "description": "Swimming technique & training tools for competitive swimmers: 3D stroke lab, technique library, pace calculators, deck timers, race planner and AI coach.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

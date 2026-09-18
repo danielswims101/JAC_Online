@@ -2,31 +2,31 @@
 <!--
   Replace the domain below when you rename and move off github.io.
   NOTE: search engines index PAGES, not #hashes — the three legal pages are
-  real files so they will index. The tools (#tempo, #calculator, #visualizer)
+  real files so they will index. The tools (#timers, #calculator, #visualizer)
   will only rank once they are split into real pages or pre-rendered.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://danielswims101.github.io/JAC_Online/</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://danielswims101.github.io/JAC_Online/privacy.html</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-09-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://danielswims101.github.io/JAC_Online/terms.html</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-09-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://danielswims101.github.io/JAC_Online/disclaimer.html</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-09-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
