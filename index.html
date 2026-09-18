@@ -488,6 +488,19 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .qp{flex:0 0 auto;white-space:nowrap}
   .ai-messages{height:calc(100dvh - 300px)}
 }
+/* Landscape phone (812×375, 667×375): the message pane's height floor pushed the composer far below the fold and the
+   3D canvas kept a taller-than-screen height (the phone overrides above are max-width rules) — after them so it wins. */
+@media(max-height:500px) and (orientation:landscape){
+  .ai-messages{min-height:160px;height:calc(100dvh - 230px)}
+  /* Mode buttons and quick prompts as single scrolling rows (as on portrait phones): wrapped they cost ~330px of height */
+  .ai-mode-btns{gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+  .ai-mode-btns::-webkit-scrollbar{display:none}
+  .ai-mode-btn{flex:0 0 auto;white-space:nowrap}
+  .quick-prompts{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .quick-prompts::-webkit-scrollbar{display:none}
+  .qp{flex:0 0 auto;white-space:nowrap}
+  #viz3d-container{height:min(520px,calc(100dvh - 90px))}
+}
 /* ACCESSIBILITY */
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.qp:focus-visible,[role="button"]:focus-visible,[role="link"]:focus-visible,[tabindex]:not(.page):focus-visible,#viz3d-container:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 /* Inside overflow:hidden parents (accordion, canvas wrap) an outside ring is clipped — draw it inset */
@@ -2103,7 +2116,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:2rem">
     <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
       <div style="width:58px;height:58px;border-radius:50%;background:var(--cyan-dim);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0">🏊</div>
-      <div><h2 id="profile-name-display" style="font-family:var(--fh);font-size:1.75rem;letter-spacing:1px">Swimmer</h2><p style="font-size:0.8rem;color:var(--white3);margin-top:3px">PRs auto-saved in your browser</p></div>
+      <div style="min-width:0;flex:1 1 200px"><h2 id="profile-name-display" style="font-family:var(--fh);font-size:1.75rem;letter-spacing:1px;overflow-wrap:anywhere">Swimmer</h2><p style="font-size:0.8rem;color:var(--white3);margin-top:3px">PRs auto-saved in your browser</p></div>
     </div>
     <div class="form-group" style="max-width:300px"><label>Swimmer Name</label><input class="form-input" id="profile-name" placeholder="Your name" maxlength="30" autocomplete="name" oninput="saveName()"></div>
   </div>
@@ -3212,6 +3225,30 @@ function updateNavAuth() {
 }
 var _authReturnFocus = null;
 var _authHideTimer = 0; // closeAuthGate's pending display:none — cancelled by a quick re-open
+// The sign-in library failed to load (blocked CDN, offline): said in the page, never with a
+// native alert() that steals focus and contradicts the "log in to continue" copy next to it.
+var AUTH_DOWN_MSG = 'Account features are unavailable right now — the sign-in service could not load (no connection or a blocked script). Everything else on Tidelyne still works; reload to try again.';
+function authUnavailable() {
+  if (!sb) initSupabaseAuth(); // creates the client synchronously when the library is already here
+  return !sb && sbScriptState !== 'loading';
+}
+var _authToastT = 0;
+function authUnavailableNotice() {
+  if (!document.body) return;
+  var t = document.getElementById('tl-auth-toast');
+  if (t && t.parentNode) t.parentNode.removeChild(t);
+  t = document.createElement('div');
+  t.id = 'tl-auth-toast'; t.className = 'tl-upd-toast';
+  t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite');
+  var m = document.createElement('span'); m.className = 'tl-upd-toast-msg'; m.textContent = AUTH_DOWN_MSG;
+  var x = document.createElement('button');
+  x.type = 'button'; x.className = 'tl-upd-toast-x'; x.textContent = '✕'; x.setAttribute('aria-label', 'Dismiss');
+  x.addEventListener('click', function(){ if (t.parentNode) t.parentNode.removeChild(t); });
+  t.appendChild(m); t.appendChild(x);
+  document.body.appendChild(t);
+  clearTimeout(_authToastT);
+  _authToastT = setTimeout(function(){ if (t.parentNode) t.parentNode.removeChild(t); }, 12000);
+}
 function openAuthGate(screen) {
   if (!sb) {
     initSupabaseAuth();
@@ -3219,7 +3256,7 @@ function openAuthGate(screen) {
       _sbScriptWaiters.push(function(){ openAuthGate(screen); });
       return;
     }
-    if (!sb) { alert('Account features are unavailable right now — the sign-in service could not load. All content is still accessible without an account.'); return; }
+    if (!sb) { authUnavailableNotice(); return; }
   }
   var g = document.getElementById('access-gate');
   if (!g) { document.addEventListener('DOMContentLoaded', function(){ openAuthGate(screen); }, { once: true }); return; } // overlay markup not parsed yet
@@ -3270,16 +3307,27 @@ function showAuthScreen(name) {
     if (first) try { first.focus(); } catch(e){}
   }
 }
-function showAuthError(screenPrefix, message) {
+// field (optional): the id of the one control the message is about — only it
+// is flagged invalid. Omitted = flag every text field (a server-side error
+// with no field of its own); null = flag nothing (a success or info message).
+function showAuthError(screenPrefix, message, field) {
   var el = document.getElementById(screenPrefix + '-error') || document.getElementById(screenPrefix + '-msg');
   if (!el) return;
   el.style.color = 'var(--red)'; // reset — success messages recolor it green
   el.textContent = message;
   el.style.display = 'block';
-  // Flag the screen's fields so assistive tech links them to the message
-  document.querySelectorAll('#screen-' + screenPrefix + ' input:not([type="checkbox"])').forEach(function(i){
-    i.setAttribute('aria-invalid', 'true'); i.setAttribute('aria-describedby', el.id);
+  // Flag the field(s) so assistive tech links them to the message — and clear
+  // a previous flag first, so fixing the username never leaves it marked red.
+  document.querySelectorAll('#screen-' + screenPrefix + ' input').forEach(function(i){
+    i.removeAttribute('aria-invalid'); if (i.getAttribute('aria-describedby') === el.id) i.removeAttribute('aria-describedby');
   });
+  var targets = field === null ? [] : (typeof field === 'string' ? [document.getElementById(field)].filter(Boolean)
+    : Array.prototype.slice.call(document.querySelectorAll('#screen-' + screenPrefix + ' input:not([type="checkbox"])')));
+  targets.forEach(function(i){ i.setAttribute('aria-invalid', 'true'); i.setAttribute('aria-describedby', el.id); });
+}
+// True for a plain Enter only — not an IME candidate confirm (isComposing), not Shift/Alt/Ctrl/Cmd+Enter.
+function tlPlainEnter(e) {
+  return !!e && e.key === 'Enter' && !e.isComposing && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey;
 }
 // Escape closes the auth overlay; so does clicking the dark backdrop.
 document.addEventListener('keydown', function(e){
@@ -3292,19 +3340,19 @@ async function doSignup() {
   var ageOk = document.getElementById('signup-age').checked;
   var btn = document.getElementById('signup-btn');
   if (username.length < 3 || !/^[a-zA-Z0-9_]+$/.test(username)) {
-    showAuthError('signup', 'Username must be 3+ characters, letters/numbers/underscore only.');
+    showAuthError('signup', 'Username must be 3+ characters, letters/numbers/underscore only.', 'signup-username');
     return;
   }
   if (!email || !email.includes('@')) {
-    showAuthError('signup', 'Enter a valid email address.');
+    showAuthError('signup', 'Enter a valid email address.', 'signup-email');
     return;
   }
   if (password.length < 8) {
-    showAuthError('signup', 'Password must be at least 8 characters.');
+    showAuthError('signup', 'Password must be at least 8 characters.', 'signup-password');
     return;
   }
   if (!ageOk) {
-    showAuthError('signup', 'You must confirm you are 13 or older to create an account.');
+    showAuthError('signup', 'You must confirm you are 13 or older to create an account.', 'signup-age');
     return;
   }
   btn.disabled = true; btn.textContent = 'Creating account…';
@@ -3313,7 +3361,7 @@ async function doSignup() {
   // enforces case-insensitive uniqueness, so a race can't create duplicates.
   var taken = await sb.rpc('username_taken', { candidate: username });
   if (taken.data === true) {
-    showAuthError('signup', 'That username is already taken — pick another.');
+    showAuthError('signup', 'That username is already taken — pick another.', 'signup-username');
     btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
     return;
   }
@@ -3341,7 +3389,7 @@ async function doSignup() {
     await onAuthSuccess(data.user);
   } else {
     showAuthScreen('login');
-    showAuthError('login', 'Account created! Check your email to confirm, then log in.');
+    showAuthError('login', 'Account created! Check your email to confirm, then log in.', null);
     document.getElementById('login-error').style.color = 'var(--green)';
   }
   btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
@@ -3367,8 +3415,17 @@ async function doLogin() {
 async function doForgotPassword() {
   var email = document.getElementById('forgot-email').value.trim();
   var msg = document.getElementById('forgot-msg');
-  if (!email) { showAuthError('forgot', 'Enter your email first.'); return; }
-  var { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+  var btn = document.getElementById('forgot-btn');
+  if (!email) { showAuthError('forgot', 'Enter your email first.', 'forgot-email'); return; }
+  if (!email.includes('@')) { showAuthError('forgot', 'Enter a valid email address.', 'forgot-email'); return; } // same rule as sign-up
+  if (btn && btn.disabled) return; // a double tap must not send two reset emails
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+  var error = null;
+  try {
+    error = (await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname })).error;
+  } catch (e) { error = { message: 'Could not reach the sign-in service — check your connection and try again.' }; }
+  finally { if (btn) { btn.disabled = false; btn.textContent = 'SEND RESET LINK →'; } }
+  document.querySelectorAll('#screen-forgot input[aria-invalid]').forEach(function(i){ i.removeAttribute('aria-invalid'); i.removeAttribute('aria-describedby'); });
   msg.style.display = 'block';
   msg.style.color = error ? 'var(--red)' : 'var(--green)';
   msg.textContent = error ? error.message : 'Check your email for a password reset link.';
@@ -3386,15 +3443,15 @@ async function doSetNewPassword() {
   var p1 = document.getElementById('newpass-password').value;
   var p2 = document.getElementById('newpass-confirm').value;
   var btn = document.getElementById('newpass-btn');
-  if (p1.length < 8) { showAuthError('newpass', 'Password must be at least 8 characters.'); return; }
-  if (p1 !== p2) { showAuthError('newpass', 'The two passwords do not match.'); return; }
+  if (p1.length < 8) { showAuthError('newpass', 'Password must be at least 8 characters.', 'newpass-password'); return; }
+  if (p1 !== p2) { showAuthError('newpass', 'The two passwords do not match.', 'newpass-confirm'); return; }
   btn.disabled = true; btn.textContent = 'Saving…';
   var { data, error } = await sb.auth.updateUser({ password: p1 });
   btn.disabled = false; btn.textContent = 'SET NEW PASSWORD →';
   if (error) { showAuthError('newpass', error.message); return; }
   _recoveryPending = false;
   try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
-  showAuthError('newpass', 'Password updated — you are signed in.');
+  showAuthError('newpass', 'Password updated — you are signed in.', null);
   document.getElementById('newpass-error').style.color = 'var(--green)';
   document.getElementById('newpass-password').value = ''; document.getElementById('newpass-confirm').value = '';
   var user = data && data.user ? data.user : currentUser;
@@ -3411,7 +3468,7 @@ function handleAuthCallbackError() {
   try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
   _recoveryPending = false;
   openAuthGate(expired ? 'forgot' : 'login');
-  showAuthError(expired ? 'forgot' : 'login', desc + (expired ? ' Request a new reset link below.' : ''));
+  showAuthError(expired ? 'forgot' : 'login', desc + (expired ? ' Request a new reset link below.' : ''), null); // about the link, not the fields
   return true;
 }
 async function doLogout() {
@@ -3471,7 +3528,7 @@ async function initSupabaseAuth(){
   if (isAuthCallbackHash(location.hash)) {
     var wasRecovery = _recoveryPending; _recoveryPending = false;
     try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
-    if (wasRecovery && !currentUser) { openAuthGate('forgot'); showAuthError('forgot', 'That reset link could not be verified. Request a new one below.'); }
+    if (wasRecovery && !currentUser) { openAuthGate('forgot'); showAuthError('forgot', 'That reset link could not be verified. Request a new one below.', null); }
   }
 }
 // The library is async: whichever comes last — its onload (onSupabaseScript)
@@ -3487,9 +3544,9 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">WELCOME<br><span style="color:var(--cyan)">BACK</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
-      <input id="login-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <input id="login-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doLogin()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Password</label>
-      <input id="login-password" type="password" autocomplete="current-password" class="form-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <input id="login-password" type="password" autocomplete="current-password" class="form-input" placeholder="••••••••" onkeydown="if(tlPlainEnter(event))doLogin()"></div>
     <button id="login-btn" onclick="doLogin()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">LOG IN →</button>
     <p id="login-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p class="auth-links" style="font-size:0.82rem;color:var(--white3)">
@@ -3503,11 +3560,11 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne — Free Account</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">CREATE YOUR<br><span style="color:var(--cyan)">ACCOUNT</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Choose a Username</label>
-      <input id="signup-username" type="text" autocomplete="username" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(event.key==='Enter')doSignup()"></div>
+      <input id="signup-username" type="text" autocomplete="username" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
-      <input id="signup-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doSignup()"></div>
+      <input id="signup-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Choose a Password</label>
-      <input id="signup-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(event.key==='Enter')doSignup()"></div>
+      <input id="signup-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
     <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:1rem;font-size:0.78rem;color:var(--white3);text-align:left;cursor:pointer;line-height:1.5">
       <input type="checkbox" id="signup-age" style="margin-top:2px;accent-color:var(--cyan)"> I confirm I am 13 years of age or older.
     </label>
@@ -3521,8 +3578,8 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🔑</div>
     <h2 style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:1.25rem">RESET YOUR<br><span style="color:var(--cyan)">PASSWORD</span></h2>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Email</label>
-      <input id="forgot-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doForgotPassword()"></div>
-    <button onclick="doForgotPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SEND RESET LINK →</button>
+      <input id="forgot-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doForgotPassword()"></div>
+    <button id="forgot-btn" onclick="doForgotPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SEND RESET LINK →</button>
     <p id="forgot-msg" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.78rem;letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Back to login</button></p>
   </div>
@@ -3532,9 +3589,9 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <h2 style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:0.75rem">CHOOSE A NEW<br><span style="color:var(--cyan)">PASSWORD</span></h2>
     <p style="font-size:0.82rem;color:var(--white3);line-height:1.5;margin-bottom:1.1rem">Your reset link checked out. Pick a new password for your account.</p>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>New Password</label>
-      <input id="newpass-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(event.key==='Enter')doSetNewPassword()"></div>
+      <input id="newpass-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(tlPlainEnter(event))doSetNewPassword()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Confirm New Password</label>
-      <input id="newpass-confirm" type="password" autocomplete="new-password" class="form-input" placeholder="Type it again" onkeydown="if(event.key==='Enter')doSetNewPassword()"></div>
+      <input id="newpass-confirm" type="password" autocomplete="new-password" class="form-input" placeholder="Type it again" onkeydown="if(tlPlainEnter(event))doSetNewPassword()"></div>
     <button id="newpass-btn" onclick="doSetNewPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SET NEW PASSWORD →</button>
     <p id="newpass-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
   </div>
@@ -3803,10 +3860,11 @@ function enhanceA11y(){
     if(typeof STROKES==='undefined'||typeof currentStroke==='undefined'||!STROKES[currentStroke]) return;
     e.preventDefault();
     const ph=STROKES[currentStroke].phases;
-    const cur=(typeof currentPhaseInfo!=='undefined'&&currentPhaseInfo)?(currentPhaseInfo.idx||0):0;
+    // Read the phase from the clock, not from currentPhaseInfo: that only updates on the next
+    // animation frame, so key repeat (or a quick double-tap) between frames stepped from a stale index.
+    const cur=(typeof phaseIdxFromClock3D==='function')?phaseIdxFromClock3D():((typeof currentPhaseInfo!=='undefined'&&currentPhaseInfo)?(currentPhaseInfo.idx||0):0);
     const idx=(cur+(e.key==='ArrowRight'?1:-1)+ph.length)%ph.length;
-    if(typeof playing!=='undefined'&&playing&&typeof togglePlay3D==='function') togglePlay3D();
-    if(typeof jumpToPhase3D==='function') jumpToPhase3D(idx);
+    if(typeof jumpToPhase3D==='function') jumpToPhase3D(idx); // pauses the loop itself
   }); }
 }
 document.addEventListener('DOMContentLoaded', enhanceA11y);
@@ -4876,10 +4934,24 @@ function jumpToPhase3D(i) {
   const phases = STROKES[currentStroke].phases;
   let t = 0;
   for (let j=0;j<i;j++) t += phases[j].dur;
+  // Pause first (as the arrow keys always did): at 0.55 cycles/s a phase is
+  // gone in ~300 ms, so a tap on the phase bar showed it for a blink.
+  if (playing) togglePlay3D();
   // Land a hair INSIDE the phase: exactly on the boundary, the modulo in
   // updateSwimmer can leave a floating-point residue that resolves to the
   // END of the previous phase (its title with this phase's numbers).
   clockT = t + 1e-4;
+}
+// The phase the clock is in right now — same walk as updateSwimmer, but
+// synchronous, so keyboard stepping never reads a frame-old currentPhaseInfo.
+function phaseIdxFromClock3D() {
+  const sd = STROKES[currentStroke]; if (!sd || !sd.phases || !sd.phases.length) return 0;
+  const phases = sd.phases, totalDur = phases.reduce((s,p)=>s+p.dur, 0);
+  if (!(totalDur > 0)) return 0;
+  const cycleT = ((clockT % totalDur) + totalDur) % totalDur;
+  let cum = 0;
+  for (let i=0;i<phases.length;i++){ if (cycleT < cum + phases[i].dur) return i; cum += phases[i].dur; }
+  return 0;
 }
 function updatePhaseBar3D(idx) {
   document.querySelectorAll('.phase-step').forEach((el,i) => { el.classList.toggle('active', i===idx); el.setAttribute('aria-pressed', i===idx ? 'true' : 'false'); });
@@ -5183,7 +5255,10 @@ async function generateMotion(){
   const btn=document.getElementById('motion-btn');
   const desc=(inp.value||'').trim();
   if(!desc){ statusEl.textContent='Describe a movement first — e.g. "breaststroke pullout off the wall".'; return; }
-  if(!currentUser){ statusEl.textContent='AI reconstruction needs a free account — log in to continue.'; openAuthGate('login'); return; }
+  if(!currentUser){
+    if(authUnavailable()){ statusEl.textContent=AUTH_DOWN_MSG; return; }
+    statusEl.textContent='AI reconstruction needs a free account — log in to continue.'; openAuthGate('login'); return;
+  }
   ensureViz3DReady();
   btn.disabled=true;
   statusEl.textContent='✦ Reconstructing — the AI is computing joint keyframes for "'+desc+'"…';
@@ -5197,12 +5272,15 @@ async function generateMotion(){
       body:JSON.stringify({mode:'motion',messages:[{role:'user',content:desc}]})
     });
     if(!resp.ok){
-      const fb=tryFallbackMotion(desc);
-      if(fb){ loadCustomMotion(fb, statusEl, '⚠ AI backend unavailable — built-in reconstruction: '); btn.disabled=false; return; }
+      // Say WHY first: a rate limit or an expired session is not "backend unavailable".
+      // The built-in reconstruction still loads for a known cue, with an honest prefix.
       const err=await resp.json().catch(()=>({}));
-      statusEl.textContent=err.error||(resp.status===429?AI_LIMIT_MSG
-        :(resp.status===404?'AI 3D reconstruction is temporarily unavailable — try a built-in stroke, or the stroke buttons.'
-        :'Error: HTTP '+resp.status));
+      const fb=tryFallbackMotion(desc);
+      if(resp.status===401||resp.status===403){ if(fb) loadCustomMotion(fb, statusEl, '⚠ Session expired — log in again. Built-in reconstruction: '); else statusEl.textContent='Session expired — please log in again.'; btn.disabled=false; return; }
+      if(resp.status===429){ if(fb) loadCustomMotion(fb, statusEl, '⚠ '+(err.error||AI_LIMIT_MSG)+' Built-in reconstruction: '); else statusEl.textContent=err.error||AI_LIMIT_MSG; btn.disabled=false; return; }
+      if(fb){ loadCustomMotion(fb, statusEl, '⚠ AI backend unavailable — built-in reconstruction: '); btn.disabled=false; return; }
+      statusEl.textContent=err.error||(resp.status===404?'AI 3D reconstruction is temporarily unavailable — try a built-in stroke, or the stroke buttons.'
+        :'Error: HTTP '+resp.status);
       btn.disabled=false; return;
     }
     const reader=resp.body.getReader();
@@ -5400,19 +5478,29 @@ async function sendToAI(){
   const msg=input.value.trim();
   if(!msg) return;
   if(!currentUser){
-    const gateMsg='The AI Coach needs a free account (it keeps the service free for everyone). Log in or sign up to continue.';
+    // Library failed to load: say so in the chat instead of "log in to continue" plus a native alert saying the opposite.
+    const down=authUnavailable();
+    const gateMsg=down?'The AI Coach needs a free account, and '+AUTH_DOWN_MSG.charAt(0).toLowerCase()+AUTH_DOWN_MSG.slice(1)
+      :'The AI Coach needs a free account (it keeps the service free for everyone). Log in or sign up to continue.';
     if(lastAIBubbleText()!==gateMsg) addMsg(gateMsg,'ai');
-    openAuthGate('login');
+    if(!down) openAuthGate('login');
     return;
   }
   const btn=document.getElementById('ai-send-btn');
   if(btn.disabled) return; // a stream is already running
   addMsg(msg,'user'); input.value=''; btn.disabled=true;
   conversationHistory.push({role:'user',content:msg});
-  // Cap history — otherwise every message re-uploads the whole conversation
-  if(conversationHistory.length>20) conversationHistory=conversationHistory.slice(-20);
+  // Cap history — otherwise every message re-uploads the whole conversation.
+  // The model API needs the first turn to be the user's: the cut lands on an
+  // assistant turn every other time (the 11th message did), so drop any
+  // leading assistant turn — otherwise every later Send fails until Clear.
+  if(conversationHistory.length>20){
+    conversationHistory=conversationHistory.slice(-20);
+    while(conversationHistory.length&&conversationHistory[0].role!=='user') conversationHistory.shift();
+  }
   // Create streaming bubble
   const streamBubble=createStreamBubble();
+  let fullText=''; // outside the try: a stream that breaks mid-answer keeps what arrived
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
@@ -5437,7 +5525,6 @@ async function sendToAI(){
     }
     const reader=resp.body.getReader();
     const decoder=new TextDecoder();
-    let fullText='';
     let buffer='';
     while(true){
       const {done,value}=await reader.read();
@@ -5462,8 +5549,16 @@ async function sendToAI(){
     if(fullText) conversationHistory.push({role:'assistant',content:fullText});
     else conversationHistory.pop(); // empty reply — drop the user turn so history stays valid
   }catch(e){
-    conversationHistory.pop(); // roll back the user turn on network failure
-    finishStreamBubble(streamBubble, 'Connection error — check your network and try again.');
+    // A stream that broke after tokens arrived keeps the partial answer on
+    // screen and in history (the reader was mid-paragraph); with nothing
+    // received, roll back the user turn so the history stays valid.
+    if(fullText){
+      conversationHistory.push({role:'assistant',content:fullText});
+      finishStreamBubble(streamBubble, fullText+'\n\n— Connection interrupted before the answer finished — check your network and ask again for the rest.');
+    } else {
+      conversationHistory.pop(); // roll back the user turn on network failure
+      finishStreamBubble(streamBubble, 'Connection error — check your network and try again.');
+    }
   }
   btn.disabled=false;
 }
@@ -5543,11 +5638,20 @@ function clearChat(){
 }
 document.addEventListener('DOMContentLoaded',()=>{
   const inp=document.getElementById('ai-input');
-  if(inp) inp.addEventListener('keydown',e=>{if(e.key==='Enter')sendToAI();});
+  // Plain Enter sends; an IME candidate confirm (isComposing) or a modified Enter must not.
+  if(inp) inp.addEventListener('keydown',e=>{ if(e.key!=='Enter'||e.isComposing||e.shiftKey||e.altKey||e.ctrlKey||e.metaKey) return; e.preventDefault(); sendToAI(); });
 });
 // ─── WORKOUT GENERATOR — STREAMING ────────────
 async function generateWorkout(){
-  if(!currentUser){ openAuthGate('login'); return; }
+  if(!currentUser){
+    if(authUnavailable()){ // say it where the workout would appear, not in a native alert
+      const o=document.getElementById('gen-output'), r=document.getElementById('gen-result'), l=document.getElementById('gen-loading'), a=document.getElementById('gen-actions');
+      if(o) o.classList.add('show'); if(l) l.style.display='none'; if(a) a.style.display='none';
+      if(r){ r.removeAttribute('aria-busy'); r.innerHTML='<p style="color:var(--red)">'+escapeHTML(AUTH_DOWN_MSG)+'</p>'; }
+      tlAnnounce(AUTH_DOWN_MSG); return;
+    }
+    openAuthGate('login'); return;
+  }
   const genBtn=document.getElementById('gen-btn');
   if(genBtn&&genBtn.disabled) return; // double-click = two streams + two rate-limit hits
   if(genBtn) genBtn.disabled=true;
@@ -5604,6 +5708,7 @@ COOL-DOWN (Xm):
 TOTAL: Xm
 COACH NOTES:
 Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g. 24–28 = AeT). Volume target: ${volTargets}.`;
+  let fullText=''; // outside the try: a stream that breaks mid-session keeps what arrived
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
@@ -5631,7 +5736,7 @@ Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g.
     }
     const reader=resp.body.getReader();
     const decoder=new TextDecoder();
-    let fullText='', buffer='';
+    let buffer='';
     result.innerHTML='<div id="gen-stream" aria-live="off" style="color:var(--white2);line-height:1.8;white-space:pre-wrap;font-family:var(--fm);font-size:0.82rem"></div>';
     const streamEl=document.getElementById('gen-stream');
     while(true){
@@ -5661,8 +5766,14 @@ Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g.
   }catch(e){
     loading.style.display='none';
     result.removeAttribute('aria-busy');
-    result.innerHTML=`<p style="color:var(--red)">Connection error.</p>`;
-    tlAnnounce('Connection error.');
+    if(fullText){ // keep the sets that streamed in; say the session is cut short
+      result.innerHTML=formatWorkout(fullText)+`<p style="color:var(--red);margin-top:0.75rem">Connection interrupted before the session finished — check your network and generate again for the full workout.</p>`;
+      actions.style.display='flex';
+      tlAnnounce('Connection interrupted — the workout shown is incomplete.');
+    } else {
+      result.innerHTML=`<p style="color:var(--red)">Connection error.</p>`;
+      tlAnnounce('Connection error.');
+    }
   }
 }
 function formatWorkout(text){
@@ -5699,7 +5810,16 @@ const VIZ_CONCEPTS={
   'custom':''
 };
 async function generateVisualization(){
-  if(!currentUser){ openAuthGate('login'); return; }
+  // Validate the form before the account gate (as generateMotion does): a logged-out
+  // swimmer must not be sent to sign in only to learn afterwards that the box was empty.
+  const vConcept=document.getElementById('viz-concept').value;
+  const vCustom=document.getElementById('viz-custom').value.trim().slice(0,300);
+  if(!(vConcept==='custom'?vCustom:((VIZ_CONCEPTS[vConcept]||'')+vCustom))){ tlNotice('viz-notice','Please describe the technique concept.',null,'viz-custom'); document.getElementById('viz-custom').focus(); return; }
+  tlNotice('viz-notice','');
+  if(!currentUser){
+    if(authUnavailable()){ tlNotice('viz-notice',AUTH_DOWN_MSG); return; } // in the page, not a native alert
+    openAuthGate('login'); return;
+  }
   const vgBtn=document.getElementById('viz-gen-btn');
   if(vgBtn&&vgBtn.disabled) return;
   if(vgBtn) vgBtn.disabled=true;
@@ -5816,14 +5936,17 @@ function formatVizOutput(text){
 function parseTime(str){
   if(!str) return null;
   str=String(str).trim();
-  // Accept only "ss(.ss)" or "m:ss(.ss)" — reject "1:23:45", "1e3", stray
-  // letters, and "1.55" typos that used to be silently read as 1.55 seconds.
-  const m=str.match(/^(?:(\d{1,2}):)?([0-5]?\d(?:\.\d{1,3})?)$/);
+  // Accept "ss(.ss)" — plain seconds as a scoreboard shows them, "62.30"
+  // included — or "m:ss(.ss)" with the seconds under 60. Reject "1:23:45",
+  // "1:75", "1e3", stray letters, and "1.55" typos that used to be silently
+  // read as 1.55 seconds.
+  const m=str.match(/^(?:(\d{1,2}):)?(\d{1,4}(?:\.\d{1,3})?)$/);
   if(!m) return null;
   const mins=m[1]?parseInt(m[1],10):0;
   const secs=parseFloat(m[2]);
+  if(m[1] && secs>=60) return null; // "1:75" is not a time
   const v=mins*60+secs;
-  if(!m[1] && v<10) return null; // a bare "1.55" is a m:ss typo, not 1.55 s — no swim time is under 10 s
+  if(v<10) return null; // "1.55" is a m:ss typo, not 1.55 s, and "0:05" is no swim time either — nothing under 10 s
   return (isFinite(v) && v>0 && v<3600) ? v : null;
 }
 function formatTime(secs){
@@ -6039,8 +6162,8 @@ function savePR(key,value,el,normalize){
   if(normalize) commit(); else prErrTimers[key]=setTimeout(commit,800);
 }
 function saveName(){
-  const n=document.getElementById('profile-name').value;
-  lsSet('swimmer_name',n);
+  const n=String(document.getElementById('profile-name').value||'').trim().slice(0,30); // Import trims and caps the same way
+  if(n) lsSet('swimmer_name',n); else lsRemove('swimmer_name'); // spaces alone are no name — show "Swimmer", store nothing
   document.getElementById('profile-name-display').textContent=n||'Swimmer';
 }
 function clearAllPRs(){
@@ -6095,6 +6218,9 @@ function importBackup(ev){
         if(!confirm('Importing replaces the '+list+' already on this device with the backup file\'s contents. Export a backup first if you want to keep them. Continue?')){ tlNotice('profile-notice','Import cancelled — nothing was changed.'); return; }
       }
       let nPR=0, nLog=0, nSet=0, skipped=0;
+      // "Replaces" means replaces: a PR the file does not carry must not survive
+      // (restoring an older backup to undo a wrong entry would otherwise keep it).
+      if(fileHasPR) Object.keys(validKeys).forEach(k=>lsRemove(k));
       if(d.prs&&typeof d.prs==='object') Object.keys(d.prs).forEach(k=>{
         const v=String(d.prs[k]==null?'':d.prs[k]).trim().slice(0,12); if(!v) return;
         if(validKeys[k]&&parseTime(v)!==null){ lsSet(k,v); nPR++; } else skipped++;
@@ -6149,10 +6275,13 @@ function readLog(){
     // Drop anything that is not a session object (a hand-edited or hostile
     // backup can hold null/number entries) and normalise ids to numbers so
     // renderLog/deleteLogEntry can never throw on stored data.
-    let dirty=false, seq=Date.now();
+    let dirty=false, seq=Date.now(); const seen=new Set();
     const out=v.filter(e=>e&&typeof e==='object'&&!Array.isArray(e)).map(e=>{
       const n=Number(e.id);
-      if(!(isFinite(n)&&n>0)){ e.id=seq++; dirty=true; } else if(e.id!==n){ e.id=n; dirty=true; }
+      // Ids must be unique too: delete works by id, so two sessions sharing one
+      // (a backup merged from two devices) would vanish together on one tap.
+      if(!(isFinite(n)&&n>0)||seen.has(n)){ e.id=seq++; dirty=true; } else if(e.id!==n){ e.id=n; dirty=true; }
+      seen.add(e.id);
       return e;
     });
     if(dirty||out.length!==v.length) lsSet('swimiq_log',JSON.stringify(out));
@@ -6162,14 +6291,16 @@ function readLog(){
 // Accept only plain session objects with a real date; coerce the numeric
 // fields, cap the text fields and assign ids where missing.
 function sanitizeLogEntries(list){
-  const out=[]; let seq=Date.now(), latest=logTodayISO(1);
+  const out=[]; let seq=Date.now(), latest=logTodayISO(1); const seen=new Set();
   const num=(v,max)=>{ const n=Math.round(Number(v)); return (isFinite(n)&&n>0)?Math.min(n,max):0; };
   (Array.isArray(list)?list:[]).forEach(e=>{
     if(!e||typeof e!=='object'||Array.isArray(e)) return;
     const date=String(e.date||'').slice(0,10);
     if(!parseLogDate(date)||date>latest) return; // a real calendar day, no later than tomorrow
-    const id=Number(e.id), eff=Math.round(Number(e.effort));
-    out.push({ id:(isFinite(id)&&id>0)?id:seq++, date, type:String(e.type||'').slice(0,40),
+    let id=Number(e.id); const eff=Math.round(Number(e.effort));
+    if(!(isFinite(id)&&id>0)||seen.has(id)) id=seq++; // unique ids — a duplicate would be deleted with its twin
+    seen.add(id);
+    out.push({ id, date, type:String(e.type||'').slice(0,40),
       dist:num(e.dist,LOG_MAX_DIST), dur:num(e.dur,LOG_MAX_DUR), zone:String(e.zone||'').slice(0,40),
       effort:(eff>=1&&eff<=10)?eff:0, mainset:String(e.mainset||'').slice(0,200), notes:String(e.notes||'').slice(0,1000) });
   });
@@ -6255,10 +6386,36 @@ function renderLog(){
     statsEl.style.display='none'; // history exists but nothing in the window — never show a stale summary
   }
 }
+// One tap deletes with no confirm, so the deleted session can be put back for a few seconds.
+let _logUndo=null; // {entry, timer}
 function deleteLogEntry(id){
-  lsSet('swimiq_log',JSON.stringify(readLog().filter(e=>e.id!==id)));
+  const all=readLog(), gone=all.find(e=>e.id===id);
+  if(!gone) return;
+  if(!lsSet('swimiq_log',JSON.stringify(all.filter(e=>e.id!==id)))){ tlNotice('log-notice','Could not delete the session — your device storage may be blocked.'); return; }
   renderLog();
-  setLogStatus('Session deleted.');
+  if(_logUndo&&_logUndo.timer) clearTimeout(_logUndo.timer);
+  _logUndo={entry:gone,timer:0};
+  const n=document.getElementById('log-notice');
+  if(n){
+    tlNotice('log-notice','Session deleted — '+gone.date+(gone.type?' · '+gone.type:'')+'. ','ok');
+    const b=document.createElement('button'); b.type='button'; b.className='tl-linkbtn'; b.textContent='Undo';
+    b.addEventListener('click',undoLogDelete); n.appendChild(b);
+  }
+  setLogStatus('Session deleted. Undo is available for a few seconds.');
+  _logUndo.timer=setTimeout(()=>{
+    if(!_logUndo||_logUndo.entry!==gone) return;
+    _logUndo=null;
+    if(n&&/^Session deleted/.test(n.textContent)) tlNotice('log-notice','');
+  },6000);
+}
+function undoLogDelete(){
+  if(!_logUndo) return;
+  const e=_logUndo.entry; clearTimeout(_logUndo.timer); _logUndo=null;
+  const entries=sortLogEntries([e].concat(readLog().filter(x=>x.id!==e.id))); entries.splice(LOG_MAX);
+  if(!lsSet('swimiq_log',JSON.stringify(entries))){ tlNotice('log-notice','Could not restore the session — your device storage may be full or blocked.'); return; }
+  renderLog();
+  tlNotice('log-notice','Session restored.','ok');
+  setLogStatus('Session restored.');
 }
 function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog(); setLogStatus('All sessions cleared.');}
 // The date field defaults to today, and is refreshed when the page is shown
@@ -6509,7 +6666,13 @@ function tpRender(){
   var ac=$('tlt-accent'); if(ac&&String(ac.value)!==String(TP.accent)) ac.value=String(TP.accent);
   var ci=$('tlt-countin'); if(ci) ci.checked=!!TP.countIn;
 }
-function tpSet(bpm){ TP.bpm=Math.round(clamp(bpm,TP_MIN,TP_MAX)); tpRender(); tpSave(); }
+function tpSet(bpm){
+  var was=TP.bpm; TP.bpm=Math.round(clamp(bpm,TP_MIN,TP_MAX)); tpRender(); tpSave();
+  // The live status announced the tempo at Start; a nudge, the slider or the
+  // arrow keys must not leave it saying 60 while 65 is beeping.
+  if(TP.status==='running'&&TP.bpm!==was) setStatus('tlt-tempo-status',tpRunningMsg());
+}
+function tpRunningMsg(){ return TP.bpm+' '+(TP.mode==='spm'?'strokes':'cycles')+'/min'+(TP.accent?', accent every '+TP.accent:'')+'.'; }
 window.tlt_nudge=function(d){ tpSet(TP.bpm+Number(d||0)); };
 window.tlt_setMode=function(m){
   if((m!=='spm'&&m!=='cpm')||TP.mode===m) return;
@@ -6592,7 +6755,7 @@ function tpStart(){
   if(TP.countIn){ for(var i=0;i<3;i++){ TONES.count(t0+i); TP.queue.push({t:t0+i,kind:'count',n:3-i}); } TP.next=t0+3; }
   else TP.next=t0;
   tpSchedule(); tpLoopStart(); wlHold('tempo'); tpButtons();
-  setStatus('tlt-tempo-status',(TP.countIn?'3-2-1, then ':'')+TP.bpm+' '+(TP.mode==='spm'?'strokes':'cycles')+'/min'+(TP.accent?', accent every '+TP.accent:'')+'.');
+  setStatus('tlt-tempo-status',(TP.countIn?'3-2-1, then ':'')+tpRunningMsg());
 }
 function tpPause(msg){
   if(TP.status!=='running') return;
@@ -6888,16 +7051,23 @@ function soPattern(intervalS,startSec,maxLen){
 }
 function listJoin(a){ return a.join(', '); }
 function cell(tr,txt,cls){ var td=document.createElement('td'); td.textContent=txt; if(cls) td.className=cls; tr.appendChild(td); return td; }
+// An error must not leave the previous run's table, summary and Copy button under it.
+function soFail(msg){
+  setStatus('tlt-so-status',msg);
+  var wrap=$('tlt-so-wrap'), cp=$('tlt-so-copy'), body=$('tlt-so-body'), sum=$('tlt-so-summary'), ta=$('tlt-so-text');
+  if(wrap) wrap.classList.add('tlt-hidden'); if(cp) cp.classList.add('tlt-hidden');
+  if(body) body.textContent=''; if(sum) sum.textContent=''; if(ta) ta.value='';
+}
 window.tlt_sendoff=function(){
   var repsEl=$('tlt-so-reps'), intEl=$('tlt-so-int'), stEl=$('tlt-so-start'), paceEl=$('tlt-so-pace'), distEl=$('tlt-so-dist');
   var reps=Math.round(clamp(repsEl?repsEl.value:10,1,100)); if(repsEl) repsEl.value=String(reps);
   var interval=parseMSS(intEl?intEl.value:''), startSec=Number(stEl?stEl.value:0)||0;
   var paceRaw=paceEl?String(paceEl.value).trim():'', pace=paceRaw?parseMSS(paceRaw):0;
   var dist=distEl?String(distEl.value).trim().slice(0,12):'';
-  if(!interval){ setStatus('tlt-so-status','Enter the interval as m:ss, for example 1:30.'); return; }
-  if(paceRaw&&!pace){ setStatus('tlt-so-status','Enter the pace as m:ss, for example 1:08, or leave it blank.'); return; }
+  if(!interval){ soFail('Enter the interval as m:ss, for example 1:30.'); return; }
+  if(paceRaw&&!pace){ soFail('Enter the pace as m:ss, for example 1:08, or leave it blank.'); return; }
   var rows=soCompute(reps,interval,startSec,pace||0), body=$('tlt-so-body'), wrap=$('tlt-so-wrap');
-  if(!rows.length){ setStatus('tlt-so-status','Nothing to list — check reps and interval.'); return; }
+  if(!rows.length){ soFail('Nothing to list — check reps and interval.'); return; }
   if(body){
     body.textContent='';
     rows.forEach(function(r){
@@ -7045,7 +7215,7 @@ function ensureInit(){
   on('tlt-vol-test','click',function(){ var c=auEnsure(); if(!c){ setStatus('tlt-sound-status','No Web Audio in this browser.'); return; } TONES.work(c.currentTime+0.02); setStatus('tlt-sound-status','Beep sent at '+Math.round(AU.vol*100)+'% — nothing heard? Check the silent switch.'); auIdleSoon(); });
   // tempo
   on('tlt-tempo-slider','input',function(){ tpSet($('tlt-tempo-slider').value); });
-  on('tlt-accent','change',function(){ TP.accent=Number($('tlt-accent').value)||0; tpSave(); });
+  on('tlt-accent','change',function(){ TP.accent=Number($('tlt-accent').value)||0; tpSave(); if(TP.status==='running') setStatus('tlt-tempo-status',tpRunningMsg()); });
   on('tlt-countin','change',function(){ TP.countIn=!!$('tlt-countin').checked; tpSave(); });
   tpRender(); tpButtons();
   // interval
@@ -7113,10 +7283,10 @@ function parseT(s){
   var v = null;
   if (typeof window.parseTime === 'function') v = window.parseTime(s);
   else {
-    var m = String(s == null ? '' : s).trim().match(/^(?:(\d{1,2}):)?([0-5]?\d(?:\.\d{1,3})?)$/);
-    if (m) v = (m[1] ? parseInt(m[1], 10) : 0) * 60 + parseFloat(m[2]);
+    var m = String(s == null ? '' : s).trim().match(/^(?:(\d{1,2}):)?(\d{1,4}(?:\.\d{1,3})?)$/);
+    if (m && !(m[1] && parseFloat(m[2]) >= 60)) v = (m[1] ? parseInt(m[1], 10) : 0) * 60 + parseFloat(m[2]); // same rule as parseTime: plain seconds of any size, m:ss keeps ss under 60
   }
-  return (typeof v === 'number' && isFinite(v) && v > 0 && v < 3600) ? v : null;
+  return (typeof v === 'number' && isFinite(v) && v >= 10 && v < 3600) ? v : null;
 }
 // Display form — site convention ("52.30s" under a minute, "1:52.30" above).
 function fmtT(sec){
@@ -8865,13 +9035,16 @@ function anSetErr(errId, fields, msg, badId){
 }
 function calcSwolfValues(timeStr, strokesRaw, pool){
   var t = parseSecs(timeStr);
+  var poolLabel = { '25m':'25 m', '50m':'50 m', '25yd':'25 yd' }[pool] || '25 m';
+  var poolLen = { '25m':25, '50m':50, '25yd':22.86 }[pool] || 25;
   if (t == null) return { ok:false, field:'time', err:'Enter the time for one length in seconds, e.g. 17.8.' };
   if (t < 5 || t > 120) return { ok:false, field:'time', err:'One length should take between 5 and 120 seconds.' };
+  // Same 3.0 m/s ceiling as the stroke-rate tab, per pool length: a 5 s 50 m is not a swim.
+  if (t < poolLen / 3.0) return { ok:false, field:'time', err:'That is over 3 m/s for a ' + poolLabel + ' length — faster than any swimmer. Check the time.' };
   var s = Number(strokesRaw);
   if (!isFinite(s) || s <= 0 || String(strokesRaw).trim() === '') return { ok:false, field:'strokes', err:'Enter the stroke count for that length.' };
   if (s !== Math.round(s)) return { ok:false, field:'strokes', err:'Stroke count must be a whole number.' };
   if (s < 3 || s > 80) return { ok:false, field:'strokes', err:'Stroke count should be between 3 and 80 for one length.' };
-  var poolLabel = { '25m':'25 m', '50m':'50 m', '25yd':'25 yd' }[pool] || '25 m';
   return { ok:true, swolf:t + s, time:t, strokes:s, pool:poolLabel, secondsPerStroke:t / s };
 }
 window.tl_an_calcSwolf = function(){
@@ -10247,11 +10420,13 @@ function renderStatus(){
   const note = $('tl-upd-offline-note');
   if (note){
     let msg = '';
+    const offlineNow = typeof navigator.onLine === 'boolean' && !navigator.onLine;
     if (controlled) msg = 'Offline ready — pages, calculators, timers, your log and PRs work without signal, and the 3D lab does too once you have opened it while online. The AI coach and videos need a connection.';
     else if (swSupported) msg = 'Preparing offline support — reload once to finish caching.';
-    else if (swFailed) msg = SW_FAILED_MSG;
+    // No worker AND no connection: "reload to try again; the site still works online" would be advice the reader cannot take.
+    else if (swFailed) msg = offlineNow ? 'Offline support was not set up in this session, so pages you have not opened may not load until you are back online.' : SW_FAILED_MSG;
     else msg = 'Offline support is unavailable here: it needs https and a browser that supports service workers.';
-    if (typeof navigator.onLine === 'boolean' && !navigator.onLine) msg = 'You are offline. ' + msg;
+    if (offlineNow) msg = 'You are offline. ' + msg;
     if (swVersion && cmpVer(swVersion, window.TL_VERSION) > 0) msg += ' Version ' + swVersion + ' has been downloaded — reload to finish updating.';
     note.textContent = msg;
   }
@@ -10402,6 +10577,10 @@ function hideUpdateToast(){
   if (t && t.parentNode) t.parentNode.removeChild(t);
 }
 window.tlCheckForUpdates = function(){
+  if (typeof navigator.onLine === 'boolean' && !navigator.onLine){ // no connection: the check cannot run whatever the worker state
+    setStatus('Could not check — you may be offline. Cached pages still work.', 'warn');
+    return Promise.resolve(false);
+  }
   if (!swSupported || !swReg){
     setStatus(swSupported ? 'Still registering — try again in a moment.' : (swFailed ? SW_FAILED_MSG : 'Update checks need https and a browser with service-worker support. Reload the page to fetch the latest version.'), 'warn');
     return Promise.resolve(false);
