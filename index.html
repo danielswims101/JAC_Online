@@ -1823,7 +1823,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="legend-item"><div class="legend-dot" style="background:#4488ff"></div>Lift</div>
     <div class="legend-item"><div class="legend-dot" style="background:#ffaa00"></div>Net Force (+ accelerating / − decelerating)</div>
   </div>
-  <p style="font-size:0.7rem;color:var(--white4);margin-top:0.5rem;font-family:var(--fm)">Force and velocity values are illustrative teaching approximations, not measured data.</p>
+  <p style="font-size:0.7rem;color:var(--white4);margin-top:0.5rem;font-family:var(--fm)">Force and velocity values are illustrative teaching approximations, not measured data — glide-phase drag in particular is shown well below measured passive drag (about 50–70 N at 2 m/s) so the propulsive phases stay readable.</p>
   <div id="viz-info-panel" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r12)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
       <h2 id="viz-phase-name" style="font-family:var(--fh);font-weight:400;font-size:1.4rem;letter-spacing:1px;color:var(--cyan)">Select a stroke</h2>
@@ -1962,7 +1962,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="t-starts">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>GRAB START & TRACK START MECHANICS</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Track start (one foot back) is now dominant at elite level; the grab start (both feet at the front edge, hands gripping the block) is the older alternative — a stronger but slower push, now rare in elite racing and kept mainly for relay take-overs, where the arm swing is timed to the incoming swimmer. Reaction time target: &lt;0.65 seconds. Takeoff is near horizontal — the block height gives the flight.</p>
+    <div class="acc-body open"><p>Track start (one foot back) is now dominant at elite level; the grab start (both feet at the front edge, hands gripping the block) is the older individual start — a stronger but slower push, now rare in elite racing. Relay take-overs use a different start again: the step-through (swing) start, an arm swing from the back of the block timed to the incoming swimmer's touch. Reaction time target: &lt;0.65 seconds. Takeoff is near horizontal — the block height gives the flight.</p>
     <dl class="key-grid">
       <div class="key-point"><dt class="kp-label">Reaction time</dt><dd>Fast-elite: ~0.60–0.64 s; most swimmers are slower — chase clean, not just fast.</dd></div>
       <div class="key-point"><dt class="kp-label">Takeoff angle</dt><dd>Near horizontal — about 0–10° above the horizontal; the 0.5–0.75 m block height gives the flight.</dd></div>
@@ -2095,7 +2095,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="dl-card"><div class="dl-day">Day 2 — Tuesday</div><h4>ROTATIONAL POWER</h4><ul>
       <li><span class="reps">4×8</span>Med Ball Rotational Throws</li><li><span class="reps">3×10</span>Cable Chops High-Low</li><li><span class="reps">3×10</span>Pallof Press</li><li><span class="reps">3×8</span>Single-Leg RDL</li><li><span class="reps">3×10</span>Copenhagen Plank</li></ul></div>
     <div class="dl-card"><div class="dl-day">Day 3 — Thursday</div><h4>EXPLOSIVE POWER</h4><ul>
-      <li><span class="reps">4×4</span>Box Jumps</li><li><span class="reps">4×6</span>Hang Power Clean</li><li><span class="reps">3×8</span>Lat Pulldown + Pause</li><li><span class="reps">3×12</span>Hip Thrust</li><li><span class="reps">3×10</span>Serratus Punch</li></ul></div>
+      <li><span class="reps">4×4</span>Box Jumps</li><li><span class="reps">4×6</span>Hang Power Clean</li><li><span class="reps">3×8</span>Lat Pulldown + Pause</li><li><span class="reps">3×12</span>Hip Thrust</li><li><span class="reps">3×15</span>Serratus Punch</li></ul></div>
     <div class="dl-card"><div class="dl-day">Day 4 — Friday</div><h4>SHOULDER HEALTH</h4><ul>
       <li><span class="reps">3×15</span>Sidelying External Rotation</li><li><span class="reps">3×12</span>Y-T-W-L on Incline</li><li><span class="reps">3×30 s</span>Sleeper Stretch (for GIRD — limited internal rotation)</li><li><span class="reps">3×20</span>Ankle Circles + Toe Spreads</li></ul></div>
     <div class="dl-card"><div class="dl-day">Daily</div><h4>MOBILITY ROUTINE</h4><ul>
@@ -2155,8 +2155,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel active" id="c-golf">
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>GOLF SCORE CALCULATOR</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label>50 m Split (seconds)</label><input class="form-input" id="golf-split" enterkeyhint="done" type="number" placeholder="e.g. 32" min="20" max="120"></div>
-        <div class="form-group" style="margin-bottom:1rem"><label>Stroke Count (per 50 m, each arm — count every hand entry)</label><input class="form-input" id="golf-strokes" enterkeyhint="done" type="number" placeholder="e.g. 28" min="10" max="60"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>50 m Split (seconds)</label><input class="form-input" id="golf-split" enterkeyhint="done" type="number" step="any" placeholder="e.g. 32" min="20.9" max="120"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Stroke Count (per 50 m — each arm in free/back, one per cycle in fly/breast)</label><input class="form-input" id="golf-strokes" enterkeyhint="done" type="number" placeholder="e.g. 28" min="8" max="80"></div>
         <button class="calc-btn" onclick="calcGolf()">Calculate <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="golf-notice" role="alert" hidden></p>
         <div class="calc-result" id="golf-result" aria-live="polite" aria-atomic="true"><div class="big" id="golf-score">—</div><div class="sub">Golf Score</div><p style="margin-top:1rem;font-size:0.84rem;color:var(--white2);line-height:1.7" id="golf-rating"></p></div>
@@ -2221,18 +2221,18 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="info-box"><strong>Read the HR numbers as a 10-second count, not bpm.</strong> Stop, find your pulse, count for 10 seconds — "HR 24–28" means 24–28 beats in that 10 seconds (roughly 144–168 bpm). Lactate values are typical ranges from the literature, not measurements of you.</div>
   <div class="card-lg" style="margin-bottom:2.5rem">
     <div class="zone-bars">
-      <div class="zone-row"><div class="zone-name">Recovery</div><div class="zone-track"><div class="zone-fill z1">Z1</div></div><div class="zone-info">&lt;2.0 mmol · HR &lt;22</div></div>
+      <div class="zone-row"><div class="zone-name">Recovery</div><div class="zone-track"><div class="zone-fill z1">Z1</div></div><div class="zone-info">&lt;2.0 mmol · HR &lt;24</div></div>
       <div class="zone-row"><div class="zone-name"><span style="text-transform:none">AeT</span> / Base</div><div class="zone-track"><div class="zone-fill z2">Z2 AeT</div></div><div class="zone-info">2.0–3.0 mmol · HR 24–28</div></div>
-      <div class="zone-row"><div class="zone-name">Threshold</div><div class="zone-track"><div class="zone-fill z3">Z3 Thresh</div></div><div class="zone-info">3.0–5.0 mmol · HR 27–31</div></div>
-      <div class="zone-row"><div class="zone-name">VO₂ max</div><div class="zone-track"><div class="zone-fill z4">Z4 VO₂ max</div></div><div class="zone-info">5.0–8.0 mmol · HR 30–33</div></div>
+      <div class="zone-row"><div class="zone-name">Threshold</div><div class="zone-track"><div class="zone-fill z3">Z3 Thresh</div></div><div class="zone-info">3.0–5.0 mmol · HR 28–31</div></div>
+      <div class="zone-row"><div class="zone-name">VO₂ max</div><div class="zone-track"><div class="zone-fill z4">Z4 VO₂ max</div></div><div class="zone-info">5.0–8.0 mmol · HR 31–33</div></div>
       <div class="zone-row"><div class="zone-name">Anaerobic</div><div class="zone-track"><div class="zone-fill z5">Z5 Sprint</div></div><div class="zone-info">8.0+ mmol on lactate work · rest-dependent</div></div>
     </div>
   </div>
   <div style="display:flex;flex-direction:column;gap:1.25rem">
-    <div class="card"><div class="badge green">Zone 1</div><h3>RECOVERY</h3><p><strong>Lactate:</strong> below 2.0 mmol/L · <strong>HR:</strong> under 22 on the 10-second count · Easy enough to hold a full conversation. Warm-up, cool-down, recovery between hard sets — and a large share of base volume: elite programs log about 40% of their metres here (Hellard et al. 2019). Going too hard in what should be Zone 1 is the most common way swimmers blunt the next quality set.</p></div>
+    <div class="card"><div class="badge green">Zone 1</div><h3>RECOVERY</h3><p><strong>Lactate:</strong> below 2.0 mmol/L · <strong>HR:</strong> under 24 on the 10-second count · Easy enough to hold a full conversation. Warm-up, cool-down, recovery between hard sets — and a large share of base volume: elite programs log about 40% of their metres here (Hellard et al. 2019). Going too hard in what should be Zone 1 is the most common way swimmers blunt the next quality set.</p></div>
     <div class="card"><div class="badge cyan">Zone 2 — <span style="text-transform:none">AeT</span></div><h3>AEROBIC THRESHOLD</h3><p><strong>Lactate:</strong> 2.0–3.0 mmol/L · <strong>HR:</strong> 24–28 on the 10-second count · <strong>Zones 1–2 together carry 80%+ of total training volume.</strong> Builds mitochondrial density, oxidative enzyme capacity, cardiac output.</p></div>
-    <div class="card"><div class="badge gold">Zone 3</div><h3>THRESHOLD</h3><p><strong>Lactate:</strong> 3.0–5.0 mmol/L · <strong>HR:</strong> 27–31 on the 10-second count · <strong>Three-to-four-word sentences at most.</strong> Typically introduced around Week 4 of a season and expanded progressively through Meso II.</p></div>
-    <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX &amp; SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · HR 30–33 on the 10-second count · 3–8 min intervals · 48–72 h recovery. <strong>Zone 5:</strong> sprint / anaerobic — two kinds. Alactic speed: 10–30 s efforts on full rest; lactate stays low and HR is not the guide. Lactate production: 50–100 m maximal efforts (8.0+ mmol/L, HR near max), 2–5 min rest, 1–2× a week at most.</p></div>
+    <div class="card"><div class="badge gold">Zone 3</div><h3>THRESHOLD</h3><p><strong>Lactate:</strong> 3.0–5.0 mmol/L · <strong>HR:</strong> 28–31 on the 10-second count · <strong>Three-to-four-word sentences at most.</strong> Typically introduced around Week 4 of a season and expanded progressively through Meso II.</p></div>
+    <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX &amp; SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · HR 31–33 on the 10-second count · 3–8 min intervals · 48–72 h recovery. <strong>Zone 5:</strong> sprint / anaerobic — two kinds. Alactic speed: 10–30 s efforts on full rest; lactate stays low and HR is not the guide. Lactate production: 50–100 m maximal efforts (8.0+ mmol/L, HR near max), 2–5 min rest, 1–2× a week at most.</p></div>
   </div>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
@@ -4500,7 +4500,7 @@ function buildSwimmer(baseColor) {
 const DEG = Math.PI/180;
 const STROKES = {
   freestyle: {
-    color: 0x00d4ff, rollAmp: 24, flutter: true,
+    color: 0x00d4ff, rollAmp: 24, flutter: true, rate: 1.45,   // tempo multiplier on the 0.55 Hz clock (48 cycles/min); the motion module's patch overrides it for the human rig
     breath: { type:'side', start:0.62, dur:0.30 },
     // TRUE OPPOSITION TIMING: R runs the same pose sequence as L, exactly
     // half a cycle behind (R[i] = mirror of L[i+3]) — when one hand enters,
@@ -4533,7 +4533,7 @@ const STROKES = {
     ]
   },
   backstroke: {
-    color: 0x00e599, rollAmp: 26, supine: true, flutter: true,
+    color: 0x00e599, rollAmp: 26, supine: true, flutter: true, rate: 1.40,   // 46 cycles/min
     phases: [
       { name:'Pinky Entry', dur:0.18, drag:40, thrust:34, lift:12, vel:1.86, eff:62,
         desc:'Pinky-first entry directly above the shoulder, arm fully extended past the head. The hips stay high near the surface throughout — even a small hip drop costs real speed.',
@@ -4562,7 +4562,7 @@ const STROKES = {
     ]
   },
   breaststroke: {
-    color: 0xf5a623, rollAmp: 0, hold: true,
+    color: 0xf5a623, rollAmp: 0, hold: true, rate: 1.3,   // 43 cycles/min
     breath: { type:'front', start:0.38, dur:0.30 },
     phases: [
       { name:'Glide & Streamline', dur:0.26, drag:18, thrust:4, lift:2, vel:1.84, eff:83,
@@ -4588,7 +4588,7 @@ const STROKES = {
     ]
   },
   butterfly: {
-    color: 0xa855f7, rollAmp: 0, undulate: true,
+    color: 0xa855f7, rollAmp: 0, undulate: true, rate: 1.6,   // 53 cycles/min
     breath: { type:'front', start:0.44, dur:0.28 },
     phases: [
       { name:'Entry & Extension', dur:0.17, drag:42, thrust:50, lift:20, vel:1.62, eff:59,
@@ -4618,10 +4618,10 @@ const STROKES = {
     ]
   },
   dolphin: {
-    color: 0xff7043, rollAmp: 0, undulate: true,
+    color: 0xff7043, rollAmp: 0, undulate: true, rate: 3.5,   // 115 kicks/min — the elite race rate that matches this record's ~2.1 m/s (1.1 m per kick); the human rig's patch runs a slower study tempo
     phases: [
       { name:'Peak Streamline', dur:0.16, drag:34, thrust:6, lift:4, vel:2.12, eff:88,
-        desc:'Maximum streamline — hands stacked, arms locked past the ears, core completely rigid. Push-off velocity of 2.5–3.0 m/s decays through the glide — start kicking before it drops below swimming speed.',
+        desc:'Maximum streamline — hands stacked, arms locked past the ears, core completely rigid. Push-off velocity of 2.5–3.0 m/s decays through the glide — start kicking before it drops below swimming speed. Shown at the elite race rate of ~115 kicks a minute.',
         L:{ sh:[172,0,5], el:[4], hi:[2,0,0], kn:[3] },
         R:{ sh:[172,0,-5], el:[4], hi:[2,0,0], kn:[3] } },
       { name:'Hip Load', dur:0.18, drag:46, thrust:70, lift:16, vel:2.04, eff:81,
@@ -5513,12 +5513,12 @@ function validateMotion(obj){
 // even before the ask-ai edge function's "motion" mode is deployed.
 const FALLBACK_MOTIONS = [
   { match:/pull ?-?out/i, motion:{ name:'Breaststroke Pullout', rollAmp:0, undulate:false, supine:false, hold:true, phases:[
-    { name:'Push-off Streamline', dur:0.22, drag:16, thrust:10, lift:3, vel:2.4, eff:88, desc:'Tight streamline off the wall — hands stacked, core rigid, riding wall speed.', L:{sh:[172,0,4],el:[4],hi:[2,0,0],kn:[2]}, R:{sh:[172,0,-4],el:[4],hi:[2,0,0],kn:[2]} },
-    { name:'Underwater Pull to Thighs', dur:0.18, drag:52, thrust:150, lift:20, vel:2.1, eff:74, desc:'One full pull all the way past the hips — the fastest swum part of the stroke, riding the wall\'s speed.', L:{sh:[-15,0,6],el:[10],hi:[4,0,0],kn:[4]}, R:{sh:[-15,0,-6],el:[10],hi:[4,0,0],kn:[4]} },
-    { name:'Glide + Dolphin Kick', dur:0.18, drag:30, thrust:90, lift:14, vel:1.9, eff:78, desc:'Arms at the thighs; the single dolphin kick is shown here for clarity — since 2014 it may be taken any time before the breaststroke kick, and most elite swimmers fire it just before or as the pull starts.', L:{sh:[-15,0,4],el:[8],hi:[26,0,0],kn:[38]}, R:{sh:[-15,0,-4],el:[8],hi:[26,0,0],kn:[38]} },
+    { name:'Push-off Streamline', dur:0.22, drag:64, thrust:10, lift:3, vel:2.2, eff:88, desc:'Tight streamline off the wall — hands stacked, core rigid, riding wall speed. Drag rises with the square of speed, so the glide decays fastest here — start the pull the instant velocity starts to fall.', L:{sh:[172,0,4],el:[4],hi:[2,0,0],kn:[2]}, R:{sh:[172,0,-4],el:[4],hi:[2,0,0],kn:[2]} },
+    { name:'Underwater Pull to Thighs', dur:0.18, drag:62, thrust:100, lift:20, vel:2.1, eff:74, desc:'One full pull all the way past the hips — the fastest swum part of the stroke, riding the wall\'s speed.', L:{sh:[-15,0,6],el:[10],hi:[4,0,0],kn:[4]}, R:{sh:[-15,0,-6],el:[10],hi:[4,0,0],kn:[4]} },
+    { name:'Glide + Dolphin Kick', dur:0.18, drag:60, thrust:40, lift:14, vel:2.3, eff:78, desc:'Arms at the thighs; the single dolphin kick is shown here for clarity — since 2014 it may be taken any time before the breaststroke kick, and most elite swimmers fire it just before or as the pull starts.', L:{sh:[-15,0,4],el:[8],hi:[26,0,0],kn:[38]}, R:{sh:[-15,0,-4],el:[8],hi:[26,0,0],kn:[38]} },
     { name:'Sneak Recovery', dur:0.18, drag:44, thrust:20, lift:6, vel:1.5, eff:55, desc:'Hands sneak forward tight to the body to minimize frontal drag.', L:{sh:[80,0,8],el:[95],hi:[6,0,0],kn:[8]}, R:{sh:[80,0,-8],el:[95],hi:[6,0,0],kn:[8]} },
-    { name:'Breaststroke Kick to Breakout', dur:0.16, drag:70, thrust:40, lift:8, vel:1.3, eff:48, desc:'Heels draw up narrow as the arms finish extending — the one breaststroke kick sweeps out, around and together to drive the breakout.', L:{sh:[150,0,6],el:[30],hi:[35,0,8],kn:[120]}, R:{sh:[150,0,-6],el:[30],hi:[35,0,-8],kn:[120]} },
-    { name:'Breakout Reach', dur:0.20, drag:28, thrust:60, lift:10, vel:1.75, eff:66, desc:'Legs snap together into streamline off the kick as the first arm stroke begins toward the surface.', L:{sh:[168,0,5],el:[6],hi:[8,0,0],kn:[10]}, R:{sh:[168,0,-5],el:[6],hi:[8,0,0],kn:[10]} }
+    { name:'Breaststroke Kick to Breakout', dur:0.16, drag:70, thrust:60, lift:8, vel:1.4, eff:48, desc:'Heels draw up narrow as the arms finish extending — the one breaststroke kick sweeps out, around and together to drive the breakout.', L:{sh:[150,0,6],el:[30],hi:[35,0,8],kn:[120]}, R:{sh:[150,0,-6],el:[30],hi:[35,0,-8],kn:[120]} },
+    { name:'Breakout Reach', dur:0.20, drag:28, thrust:92, lift:10, vel:1.75, eff:66, desc:'Legs snap together into streamline off the kick as the first arm stroke begins toward the surface.', L:{sh:[168,0,5],el:[6],hi:[8,0,0],kn:[10]}, R:{sh:[168,0,-5],el:[6],hi:[8,0,0],kn:[10]} }
   ] } },
   { match:/streamline|glide/i, motion:{ name:'Streamline Glide', rollAmp:0, undulate:true, supine:false, phases:[
     { name:'Peak Streamline', dur:0.5, drag:18, thrust:8, lift:4, vel:2.5, eff:90, desc:'Hands stacked, arms squeezing the ears, core rigid — the lowest-drag shape a human can make.', L:{sh:[172,0,4],el:[4],hi:[2,0,0],kn:[2]}, R:{sh:[172,0,-4],el:[4],hi:[2,0,0],kn:[2]} },
@@ -6325,9 +6325,10 @@ function calcFail(noticeId,msg,focusId,resultId){
   tlNotice(noticeId,msg,null,focusId);
   const f=document.getElementById(focusId); if(f){ try{ f.focus({preventScroll:true}); }catch(e){ f.focus(); } }
 }
-// One range for the attributes and the script: a real 50 m split is 20–120 s,
-// a real stroke count 10–60 (see the min/max on #golf-split / #golf-strokes).
-const GOLF_LIMITS={split:[20,120],strokes:[10,60]};
+// One range for the attributes and the script: a real 50 m split is 20.9–120 s (20.91 is the 50 m free
+// world record, the same floor as the Race Splits calculator), a real stroke count 8–80 (a beginner at
+// 0.6–0.8 m per arm stroke takes 60–80 per 50 m; see the min/max on #golf-split / #golf-strokes).
+const GOLF_LIMITS={split:[20.9,120],strokes:[8,80]};
 function calcGolf(){
   const split=parseFloat(document.getElementById('golf-split').value);
   const strokes=parseFloat(document.getElementById('golf-strokes').value);
@@ -6387,13 +6388,13 @@ function calcPaceZones(){
   const rawPace=String(document.getElementById('pace-100').value||'').trim();
   const t=parseTime(rawPace);
   if(!t){calcFail('pace-notice',/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100 m time as m:ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100 m time (ss.ss or m:ss.ss).','pace-100','pace-result');return;}
-  if(t<35||t>240){calcFail('pace-notice','A 100 m time between 35 s and 4:00 is expected — check the value (use m:ss for minutes).','pace-100','pace-result');return;}
+  if(t<40||t>240){calcFail('pace-notice','A 100 m time between 40 s and 4:00 is expected — check the value (use m:ss for minutes).','pace-100','pace-result');return;}
   tlNotice('pace-notice','');
   const zones=[
-    {name:'Zone 1 — Recovery',pct:[1.35,1.50],color:'#00e599',desc:'HR <22 · <2 mmol'},
+    {name:'Zone 1 — Recovery',pct:[1.35,1.50],color:'#00e599',desc:'HR <24 · <2 mmol'},
     {name:'Zone 2 — AeT',pct:[1.22,1.35],color:'#00d4ff',desc:'HR 24–28 · 2–3 mmol'},
-    {name:'Zone 3 — Threshold',pct:[1.12,1.22],color:'#f5a623',desc:'HR 27–31 · 3–5 mmol'},
-    {name:'Zone 4 — VO₂ max',pct:[1.04,1.12],color:'#ff7043',desc:'HR 30–33 · 5–8 mmol'},
+    {name:'Zone 3 — Threshold',pct:[1.12,1.22],color:'#f5a623',desc:'HR 28–31 · 3–5 mmol'},
+    {name:'Zone 4 — VO₂ max',pct:[1.04,1.12],color:'#ff7043',desc:'HR 31–33 · 5–8 mmol'},
     {name:'Zone 5 — Sprint',pct:[0.90,1.04],color:'#ff5252',desc:'Speed & lactate work · rest-dependent'}
   ];
   let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">Training pace zones</caption><thead><tr><th scope="col">Zone</th><th scope="col">Per 100 <span class="th-unit">m</span></th><th scope="col">Per 50 <span class="th-unit">m</span></th><th scope="col">Notes</th></tr></thead><tbody>';
@@ -6678,11 +6679,15 @@ function saveLogEntry(){
   const dist=distRaw===''?0:Number(distRaw), dur=durRaw===''?0:Number(durRaw), effort=effRaw===''?0:Number(effRaw);
   if(!(isFinite(dist)&&dist>=0&&dist<=LOG_MAX_DIST)){ fail('Distance must be between 0 and 100,000 (m or yd).','log-distance'); return; }
   if(!(isFinite(dur)&&dur>=0&&dur<=LOG_MAX_DUR)){ fail('Duration must be between 0 and 600 minutes.','log-duration'); return; }
+  // Distance against duration for a swim: over 150 m per minute for a whole session is under 40 s per 100 — a
+  // yards/metres mix-up or the distance typed into the minutes box, and it would drive Analytics as if real.
+  const logType=document.getElementById('log-type').value;
+  if(logType!=='Dryland'&&dist>0&&dur>0&&dist/dur>150){ fail('That is under 40 s per 100 for the whole session — check the distance (metres or yards) and the minutes.','log-distance'); return; }
   if(effRaw!==''&&!(Number.isInteger(effort)&&effort>=1&&effort<=10)){ fail('Effort is a whole number from 1 to 10 — or leave it blank.','log-effort'); return; }
   const entry={
     id:Date.now(),
     date,
-    type:document.getElementById('log-type').value,
+    type:logType,
     dist:Math.round(dist),
     dur:Math.round(dur),
     zone:document.getElementById('log-zone').value,
@@ -7445,6 +7450,9 @@ function soPattern(intervalS,startSec,maxLen){
 }
 function listJoin(a){ return a.join(', '); }
 function cell(tr,txt,cls){ var td=document.createElement('td'); td.textContent=txt; if(cls) td.className=cls; tr.appendChild(td); return td; }
+// The distance is a free label; when it reads as a number ("100", "100 m", "100yd") it is checked against the
+// interval so "6 × 100 on 0:30" (3.3 m/s) draws a warning — a warning, not a block, because odd labels are allowed.
+function soDistMetres(s){ var m=/^(\d+(?:\.\d+)?)\s*(m|meters|metres|y|yd|yds|yards)?$/i.exec(String(s||'').trim()); if(!m) return 0; var n=parseFloat(m[1]); return /^y/i.test(m[2]||'')?n*0.9144:n; }
 // An error must not leave the previous run's table, summary and Copy button under it.
 function soFail(msg){
   setStatus('tlt-so-status',msg);
@@ -7480,22 +7488,25 @@ window.tlt_sendoff=function(){
   if(pat) lines.push(pat.length===1?'Every rep leaves on the '+pat[0]+'.':'Leave on: '+listJoin(pat)+' — repeats every '+pat.length+' reps.');
   else lines.push('The leave times do not fall into a short pattern — read them off the list.');
   lines.push('Last rep leaves at '+fmtClock(lastLeave)+' ('+rows[rows.length-1].reading+'); the set is '+fmtMS(reps*interval)+' long on the interval.');
-  var warn='';
+  var warns=[];
   if(pace){
     var rest=interval-pace;
-    if(rest<0) warn='Holding '+fmtClock(pace)+' is slower than the interval — you would touch '+fmtClock(-rest)+' after the next send-off. Pick a longer interval or a faster pace.';
+    if(rest<0) warns.push('Holding '+fmtClock(pace)+' is slower than the interval — you would touch '+fmtClock(-rest)+' after the next send-off. Pick a longer interval or a faster pace.');
     else{
       var fpat=soPattern(interval,startSec+pace);
       lines.push('Holding '+fmtClock(pace)+': '+fmtClock(rest)+' rest each rep'+(fpat?', touching on '+listJoin(fpat):'')+'. Last touch at '+fmtClock(lastLeave+pace)+' ('+rows[rows.length-1].finishReading+').');
     }
   }
+  // Faster than the 50 m freestyle world-record average (2.39 m/s from a dive): no repeat from a push is swum at 2.2 m/s.
+  var distM=soDistMetres(dist), swimT=(pace&&pace<interval)?pace:interval, swimLbl=(pace&&pace<interval)?'pace':'interval';
+  if(distM&&distM/swimT>2.2) warns.push('That '+swimLbl+' is faster than world-record pace for '+dist+' — check the distance or the '+swimLbl+'.');
   var sum=$('tlt-so-summary');
   if(sum){
     sum.textContent='';
     lines.forEach(function(t,i){ var p=document.createElement('div'); if(i===0){ var b=document.createElement('strong'); b.textContent=t; p.appendChild(b); } else p.textContent=t; sum.appendChild(p); });
-    if(warn){ var w=document.createElement('div'); w.className='warn'; w.textContent=warn; sum.appendChild(w); }
+    warns.forEach(function(warn){ var w=document.createElement('div'); w.className='warn'; w.textContent=warn; sum.appendChild(w); });
   }
-  var txt=[head].concat(lines.slice(1)).concat(warn?[warn]:[]).concat(['']);
+  var txt=[head].concat(lines.slice(1)).concat(warns).concat(['']);
   rows.forEach(function(r){ txt.push(String(r.rep)+'\t'+fmtClock(r.clock)+' ('+r.reading+')'+(pace?'\tfinish '+fmtClock(r.finish)+' ('+r.finishReading+')\trest '+(r.rest<0?'−':'')+fmtClock(Math.abs(r.rest)):'')); });
   var ta=$('tlt-so-text'); if(ta) ta.value=txt.join('\n');
   setStatus('tlt-so-status',''); pcSave();
@@ -9457,6 +9468,8 @@ function calcSwolfValues(timeStr, strokesRaw, pool){
   if (!isFinite(s) || s <= 0 || String(strokesRaw).trim() === '') return { ok:false, field:'strokes', err:'Enter the stroke count for that length.' };
   if (s !== Math.round(s)) return { ok:false, field:'strokes', err:'Stroke count must be a whole number.' };
   if (s < 3 || s > 80) return { ok:false, field:'strokes', err:'Stroke count should be between 3 and 80 for one length.' };
+  // Same plausibility as the stroke-rate tab's DPS rule: nobody covers more than 8 m per stroke (the floor becomes 4 for 25 m / yd, 7 for 50 m).
+  if (poolLen / s > 8) return { ok:false, field:'strokes', err:'That is ' + fmtDec(poolLen / s, 1) + ' m per stroke — outside a plausible range for a ' + poolLabel + ' length. Check the count.' };
   return { ok:true, swolf:t + s, time:t, strokes:s, pool:poolLabel, secondsPerStroke:t / s };
 }
 window.tl_an_calcSwolf = function(){
