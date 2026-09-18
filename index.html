@@ -3677,6 +3677,17 @@ function showAuthError(screenPrefix, message, field) {
 function tlPlainEnter(e) {
   return !!e && e.key === 'Enter' && !e.isComposing && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey;
 }
+// One rule for the three email fields (sign-up, reset, log-in): the browser's own type=email check plus a
+// dotted domain, so "a@", "@" or "me@" are caught here with the field focused instead of by the server's raw
+// reply (R7-FUNCTION-05). `loose` (log-in) keeps to the browser check alone — an existing account is never
+// locked out by a stricter rule than the one it was created under.
+function tlEmailOk(el, loose) {
+  if (!el) return false;
+  var v = String(el.value || '').trim();
+  if (!v) return false;
+  try { if (typeof el.checkValidity === 'function' && !el.checkValidity()) return false; } catch (e) {}
+  return loose ? v.indexOf('@') > 0 : /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+}
 // supabase-js surfaces raw browser strings ("Failed to fetch") when the auth
 // endpoint is unreachable, and terse API phrases for the common mistakes.
 // Translate the ones a swimmer will actually meet; pass anything else through.
@@ -3704,7 +3715,7 @@ async function doSignup() {
     showAuthError('signup', 'Username must be 3+ characters, letters/numbers/underscore only.', 'signup-username');
     return;
   }
-  if (!email || !email.includes('@')) {
+  if (!tlEmailOk(document.getElementById('signup-email'))) {
     showAuthError('signup', 'Enter a valid email address.', 'signup-email');
     return;
   }
@@ -3770,6 +3781,10 @@ async function doLogin() {
     showAuthError('login', 'Enter both email and password.');
     return;
   }
+  if (!tlEmailOk(document.getElementById('login-email'), true)) {
+    showAuthError('login', 'Enter a valid email address.', 'login-email');
+    return;
+  }
   if (tlIsBusy(btn)) return; // Enter in a field bypasses the disabled button: one log-in request at a time
   tlSetBusy(btn, true); btn.textContent = 'Logging in…';
   var { data, error } = await sb.auth.signInWithPassword({ email: email, password: password });
@@ -3787,7 +3802,7 @@ async function doForgotPassword() {
   var msg = document.getElementById('forgot-msg');
   var btn = document.getElementById('forgot-btn');
   if (!email) { showAuthError('forgot', 'Enter your email first.', 'forgot-email'); return; }
-  if (!email.includes('@')) { showAuthError('forgot', 'Enter a valid email address.', 'forgot-email'); return; } // same rule as sign-up
+  if (!tlEmailOk(document.getElementById('forgot-email'))) { showAuthError('forgot', 'Enter a valid email address.', 'forgot-email'); return; } // same rule as sign-up
   if (tlIsBusy(btn)) return; // a double tap must not send two reset emails
   if (btn) { tlSetBusy(btn, true); btn.textContent = 'Sending…'; }
   var error = null;
@@ -3982,6 +3997,8 @@ function escapeHTML(s){
 // The one reduced-motion query for page-level code (the router's scroll, the 3D lab's view tweens and start state).
 // Top-level twin of the Timers block's private reducedMotion() — page-level code cannot see that one.
 function tlReducedMotion(){ try{ return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches); }catch(e){ return false; } }
+// Per-route scroll offsets for Back/Forward and the history-entry stamp counter (see the hashchange listener below).
+const _tlScrollMemo={}; let _tlHistN=0;
 function activatePage(name,opts){
   // Routes are case-insensitive (phones capitalise the first letter of a typed link: #Zones, #TIMERS) and
   // tolerate a stray query (#technique?x=1): normalise before the lookup and put the canonical hash in the
@@ -4031,8 +4048,15 @@ function activatePage(name,opts){
   const aiBtn=document.getElementById('nav-ai-coach-btn');
   if(aiBtn){ aiBtn.classList.toggle('active',name==='ai'); if(name==='ai') aiBtn.setAttribute('aria-current','page'); else aiBtn.removeAttribute('aria-current'); }
   if(!alreadyActive){
-    const smooth=!tlReducedMotion();
-    window.scrollTo({top:0,behavior:smooth?'smooth':'auto'});
+    // Back/Forward (opts.restore) return the reader to where they left this view; every other activation
+    // starts at the top (R7-FUNCTION-03).
+    const memo=(opts&&opts.restore)?_tlScrollMemo[name]:null;
+    if(memo!=null){ window.scrollTo({top:memo,behavior:'auto'}); }
+    else { const smooth=!tlReducedMotion(); window.scrollTo({top:0,behavior:smooth?'smooth':'auto'}); }
+    // A tab selected while this view was display:none (showPageTab from another page, a deep link) could not be
+    // scrolled into its strip — the strip measured 0 wide. Now that the view is laid out, bring each strip's
+    // selected tab into view; a no-op wherever the strip fits (R7-FUNCTION-10).
+    if(page) page.querySelectorAll('.tab-btn.active').forEach(b=>tlRevealInStrip(b.parentElement,b));
     // Move focus to the new view for screen-reader/keyboard users. The view is named (a labelled
     // region) so the focus move itself says where they are, and the change is also announced —
     // document.title changes are silent in an SPA.
@@ -4082,8 +4106,20 @@ function showPageTab(page, tabId, elId){
     const f=hdr?(hdr.querySelector('.acc-btn')||hdr):el; try{ f.focus({preventScroll:true}); }catch(e){}
   },80);
 }
-window.addEventListener('hashchange', function(){ activatePage(location.hash.slice(1)||'home'); });
-document.addEventListener('DOMContentLoaded', function(){ activatePage(location.hash.slice(1)||'home',{focus:false}); }); // initial load: leave focus at the top so the skip link and nav come first
+// Back/Forward land where the reader was, not at the top (R7-FUNCTION-03). popstate fires for a fresh hash
+// link as well as for a traversal, so every history entry is stamped with an index instead (replaceState keeps
+// the URL): a hashchange whose entry already carries one is Back/Forward. The offset of the view being left is
+// remembered per route and restored by activatePage. The browser's own restoration is switched off: with
+// 'auto' it restored the old offset on popstate and the router then scrolled it away — a visible jump-then-scroll.
+try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+function tlStampHistory(){ try{ if(!(history.state&&history.state.tlIdx)) history.replaceState({tlIdx:++_tlHistN},'',location.pathname+location.search+location.hash); }catch(e){} }
+window.addEventListener('hashchange', function(){
+  const cur=document.querySelector('.page.active'); if(cur&&cur.id.indexOf('page-')===0) _tlScrollMemo[cur.id.slice(5)]=window.scrollY;
+  const traverse=!!(history.state&&history.state.tlIdx);
+  activatePage(location.hash.slice(1)||'home',{restore:traverse});
+  tlStampHistory();
+});
+document.addEventListener('DOMContentLoaded', function(){ activatePage(location.hash.slice(1)||'home',{focus:false}); tlStampHistory(); }); // initial load: leave focus at the top so the skip link and nav come first
 // Every title + ' — Tidelyne' stays ≤ 60 characters (the brand suffix is what tab strips and search snippets drop
 // first) — the README release check verifies it.
 const PAGE_TITLES={
@@ -6172,7 +6208,10 @@ function renderSeasonPage(now) {
       if (now > end) { status = 'Completed'; statusColor = 'var(--white4)'; }
       else if (now >= start && now <= end) { status = 'Happening now'; statusColor = 'var(--green)'; }
       else {
-        const days = Math.ceil((start - now) / 86400000);
+        // Calendar days between local midnights (like the planner's daysUntil): ceil(start - now) counted the
+        // extra hour of an autumn clock change as a day between 00:00 and 01:00 (R7-FUNCTION-04).
+        const today0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const days = Math.round((start - today0) / 86400000);
         status = `In ${days} day${days===1?'':'s'}`;
         statusColor = days <= 21 ? 'var(--gold)' : 'var(--cyan)';
       }
@@ -6961,7 +7000,11 @@ function saveName(){
 function clearAllPRs(){
   if(!confirm('Clear all PRs from this browser? This cannot be undone — export a backup first if you want to keep them.')) return;
   Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>lsRemove('pr_'+e.replace(/ /g,'_'))));
+  // A pending typing error/commit timer would fire against a detached input and re-store or re-flag a value
+  // that was just cleared; the hint from a stored invalid PR no longer applies either (R7-FUNCTION-08).
+  Object.keys(prErrTimers).forEach(k=>{ clearTimeout(prErrTimers[k]); delete prErrTimers[k]; });
   Object.keys(PR_EVENTS).forEach(s=>buildPRGrid(s));
+  prHint('All PRs cleared.');
 }
 // ─── BACKUP: EXPORT / IMPORT ──────────────────
 // On-device data (name + PRs + training log) never reaches a server, so a
@@ -7183,10 +7226,17 @@ function saveLogEntry(){
     if(last&&last.date===entry.date&&last.type===entry.type&&last.zone===entry.zone){ tlNotice('log-notice','Looks like this session was just saved.'); return; }
   }
   const entries=sortLogEntries([entry].concat(prev)); // newest save first on an equal date (stable sort)
-  entries.splice(LOG_MAX);
+  // At the cap the list is trimmed to the newest LOG_MAX by date. A save must never report success while it
+  // is the one cut off (a back-dated session older than everything stored), and dropping a stored session
+  // to make room is said out loud — Import already reports what it leaves out (R7-FUNCTION-01).
+  const dropped=entries.splice(LOG_MAX);
+  if(dropped.some(e=>e.id===entry.id)){
+    tlNotice('log-notice','The log is full ('+LOG_MAX.toLocaleString()+' sessions) and this session is older than every stored one, so it was not saved — export a backup from My PRs and clear old sessions to add it.');
+    return;
+  }
   if(!lsSet('swimiq_log',JSON.stringify(entries))){ tlNotice('log-notice','Could not save the session — your device storage may be full or blocked.'); return; }
   _lastLogSaveAt=Date.now();
-  tlNotice('log-notice','Session saved — '+entries.length+' logged.','ok');
+  tlNotice('log-notice','Session saved — '+entries.length+' logged.'+(dropped.length?' The oldest session ('+fmtLogDate(dropped[dropped.length-1].date)+') was removed to stay within '+LOG_MAX.toLocaleString()+' — export a backup from My PRs first if you want to keep old sessions.':''),'ok');
   ['log-distance','log-duration','log-effort','log-mainset','log-notes'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
   });
@@ -7444,7 +7494,19 @@ function storeSet(key,obj,statusId){
   if(!ok&&statusId) setStatus(statusId,'Could not save this setting — browser storage is full or blocked. Everything still works for this visit.');
   return ok;
 }
-function nowMs(){ return (window.performance&&performance.now)?performance.now():Date.now(); }
+// The timers' clock. performance.now() is monotonic and sub-millisecond, but on iOS, macOS and Android it does not
+// advance while the device sleeps: a locked phone with the interval timer or the split taker running came back
+// with the locked minutes missing. The wall clock keeps counting through a sleep, so the two are compared on every
+// read and a gap of over 2 s (never a backward step — a clock correction must not shift a running timer) is
+// added to the monotonic clock once. Every reader (interval timer, split taker, tap tempo) is corrected at
+// the same time and the readouts jump to the true elapsed time; cues are keyed, so nothing double-fires (R7-FUNCTION-09).
+var _clkSkew0=(window.performance&&performance.now)?(Date.now()-performance.now()):0, _clkAdj=0;
+function nowMs(){
+  if(!(window.performance&&performance.now)) return Date.now();
+  var p=performance.now(), skew=Date.now()-p-_clkSkew0;
+  if(skew-_clkAdj>2000) _clkAdj=skew;
+  return p+_clkAdj;
+}
 function raf(fn){ return (window.requestAnimationFrame||function(f){ return setTimeout(function(){ f(nowMs()); },16); })(fn); }
 function caf(id){ (window.cancelAnimationFrame||clearTimeout)(id); }
 
@@ -8078,6 +8140,8 @@ window.tlt_sendoff=function(){
   if(pace){
     var rest=interval-pace;
     if(rest<0) warns.push('Holding '+fmtClock(pace)+' is slower than the interval — you would touch '+fmtClock(-rest)+' after the next send-off. Pick a longer interval or a faster pace.');
+    // Under 5 s of rest is no plan either: the swimmer touches as the next rep leaves (R7-FUNCTION-07).
+    else if(rest<5) warns.push('Holding '+fmtClock(pace)+' leaves '+(rest?fmtClock(rest)+' of':'no')+' rest — you would touch as the next rep leaves. Pick a longer interval or a faster pace.');
     else{
       var fpat=soPattern(interval,startSec+pace);
       lines.push('Holding '+fmtClock(pace)+': '+fmtClock(rest)+' rest each rep'+(fpat?', touching on '+listJoin(fpat.slice(0,reps)):'')+'. Last touch at '+fmtClock(lastLeave+pace)+' ('+rows[rows.length-1].finishReading+').');
@@ -8100,6 +8164,9 @@ window.tlt_sendoff=function(){
 
 /* ─── split taker ─────────────────────────────────────────────────────── */
 var SP={status:'idle',t0:0,splits:[],raf:0};
+// No lap is under 0.3 s: a bounced or double-registered tap (wet fingers) — the same floor for Split and Stop,
+// so a Stop a hair after a Split cannot record a phantom "fastest" lap (R7-FUNCTION-06).
+var SP_MIN_LAP=0.3;
 function spStats(splits){
   splits=Array.isArray(splits)?splits:[];
   var laps=[], i; for(i=0;i<splits.length;i++) laps.push(splits[i]-(i?splits[i-1]:0));
@@ -8144,15 +8211,15 @@ function spStart(){
 // 0.3 s, so a split that soon after the last one (or the start) is the same tap.
 function spSplit(){
   var total=(nowMs()-SP.t0)/1000, n=SP.splits.length, lap=total-(n?SP.splits[n-1]:0);
-  if(lap<0.3) return;
+  if(lap<SP_MIN_LAP) return;
   SP.splits.push(total); spRender();
   setStatus('tlt-sp-status','Split '+(n+1)+': '+fmtSW(lap,2)+' — total '+fmtSW(total,2));
 }
 window.tlt_spMain=function(){ if(SP.status==='running') spSplit(); else spStart(); };
 window.tlt_spStop=function(){
   if(SP.status!=='running') return;
-  var el=(nowMs()-SP.t0)/1000, last=SP.splits.length?SP.splits[SP.splits.length-1]:-1;
-  if(el-last>0.2) SP.splits.push(el);
+  var el=(nowMs()-SP.t0)/1000, last=SP.splits.length?SP.splits[SP.splits.length-1]:0;
+  if(el-last>SP_MIN_LAP) SP.splits.push(el);
   SP.status='stopped'; spLoopStop(); wlDrop('split'); spMainBtn(false);
   setText('tlt-sp-time',fmtSW(el,2)); setText('tlt-sp-sub','Stopped at '+fmtSW(el,2)+' — Start begins a new one'); spRender();
   var n=SP.splits.length; setStatus('tlt-sp-status','Stopped at '+fmtSW(el,2)+(n?' — '+n+' split'+(n>1?'s':'')+' recorded':'')+'. Start begins a new one.');
@@ -11758,6 +11825,15 @@ function onSWMessage(e){
   renderStatus();
   // First-ever install: the page is already the newest — nothing to reload into.
   if (!hadController && !d.previous) return;
+  // The usual release path for an online visitor: the navigation already fetched the NEW shell (network-first)
+  // and the new worker installed behind it. The page is the version the worker serves, so a reload would open
+  // the identical shell — say nothing. The one thing worth reloading for is the 3D lab module, which the old
+  // worker may have served from its cache (assetKey collapses ?v=) if it was loaded in this page (R7-FUNCTION-02).
+  if (cmpVer(swVersion, window.TL_VERSION) === 0){
+    if (typeof humanScriptState === 'undefined' || humanScriptState === 'idle') return;
+    showUpdateToast(swVersion, 'reload to refresh the 3D lab files');
+    return;
+  }
   showUpdateToast(swVersion);
 }
 // A worker newer than this page is in control: its cache serves files built for the newer shell.
