@@ -3452,6 +3452,7 @@ document.addEventListener('keydown', function(e){
   if (e.key === 'Escape') closeAuthGate();
 });
 async function doSignup() {
+  if (!sb) { showAuthError('signup', AUTH_NOLIB_MSG); return; } // Enter in a field bypasses the disabled button
   var username = document.getElementById('signup-username').value.trim();
   var email = document.getElementById('signup-email').value.trim();
   var password = document.getElementById('signup-password').value;
@@ -3518,6 +3519,7 @@ async function doSignup() {
   btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
 }
 async function doLogin() {
+  if (!sb) { showAuthError('login', AUTH_NOLIB_MSG); return; } // Enter in a field bypasses the disabled button
   var email = document.getElementById('login-email').value.trim();
   var password = document.getElementById('login-password').value;
   var btn = document.getElementById('login-btn');
@@ -3536,6 +3538,7 @@ async function doLogin() {
   btn.disabled = false; btn.textContent = 'LOG IN →';
 }
 async function doForgotPassword() {
+  if (!sb) { showAuthError('forgot', AUTH_NOLIB_MSG); return; } // Enter in a field bypasses the disabled button
   var email = document.getElementById('forgot-email').value.trim();
   var msg = document.getElementById('forgot-msg');
   var btn = document.getElementById('forgot-btn');
@@ -3563,6 +3566,7 @@ function isAuthCallbackHash(h) {
   return /(^|[#&])(access_token|refresh_token|error|error_code|error_description|type)=/.test(h || '');
 }
 async function doSetNewPassword() {
+  if (!sb) { showAuthError('newpass', AUTH_NOLIB_MSG); return; } // Enter in a field bypasses the disabled button
   var p1 = document.getElementById('newpass-password').value;
   var p2 = document.getElementById('newpass-confirm').value;
   var btn = document.getElementById('newpass-btn');
@@ -5372,6 +5376,7 @@ function vizLabRetry(){
     if (_vizLabA11y.label) c.setAttribute('aria-label', _vizLabA11y.label);
   }
   c.innerHTML = '';
+  if (viz3DInitialized && renderer && renderer.domElement) c.appendChild(renderer.domElement); // an already-built lab keeps its canvas
   document.querySelectorAll('#page-visualizer .viz-controls .viz-btn[aria-disabled="true"]').forEach(b => { b.disabled = false; b.removeAttribute('aria-disabled'); });
   if (typeof tlAnnounce === 'function') tlAnnounce('Retrying the 3D lab…');
   try { c.focus({ preventScroll: true }); } catch(e){}
