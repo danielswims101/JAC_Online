@@ -4,7 +4,7 @@ Tidelyne — wire the real logo into index.html
 =============================================
 Run AFTER copying the logo files into the repo:
 
-    logo-mark.svg  logo-full.svg  favicon-32.png
+    logo-mark.svg  favicon-32.png
     favicon-192.png  apple-touch-180.png  og.png
 
 Then:
