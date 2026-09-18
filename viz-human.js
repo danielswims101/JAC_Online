@@ -2098,7 +2098,7 @@
              L: { sh: [-31, 16, 38], el: [103] }, R: { sh: [90, 72, -90], el: [36] } },
         4: { name: 'High-Elbow Recovery', desc: 'The elbow leads the recovery, lifted well clear of the water and out to the side, the forearm and hand hanging relaxed just above the surface as the body rolls onto the pulling side.',
              L: { sh: [-105, 140, -21], el: [117] }, R: { sh: [8, -37, -154], el: [97] } },
-        5: { desc: 'The elbow leads forward, still bent, and the forearm reaches in front of the shoulder to a narrow entry — fingertips first, palm down, the hand never higher than the elbow — then the arm extends under the surface while the opposite arm drives through its pull.',
+        5: { desc: 'The elbow leads forward, still bent, and the forearm reaches in front of the shoulder to an entry in line with the shoulder — fingertips first, palm down, the hand never higher than the elbow — then the arm extends under the surface while the opposite arm drives through its pull.',
              L: { sh: [90, -72, 90], el: [36] }, R: { sh: [-31, -16, -38], el: [103] } }
         // Round-4 review ("windmill: hand +0.373 m and 22 cm ABOVE the elbow at u 0.22, straight-arm swing into a high entry"): the
         // straight forward-down entry [176, 30, 7]/8 made the quaternion path from the high-elbow peak swing the forearm over the
