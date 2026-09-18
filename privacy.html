@@ -44,8 +44,22 @@ ul{padding-left:1.25rem}
 table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.88rem}
 th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
 th{color:var(--cyan);font-size:0.75rem;text-transform:uppercase;letter-spacing:1px}
-.back{display:inline-block;margin-bottom:2rem;font-size:0.85rem}
+td:first-child{color:var(--white)}
+/* Phones: one card per row, the column header printed above each cell, instead of three 80-140px ribbons */
+@media(max-width:480px){
+  thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  table,tbody,tr,td{display:block;width:100%}
+  tr{padding:10px 0;border-bottom:1px solid var(--border)}
+  td{padding:0 0 8px;border:0}
+  td:last-child{padding-bottom:0}
+  td::before{content:attr(data-label);display:block;color:var(--cyan);font-size:0.7rem;text-transform:uppercase;letter-spacing:1px;line-height:1.5}
+  td:first-child::before{display:none}
+}
+.back{display:inline-block;margin-bottom:2rem;font-size:0.85rem;padding:8px 0;margin-top:-8px}
 footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--white3)}
+/* The footer links and the back link are the only navigation on these pages: 40px tap targets without changing the visual rhythm */
+footer p{margin-bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:0 6px}
+footer a{display:inline-block;padding:10px 4px;margin:-6px 0}
 </style>
 </head>
 <body>
@@ -80,13 +94,15 @@ searches, and the last release you read on the What's New page</li>
 
 <h2>3. What is sent to a server</h2>
 <table>
-<tr><th>Data</th><th>When</th><th>Why</th></tr>
-<tr><td>Email address</td><td>Only if you create an account</td><td>To sign you in and let you reset your password</td></tr>
-<tr><td>Password</td><td>Only if you create an account</td><td>Stored hashed by our authentication provider — never in readable form, and never visible to us</td></tr>
-<tr><td>Username you choose</td><td>Only if you create an account</td><td>To show who is signed in</td></tr>
-<tr><td>Messages you send the AI coach</td><td>Each time you use an AI feature</td><td>To generate the reply</td></tr>
-<tr><td>A count of your AI requests</td><td>Each AI request</td><td>To enforce the 20-messages-per-5-hours limit that keeps the site free</td></tr>
-<tr><td>Your username and email address, in one notification email to the site owner</td><td>Once, when you create an account</td><td>So we know a real person signed up; it is not used for marketing and is not shared</td></tr>
+<thead><tr><th scope="col">Data</th><th scope="col">When</th><th scope="col">Why</th></tr></thead>
+<tbody>
+<tr><td data-label="Data">Email address</td><td data-label="When">Only if you create an account</td><td data-label="Why">To sign you in and let you reset your password</td></tr>
+<tr><td data-label="Data">Password</td><td data-label="When">Only if you create an account</td><td data-label="Why">Stored hashed by our authentication provider — never in readable form, and never visible to us</td></tr>
+<tr><td data-label="Data">Username you choose</td><td data-label="When">Only if you create an account</td><td data-label="Why">To show who is signed in</td></tr>
+<tr><td data-label="Data">Messages you send the AI coach</td><td data-label="When">Each time you use an AI feature</td><td data-label="Why">To generate the reply</td></tr>
+<tr><td data-label="Data">A count of your AI requests</td><td data-label="When">Each AI request</td><td data-label="Why">To enforce the 20-messages-per-5-hours limit that keeps the site free</td></tr>
+<tr><td data-label="Data">Your username and email address, in one notification email to the site owner</td><td data-label="When">Once, when you create an account</td><td data-label="Why">So we know a real person signed up; it is not used for marketing and is not shared</td></tr>
+</tbody>
 </table>
 
 <h2>4. Processors we use</h2>

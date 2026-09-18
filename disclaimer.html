@@ -41,8 +41,11 @@ ul{padding-left:1.25rem}
 .updated{color:var(--white3);font-size:0.8rem;margin-bottom:2rem}
 .box{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:1.1rem 1.35rem;margin:1.5rem 0}
 .box strong{color:var(--gold)}
-.back{display:inline-block;margin-bottom:2rem;font-size:0.85rem}
+.back{display:inline-block;margin-bottom:2rem;font-size:0.85rem;padding:8px 0;margin-top:-8px}
 footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--white3)}
+/* The footer links and the back link are the only navigation on these pages: 40px tap targets without changing the visual rhythm */
+footer p{margin-bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:0 6px}
+footer a{display:inline-block;padding:10px 4px;margin:-6px 0}
 </style>
 </head>
 <body>
