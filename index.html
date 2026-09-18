@@ -253,7 +253,7 @@ main footer a{text-decoration:none}
 button{cursor:pointer;font-family:var(--fb)}
 input,textarea,select{font-family:var(--fb)}
 /* NAV */
-nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.985);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;gap:8px}
+nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.985);border-bottom:1px solid var(--border);min-height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;gap:8px}
 .nav-brand{font-family:var(--fh);font-size:1.45rem;letter-spacing:3px;color:var(--cyan);cursor:pointer;flex-shrink:0;white-space:nowrap;text-decoration:none}
 .nav-word>span{color:var(--white)}
 .nav-brand{display:flex;align-items:center;gap:9px}
@@ -262,6 +262,12 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.985);border-bott
 .nav-links li a{display:block;padding:4px 8px;font-size:0.65rem;font-weight:500;letter-spacing:0.3px;color:var(--white3);text-decoration:none;text-transform:uppercase;transition:color 0.2s;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;line-height:48px}
 .nav-links li a:hover,.nav-links li a.active{color:var(--cyan);border-bottom-color:var(--cyan)}
 .nav-right{display:flex;gap:6px;align-items:center;flex-shrink:0}
+/* Text-only zoom (Android font scaling, Firefox/Safari text zoom) grows the rem-sized wordmark and pills inside a px-wide bar until the
+   menu button leaves the viewport. CSS cannot see text zoom, so the nav script measures and adds .tl-tight (wordmark hidden — the mark
+   and the link's aria-label keep the home link named) and .tl-tight2 (the AI Coach label clipped, its ✦ stays) while the bar overflows (R6-A11Y-03) */
+nav.tl-tight .nav-word{display:none}
+nav.tl-tight2 .nav-ai-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+nav.tl-tight2 .nav-ai-btn{min-width:40px} /* icon-only pill keeps a 40px target */
 @media(min-width:769px){.nav-right>button{min-height:30px;display:inline-flex;align-items:center;justify-content:center}}
 .nav-ai-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:6px 10px;font-family:var(--fm);font-size:0.65rem;letter-spacing:1px;font-weight:600;text-transform:uppercase;transition:background 0.2s;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:4px} /* gap: the star span is a flex item, so the trailing space of the text node would collapse */
 .nav-ai-btn:hover{background:var(--cyan2)}
@@ -347,7 +353,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .viz-phys-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
 /* METRICS */
 .metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:1rem;margin-bottom:3rem}
-.metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border)}@media(hover:hover){.metric-card[onclick]:hover{transform:translateY(-3px)}}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4}
+.metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border)}@media(hover:hover){.metric-card[onclick]:hover{transform:translateY(-3px)}}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4;overflow-wrap:anywhere}
 /* VIDEO */
 .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}.video-grid>.video-card:only-child{grid-column:1/-1;max-width:640px}
 .video-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);overflow:hidden;transition:border-color 0.3s,transform 0.25s}.video-card:hover{border-color:var(--border);transform:translateY(-3px)}
@@ -532,7 +538,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .btn-sm:active,.btn-ghost-sm:active,.btn-hero:active,.btn-hero-ghost:active,.viz-btn:active,.tab-btn:active,.qp:active,.ai-mode-btn:active,.calc-btn:active,.ai-send:active,.phase-step:active,nav .nav-menu a:active,nav .nav-links>li>a:active,nav .nav-group-btn:active{transform:scale(0.97);filter:brightness(1.15);transition-duration:60ms}
 /* RESPONSIVE */
 @media(max-width:768px){
-  nav{height:52px}
+  nav{min-height:52px}
   .section-wrap{padding:3rem 1.25rem}
   /* Footer gutter follows the page gutter (20px) so its columns line up with the content column */
   footer{padding:2.5rem 1.25rem}
@@ -547,7 +553,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 }
 @media(max-width:480px){
   .hero h1{font-size:3.5rem}
-  .metrics-row{grid-template-columns:repeat(2,1fr)}
+  .metrics-row{grid-template-columns:repeat(2,minmax(0,1fr))} /* minmax(0,…): the cards shrink under text zoom instead of widening the page (R6-A11Y-03) */
   #viz3d-container{height:320px}
   /* HUD: one translucent strip along the top (was a 2×2 block over 56% of the canvas width) */
   .viz-overlay-stats{grid-template-columns:repeat(4,1fr);left:8px;right:8px;gap:4px}
@@ -1012,7 +1018,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-steps li strong{color:var(--white)}
 
 /* 1 · Summary */
-#page-analytics .an-periods{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
+#page-analytics .an-periods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-bottom:1rem} /* minmax(0,…): nowrap values must not widen the page under text zoom (R6-A11Y-03) */
 #page-analytics .an-period{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.2rem 1.25rem;transition:border-color 0.3s}
 #page-analytics .an-period:hover{border-color:var(--border)}
 #page-analytics .an-period-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;display:flex;flex-direction:column;gap:2px;margin-bottom:0.6rem}
@@ -1021,7 +1027,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-period-big small{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--white3);text-transform:none;margin-left:4px} /* unit symbols are case-sensitive: m/yd, not M/YD */
 #page-analytics .an-period-rows{display:flex;flex-direction:column;gap:5px}
 #page-analytics .an-period-rows div{display:flex;justify-content:space-between;gap:10px;font-size:0.8rem;color:var(--white3);border-top:1px solid var(--border2);padding-top:5px}
-#page-analytics .an-period-rows strong{font-family:var(--fm);font-weight:500;color:var(--white2);font-size:0.78rem;white-space:nowrap}
+#page-analytics .an-period-rows strong{font-family:var(--fm);font-weight:500;color:var(--white2);font-size:0.78rem;text-align:right}
 #page-analytics .an-period-rows strong.up{color:var(--green)}
 #page-analytics .an-period-rows strong.down{color:var(--gold)}
 #page-analytics .an-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
@@ -1114,7 +1120,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 /* Responsive */
 @media(max-width:768px){
-  #page-analytics .an-periods{grid-template-columns:1fr 1fr}
+  #page-analytics .an-periods{grid-template-columns:repeat(2,minmax(0,1fr))}
   #page-analytics .an-metrics{grid-template-columns:repeat(3,1fr)}
   #page-analytics .an-seg-btn{min-height:44px;padding:9px 14px}
   #page-analytics .an-table-btn{margin-left:0;min-height:46px}
@@ -1387,10 +1393,10 @@ nav .nav-drawer{flex:1 1 auto;min-width:0;display:flex;align-items:stretch;justi
 }
 nav .nav-drawer-head,nav .nav-drawer-search,nav .nav-scrim,nav .nav-burger{display:none}
 nav .nav-drawer-scroll{display:flex;align-items:center;min-width:0}
-nav .nav-links{display:flex;align-items:center;list-style:none;margin:0;padding:0;gap:2px;width:auto}
+nav .nav-links{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;list-style:none;margin:0;padding:0;gap:2px;width:auto;min-width:0} /* wrap: under text zoom the row grows the bar instead of crossing the pills (R6-A11Y-03) */
 nav .nav-links>li{position:relative;margin:0;padding:0}
 /* Top-level items: page links (Home, What's New) and group buttons share one look. */
-nav .nav-links>li>a,nav .nav-group-btn{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;font-family:var(--fb);font-size:0.78rem;font-weight:500;letter-spacing:0.3px;line-height:46px;text-transform:uppercase;white-space:nowrap;color:var(--white3);background:none;border:0;border-bottom:2px solid transparent;border-radius:0;cursor:pointer;transition:color 0.2s,border-color 0.2s}
+nav .nav-links>li>a,nav .nav-group-btn{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 3px;font-family:var(--fb);font-size:0.78rem;font-weight:500;letter-spacing:0.3px;line-height:46px;text-transform:uppercase;white-space:nowrap;color:var(--white3);background:none;border:0;border-bottom:2px solid transparent;border-radius:0;cursor:pointer;transition:color 0.2s,border-color 0.2s}
 nav .nav-links>li>a:hover,nav .nav-links>li>a.active,nav .nav-group-btn:hover,nav .nav-group-btn[aria-expanded="true"],nav .nav-group-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}
 nav #nav-updates{position:relative}
 nav .nav-caret{display:inline-block;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);opacity:0.75;transition:transform 0.2s}
@@ -1402,7 +1408,8 @@ nav .nav-group-btn[aria-expanded="true"]+.nav-menu{display:block;animation:tlNav
 @keyframes tlNavMenuIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 nav .nav-menu li{margin:0;padding:0}
 nav .nav-menu a{display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:40px;padding:8px 12px;border:0;border-radius:8px;line-height:1.3;font-size:0.82rem;font-weight:500;letter-spacing:0;text-transform:none;color:var(--white2);white-space:nowrap;transition:background 0.15s,color 0.15s}
-nav .nav-menu a[data-desc]::after{content:attr(data-desc);display:block;font-size:0.68rem;font-weight:300;letter-spacing:0;color:var(--white3);line-height:1.35}
+/* The one-line description is real text in a .nav-desc span (aria-hidden, referenced by aria-describedby): generated ::after content was folded into the link's accessible name (R6-A11Y-04) */
+nav .nav-menu a .nav-desc{display:block;font-size:0.68rem;font-weight:300;letter-spacing:0;color:var(--white3);line-height:1.35}
 nav .nav-menu a:hover,nav .nav-menu a:focus-visible{background:var(--cyan-dim);color:var(--cyan);border-bottom-color:transparent}
 nav .nav-menu a.active{background:var(--cyan-dim);color:var(--cyan);box-shadow:inset 2px 0 0 var(--cyan);border-bottom-color:transparent}
 nav .nav-menu a.active:hover,nav .nav-menu a.active:focus-visible{background:rgba(0,212,255,0.16);color:var(--white)} /* the current page's row still answers the pointer (hover and selected were identical) */
@@ -1473,7 +1480,7 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-menu.flip{left:auto;right:auto}
   nav .nav-group-btn[aria-expanded="true"]+.nav-menu{display:grid;animation:none}
   nav .nav-menu a{min-height:46px;padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:8px;white-space:normal;font-size:0.8rem}
-  nav .nav-menu a[data-desc]::after{display:none}
+  nav .nav-menu a .nav-desc{display:none}
   nav .nav-menu a:hover{border-color:var(--border)}
   nav .nav-menu a.active{border-color:rgba(0,212,255,0.4);box-shadow:inset 2px 0 0 var(--cyan)}
 }
@@ -1531,7 +1538,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   .nutr-grid>.nutr-card:last-child:nth-child(odd){grid-column:1/-1}
 }
 @media(max-width:768px){
-  #page-home .metrics-row{grid-template-columns:repeat(6,1fr);gap:0.75rem}
+  #page-home .metrics-row{grid-template-columns:repeat(6,minmax(0,1fr));gap:0.75rem}
   #page-home .metrics-row .metric-card{grid-column:span 2}
   #page-home .metrics-row .metric-card:nth-child(4),#page-home .metrics-row .metric-card:nth-child(5){grid-column:span 3}
   .dl-grid>.dl-card:last-child:nth-child(odd){grid-column:1/-1}
@@ -1546,7 +1553,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   .footer-inner>.footer-col:last-child:nth-child(odd){grid-column:auto}
   .footer-bottom{padding-top:1rem}
   .key-grid{grid-template-columns:1fr}
-  #page-home .metrics-row{grid-template-columns:repeat(2,1fr);gap:0.75rem}
+  #page-home .metrics-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:0.75rem}
   #page-home .metrics-row .metric-card:nth-child(n){grid-column:auto}
   #page-home .metrics-row .metric-card:last-child:nth-child(odd){grid-column:1/-1}
   /* Phone hero: above-the-fold headline, full-width CTAs, an even 2×2 stat grid */
@@ -1571,8 +1578,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   .log-del{order:1;margin:-10px -10px -10px 0}
   .log-content{flex:1 1 100%;order:2}
   .data-table th,.data-table td{padding:9px 10px}
-  /* Season meet table: one card per meet instead of four columns of one-word lines (roles in the markup keep table semantics) */
-  #season-meet-table thead{display:none}
+  /* Season meet table: one card per meet instead of four columns of one-word lines (roles in the markup keep table semantics).
+     The header row is clipped, not display:none, so the columnheaders stay in the accessibility tree (R6-A11Y-01) */
+  #season-meet-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   #season-meet-table,#season-meet-table tbody{display:block;width:100%}
   #season-meet-table tr{display:grid;grid-template-columns:1fr auto;column-gap:12px;row-gap:2px;align-items:baseline;padding:12px 14px;border-bottom:1px solid var(--border2)}
   #season-meet-table tr:last-child{border-bottom:0}
@@ -1586,8 +1594,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   #season-meet-table td:nth-child(2)::before{content:"Dates: "}
   #season-meet-table td:nth-child(3)::before{content:"Course: "}
   #season-meet-table td:nth-child(4)::before{content:"Status: "}
-  /* Prose tables (training sets, race event plans): one card per row on phones, the column header printed above each cell (roles in the markup keep table semantics) */
-  .data-table.tl-stack thead{display:none}
+  /* Prose tables (training sets, race event plans): one card per row on phones, the column header printed above each cell (roles in the markup keep table semantics; the clipped thead keeps the real columnheaders in the accessibility tree) */
+  .data-table.tl-stack thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .data-table.tl-stack,.data-table.tl-stack tbody,.data-table.tl-stack tr,.data-table.tl-stack td{display:block;width:100%}
   .data-table.tl-stack tr{padding:12px 14px;border-bottom:1px solid var(--border2)}
   .data-table.tl-stack tr:last-child{border-bottom:0}
@@ -1597,6 +1605,14 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   .data-table.tl-stack td::before{content:attr(data-label);display:block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;color:var(--white3);line-height:1.4;margin-bottom:2px}
   .data-table.tl-stack td:first-child{font-size:0.95rem;line-height:1.4;padding-bottom:8px}
   .data-table.tl-stack td:first-child::before{display:none}
+  /* Where the browser supports alt text on generated content, the printed labels are decorative for assistive tech —
+     the column header comes from the real <th> — so cells are not read as "Details Details …" (R6-A11Y-01) */
+  @supports (content:"a" / "b"){
+    .data-table.tl-stack td::before{content:attr(data-label) / ""}
+    #season-meet-table td:nth-child(2)::before{content:"Dates: " / ""}
+    #season-meet-table td:nth-child(3)::before{content:"Course: " / ""}
+    #season-meet-table td:nth-child(4)::before{content:"Status: " / ""}
+  }
 }
 /* Reduced motion — the one block for the whole stylesheet (the JS side is tlReducedMotion(): the WebGL stroke loop
    starts paused, view tweens and smooth scrolls are skipped). Kept last so nothing above can re-enable a transition. */
@@ -1610,7 +1626,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   .btn-sm:active,.btn-ghost-sm:active,.btn-hero:active,.btn-hero-ghost:active,.viz-btn:active,.tab-btn:active,.qp:active,.ai-mode-btn:active,.calc-btn:active,.ai-send:active,.phase-step:active,nav .nav-menu a:active,nav .nav-links>li>a:active,nav .nav-group-btn:active{transform:none}
   /* timers */
   #page-timers .tlt-pulse{transition:none}
-  #page-timers .tlt-pulse.on{transform:none}
+  /* The beat stays visible, but as a small-luminance change (no cyan flash, no glow, no scale) — R6-A11Y-02 */
+  #page-timers .tlt-pulse.on{transform:none;background:var(--card3);color:var(--white);border-color:var(--white3);box-shadow:none}
+  #page-timers .tlt-pulse.on.accent{background:var(--card3);border-color:var(--gold);box-shadow:none}
   #page-timers .tlt-bar-fill{transition:none}
   #page-timers .tlt-int-display{transition:none}
   /* planner */
@@ -1627,6 +1645,19 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   /* nav drawer and group menus */
   nav .nav-drawer,nav .nav-drawer.open,nav .nav-scrim,nav .nav-burger-bars span,nav .nav-caret{transition:none}
   nav .nav-group-btn[aria-expanded="true"]+.nav-menu{animation:none}
+}
+/* Windows High Contrast / forced colours (R6-A11Y-05): the browser discards box-shadow rings and alpha tints and repaints
+   every background and border in system colours, so the pressed / selected states above would draw like their neighbours.
+   Selected controls take the system Highlight fill (selectors repeat the originals so they win on order, not on !important),
+   tabs and current-page links a Highlight underline, and data colours (legend swatches, zone bars, the tempo pulse) stay theirs. */
+@media (forced-colors:active){
+  [aria-pressed="true"],#page-timers .tlt-seg button[aria-pressed="true"],#page-analytics .an-seg-btn[aria-pressed="true"],.viz-btn.active,.ai-mode-btn.active,.phase-step.active,nav .nav-menu a.active,.nav-ai-btn.active{forced-color-adjust:none;background:Highlight;color:HighlightText;border-color:Highlight;box-shadow:none}
+  [aria-pressed="true"] *,#page-timers .tlt-seg button[aria-pressed="true"] small,.viz-btn.active *,.ai-mode-btn.active *,nav .nav-menu a.active *,.nav-ai-btn.active *{color:inherit}
+  [aria-pressed="true"]::before,.viz-btn.active::before,.ai-mode-btn.active::before{content:"✓ " / ""} /* state survives with no colour at all; the glyph is hidden from assistive tech */
+  .tab-btn.active,.tab-btn[aria-selected="true"]{border-bottom:3px solid Highlight}
+  nav .nav-links>li>a.active,nav .nav-group-btn.active,nav .nav-group-btn[aria-expanded="true"]{border-bottom:2px solid Highlight}
+  .tl-pal-opt[aria-selected="true"]{outline:2px solid Highlight;outline-offset:-2px}
+  #page-analytics .an-swatch,.zone-fill,#page-analytics .an-zone-seg,#page-timers .tlt-pulse.on{forced-color-adjust:none}
 }
 </style>
 </head>
@@ -1651,40 +1682,40 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <li class="nav-group">
           <button type="button" class="nav-group-btn" id="tl-grp-learn" aria-expanded="false" aria-controls="tl-menu-learn">Learn<span class="nav-caret" aria-hidden="true"></span></button>
           <ul class="nav-menu" id="tl-menu-learn" aria-labelledby="tl-grp-learn">
-            <li><a href="#technique" id="nav-technique" data-desc="Every stroke, turn and start, phase by phase">Technique</a></li>
-            <li><a href="#videos" id="nav-videos" data-desc="Elite demos by stroke and skill">Videos</a></li>
-            <li><a href="#sets" id="nav-sets" data-desc="AeT, threshold, kick and speed sets">Sets</a></li>
-            <li><a href="#dryland" id="nav-dryland" data-desc="Four-day strength and mobility plan">Dryland</a></li>
-            <li><a href="#nutrition" id="nav-nutrition" data-desc="Daily fueling, race day, recovery, hydration">Nutrition</a></li>
+            <li><a href="#technique" id="nav-technique" aria-describedby="nav-technique-d">Technique<span class="nav-desc" id="nav-technique-d" aria-hidden="true">Every stroke, turn and start, phase by phase</span></a></li>
+            <li><a href="#videos" id="nav-videos" aria-describedby="nav-videos-d">Videos<span class="nav-desc" id="nav-videos-d" aria-hidden="true">Elite demos by stroke and skill</span></a></li>
+            <li><a href="#sets" id="nav-sets" aria-describedby="nav-sets-d">Sets<span class="nav-desc" id="nav-sets-d" aria-hidden="true">AeT, threshold, kick and speed sets</span></a></li>
+            <li><a href="#dryland" id="nav-dryland" aria-describedby="nav-dryland-d">Dryland<span class="nav-desc" id="nav-dryland-d" aria-hidden="true">Four-day strength and mobility plan</span></a></li>
+            <li><a href="#nutrition" id="nav-nutrition" aria-describedby="nav-nutrition-d">Nutrition<span class="nav-desc" id="nav-nutrition-d" aria-hidden="true">Daily fueling, race day, recovery, hydration</span></a></li>
           </ul>
         </li>
         <li class="nav-group">
           <button type="button" class="nav-group-btn" id="tl-grp-tools" aria-expanded="false" aria-controls="tl-menu-tools">Tools<span class="nav-caret" aria-hidden="true"></span></button>
           <ul class="nav-menu" id="tl-menu-tools" aria-labelledby="tl-grp-tools">
-            <li><a href="#visualizer" id="nav-visualizer" data-desc="Interactive 3D stroke biomechanics">3D Viz</a></li>
-            <li><a href="#workouts" id="nav-workouts" data-desc="Build a session by focus, stroke and phase">Generator</a></li>
-            <li><a href="#calculator" id="nav-calculator" data-desc="Golf Score, splits, pace zones, conversions">Calculator</a></li>
-            <li><a href="#zones" id="nav-zones" data-desc="Lactate and heart-rate ranges by zone">Zones</a></li>
-            <li><a href="#timers" id="nav-timers" data-desc="Tempo trainer, interval timer and pace clock">Timers</a></li>
-            <li><a href="#planner" id="nav-planner" data-desc="Goal times, race predictor, splits and meet countdown">Planner</a></li>
+            <li><a href="#visualizer" id="nav-visualizer" aria-describedby="nav-visualizer-d">3D Viz<span class="nav-desc" id="nav-visualizer-d" aria-hidden="true">Interactive 3D stroke biomechanics</span></a></li>
+            <li><a href="#workouts" id="nav-workouts" aria-describedby="nav-workouts-d">Generator<span class="nav-desc" id="nav-workouts-d" aria-hidden="true">Build a session by focus, stroke and phase</span></a></li>
+            <li><a href="#calculator" id="nav-calculator" aria-describedby="nav-calculator-d">Calculator<span class="nav-desc" id="nav-calculator-d" aria-hidden="true">Golf Score, splits, pace zones, conversions</span></a></li>
+            <li><a href="#zones" id="nav-zones" aria-describedby="nav-zones-d">Zones<span class="nav-desc" id="nav-zones-d" aria-hidden="true">Lactate and heart-rate ranges by zone</span></a></li>
+            <li><a href="#timers" id="nav-timers" aria-describedby="nav-timers-d">Timers<span class="nav-desc" id="nav-timers-d" aria-hidden="true">Tempo trainer, interval timer and pace clock</span></a></li>
+            <li><a href="#planner" id="nav-planner" aria-describedby="nav-planner-d">Planner<span class="nav-desc" id="nav-planner-d" aria-hidden="true">Goal times, race predictor, splits and meet countdown</span></a></li>
           </ul>
         </li>
         <li class="nav-group">
           <button type="button" class="nav-group-btn" id="tl-grp-track" aria-expanded="false" aria-controls="tl-menu-track">Track<span class="nav-caret" aria-hidden="true"></span></button>
           <ul class="nav-menu" id="tl-menu-track" aria-labelledby="tl-grp-track">
-            <li><a href="#profile" id="nav-profile" data-desc="Personal records by event">My PRs</a></li>
-            <li><a href="#log" id="nav-log" data-desc="Sessions, volume and a 30-day summary">Log</a></li>
-            <li><a href="#analytics" id="nav-analytics" data-desc="Trends from your training data">Analytics</a></li>
+            <li><a href="#profile" id="nav-profile" aria-describedby="nav-profile-d">My PRs<span class="nav-desc" id="nav-profile-d" aria-hidden="true">Personal records by event</span></a></li>
+            <li><a href="#log" id="nav-log" aria-describedby="nav-log-d">Log<span class="nav-desc" id="nav-log-d" aria-hidden="true">Sessions, volume and a 30-day summary</span></a></li>
+            <li><a href="#analytics" id="nav-analytics" aria-describedby="nav-analytics-d">Analytics<span class="nav-desc" id="nav-analytics-d" aria-hidden="true">Trends from your training data</span></a></li>
           </ul>
         </li>
         <li class="nav-group">
           <button type="button" class="nav-group-btn" id="tl-grp-compete" aria-expanded="false" aria-controls="tl-menu-compete">Compete<span class="nav-caret" aria-hidden="true"></span></button>
           <ul class="nav-menu" id="tl-menu-compete" aria-labelledby="tl-grp-compete">
-            <li><a href="#race" id="nav-race" data-desc="Meet-day timeline, warm-up, event plans">Race Strategy</a></li>
-            <li><a href="#taper" id="nav-taper" data-desc="Sprint and distance taper, recovery, sleep">Taper</a></li>
-            <li><a href="#mental" id="nav-mental" data-desc="Visualization, arousal control, focus cues">Mental</a></li>
-            <li><a href="#injury" id="nav-injury" data-desc="Prevention by body region, plus breathing">Injury</a></li>
-            <li><a href="#season" id="nav-season" data-desc="Season phase, meet calendar, time standards">Season</a></li>
+            <li><a href="#race" id="nav-race" aria-describedby="nav-race-d">Race Strategy<span class="nav-desc" id="nav-race-d" aria-hidden="true">Meet-day timeline, warm-up, event plans</span></a></li>
+            <li><a href="#taper" id="nav-taper" aria-describedby="nav-taper-d">Taper<span class="nav-desc" id="nav-taper-d" aria-hidden="true">Sprint and distance taper, recovery, sleep</span></a></li>
+            <li><a href="#mental" id="nav-mental" aria-describedby="nav-mental-d">Mental<span class="nav-desc" id="nav-mental-d" aria-hidden="true">Visualization, arousal control, focus cues</span></a></li>
+            <li><a href="#injury" id="nav-injury" aria-describedby="nav-injury-d">Injury<span class="nav-desc" id="nav-injury-d" aria-hidden="true">Prevention by body region, plus breathing</span></a></li>
+            <li><a href="#season" id="nav-season" aria-describedby="nav-season-d">Season<span class="nav-desc" id="nav-season-d" aria-hidden="true">Season phase, meet calendar, time standards</span></a></li>
           </ul>
         </li>
         <li class="nav-item"><a href="#updates" id="nav-updates">What's New</a></li>
@@ -1696,7 +1727,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <!-- Search button: initPalette() rewrites the hint and labels for the platform, and the nav script
          hides it while window.openPalette is undefined so it is never a dead control. -->
     <button type="button" class="nav-key-btn tl-pal-navbtn" id="nav-search-btn" aria-label="Search (Cmd+K)" title="Search (Cmd+K)" onclick="if(window.openPalette)openPalette()"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg><span class="tl-pal-navhint" aria-hidden="true">⌘K</span></button>
-    <button class="nav-ai-btn" id="nav-ai-coach-btn" onclick="showPage('ai')">AI Coach <span aria-hidden="true">✦</span></button>
+    <button class="nav-ai-btn" id="nav-ai-coach-btn" onclick="showPage('ai')"><span class="nav-ai-label">AI Coach</span> <span aria-hidden="true">✦</span></button>
     <button class="nav-ai-btn" id="nav-login-btn" onclick="openAuthGate('login')" style="background:var(--navy3);color:var(--cyan);border:1px solid var(--border)">Log In</button>
     <span id="current-username-display" style="font-family:var(--fm);font-size:0.65rem;color:var(--cyan);letter-spacing:0.5px;white-space:nowrap;padding:0 4px"></span>
     <button class="nav-key-btn" id="nav-logout-btn" onclick="doLogout()" title="Log out" style="display:none">⎋</button>
@@ -2798,6 +2829,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
           <div class="tlt-unit" id="tlt-tempo-unit">strokes / min</div>
           <div class="tlt-sub" id="tlt-tempo-secs">1.00 s per stroke</div>
           <div class="tlt-sub2" id="tlt-tempo-equiv"></div>
+          <div class="tlt-sub2" id="tlt-tempo-flash" hidden>Above 180 per minute the light shows every other beep (the accent beeps when an accent is set), so it never flashes more than three times a second. The sound is unchanged.</div>
         </div>
       </div>
       <div class="tlt-adjust">
@@ -6580,6 +6612,10 @@ const _tlNoticeFields={};
 function tlNotice(id,msg,kind,field){
   const el=document.getElementById(id);
   if(!el){ if(msg) alert(msg); return; }
+  // A success is the happy path and reads politely (role=status); an error interrupts (role=alert).
+  // Set before the text so the announcement carries the right politeness (R6-A11Y-06).
+  const role=el.getAttribute('role');
+  if(role==='alert'||role==='status'){ const want=(msg&&kind==='ok')?'status':'alert'; if(role!==want) el.setAttribute('role',want); }
   el.textContent=msg||'';
   el.classList.toggle('is-ok',kind==='ok');
   el.hidden=!msg;
@@ -6977,11 +7013,11 @@ function deleteLogEntry(id){
   renderLog();
   _logUndo.push(gone); _logUndoAt=at;
   const k=_logUndo.length;
-  tlNotice('log-notice',(k>1?k+' sessions deleted — latest ':'Session deleted — ')+(gone.date?fmtLogDate(gone.date):'Unknown date')+(gone.type?' · '+gone.type:'')+'.','ok');
+  // One notice carries the undo window too, so the event is announced once (the sr-only status used to repeat it — R6-A11Y-06).
+  tlNotice('log-notice',(k>1?k+' sessions deleted — latest ':'Session deleted — ')+(gone.date?fmtLogDate(gone.date):'Unknown date')+(gone.type?' · '+gone.type:'')+'. Undo is available until you save, clear, or leave this page.','ok');
   const u=document.getElementById('log-undo'), ub=document.getElementById('log-undo-btn');
   if(ub) ub.textContent=k>1?'Undo all':'Undo';
   if(u) u.hidden=false;
-  setLogStatus((k>1?k+' sessions deleted.':'Session deleted.')+' Undo is available until you save, clear, or leave this page.');
   focusLogAfterChange(at);
 }
 // Drops the pending undo (next save, Clear All, backup import or leaving the page). If the Undo
@@ -7000,8 +7036,7 @@ function undoLogDelete(){
   if(!lsSet('swimiq_log',JSON.stringify(entries))){ tlNotice('log-notice','Could not restore the session'+(back.length>1?'s':'')+' — your device storage may be full or blocked.'); return; }
   renderLog();
   const msg=back.length>1?back.length+' sessions restored.':'Session restored.';
-  tlNotice('log-notice',msg,'ok');
-  setLogStatus(msg);
+  tlNotice('log-notice',msg,'ok');   // polite status; the sr-only region no longer repeats it (R6-A11Y-06)
   // The Undo button that had focus is about to be hidden: land on the last-deleted session's delete button first.
   const last=back[back.length-1];
   const at=Array.prototype.slice.call(document.querySelectorAll('#log-entries .log-del')).findIndex(b=>Number(b.getAttribute('data-del-id'))===last.id);
@@ -7244,6 +7279,7 @@ window.tlt_onTab=function(name){
 
 /* ═══════════════════════ TEMPO TRAINER ═══════════════════════════════ */
 var TP_MIN=20, TP_MAX=200;
+var TP_FLASH_MAX=180; // above 180/min the disc lights on every other beep (or the accent beeps): a full-luminance flash may not exceed 3 per second (WCAG 2.3.1, R6-A11Y-02)
 var TP={status:'idle',mode:'spm',bpm:60,accent:0,countIn:true,beat:0,next:0,timer:0,raf:0,queue:[],taps:[],pulseT:0,countEnd:0}; // countEnd: audio time the 3-2-1 count-in ends (0 = none pending)
 function tpSave(){ storeSet('tl_tempo',{mode:TP.mode,bpm:TP.bpm,accent:TP.accent,countIn:TP.countIn,vol:Math.round(AU.vol*100)},'tlt-tempo-status'); }
 function tpLoad(){
@@ -7275,6 +7311,7 @@ function tpRender(){
     setText('tlt-tempo-equiv','= '+fmt1(e.other)+' strokes/min, '+e.otherSec.toFixed(2)+' s per arm stroke in free and back (FINIS Mode 1 tempo '+e.otherSec.toFixed(2)+'). Fly and breast: '+TP.bpm+' strokes/min, '+e.sec.toFixed(2)+' s.');
   }
   var sl=$('tlt-tempo-slider'); if(sl&&Number(sl.value)!==TP.bpm) sl.value=String(TP.bpm);
+  var fl=$('tlt-tempo-flash'); if(fl) fl.hidden=TP.bpm<=TP_FLASH_MAX;
   var a=$('tlt-mode-spm'), b=$('tlt-mode-cpm');
   if(a) a.setAttribute('aria-pressed',TP.mode==='spm'?'true':'false');
   if(b) b.setAttribute('aria-pressed',TP.mode==='cpm'?'true':'false');
@@ -7341,7 +7378,12 @@ function tpFrame(){
     if(pulse){
       pulse.classList.remove('on','accent','count');
       if(ev.kind==='count'){ pulse.classList.add('count'); setText('tlt-pulse-num',String(ev.n)); }
-      else{ pulse.classList.add('on'); if(ev.accent) pulse.classList.add('accent'); setText('tlt-pulse-num',TP.accent>0?String((ev.n%TP.accent)+1):String((ev.n%1000)+1)); }
+      else{
+        // The audio never changes; only the light is rate-limited above TP_FLASH_MAX.
+        var lit=TP.bpm<=TP_FLASH_MAX||(TP.accent>0?!!ev.accent:ev.n%2===0);
+        if(lit){ pulse.classList.add('on'); if(ev.accent) pulse.classList.add('accent'); }
+        setText('tlt-pulse-num',TP.accent>0?String((ev.n%TP.accent)+1):String((ev.n%1000)+1));
+      }
     }
     TP.pulseT=now;
   }
@@ -11503,7 +11545,7 @@ if (window.__TL_TEST__ === true){
   var DESKTOP_MQ = '(min-width:900px)';
   var HOVER_OPEN_MS = 120;   // intent delay so a cursor crossing the bar does not flash menus
   var HOVER_CLOSE_MS = 260;  // grace period to travel from button into the panel
-  var st = { mq:null, open:null, byHover:false, tOpen:0, tClose:0, tPark:0, drawer:false, scrollY:0, focusBack:null, docBound:false, obs:null };
+  var st = { mq:null, open:null, byHover:false, tOpen:0, tClose:0, tPark:0, drawer:false, scrollY:0, focusBack:null, docBound:false, obs:null, fitting:false, fitBound:false, tFit:0 };
 
   function byId(id){ return document.getElementById(id); }
   function navEl(){ return document.querySelector('nav'); }
@@ -11811,8 +11853,40 @@ if (window.__TL_TEST__ === true){
     var s = byId('tl-nav-scrim'); if (s) { s.classList.remove('open'); s.style.top = ''; }
     var b = byId('nav-menu-btn'); if (b) b.setAttribute('aria-expanded', 'false');
     syncSearchRow();
+    fitNav();
   }
 
+  // Text-only zoom (Android font scaling, Firefox/Safari text zoom) grows the rem-sized wordmark and pills
+  // inside a px-wide bar until the menu button leaves the viewport; CSS cannot see text zoom, so measure
+  // (R6-A11Y-03). While the bar overflows, or the desktop link row has had to wrap, hide the wordmark
+  // (.tl-tight), then clip the AI Coach label (.tl-tight2); both controls keep their accessible names.
+  function navCramped(n){
+    if (n.scrollWidth > n.clientWidth + 1) return true;
+    if (!isDesktop()) return false;
+    var ul = n.querySelector('.nav-links'), li = ul ? ul.querySelector('li') : null;
+    return !!li && ul.getBoundingClientRect().height > li.getBoundingClientRect().height * 1.5;
+  }
+  function fitNav(){
+    var n = navEl(); if (!n || st.fitting) return;
+    st.fitting = true;
+    try {
+      n.classList.remove('tl-tight', 'tl-tight2');
+      if (navCramped(n)) { n.classList.add('tl-tight'); if (navCramped(n)) n.classList.add('tl-tight2'); }
+    } catch (e) {}
+    st.fitting = false;
+  }
+  function watchFit(){
+    var n = navEl(); if (!n || st.fitBound) return;
+    st.fitBound = true;
+    var sched = function(){ if (st.tFit) return; st.tFit = (window.requestAnimationFrame || window.setTimeout)(function(){ st.tFit = 0; fitNav(); }); };
+    if (typeof window.ResizeObserver === 'function') {
+      var ro = new ResizeObserver(sched);
+      ro.observe(n);
+      q('.nav-brand, .nav-right, .nav-links', n).forEach(function(el){ ro.observe(el); });
+    } else window.addEventListener('resize', sched);
+    if (document.fonts && document.fonts.ready && document.fonts.ready.then) document.fonts.ready.then(sched, function(){});
+    window.addEventListener('load', sched);
+  }
   function initNav(){
     var n = navEl(), d = byId('nav-drawer');
     if (!n || !d) return;
@@ -11847,6 +11921,7 @@ if (window.__TL_TEST__ === true){
     syncMode();
     syncActiveGroup();
     syncBadge();
+    watchFit(); fitNav();
   }
 
   // Close everything whenever the router activates a page (footer links, cards, hash edits).
