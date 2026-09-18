@@ -24,7 +24,7 @@ Installable as an app and works offline.
 | `logo-mark.svg`, `favicon-*.png`, `apple-touch-180.png`, `og.png`, `screenshot-phone.jpg` | Brand assets and the install-prompt screenshot (a JPEG: the gradient-heavy UI is 76 KB as JPEG against 587 KB as PNG). |
 | `supabase/` | Backend sources — the `ask-ai` and `notify-signup` Edge Functions and the database migrations. See `supabase/README.md`. Not part of the site — excluded from the published site via `_config.yml`. |
 | `tools/` | Build scripts (logo and icon generation) and the forensic audit log. **Not part of the site** — excluded from the published site via `_config.yml`. |
-| `tools/FORENSIC_LOG.md` | The forensic audit log — every finding from the six audit rounds that shipped in 3.2.0 (723 findings, 710 fixed), one row per finding with the fix that landed and its status, so a later round never re-discovers an issue without seeing what was decided. |
+| `tools/FORENSIC_LOG.md` | The forensic audit log — every finding from every audit round (rounds 1–6 shipped in 3.2.0; later rounds follow, one `## Round` section each), one row per finding with the fix that landed and its status, so a later round never re-discovers an issue without seeing what was decided. Counts live in the log itself, never here. |
 
 ## Stack
 
