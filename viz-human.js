@@ -2064,7 +2064,7 @@
   // ═════════════════════════════════════════════════════════════════════════════════
   // 5. STROKE_PATCHES — coaching corrections (what changed and why is in each patch's `// notes` / `// sources` comment block)
   // ═════════════════════════════════════════════════════════════════════════════════
-  // Format: { [stroke]: { rollAmp?, breath?, depth?, rate?, wave?, hold?, append?: { at, phases: [full phase objects] }, phases?: { [i]: { name?, desc?, dur?, drag?, thrust?, lift?, vel?, eff?, L?: {sh?,el?,hi?,kn?}, R?: {...} } },
+  // Format: { [stroke]: { rollAmp?, breath?, depth?, rate?, wave?, hold?, append?: { at, phases: [full phase objects] }, phases?: { [i]: { name?, desc?, dur?, drag?, thrust?, lift?, vel?, eff?, peak?: { at, drag, thrust, lift, vel, eff }, L?: {sh?,el?,hi?,kn?}, R?: {...} } },
   //           rate: tempo multiplier on the page's global 0.55 cycles/s clock (technique pass; the page reads sd.rate),
   //           wave: bodyWave() parameters (technique pass; the page's undulation block reads sd.wave),
   //           phasesAnatomical?: same shape, used instead of `phases` when config.anatomicalElbow is true } }
@@ -2199,9 +2199,14 @@
              L: { sh: [180, 2, -12], el: [5], hi: [2, 0, 0], kn: [2] }, R: { sh: [180, -2, 12], el: [5], hi: [2, 0, 0], kn: [2] } },
         1: { name: 'Out-Sweep & Catch', dur: 0.16, drag: 46, thrust: 40, lift: 18, vel: 1.35, eff: 60, desc: 'Hands press out to 1.1 m apart, 17 cm deep, arms straight with the elbows high near the surface; the legs relax a little downward and the chin starts to rise as the hands turn the corner.',
              L: { sh: [134, -35, 48], el: [6], hi: [16, 0, 0], kn: [10] }, R: { sh: [134, 35, -48], el: [6], hi: [16, 0, 0], kn: [10] } },
-        2: { name: 'In-Sweep, Breath & Heel-Draw', dur: 0.20, drag: 64, thrust: 60, lift: 24, vel: 1.05, eff: 52, desc: 'Elbows stay high near the surface and bend to 70° as the forearms scull in and up under them, the hands meeting in front of the chin; the chest lifts 30°, the hips sink and the shoulders reach the surface; the heels draw to the buttocks with the feet flat and turned out.',
+        2: { name: 'In-Sweep, Breath & Heel-Draw', dur: 0.20, drag: 64, thrust: 60, lift: 24, vel: 1.05, eff: 52,
+             // R6-DOMAIN-03: the thrust peak belongs to the whip (feet sweeping in, u ≈ 0.58), not to the closed legs at u 0.66 — a
+             // physics-only sub-key the page's readout lerp passes through on the way to the Squeeze keyframe; the pose spline and
+             // the ankle timing (keyed to this phase's localT) are untouched.
+             peak: { at: 0.6, drag: 60, thrust: 175, lift: 24, vel: 1.60, eff: 66 },
+             desc: 'Elbows stay high near the surface and bend to 70° as the forearms scull in and up under them, the hands meeting in front of the chin; the chest lifts 30°, the hips sink and the shoulders reach the surface; the heels draw to the buttocks with the feet flat and turned out.',
              L: { sh: [96, -56, 37], el: [70], hi: [31, -18, 8], kn: [126] }, R: { sh: [96, 56, -37], el: [70], hi: [31, 18, -8], kn: [126] } },
-        3: { name: 'Squeeze into the Glide', dur: 0.08, drag: 48, thrust: 175, lift: 24, vel: 1.92, eff: 74, desc: 'One continuous whip has brought the legs straight and together, feet pointed again and still angled a little below the hip line; the arms are locked out, the head is back between the arms and the hips ride up to the surface as the body lunges forward.',
+        3: { name: 'Squeeze into the Glide', dur: 0.08, drag: 40, thrust: 60, lift: 24, vel: 1.92, eff: 74, desc: 'One continuous whip has brought the legs straight and together, feet pointed again and still angled a little below the hip line — the thrust peak came a moment earlier as the feet swept in, and is now fading; the arms are locked out, the head is back between the arms and the hips ride up to the surface as the body lunges forward.',
              L: { sh: [180, 2, -12], el: [5], hi: [11, -3, 3], kn: [3] }, R: { sh: [180, -2, 12], el: [5], hi: [11, 3, -3], kn: [3] } },
         4: { name: 'Streamline Glide', dur: 0.26, drag: 20, thrust: 4, lift: 2, vel: 1.95, eff: 84, desc: 'The streamline holds: hands stacked just under the surface, head down between the arms, legs together with the feet pointed, the body riding flat and settling for the last quarter of the cycle.',
              L: { sh: [180, 2, -12], el: [5], hi: [2, 0, 0], kn: [2] }, R: { sh: [180, -2, 12], el: [5], hi: [2, 0, 0], kn: [2] } }
@@ -2317,7 +2322,7 @@
       //   1: progressive knee flexion through the upkick — the shin lags the thigh from mid-upkick; the head as the node of the wave, shoulders moving a little
       //   more; tempo / amplitude pairing).
       phases: {
-        0: { name: 'Heels Up (Load)', dur: 0.20, drag: 48, thrust: 50, lift: 4, vel: 1.62, eff: 70, desc: 'Top of the kick: the back arches slightly — chest up, hips at their lowest, the head held level — the knees are bent about 56° with the thighs still a couple of degrees above the line, the heels drawn up under the surface and the feet relaxed. The wave has reached the knees. Shown at a study tempo of 96 kicks a minute (~1.7 m/s); at the elite race rate of ~115 the same kick is ~2 m/s — faster than surface freestyle.',
+        0: { name: 'Heels Up (Load)', dur: 0.20, drag: 40, thrust: 16, lift: 4, vel: 1.62, eff: 70, desc: 'Top of the kick: the back arches slightly — chest up, hips at their lowest, the head held level — the knees are bent about 56° with the thighs still a couple of degrees above the line, the heels drawn up under the surface and the feet relaxed. The feet are momentarily still at this reversal, so thrust is near its floor and the body is coasting. The wave has reached the knees. Shown at a study tempo of 96 kicks a minute (~1.7 m/s); at the elite race rate of ~115 the same kick is ~2 m/s — faster than surface freestyle.',
              L: { sh: [-173, 2, -13], el: [5], hi: [-2, 0, 0], kn: [56] }, R: { sh: [-173, -2, 13], el: [5], hi: [-2, 0, 0], kn: [56] } },
         1: { name: 'Downbeat Whip', dur: 0.25, drag: 56, thrust: 104, lift: 40, vel: 1.66, eff: 78, desc: 'The thighs press down and the knees snap straight — shins and pointed feet whip down at 3–4 m/s; the reaction lifts the hips. Peak thrust: kick propulsion scales with foot speed, so it peaks here, mid-downbeat.',
              L: { sh: [-173, 2, -13], el: [5], hi: [14, 0, 0], kn: [28] }, R: { sh: [-173, -2, 13], el: [5], hi: [14, 0, 0], kn: [28] } },
@@ -2325,7 +2330,7 @@
              L: { sh: [-173, 2, -13], el: [5], hi: [20, 0, 0], kn: [6] }, R: { sh: [-173, -2, 13], el: [5], hi: [20, 0, 0], kn: [6] } },
         3: { name: 'Upbeat Drive', dur: 0.18, drag: 54, thrust: 50, lift: 38, vel: 1.78, eff: 79, desc: 'The legs sweep up through the body line as the hips drop and the chest rises — the thighs lead and the water starts to fold the knees (about 10°); the feet are at their fastest upward speed here, and the upkick gives roughly 30% of the propulsion.',
              L: { sh: [-173, 2, -13], el: [5], hi: [6, 0, 0], kn: [10.5] }, R: { sh: [-173, -2, 13], el: [5], hi: [6, 0, 0], kn: [10.5] } },
-        4: { name: 'Upbeat Peak', dur: 0.17, drag: 56, thrust: 12, lift: 26, vel: 1.72, eff: 76, desc: 'The thighs pass above the body line (hip extension about 12°) with the knees already bent about 22° and still loading — the shins lag the thighs as the wave passes from the hips into the knees; the feet are slowing as they reach the top of the kick.',
+        4: { name: 'Upbeat Peak', dur: 0.17, drag: 48, thrust: 12, lift: 26, vel: 1.72, eff: 76, desc: 'The thighs pass above the body line (hip extension about 12°) with the knees already bent about 22° and still loading — the shins lag the thighs as the wave passes from the hips into the knees; the feet are slowing as they reach the top of the kick.',
              L: { sh: [-173, 2, -13], el: [5], hi: [-12, 0, 0], kn: [22] }, R: { sh: [-173, -2, 13], el: [5], hi: [-12, 0, 0], kn: [22] } }
       }
     }
@@ -2359,6 +2364,7 @@
         if (pp.dur !== undefined) ph.dur = pp.dur;
         // Re-keyed physics travel with the phase (a renamed/re-timed phase must not inherit the old slot's numbers).
         for (var pf = 0; pf < PHYS.length; pf++) if (pp[PHYS[pf]] !== undefined) ph[PHYS[pf]] = pp[PHYS[pf]];
+        if (pp.peak !== undefined) ph.peak = pp.peak ? deepClone(pp.peak) : undefined;   // physics-only mid-interval key (R6-DOMAIN-03)
         for (var sIdx = 0; sIdx < 2; sIdx++) {
           var sideKey = sIdx === 0 ? 'L' : 'R';
           if (!pp[sideKey]) continue;
