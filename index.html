@@ -293,6 +293,8 @@ h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-w
 .section-title{font-family:var(--fh);font-weight:400;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:2px;line-height:0.92;margin-top:0;margin-bottom:1rem}
 .section-title span{color:var(--cyan)}
 .section-intro{font-size:0.95rem;color:var(--white2);max-width:660px;line-height:1.85;font-weight:300;margin-bottom:2.5rem}
+/* Peer section headings inside a page (Log, What's New, Analytics) share one scale — a step below .section-title, above the card h3/h4s; .section-eyebrow stays for labelled groups */
+.sub-title{font-family:var(--fh);font-weight:400;font-size:1.5rem;letter-spacing:1px;line-height:1;color:var(--white);margin:0 0 1rem}.sub-title span{color:var(--cyan)}
 .form-notice{color:var(--red);font-size:0.82rem;line-height:1.55;margin-top:0.75rem}.form-notice.is-ok{color:var(--green)}.form-notice[hidden]{display:none}
 .form-field-msg{margin-top:0} /* the copy of a notice placed under its field (tlNotice, data-field-msg): the form-group's gap is the spacing */
 /* Training-log delete notice + its Undo button: the button is a sibling of the role=alert, not part of its text */
@@ -311,6 +313,8 @@ h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-w
 .card p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.85rem}
 .card ul{list-style:none}.card ul li{font-size:0.83rem;color:var(--white2);padding:6px 0;border-bottom:1px solid var(--border2);display:flex;align-items:flex-start;gap:10px;line-height:1.6}
 .card ul li:before{content:'→';color:var(--cyan);flex-shrink:0;font-size:0.75rem;margin-top:2px}.card ul li:last-child{border-bottom:none}
+/* Home feature cards: the tallest card's list sets the row, so the others end on the same baseline with the slack above their lists (not ~90px of empty card under them) */
+#page-home .grid-3>.card{display:flex;flex-direction:column}#page-home .grid-3>.card>ul{margin-top:auto}
 /* BADGES */
 .badge{display:inline-block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;padding:4px 11px;border-radius:4px;text-transform:uppercase;margin-bottom:1rem}
 .badge.cyan{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,212,255,0.25)}.badge.gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(245,166,35,0.25)}.badge.green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,229,153,0.25)}.badge.red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,82,82,0.25)}
@@ -350,6 +354,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border)}@media(hover:hover){.metric-card[onclick]:hover{transform:translateY(-3px)}}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4}
 /* VIDEO */
 .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}.video-grid>.video-card:only-child{grid-column:1/-1;max-width:640px}
+@media(min-width:664px) and (max-width:1011px){.video-grid>.video-card:last-child:nth-child(odd):not(:only-child){grid-column:1/-1;max-width:640px;justify-self:center;width:100%}} /* the two-column band (grid 624–947px wide): a 2+1 tab's odd card spans the row, centred, instead of sitting alone at half width; three-up desktops keep their rows */
 .video-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);overflow:hidden;transition:border-color 0.3s,transform 0.25s}.video-card:hover{border-color:var(--border);transform:translateY(-3px)}
 .video-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}.video-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 .video-info{padding:1.25rem}.video-info h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;margin-bottom:0.5rem}.video-info p{font-size:0.84rem;color:var(--white2);line-height:1.75;font-weight:300}.video-tag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem;display:block}
@@ -360,6 +365,10 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .viz-canvas-wrap{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r16);overflow:hidden;position:relative}
 #viz3d-container{display:block;width:100%;height:520px;border-radius:var(--r16);overflow:hidden;cursor:grab}
 .viz-fallback{display:flex;align-items:center;justify-content:center;height:100%;padding:2rem;text-align:center;color:var(--white2);font-size:0.9rem;line-height:1.8}
+/* First open: the canvas was a transparent hole while three.js + viz-human.js (~930KB) download and the swimmer builds — a centred loading line over it mirrors #human-status until a swimmer is on screen */
+.viz-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 1rem;text-align:center;pointer-events:none;font-family:var(--fm);font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--white2)}
+.viz-spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(0,212,255,0.2);border-top-color:var(--cyan);animation:vizSpin 0.9s linear infinite;flex-shrink:0}
+@keyframes vizSpin{to{transform:rotate(360deg)}}
 .viz-overlay-stats{position:absolute;top:12px;right:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px;pointer-events:none}
 .vos-item{background:rgba(4,13,24,0.92);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center}
 .vos-val{font-family:var(--fm);font-size:1.1rem;color:var(--cyan);display:block;line-height:1;letter-spacing:0.5px}
@@ -395,6 +404,9 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 /* AI SECTION */
 #ai-section{max-width:1200px;margin:0 auto;padding:0 2rem 3rem}
 #page-ai .ai-title-wrap{max-width:1200px;padding:1.75rem 2rem 0.75rem} /* same gutter as #ai-section at every width (was an inline 2rem the phone rule could not override) */
+/* Title on the site scale (was an inline 2.2rem at every width — half the size of every other page title on desktop), capped at 3rem so the chat card keeps its viewport budget; the meta line sits under it instead of hanging off its baseline */
+#page-ai .ai-title-wrap .section-title{font-size:clamp(2.2rem,4vw,3rem);margin-bottom:0.4rem}
+.ai-title-note{font-size:0.8rem;color:var(--white3);font-weight:300;line-height:1.5;margin:0}
 .ai-wrapper{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);overflow:hidden;box-shadow:0 0 80px rgba(0,212,255,0.07)}
 .ai-header{background:var(--card2);border-bottom:1px solid var(--border);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .ai-header-left{display:flex;align-items:center;gap:12px}
@@ -407,12 +419,13 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 @media(hover:hover){.ai-mode-btn:hover:not(.active){color:var(--white);border-color:rgba(0,212,255,0.3)}}
 .ai-messages{height:calc(100dvh - 400px);min-height:340px;max-height:1100px;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;scroll-behavior:smooth}
 /* Keep the composer in view: the chat card is capped to the viewport below the page title and the message pane
-   gives way first (the card sits ~162px down on desktop, ~176px on phones, eyebrow included). Very short viewports keep the flowing layout. */
+   gives way first (the card sits ~174px down on tablets, ~194px on desktop where the title is 48px, ~174px on phones, eyebrow and meta line included). Very short viewports keep the flowing layout. */
 @media(min-height:600px){
-  .ai-wrapper{display:flex;flex-direction:column;max-height:calc(100dvh - 174px)}
+  .ai-wrapper{display:flex;flex-direction:column;max-height:calc(100dvh - 196px)}
   .ai-messages{flex:1 1 auto;min-height:180px}
   .ai-header,.quick-prompts,.ai-input-row{flex-shrink:0}
 }
+@media(min-height:600px) and (min-width:900px){.ai-wrapper{max-height:calc(100dvh - 208px)}}
 @media(min-height:600px) and (max-width:480px){.ai-wrapper{max-height:calc(100dvh - 198px)}}
 .ai-messages::-webkit-scrollbar{width:4px}.ai-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .msg{display:flex;gap:10px;align-items:flex-start;animation:fadeUp 0.3s ease}.msg.user{flex-direction:row-reverse}
@@ -474,6 +487,7 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 .zone-info{font-family:var(--fm);font-size:0.62rem;color:var(--white3);min-width:140px}
 /* PR TRACKER */
 .pr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.85rem;margin-bottom:1.25rem}
+@media(min-width:600px){.pr-grid{grid-template-columns:repeat(3,1fr)}} /* three-event strokes fill a row and freestyle splits 3+3 (auto-fit gave four tracks: an empty fourth in four sections and a 4+2 freestyle) */
 .pr-item{background:var(--card);border-radius:var(--r8);padding:0.9rem;border:1px solid var(--border2);text-align:center;transition:border-color 0.2s}.pr-item:hover{border-color:var(--border)}
 .pr-event{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:7px;display:block}
 .pr-input{background:var(--navy2);border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.6rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s}.pr-input:focus{border-color:var(--cyan)}.pr-input::placeholder{color:var(--white4);font-size:1rem}
@@ -496,6 +510,8 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 .nutr-card ul{list-style:none}.nutr-card ul li{font-size:0.82rem;color:var(--white2);padding:5px 0;border-bottom:1px solid var(--border2);line-height:1.6}.nutr-card ul li:last-child{border-bottom:none}
 /* CONTENT BLOCKS */
 .content-block{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;margin-bottom:1.25rem}.content-block h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1rem;color:var(--white)}.content-block p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.85rem}.content-block p:last-child{margin-bottom:0}
+/* Reading measure: a tab whose only content is one block set 14px prose 1118px wide (~180 characters a line) on the 1240px pages; the card keeps its width so tabs do not jump, the text column does not (≈690px, the same measure as .section-intro) */
+.content-block>p,.content-block>ul,.content-block>ol,#page-timers .tlt-card>p{max-width:690px}#page-planner .pl-fine,#page-timers .tlt-note{max-width:72ch}
 .content-block ul{list-style:none}.content-block ul li{font-size:0.85rem;color:var(--white2);padding:7px 0;border-bottom:1px solid var(--border2);display:flex;gap:10px;align-items:flex-start;line-height:1.6}.content-block ul li:before{content:'→';color:var(--cyan);flex-shrink:0;font-size:0.75rem;margin-top:2px}.content-block ul li:last-child{border-bottom:none}
 /* FOOTER */
 footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2rem}
@@ -527,6 +543,9 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .btn-ghost-sm{background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.35);border-radius:6px;padding:7px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}.btn-ghost-sm:hover{background:var(--cyan-dim)}
 /* Same 30px box whether the control is a <button>, an <a> (which would inherit the body line-height) or carries an emoji glyph */
 .btn-sm,.btn-ghost-sm{line-height:1.2;min-height:30px}
+/* The primary "do it" button — one scale on every page (Calculate, Generate, Save Session and Send were 30–42px tall at 11.2–12.5px in two radii). [hidden] keeps winning over the display change (#ai-stop-btn / #ai-send-btn swap). */
+.btn-primary,.calc-btn,.ai-send{min-height:44px;padding:0 24px;font-size:0.75rem;letter-spacing:1.5px;border-radius:var(--r8);display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1.2}
+.btn-primary[hidden],.calc-btn[hidden],.ai-send[hidden]{display:none}
 .tl-actions{display:flex;gap:10px;flex-wrap:wrap}
 /* Pressed feedback: touch has no hover, so a tap acknowledges itself before the page changes (the timers already did this) */
 .btn-sm:active,.btn-ghost-sm:active,.btn-hero:active,.btn-hero-ghost:active,.viz-btn:active,.tab-btn:active,.qp:active,.ai-mode-btn:active,.calc-btn:active,.ai-send:active,.phase-step:active,nav .nav-menu a:active,nav .nav-links>li>a:active,nav .nav-group-btn:active{transform:scale(0.97);filter:brightness(1.15);transition-duration:60ms}
@@ -540,6 +559,10 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .ai-messages{height:calc(100dvh - 320px);min-height:280px}
   #ai-section{padding:0 1.25rem 2rem}
   #page-ai .ai-title-wrap{padding:1.5rem 1.25rem 0.75rem}
+  /* Suggested questions as one swipeable strip on tablets too: wrapped at 44px touch height the ten pills were a five-row 269px block that left the chat 35% of the card */
+  .quick-prompts{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .quick-prompts::-webkit-scrollbar{display:none}
+  .qp{flex:0 0 auto;white-space:nowrap}
   #viz3d-container{height:380px}
   .viz-overlay-stats{grid-template-columns:1fr 1fr;top:8px;right:8px}
   .vos-item{padding:6px 8px}
@@ -567,9 +590,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .ai-mode-btns{gap:4px;flex:1 1 100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
   .ai-mode-btns::-webkit-scrollbar{display:none}
   .ai-mode-btn{padding:4px 10px;flex:0 0 auto;white-space:nowrap}
-  .quick-prompts{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0.6rem 1rem}
-  .quick-prompts::-webkit-scrollbar{display:none}
-  .qp{flex:0 0 auto;white-space:nowrap}
+  .quick-prompts{padding:0.6rem 1rem} /* the nowrap strip itself comes from the ≤768 rule */
+  .ai-header-text p{display:none} /* the title's meta line already says it; the 36px it cost the pane is what the welcome bubble needs to show without an inner scroll */
   .ai-messages{height:calc(100dvh - 300px);padding:14px;gap:0.85rem}
   /* Bubbles take the full width beside the avatar (80% of a 265px row was a 212px column that made the welcome 409px tall) */
   .msg-bubble{max-width:calc(100% - 42px);padding:0.75rem 0.9rem;line-height:1.5}
@@ -649,6 +671,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-timers #tlt-sound-status{font-family:var(--fm);font-size:0.68rem;color:var(--white2)}
 #page-timers .tlt-note{font-size:0.78rem;color:var(--white3);line-height:1.65;margin:0.75rem 0 1.5rem}
 #page-timers .tlt-note a{color:var(--cyan)}
+/* The audio caveat as a closed disclosure (one line until it is needed) */
+#page-timers .tlt-sound-help{margin-top:0}
+#page-timers .tlt-sound-help summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:44px;color:var(--white2);font-family:var(--fm);font-size:0.7rem;letter-spacing:0.5px;line-height:1.4}
+#page-timers .tlt-sound-help summary::-webkit-details-marker{display:none}
+#page-timers .tlt-sound-help summary::before{content:'▸';color:var(--cyan);flex-shrink:0;font-size:0.85rem}
+#page-timers .tlt-sound-help[open] summary::before{content:'▾'}
+#page-timers .tlt-sound-help summary:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:4px}
+#page-timers .tlt-sound-help p{margin:0.25rem 0 0}
 #page-timers .tlt-hint{font-family:var(--fm);font-size:0.64rem;color:var(--white4);letter-spacing:0.3px;margin-top:0.75rem;line-height:1.7}
 /* Keyboard and mouse hints only where there is a keyboard or a wheel; touch screens get the touch wording instead */
 .viz-hint-touch{display:none}
@@ -829,7 +859,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-err:empty{display:none;margin:0}
 #page-planner .pl-err.ok{color:var(--green)}
 #page-planner .pl-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:0.85rem}
-#page-planner .pl-actions .calc-btn~.btn-ghost-sm{min-height:38px} /* Meet Countdown: Clear matches the 38px Save meets beside it (48px on touch below) */
+#page-planner .pl-actions .calc-btn~.btn-ghost-sm{min-height:44px} /* Meet Countdown: Clear matches the 44px Save meets (.calc-btn) beside it (48px on touch below) */
 #page-planner .pl-status{font-family:var(--fm);font-size:0.68rem;color:var(--green);letter-spacing:0.3px}
 #page-planner .pl-fine{font-size:0.76rem;color:var(--white3);line-height:1.65;margin-top:1.5rem}
 #page-planner .pl-fine a,#page-planner .info-box a{color:var(--cyan)}
@@ -862,7 +892,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-goal-pr a{color:var(--white3);text-decoration:underline;text-underline-offset:2px}
 #page-planner .pl-goal-pr a:hover{color:var(--cyan)}
 #page-planner .pl-goal-label{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase}
-#page-planner .pl-goal-input{background:var(--navy2);border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.55rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s;min-height:44px}
+#page-planner .pl-goal-input{background:var(--navy2);border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.6rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s;min-height:44px}
 #page-planner .pl-goal-input::placeholder{color:var(--white4);font-size:1rem;letter-spacing:0}
 #page-planner .pl-goal-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
 /* the id-scoped outline:none above out-specifies the site-wide input:focus-visible ring — restore it here */
@@ -887,7 +917,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #page-planner .pl-nopr{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;margin:-8px -6px}
   #page-planner .info-box a,#page-planner .pl-fine a{display:inline-block;padding:12px 0;margin:-12px 0}
 }
-#page-planner .pl-to-splits{align-self:flex-start;padding:6px 12px;font-size:0.62rem}
+#page-planner .pl-to-splits{align-self:flex-start;padding:6px 12px} /* font from .btn-ghost-sm (a 0.62rem override made it the one 9.9px ghost button) */
 
 /* ─── predictor ─── */
 #page-planner .pl-fit-result{background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:1rem 1.1rem;margin-top:1rem}
@@ -987,7 +1017,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
    ============================================================ */
 #page-analytics [hidden]{display:none!important}
 #page-analytics .an-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-#page-analytics .an-h{font-family:var(--fh);font-size:clamp(1.5rem,3.2vw,2rem);letter-spacing:1.5px;line-height:1;margin:0 0 1.25rem;font-weight:400}
+#page-analytics .an-h{font-family:var(--fh);font-size:1.5rem;letter-spacing:1px;line-height:1;margin:0 0 1.25rem;font-weight:400} /* same scale as .sub-title (was a 32px clamp — the only in-page heading above the log/updates size) */
 #page-analytics .an-h span{color:var(--cyan)}
 #page-analytics .an-block-head{margin-top:0.25rem}
 #page-analytics .an-divider{margin:2.75rem 0}
@@ -1115,9 +1145,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* Responsive */
 @media(max-width:768px){
   #page-analytics .an-periods{grid-template-columns:1fr 1fr}
+  #page-analytics .an-periods>:last-child:nth-child(odd){grid-column:1/-1} /* three cards two-up: the 4-week average spans the row instead of sitting alone at half width */
   #page-analytics .an-metrics{grid-template-columns:repeat(3,1fr)}
   #page-analytics .an-seg-btn{min-height:44px;padding:9px 14px}
-  #page-analytics .an-table-btn{margin-left:0;min-height:46px}
+  #page-analytics .an-table-btn{margin-left:0;min-height:44px} /* same height as the 44px segmented pills beside it */
   #page-analytics .an-chart-wrap{height:270px}
   #page-analytics .an-chart-card{padding:1rem 0.85rem 0.85rem}
   #page-analytics .an-insight{grid-template-columns:1fr}
@@ -1244,8 +1275,8 @@ html.tl-pal-lock{overflow:hidden}
   .tl-pal-foot{display:none}
   .tl-pal-list{padding:4px 6px 12px}
 }
+@media(max-width:999px){.tl-pal-navhint{display:none}} /* icon only where the bar is tight (the aria-label keeps the shortcut) */
 @media(max-width:768px){
-  .tl-pal-navhint{display:none}
   .tl-pal-navbtn{min-width:44px;min-height:44px}
 }
 /* Phones: the button must not push .nav-right past the viewport (measured
@@ -1281,7 +1312,7 @@ html.tl-pal-lock{overflow:hidden}
 #page-updates .tl-upd-offline-note strong{color:var(--white2);font-weight:500}
 #page-updates .tl-upd-install{display:flex;gap:1.25rem;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border2)}
 #page-updates .tl-upd-install-text{flex:1 1 300px;min-width:0}
-#page-updates .tl-upd-install h2{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:0.35rem}
+#page-updates .tl-upd-install h2{margin-bottom:0.35rem} /* scale from .sub-title (1.25rem sat below the 1.35rem release titles) */
 #page-updates .tl-upd-install p{font-size:0.86rem;color:var(--white2);line-height:1.75;font-weight:300;max-width:560px}
 #page-updates .tl-upd-install-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 #page-updates .tl-upd-status{font-family:var(--fm);font-size:0.7rem;letter-spacing:0.3px;color:var(--white3);margin-top:0.9rem;line-height:1.6}
@@ -1383,7 +1414,8 @@ nav .nav-drawer{flex:1 1 auto;min-width:0;display:flex;align-items:stretch;justi
 @media(min-width:900px){
   nav{display:grid;grid-template-columns:1fr auto 1fr}
   nav>.nav-brand{justify-self:start}
-  nav>.nav-right{justify-self:end}
+  nav>.nav-right{justify-self:end;margin-left:24px} /* breathing room before the ⌘K pill: the link group met it 8px away at the breakpoint (and at 1000–1040px once the username and logout appear) */
+  nav #nav-logout-btn{width:30px;height:30px;padding:0} /* 31×31 beside the 30px pills */
 }
 nav .nav-drawer-head,nav .nav-drawer-search,nav .nav-scrim,nav .nav-burger{display:none}
 nav .nav-drawer-scroll{display:flex;align-items:center;min-width:0}
@@ -1419,6 +1451,7 @@ nav #nav-search-btn[hidden]{display:none}
      letting space-between float it mid-bar; pills, logout and burger all draw at 40px on one top edge
      (a ::before keeps the 44px hit area). */
   nav .nav-right{margin-left:auto}
+  nav .nav-brand{min-height:44px;padding:0 4px;margin-left:-4px} /* the wordmark was the one nav control under 40px on touch (100×31) */
   nav .nav-ai-btn,nav #nav-login-btn{min-height:40px;padding:6px 10px;font-size:0.66rem;letter-spacing:0.6px;position:relative}
   nav .nav-ai-btn::before,nav .nav-burger::before{content:"";position:absolute;inset:-2px}
   nav #nav-logout-btn{min-width:40px;min-height:40px}
@@ -1552,6 +1585,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   /* Phone hero: above-the-fold headline, full-width CTAs, an even 2×2 stat grid */
   .hero{padding:3.5rem 1.25rem 3rem;min-height:auto}
   .hero-eyebrow{font-size:var(--fs-micro);letter-spacing:1.5px;line-height:1.5;text-wrap:balance}
+  .hero-desc{font-size:0.98rem;line-height:1.6;margin-bottom:1.75rem} /* desktop leading (1.85) in a 335px column ran six lines / 186px and put the first CTA at y=549 */
   .hero-btns{flex-direction:column;align-items:stretch;width:100%;max-width:340px;gap:10px;margin-bottom:2.5rem}
   .btn-hero,.btn-hero-ghost{width:100%}
   .hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem 1rem;width:100%;max-width:340px}
@@ -1563,6 +1597,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   #gen-btn,#log-save-btn{width:100%}
   /* Phone reading surfaces: 16px side padding instead of 28px, so body text and key-point tiles get a 301px column instead of 277px */
   .acc-body,.card,.card-lg,.content-block,#viz-info-panel,.nutr-card,.dl-card,.video-info{padding:1.1rem 1rem}
+  .info-box,.warn-box,.success-box{padding:1rem 1rem} /* the same 16px gutter as the cards beside them (22px left a 290px column next to 303px cards, 256px inside a calc panel) */
   .acc-header{padding:0.9rem 1rem}
   .pr-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
   /* Log entries: date and delete share the first line so the content spans the card instead of a 157px column */
@@ -1905,7 +1940,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
             <option value="coach">Coach — Full technical analysis</option>
           </select>
         </div>
-        <button class="btn-sm" id="viz-gen-btn" onclick="generateVisualization()" style="padding:12px">Generate Analysis <span aria-hidden="true">✦</span></button>
+        <button class="btn-sm btn-primary" id="viz-gen-btn" onclick="generateVisualization()">Generate Analysis <span aria-hidden="true">✦</span></button>
         <p class="form-notice" id="viz-notice" role="alert" hidden></p>
       </div>
       <div class="imggen-result" id="viz-result">
@@ -2163,7 +2198,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Additional Notes (optional)</label>
       <input class="form-input" id="gen-notes" maxlength="300" placeholder="e.g. sore shoulders, include Golf Score sets, pre-meet sharpener…"></div>
-    <button class="btn-sm" id="gen-btn" onclick="generateWorkout()" style="padding:12px 28px;font-size:0.78rem">Generate Full Workout <span aria-hidden="true">✦</span></button>
+    <button class="btn-sm btn-primary" id="gen-btn" onclick="generateWorkout()">Generate Full Workout <span aria-hidden="true">✦</span></button>
     <p class="form-notice" id="gen-notice" role="alert" hidden></p>
   </div>
   <div class="gen-output" id="gen-output">
@@ -2258,8 +2293,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Physiology Made Visual</div>
   <h1 class="section-title">TRAINING <span>ZONES</span></h1>
-  <div class="info-box"><strong>Read the HR numbers as a 10-second count, not bpm.</strong> Stop, find your pulse, count for 10 seconds — "HR 24–28" means 24–28 beats in that 10 seconds (roughly 144–168 bpm). Lactate values are typical ranges from the literature, not measurements of you.</div>
-  <div class="card-lg" style="margin-bottom:2.5rem">
+  <p class="section-intro">Five intensity zones, set by blood lactate and a 10-second pulse count — what each one feels like, what it trains and how much of a season it should get.</p>
+  <div class="card-lg" style="margin-bottom:0">
     <div class="zone-bars">
       <div class="zone-row"><div class="zone-name">Recovery</div><div class="zone-track"><div class="zone-fill z1">Z1</div></div><div class="zone-info">&lt;2.0 mmol · HR &lt;24</div></div>
       <div class="zone-row"><div class="zone-name"><span style="text-transform:none">AeT</span> / Base</div><div class="zone-track"><div class="zone-fill z2">Z2 AeT</div></div><div class="zone-info">2.0–3.0 mmol · HR 24–28</div></div>
@@ -2268,6 +2303,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="zone-row"><div class="zone-name">Anaerobic</div><div class="zone-track"><div class="zone-fill z5">Z5 Sprint</div></div><div class="zone-info">8.0+ mmol on lactate work · rest-dependent</div></div>
     </div>
   </div>
+  <div class="info-box" style="margin:1.25rem 0 2rem"><strong>Read the HR numbers as a 10-second count, not bpm.</strong> Stop, find your pulse, count for 10 seconds — "HR 24–28" means 24–28 beats in that 10 seconds (roughly 144–168 bpm). Lactate values are typical ranges from the literature, not measurements of you.</div>
   <div style="display:flex;flex-direction:column;gap:1.25rem">
     <div class="card"><div class="badge green">Zone 1</div><h3>RECOVERY</h3><p><strong>Lactate:</strong> below 2.0 mmol/L · <strong>HR:</strong> under 24 on the 10-second count · Easy enough to hold a full conversation. Warm-up, cool-down, recovery between hard sets — and a large share of base volume: elite programs log about 40% of their meters here (Hellard et al. 2019). Going too hard in what should be Zone 1 is the most common way swimmers blunt the next quality set.</p></div>
     <div class="card"><div class="badge cyan">Zone 2 — <span style="text-transform:none">AeT</span></div><h3>AEROBIC THRESHOLD</h3><p><strong>Lactate:</strong> 2.0–3.0 mmol/L · <strong>HR:</strong> 24–28 on the 10-second count · <strong>Zones 1–2 together carry 80%+ of total training volume.</strong> Builds mitochondrial density, oxidative enzyme capacity, cardiac output.</p></div>
@@ -2316,7 +2352,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <h1 class="section-title">TRAINING <span>LOG</span></h1>
   <p class="section-intro">All log data is saved locally in your browser — it never leaves your device. Your most recent 2,000 sessions are kept; export a backup from My PRs to archive more.</p>
   <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:1.5rem">
-    <h2 style="font-family:var(--fh);font-weight:400;font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem;color:var(--cyan)">LOG A SESSION</h2>
+    <h2 class="sub-title" style="margin-bottom:1.25rem">LOG A SESSION</h2>
     <div class="gen-row">
       <div class="form-group"><label>Date</label><input class="form-input" id="log-date" type="date"></div>
       <div class="form-group"><label>Session Type</label><select class="form-select" id="log-type"><option value="AM Pool">AM Pool</option><option value="PM Pool">PM Pool</option><option value="Dryland">Dryland</option><option value="Race">Race</option><option value="Time Trial">Time Trial</option></select></div>
@@ -2329,14 +2365,14 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" enterkeyhint="done" maxlength="200" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 24–28"></div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Notes</label><textarea class="form-textarea" id="log-notes" maxlength="1000" placeholder="Technique focus, energy levels, what went well…"></textarea></div>
-    <button class="btn-sm" id="log-save-btn" onclick="saveLogEntry()">Save Session</button>
+    <button class="btn-sm btn-primary" id="log-save-btn" onclick="saveLogEntry()">Save Session</button>
     <div class="log-notice-row">
       <p class="form-notice" id="log-notice" role="alert" data-field-msg hidden></p>
       <p class="form-notice is-ok" id="log-undo" hidden><button type="button" class="tl-linkbtn" id="log-undo-btn" onclick="undoLogDelete()">Undo</button></p>
     </div>
   </div>
   <div id="log-stats" style="margin-bottom:1.5rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;display:none">
-    <h2 style="font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:1rem;color:var(--cyan)">30-DAY SUMMARY</h2>
+    <h2 class="sub-title">30-DAY SUMMARY</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem">
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-sessions" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Sessions</div></div>
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-km" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Distance <span style="text-transform:none">m/yd</span></div></div>
@@ -2345,7 +2381,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
-    <h2 id="log-history-heading" style="font-family:var(--fh);font-weight:400;font-size:1.5rem;letter-spacing:1px">SESSION HISTORY</h2>
+    <h2 id="log-history-heading" class="sub-title" style="margin-bottom:0">SESSION HISTORY</h2>
     <button class="btn-ghost-sm" onclick="clearLog()">Clear All</button>
   </div>
   <div id="log-entries"></div>
@@ -2712,17 +2748,15 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-ai">
 <div class="section-wrap narrow ai-title-wrap">
   <div class="section-eyebrow">Coaching On Demand</div>
-  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
-    <h1 class="section-title" style="font-size:2.2rem;margin-bottom:0.5rem">AI SWIM <span>COACH</span></h1>
-    <span style="font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase">Streaming · Free account</span>
-  </div>
+  <h1 class="section-title">AI SWIM <span>COACH</span></h1>
+  <p class="ai-title-note">Streaming · free account · 20 messages every 5 hours</p>
 </div>
 <div id="ai-section">
   <div class="ai-wrapper">
     <div class="ai-header">
       <div class="ai-header-left">
         <div class="ai-dot"></div>
-        <div class="ai-header-text"><h3>COACH CHAT</h3><p>Expert coaching knowledge · 20 messages per 5 hours (the limit keeps it free for everyone) · streaming</p></div>
+        <div class="ai-header-text"><h3>COACH CHAT</h3><p>Expert coaching knowledge · the 20-message limit keeps it free for everyone</p></div>
       </div>
       <div class="ai-mode-btns" role="group" aria-label="Coach mode">
         <button class="ai-mode-btn active" id="mode-coach" aria-pressed="true" onclick="setMode('coach',this)"><span aria-hidden="true">🏊 </span>Coaching</button>
@@ -2768,15 +2802,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Pool-Deck Tools</div>
   <h1 class="section-title">SWIM <span>TIMERS</span></h1>
-  <p class="section-intro">A stroke-rate metronome, a work/rest circuit timer and a pace clock with send-off and split tools. Big numbers, big buttons, sound — and nothing leaves your device.</p>
-
-  <div class="tlt-soundbar">
-    <label for="tlt-vol">Sound</label>
-    <input type="range" id="tlt-vol" min="0" max="100" step="1" value="80" aria-label="Beep volume">
-    <button type="button" class="btn-ghost-sm" id="tlt-vol-test">Test beep</button>
-    <span id="tlt-sound-status" role="status" aria-live="polite"></span>
-  </div>
-  <p class="tlt-note">On iPhone, browser audio follows the ring/silent switch — if you hear nothing, switch to ring and raise the volume. The tempo trainer pauses itself if the screen is hidden (press Resume). The interval timer keeps counting while the screen or tab is hidden, but many browsers mute its beeps until you return, so keep the screen on for sound. Opening another Tidelyne page pauses both — the split taker keeps timing.</p>
+  <p class="section-intro">A stroke-rate metronome, a work/rest circuit timer and a pace clock with send-off and split tools — big numbers, big buttons, sound, and nothing leaves your device.</p>
 
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'tlt-tab-tempo');tlt_onTab('tempo')">Tempo Trainer</button>
@@ -2960,6 +2986,18 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <textarea id="tlt-sp-text" class="tlt-copytext" aria-hidden="true" tabindex="-1" readonly></textarea>
     </div>
   </div>
+
+  <!-- Sound settings sit under the tools (they apply to all three and, above the tab strip with the audio caveat, pushed the timers below a phone's fold) -->
+  <div class="tlt-soundbar">
+    <label for="tlt-vol">Sound</label>
+    <input type="range" id="tlt-vol" min="0" max="100" step="1" value="80" aria-label="Beep volume">
+    <button type="button" class="btn-ghost-sm" id="tlt-vol-test">Test beep</button>
+    <span id="tlt-sound-status" role="status" aria-live="polite"></span>
+  </div>
+  <details class="tlt-note tlt-sound-help">
+    <summary>No sound, or a timer paused? Read this</summary>
+    <p>On iPhone, browser audio follows the ring/silent switch — if you hear nothing, switch to ring and raise the volume. The tempo trainer pauses itself if the screen is hidden (press Resume). The interval timer keeps counting while the screen or tab is hidden, but many browsers mute its beeps until you return, so keep the screen on for sound. Opening another Tidelyne page pauses both — the split taker keeps timing.</p>
+  </details>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not coaching or medical advice</p></div></footer>
 </div>
@@ -3096,8 +3134,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <!-- ANALYTICS PAGE — computed on-device from the Training Log (readLog) -->
 <div class="page" id="page-analytics">
 <div class="section-wrap narrow">
-  <div class="section-eyebrow">Training Analytics</div>
-  <h1 class="section-title">VOLUME, CONSISTENCY <span>&amp; EFFICIENCY</span></h1>
+  <div class="section-eyebrow">Volume, Consistency &amp; Efficiency</div>
+  <h1 class="section-title">TRAINING <span>ANALYTICS</span></h1>
   <p class="section-intro">Weekly volume, consistency, intensity distribution and rule-based observations from your Training Log, plus three pool-deck efficiency calculators — all computed in your browser.</p>
 
   <div class="an-toolbar">
@@ -3331,7 +3369,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <p class="tl-upd-offline-note" id="tl-upd-offline-note"></p>
     <div class="tl-upd-install" id="tl-upd-install">
       <div class="tl-upd-install-text">
-        <h2>INSTALL TIDELYNE</h2>
+        <h2 class="sub-title">INSTALL TIDELYNE</h2>
         <p id="tl-upd-install-msg">Add Tidelyne to your home screen or desktop: full-screen, offline, one tap from the deck.</p>
       </div>
       <div class="tl-upd-install-actions">
@@ -3766,9 +3804,9 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
   <div class="auth-card-wrap" style="max-width:440px;width:100%;margin:auto">
   <!-- LOGIN -->
   <div id="screen-login" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
-    <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🏊</div>
+    <img src="logo-mark.svg" alt="" width="48" height="48" style="border-radius:11px;margin:0 auto 1rem;display:block">
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne</div>
-    <h2 id="auth-h-login" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">LOG IN TO <br><span style="color:var(--cyan)">YOUR ACCOUNT</span></h2>
+    <h2 id="auth-h-login" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;line-height:1;margin-bottom:1.5rem">LOG IN TO <br><span style="color:var(--cyan)">YOUR ACCOUNT</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
       <input id="login-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doLogin()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Password</label>
@@ -3782,9 +3820,9 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
   </div>
   <!-- SIGNUP -->
   <div id="screen-signup" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
-    <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🏊</div>
+    <img src="logo-mark.svg" alt="" width="48" height="48" style="border-radius:11px;margin:0 auto 1rem;display:block">
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne — Free Account</div>
-    <h2 id="auth-h-signup" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">CREATE YOUR <br><span style="color:var(--cyan)">ACCOUNT</span></h2>
+    <h2 id="auth-h-signup" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;line-height:1;margin-bottom:1.5rem">CREATE YOUR <br><span style="color:var(--cyan)">ACCOUNT</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Choose a Username</label>
       <input id="signup-username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
@@ -4841,6 +4879,15 @@ function humanStatus(msg, pct){
   if(t.textContent!==msg) t.textContent=msg;
   const ps=(pct==null)?'':' '+pct+'%';
   if(p.textContent!==ps) p.textContent=ps;
+  const lo=document.querySelector('#viz3d-container .viz-loading-text'); if (lo && lo.textContent!==msg+ps) lo.textContent=msg+ps; // the on-canvas loading line, while it is up
+}
+// The loading line over the canvas: shown from the first ensureViz3DReady() until a swimmer is on screen (null removes it).
+function vizLoading(text){
+  const c=document.getElementById('viz3d-container'); if(!c) return;
+  let el=c.querySelector('.viz-loading');
+  if (text==null) { if (el) el.remove(); return; }
+  if (!el) { el=document.createElement('div'); el.className='viz-loading'; el.setAttribute('aria-hidden','true'); el.innerHTML='<span class="viz-spinner"></span><span class="viz-loading-text"></span>'; c.appendChild(el); }
+  const t=el.querySelector('.viz-loading-text'); if (t.textContent!==text) t.textContent=text;
 }
 function humanModulesReady(){ return !!(window.TL_Human && typeof TL_Human.buildHumanSwimmerAsync === 'function'); }
 function humanLabel(sex){ return sex === 'female' ? 'Female' : 'Male'; }
@@ -4898,6 +4945,7 @@ function syncHumanCaustics(){
 }
 // Put a cached rig on screen. Never disposes a human (they live in humanRigCache).
 function showHumanRig(rig, sd){
+  vizLoading(null);
   if (swimmer !== rig) {
     if (swimmer) {
       swimmerOrient.remove(swimmer.root);
@@ -4961,6 +5009,7 @@ function ensureHumanRig(sd){
 }
 // Fallback: the segmented biomechanics mannequin (rebuilt per stroke, as before).
 function showMannequin(sd){
+  vizLoading(null);
   if (swimmer) {
     swimmerOrient.remove(swimmer.root);
     if (!swimmer.isHuman) disposeObject3D(swimmer.root);
@@ -5515,6 +5564,7 @@ function startViz3D() {
 }
 function ensureViz3DReady() {
   if (viz3DInitialized) { resizeViz3D(); retryHumanModules(); return; }
+  vizLoading('Loading 3D lab…'); // the canvas is otherwise an empty box for the whole download + build (#human-status sits four rows below it)
   if (window.THREE) { loadHumanScripts(startViz3D); return; }
   if (threeLoading) return;
   threeLoading = true;
