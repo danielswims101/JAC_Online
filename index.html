@@ -286,7 +286,8 @@ nav.tl-tight2 .nav-ai-btn{min-width:40px} /* icon-only pill keeps a 40px target 
 .hero{position:relative;padding:7rem 2rem 5rem;text-align:center;overflow:hidden;min-height:85vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 120% 80% at 50% -5%,rgba(0,212,255,0.08) 0%,transparent 60%)}
 .hero-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.particle{position:absolute;width:2px;height:2px;background:var(--cyan);border-radius:50%;opacity:0;animation:floatUp linear infinite}
+.particle{position:absolute;width:2px;height:2px;background:var(--cyan);border-radius:50%;opacity:0;animation:floatUp linear 3} /* three drifts (≈ 30–60 s) then the field settles — auto-starting motion beside the copy must come to rest or be pausable (WCAG 2.2.2, R7-A11Y-13) */
+html[data-motion="off"] .particle{display:none} /* hook for an in-app reduce-motion setting */
 @keyframes floatUp{0%{opacity:0;transform:translateY(100vh)}10%{opacity:0.6}90%{opacity:0.2}100%{opacity:0;transform:translateY(-100px)}}
 .hero-eyebrow{font-family:var(--fm);font-size:0.68rem;letter-spacing:5px;color:var(--cyan);text-transform:uppercase;margin-bottom:1.5rem;opacity:0.85;position:relative}
 .hero h1{font-family:var(--fh);font-size:clamp(4rem,9vw,8rem);line-height:0.88;letter-spacing:4px;margin-bottom:1.75rem;position:relative}
@@ -383,7 +384,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .viz-spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(0,212,255,0.2);border-top-color:var(--cyan);animation:vizSpin 0.9s linear infinite;flex-shrink:0}
 @keyframes vizSpin{to{transform:rotate(360deg)}}
 .viz-overlay-stats{position:absolute;top:12px;right:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px;pointer-events:none}
-.vos-item{background:rgba(4,13,24,0.92);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center}
+.vos-item{background:rgba(4,13,24,0.92);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center;display:flex;flex-direction:column-reverse} /* label first in the DOM, value on top on screen (R7-A11Y-15) */
 .vos-val{font-family:var(--fm);font-size:1.1rem;color:var(--cyan);display:block;line-height:1;letter-spacing:0.5px}
 .vos-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;margin-top:3px;display:block}
 .viz-phase-bar{position:absolute;bottom:0;left:0;right:0;height:40px;background:rgba(4,13,24,0.92);border-top:1px solid var(--border);display:flex;align-items:stretch;gap:0}
@@ -1357,7 +1358,7 @@ html.tl-pal-lock{overflow:hidden}
 #page-updates .tl-upd-items li{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid var(--border2);font-size:0.86rem;color:var(--white2);line-height:1.65;font-weight:300}
 #page-updates .tl-upd-items li:last-child{border-bottom:none}
 #page-updates .tl-upd-items strong{color:var(--white);font-weight:500}
-#page-updates .tl-upd-items a{color:var(--white2);text-decoration:none;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s}
+#page-updates .tl-upd-items a{color:var(--cyan);text-decoration:none;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s;white-space:nowrap} /* a short "Open <page> →" link (R7-A11Y-06): the site's link colour, never split across lines */
 #page-updates .tl-upd-items a::after{content:' →';color:var(--cyan);font-size:0.8em}
 #page-updates .tl-upd-items a:hover,#page-updates .tl-upd-items a:focus-visible{color:var(--white);border-bottom-color:var(--cyan)}
 #page-updates .tl-upd-items a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:2px}
@@ -1701,6 +1702,11 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   .tl-pal-opt[aria-selected="true"]{outline:2px solid Highlight;outline-offset:-2px}
   #page-analytics .an-swatch,.zone-fill,#page-analytics .an-zone-seg,#page-timers .tlt-pulse.on{forced-color-adjust:none}
 }
+/* macOS / iOS "Increase contrast" and Android's equivalent flip prefers-contrast alone (forced-colors stays off):
+   step the muted text and the alpha borders up — tokens only, no layout change (R7-A11Y-14). */
+@media (prefers-contrast:more){
+  :root{--white3:#b0c4d8;--white4:#9fb5c9;--border:rgba(0,212,255,0.45);--border2:rgba(0,212,255,0.3);--border-input:rgba(0,212,255,0.85)}
+}
 </style>
 </head>
 <body>
@@ -1881,10 +1887,11 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div id="viz3d-container" role="application" tabindex="0" aria-label="Interactive 3D swimmer" aria-describedby="viz3d-help"></div>
     <p id="viz3d-help" class="sr-only">Left and Right arrow keys step through the stroke phases; the stroke and phase buttons below do the same. Plus and Minus zoom in and out; drag to orbit, and once the lab is focused the scroll wheel zooms too. Each phase is described in words in the panel underneath.</p>
     <div class="viz-overlay-stats">
-      <div class="vos-item"><span class="vos-val" id="stat-drag">—</span><span class="vos-lbl">Drag (N)</span></div>
-      <div class="vos-item"><span class="vos-val" id="stat-thrust">—</span><span class="vos-lbl">Thrust (N)</span></div>
-      <div class="vos-item"><span class="vos-val" id="stat-velocity">—</span><span class="vos-lbl">m/s</span></div>
-      <div class="vos-item"><span class="vos-val" id="stat-efficiency">—</span><span class="vos-lbl">Effic.</span></div>
+      <!-- Label before value in the DOM (the box is drawn column-reverse) so it reads "Drag (N) 12", not "12 Drag (N)" (R7-A11Y-15) -->
+      <div class="vos-item"><span class="vos-lbl">Drag (N)</span><span class="vos-val" id="stat-drag">—</span></div>
+      <div class="vos-item"><span class="vos-lbl">Thrust (N)</span><span class="vos-val" id="stat-thrust">—</span></div>
+      <div class="vos-item"><span class="vos-lbl">Speed (m/s)</span><span class="vos-val" id="stat-velocity">—</span></div>
+      <div class="vos-item"><span class="vos-lbl">Efficiency</span><span class="vos-val" id="stat-efficiency">—</span></div>
     </div>
     <div class="viz-phase-bar" id="viz-phase-bar" role="group" aria-label="Stroke phases"></div>
   </div>
@@ -2866,11 +2873,11 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         </div>
       </div>
       <div class="tlt-adjust">
-        <button type="button" class="tlt-adj" onclick="tlt_nudge(-5)" aria-label="Slower by five">−5</button>
-        <button type="button" class="tlt-adj" onclick="tlt_nudge(-1)" aria-label="Slower by one">−1</button>
+        <button type="button" class="tlt-adj" onclick="tlt_nudge(-5)" aria-label="−5, slower by five">−5</button>
+        <button type="button" class="tlt-adj" onclick="tlt_nudge(-1)" aria-label="−1, slower by one">−1</button>
         <input type="range" id="tlt-tempo-slider" min="20" max="200" step="1" value="60" aria-label="Tempo, beeps per minute">
-        <button type="button" class="tlt-adj" onclick="tlt_nudge(1)" aria-label="Faster by one">+1</button>
-        <button type="button" class="tlt-adj" onclick="tlt_nudge(5)" aria-label="Faster by five">+5</button>
+        <button type="button" class="tlt-adj" onclick="tlt_nudge(1)" aria-label="+1, faster by one">+1</button>
+        <button type="button" class="tlt-adj" onclick="tlt_nudge(5)" aria-label="+5, faster by five">+5</button>
       </div>
       <div class="tlt-opts">
         <div class="form-group"><label for="tlt-accent">Accent every</label>
@@ -2911,7 +2918,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="tlt-tab-interval">
     <div class="tlt-int-display" id="tlt-int-display" data-phase="idle" data-paused="false" tabindex="0" role="group" aria-label="Interval timer" aria-describedby="tlt-int-keys">
       <div class="tlt-int-top">
-        <div class="tlt-int-phase" id="tlt-int-phase" aria-live="polite">READY</div>
+        <div class="tlt-int-phase" id="tlt-int-phase">READY</div>
         <div class="tlt-int-round" id="tlt-int-round">—</div>
       </div>
       <div class="tlt-count" id="tlt-int-count">0:00</div>
@@ -3029,7 +3036,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <!-- Sound settings sit under the tools (they apply to all three and, above the tab strip with the audio caveat, pushed the timers below a phone's fold) -->
   <div class="tlt-soundbar">
     <label for="tlt-vol">Sound</label>
-    <input type="range" id="tlt-vol" min="0" max="100" step="1" value="80" aria-label="Beep volume">
+    <input type="range" id="tlt-vol" min="0" max="100" step="1" value="80" aria-label="Sound volume">
     <button type="button" class="btn-ghost-sm" id="tlt-vol-test">Test beep</button>
     <span id="tlt-sound-status" role="status" aria-live="polite"></span>
   </div>
@@ -3591,12 +3598,20 @@ function showAuthScreen(name) {
 // field (optional): the id of the one control the message is about — only it
 // is flagged invalid. Omitted = flag every text field (a server-side error
 // with no field of its own); null = flag nothing (a success or info message).
+// Text written into a live region while it is display:none and then shown is skipped by most screen
+// readers (the update toast avoids the same pitfall): show the region empty, fill it on the next tick.
+var _authMsgT = {};
+function tlAuthMsg(el, message) {
+  if (_authMsgT[el.id]) { clearTimeout(_authMsgT[el.id]); delete _authMsgT[el.id]; }
+  el.textContent = '';
+  el.style.display = 'block';
+  _authMsgT[el.id] = setTimeout(function(){ delete _authMsgT[el.id]; el.textContent = message; }, 40);
+}
 function showAuthError(screenPrefix, message, field) {
   var el = document.getElementById(screenPrefix + '-error') || document.getElementById(screenPrefix + '-msg');
   if (!el) return;
   el.style.color = 'var(--red)'; // reset — success messages recolor it green
-  el.textContent = message;
-  el.style.display = 'block';
+  tlAuthMsg(el, message); // (R7-A11Y-10)
   // Flag the field(s) so assistive tech links them to the message — and clear
   // a previous flag first, so fixing the username never leaves it marked red.
   document.querySelectorAll('#screen-' + screenPrefix + ' input').forEach(function(i){
@@ -3731,9 +3746,8 @@ async function doForgotPassword() {
   } catch (e) { error = { message: 'Could not reach the sign-in service — check your connection and try again.' }; }
   finally { if (btn) { tlSetBusy(btn, false); btn.innerHTML = 'SEND RESET LINK <span aria-hidden="true">→</span>'; } }
   document.querySelectorAll('#screen-forgot input[aria-invalid]').forEach(function(i){ i.removeAttribute('aria-invalid'); i.removeAttribute('aria-describedby'); });
-  msg.style.display = 'block';
   msg.style.color = error ? 'var(--red)' : 'var(--green)';
-  msg.textContent = error ? authErrorText(error) : 'Check your email for a password reset link.';
+  tlAuthMsg(msg, error ? authErrorText(error) : 'Check your email for a password reset link.'); // shown first, filled next tick, so the status region announces it (R7-A11Y-10)
 }
 // Password recovery: the emailed link returns to this page as
 // #access_token=…&type=recovery. supabase-js turns it into a session and
@@ -3965,6 +3979,10 @@ function activatePage(name,opts){
   // AI Coach lives outside the link list: mark its button current on #ai.
   const aiBtn=document.getElementById('nav-ai-coach-btn');
   if(aiBtn){ aiBtn.classList.toggle('active',name==='ai'); if(name==='ai') aiBtn.setAttribute('aria-current','page'); else aiBtn.removeAttribute('aria-current'); }
+  // The view is a named region on every activation, including the first load (a deep link, the PWA start,
+  // or Home, which is active in the markup), so the landmark list is the same whichever way it was reached (R7-A11Y-07).
+  const shortTitle=name==='home'?'Home':String(PAGE_TITLES[name]||name).split(' — ')[0];
+  if(page&&page.getAttribute('role')!=='region'){ page.setAttribute('role','region'); page.setAttribute('aria-label',shortTitle); page.setAttribute('tabindex','-1'); }
   if(!alreadyActive){
     const smooth=!tlReducedMotion();
     window.scrollTo({top:0,behavior:smooth?'smooth':'auto'});
@@ -3972,9 +3990,7 @@ function activatePage(name,opts){
     // region) so the focus move itself says where they are, and the change is also announced —
     // document.title changes are silent in an SPA.
     if(page&&!(opts&&opts.focus===false)){
-      const shortTitle=name==='home'?'Home':String(PAGE_TITLES[name]||name).split(' — ')[0];
-      page.setAttribute('role','region'); page.setAttribute('aria-label',shortTitle);
-      page.setAttribute('tabindex','-1'); try{ page.focus({preventScroll:true}); }catch(e){ page.focus(); }
+      try{ page.focus({preventScroll:true}); }catch(e){ page.focus(); }
       if(typeof tlAnnounce==='function') tlAnnounce(shortTitle+' page');
     }
   }
@@ -4097,6 +4113,24 @@ function tlSyncHeadingLevels(pg){
   });
 }
 window.tlSyncHeadingLevels=tlSyncHeadingLevels;
+// Headings are typed in caps for the display face, so an accessible name derived from one ("AeT WORK",
+// "IM ORDER") is read as shouting or spelled out. Title-case a fully-uppercase string for such names;
+// acronyms keep their caps and mixed-case text is returned untouched (R7-A11Y-12).
+const TL_KEEP_CAPS=/^(IM|UW|EIB|SWOLF|HR|RPE|ATP|CSS|DQ|SCY|SCM|LCM|PR|PRS|AI|3D|USA|NCAA|VO₂|VO2|AET|MAX|II|III|IV|BB|AA|AAA|AAAA|FR|BK|BR|FLY|DPS|CNS|BPM|SPM|CPM|WR|LT)$/i;
+const TL_SMALL_WORDS=/^(a|an|and|the|of|to|for|on|in|at|from|with|by|or|vs|per)$/;
+function tlUnshout(s){
+  s=String(s==null?'':s).replace(/\s+/g,' ').trim();
+  const words=s.replace(/\([^)]*\)/g,'').match(/[A-Za-z][A-Za-z'’₂]*/g)||[];
+  const shouting=words.some(w=>w.length>1&&w===w.toUpperCase()&&!TL_KEEP_CAPS.test(w))&&words.every(w=>w.length<2||w===w.toUpperCase()||TL_KEEP_CAPS.test(w));
+  if(!shouting) return s;
+  return s.replace(/[A-Za-z][A-Za-z'’₂]*/g,(w,i)=>{
+    if(w!==w.toUpperCase()||TL_KEEP_CAPS.test(w)) return w;
+    const lower=w.toLowerCase(), lead=s.slice(0,i), rest=s.slice(i+w.length);
+    if(/\d$/.test(lead)) return lower; // 5TH → 5th, 100M → 100m
+    if(TL_SMALL_WORDS.test(lower)&&lead&&!/[—–:(]\s*$/.test(lead)&&/\S/.test(rest)) return lower;
+    return w.charAt(0)+lower.slice(1);
+  });
+}
 function enhanceA11y(){
   // Accordions: a real <button> inside the heading (the title stays a heading,
   // Enter/Space come for free) wired to its body via aria-controls. Clicks on
@@ -4120,7 +4154,10 @@ function enhanceA11y(){
     strip.setAttribute('role','tablist');
     if(!strip.getAttribute('aria-label')){
       const pg=strip.closest('.page'), st=pg&&pg.querySelector('.section-title');
-      const t=strip.getAttribute('data-label')||(st&&st.textContent);
+      // The page title ("Technique Library") before the heading, which is typed in caps and would be read as
+      // shouting or spelled out ("TECHNIQUE LIBRARY", "MY PRs") (R7-A11Y-12).
+      const pt=pg&&typeof PAGE_TITLES!=='undefined'&&PAGE_TITLES[pg.id.slice(5)];
+      const t=strip.getAttribute('data-label')||(pt&&String(pt).split(' — ')[0])||(st&&tlUnshout(st.textContent));
       if(t) strip.setAttribute('aria-label', t.replace(/\s+/g,' ').trim());
     }
     const btns=[...strip.querySelectorAll('.tab-btn')];
@@ -4203,7 +4240,7 @@ function enhanceA11y(){
       n=n.parentElement;
     }
     if(!name&&panel){ const tb=document.getElementById(panel.getAttribute('aria-labelledby')||''); if(tb) name=tb.textContent; }
-    if(name) t.setAttribute('aria-label', name.replace(/\s+/g,' ').trim());
+    if(name) t.setAttribute('aria-label', tlUnshout(name));
   });
   // Heading outline: each view starts at its h1; the styled h3/h4 blocks below
   // it are exposed at the next level down (aria-level) so heading navigation
@@ -4241,6 +4278,9 @@ function enhanceA11y(){
       p.innerHTML='<a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a>';
       fb.appendChild(p);
     }
+    // A <footer> inside <main> is not a contentinfo landmark on its own; name it like the Home one (R1-A11Y-20 covered
+    // Home only). Only the active view is rendered, so at most one contentinfo is exposed at a time (R7-A11Y-02).
+    const ft=fb.closest('footer'); if(ft&&!ft.getAttribute('role')){ ft.setAttribute('role','contentinfo'); ft.setAttribute('aria-label','Site footer'); }
   });
   // Mark the auth overlay as a proper dialog (focus handling in openAuthGate)
   const gate=document.getElementById('access-gate');
@@ -6632,7 +6672,12 @@ const GOLF_LIMITS={split:[20.9,120],strokes:[8,80]};
 function calcGolf(){
   const split=parseFloat(document.getElementById('golf-split').value);
   const strokes=parseFloat(document.getElementById('golf-strokes').value);
-  if(isNaN(split)||isNaN(strokes)){calcFail('golf-notice','Enter both values.',isNaN(split)?'golf-split':'golf-strokes','golf-result');return;}
+  // tlNotice tracks one field per notice; the second field flagged when both were empty is cleared here (R7-A11Y-16).
+  const golfStrokes=document.getElementById('golf-strokes');
+  if(golfStrokes.getAttribute('aria-describedby')==='golf-notice'){ golfStrokes.removeAttribute('aria-invalid'); golfStrokes.removeAttribute('aria-describedby'); }
+  if(isNaN(split)&&isNaN(strokes)){calcFail('golf-notice','Enter both values — the 50 m split and the stroke count.','golf-split','golf-result'); golfStrokes.setAttribute('aria-invalid','true'); golfStrokes.setAttribute('aria-describedby','golf-notice'); return;}
+  if(isNaN(split)){calcFail('golf-notice','Enter the 50 m split in seconds.','golf-split','golf-result');return;}
+  if(isNaN(strokes)){calcFail('golf-notice','Enter the stroke count per 50 m.','golf-strokes','golf-result');return;}
   if(split<GOLF_LIMITS.split[0]||split>GOLF_LIMITS.split[1]){calcFail('golf-notice','50 m split should be between '+GOLF_LIMITS.split[0]+' and '+GOLF_LIMITS.split[1]+' seconds.','golf-split','golf-result');return;}
   if(strokes<GOLF_LIMITS.strokes[0]||strokes>GOLF_LIMITS.strokes[1]){calcFail('golf-notice','Stroke count should be between '+GOLF_LIMITS.strokes[0]+' and '+GOLF_LIMITS.strokes[1]+' per 50 m.','golf-strokes','golf-result');return;}
   tlNotice('golf-notice','');
@@ -6827,23 +6872,28 @@ function tlAnnounce(msg){
 // the change event flushes at once. A value that becomes valid clears a
 // previous error immediately.
 const prErrTimers={};
+// The shared status line is also joined to the field's aria-describedby while it carries an error, and the
+// message names the event, so the field itself reads "100 BK: use ss.ss…" and the announcement says
+// which of the 18 fields is wrong (R7-A11Y-09).
+function prFlag(el,bad){ if(!el) return; if(bad){ el.setAttribute('aria-invalid','true'); el.setAttribute('aria-describedby','pr-format-hint pr-hint'); } else { el.removeAttribute('aria-invalid'); el.setAttribute('aria-describedby','pr-format-hint'); } }
+function prEventName(key){ return String(key||'').replace(/^pr_/,'').replace(/_/g,' '); }
 function savePR(key,value,el,normalize){
   if(prErrTimers[key]){ clearTimeout(prErrTimers[key]); delete prErrTimers[key]; }
   const v=String(value==null?'':value).trim();
-  if(!v){ lsRemove(key); if(el) el.removeAttribute('aria-invalid'); prHint(''); return; }
+  if(!v){ lsRemove(key); prFlag(el,false); prHint(''); return; }
   const t=parseTime(v);
   if(t===null){
-    const showErr=()=>{ delete prErrTimers[key]; if(el) el.setAttribute('aria-invalid','true'); prHint('Use ss.ss or m:ss.ss — e.g. 52.30 or 1:52.30 (1.52.30 also works)'); };
+    const showErr=()=>{ delete prErrTimers[key]; prFlag(el,true); prHint(prEventName(key)+': use ss.ss or m:ss.ss — e.g. 52.30 or 1:52.30 (1.52.30 also works)'); };
     if(normalize) showErr(); else prErrTimers[key]=setTimeout(showErr,800);
     return;
   }
-  if(el) el.removeAttribute('aria-invalid'); prHint('');
+  prFlag(el,false); prHint('');
   const commit=()=>{
     delete prErrTimers[key];
     const out=normalize?prFmt(t):v;
     if(normalize&&el&&el.value!==out) el.value=out;
     // A full quota or a blocked store must not look like a save: flag the field and say so.
-    if(!lsSet(key,out)){ prHint('Could not save this PR — your device storage may be full or blocked.'); if(el) el.setAttribute('aria-invalid','true'); }
+    if(!lsSet(key,out)){ prHint(prEventName(key)+': could not save this PR — your device storage may be full or blocked.'); prFlag(el,true); }
   };
   if(normalize) commit(); else prErrTimers[key]=setTimeout(commit,800);
 }
@@ -7667,7 +7717,7 @@ var IT_PRESETS={
 };
 var PHASE_LABEL={lead:'GET READY',work:'WORK',rest:'REST',setrest:'SET REST',done:'DONE',idle:'READY'};
 var PHASE_WORD={lead:'Get ready',work:'Work',rest:'Rest',setrest:'Set rest'};
-var IT={status:'idle',cfg:null,sched:[],cum:[],total:0,startedAt:0,pausedAt:0,pausedAccum:0,segIdx:-1,raf:0,tick:0,scheduled:{}};
+var IT={status:'idle',cfg:null,sched:[],cum:[],total:0,startedAt:0,pausedAt:0,pausedAccum:0,segIdx:-1,annIdx:-1,raf:0,tick:0,scheduled:{}};
 
 // Blank, non-numeric or non-finite → the default (Number('') is 0, which would turn a blank Work box into 5 s).
 function itNormalize(c){
@@ -7751,10 +7801,20 @@ function itNextText(idx){
   var extra=(n.phase==='work')?(' — round '+n.round+(IT.cfg.sets>1?', set '+n.set:'')):'';
   return 'Next: '+PHASE_WORD[n.phase]+' '+n.dur+' s'+extra;
 }
+// Spoken form of a segment for the status line — "Work — round 2 of 8, 30 s. Next: Rest 15 s." — so a
+// screen-reader user hears the round and what comes next, not just WORK / REST (R7-A11Y-08).
+function itPhrase(idx){
+  var seg=IT.sched[idx]; if(!seg) return '';
+  var c=IT.cfg, where='';
+  if(seg.phase==='work'||seg.phase==='rest') where=' — round '+seg.round+' of '+c.rounds+(c.sets>1?', set '+seg.set+' of '+c.sets:'');
+  else if(seg.phase==='setrest') where=' — after set '+seg.set+' of '+c.sets;
+  return PHASE_WORD[seg.phase]+where+', '+seg.dur+' s. '+itNextText(idx)+'.';
+}
 function itRender(el,idx){
   var seg=IT.sched[idx], segStart=IT.cum[idx], rem=segStart+seg.dur-el;
   itSetPhase(seg.phase,IT.status==='paused');
   setText('tlt-int-phase',PHASE_LABEL[seg.phase]+(IT.status==='paused'?' · PAUSED':''));
+  if(IT.annIdx!==idx){ IT.annIdx=idx; setStatus('tlt-int-status',itPhrase(idx)+(IT.status==='paused'?' Paused.':'')); }
   itSetCount(fmtCount(rem));
   setText('tlt-int-round',itRoundText(seg));
   setText('tlt-int-next',itNextText(idx));
@@ -7794,9 +7854,9 @@ function itStart(){
   var c=itReadCfg(); IT.cfg=c; IT.sched=itBuildSchedule(c); var cc=itCum(IT.sched); IT.cum=cc.cum; IT.total=cc.total;
   if(!IT.sched.length||!(IT.total>0)){ setStatus('tlt-int-status','Nothing to run — check the setup.'); return; }
   auEnsure(); // null on browsers without Web Audio: the timer still runs, silently
-  IT.status='running'; IT.startedAt=nowMs(); IT.pausedAccum=0; IT.segIdx=-1; IT.scheduled={};
+  IT.status='running'; IT.startedAt=nowMs(); IT.pausedAccum=0; IT.segIdx=-1; IT.scheduled={}; IT.annIdx=0;
   storeSet('tl_interval',c,'tlt-int-status'); wlHold('interval'); itLoopStart(); itButtons();
-  setStatus('tlt-int-status',AU.ctx?'':'No sound on this browser — watch the colors.');
+  setStatus('tlt-int-status','Started — '+itPhrase(0)+(AU.ctx?'':' No sound on this browser — watch the colors.'));
 }
 function itPause(msg){
   if(IT.status!=='running') return;
@@ -7807,10 +7867,11 @@ function itPause(msg){
 function itResume(){
   if(IT.status!=='paused') return;
   auEnsure(); IT.pausedAccum+=nowMs()-IT.pausedAt; IT.status='running';
-  wlHold('interval'); itLoopStart(); itButtons(); setStatus('tlt-int-status','');
+  var ri=itSegAt(IT.cum,IT.total,itElapsed()); IT.annIdx=ri;
+  wlHold('interval'); itLoopStart(); itButtons(); setStatus('tlt-int-status','Resumed — '+itPhrase(ri));
 }
 function itFinish(){
-  IT.status='done'; itLoopStop(); wlDrop('interval');
+  IT.status='done'; IT.annIdx=-1; itLoopStop(); wlDrop('interval');
   var dk='s'+IT.sched.length; if(!IT.scheduled[dk]&&AU.ctx){ IT.scheduled[dk]=1; TONES.done(AU.ctx.currentTime); }
   auIdleSoon(); itSetPhase('done',false);
   setText('tlt-int-phase','DONE'); itSetCount('0'); setText('tlt-int-round','');
@@ -7821,7 +7882,7 @@ function itFinish(){
   itButtons(); setStatus('tlt-int-status','Circuit complete.');
 }
 function itReset(){
-  itLoopStop(); IT.status='idle'; IT.segIdx=-1; IT.scheduled={}; IT.pausedAccum=0; wlDrop('interval'); auIdleCheck();
+  itLoopStop(); IT.status='idle'; IT.segIdx=-1; IT.annIdx=-1; IT.scheduled={}; IT.pausedAccum=0; wlDrop('interval'); auIdleCheck();
   itSetPhase('idle',false); setText('tlt-int-phase','READY'); itButtons(); itPreview(itReadCfg()); setStatus('tlt-int-status','');
 }
 window.tlt_intToggle=function(){
@@ -7934,8 +7995,17 @@ function cell(tr,txt,cls){ var td=document.createElement('td'); td.textContent=t
 // interval so "6 × 100 on 0:30" (3.3 m/s) draws a warning — a warning, not a block, because odd labels are allowed.
 function soDistMetres(s){ var m=/^(\d+(?:\.\d+)?)\s*(m|meters|metres|y|yd|yds|yards)?$/i.exec(String(s||'').trim()); if(!m) return 0; var n=parseFloat(m[1]); return /^y/i.test(m[2]||'')?n*0.9144:n; }
 // An error must not leave the previous run's table, summary and Copy button under it.
-function soFail(msg){
-  setStatus('tlt-so-status',msg);
+// field: the id of the input the message is about — flagged, described by the status line and focused,
+// like the Calculator's calcFail; soFlag('') clears the previous flag (R7-A11Y-04).
+var soFlagged=null;
+function soFlag(field){
+  if(soFlagged){ soFlagged.removeAttribute('aria-invalid'); if(soFlagged.getAttribute('aria-describedby')==='tlt-so-status') soFlagged.removeAttribute('aria-describedby'); soFlagged=null; }
+  var f=field?$(field):null; if(!f) return;
+  f.setAttribute('aria-invalid','true'); f.setAttribute('aria-describedby','tlt-so-status'); soFlagged=f;
+  try{ f.focus({preventScroll:true}); }catch(e){ f.focus(); }
+}
+function soFail(msg,field){
+  setStatus('tlt-so-status',msg); soFlag(field);
   var wrap=$('tlt-so-wrap'), cp=$('tlt-so-copy'), body=$('tlt-so-body'), sum=$('tlt-so-summary'), ta=$('tlt-so-text');
   if(wrap) wrap.classList.add('tlt-hidden'); if(cp) cp.classList.add('tlt-hidden');
   if(body) body.textContent=''; if(sum) sum.textContent=''; if(ta) ta.value='';
@@ -7947,10 +8017,10 @@ window.tlt_sendoff=function(){
   var paceRaw=paceEl?String(paceEl.value).trim():'', pace=paceRaw?parseMSS(paceRaw):0;
   var dist=distEl?String(distEl.value).trim().slice(0,12):'';
   var dotHint=function(raw){ return /^\d{1,2}[.,]\d{1,2}$/.test(raw)?' — did you mean '+raw.replace(/[.,]/,':')+'?':''; }; // "1.30" typed on a phone keypad
-  if(!interval){ soFail(dotHint(intRaw)?'Enter the interval as m:ss'+dotHint(intRaw):'Enter the interval as m:ss, for example 1:30.'); return; }
-  if(paceRaw&&!pace){ soFail(dotHint(paceRaw)?'Enter the pace as m:ss'+dotHint(paceRaw):'Enter the pace as m:ss, for example 1:08, or leave it blank.'); return; }
+  if(!interval){ soFail(dotHint(intRaw)?'Enter the interval as m:ss'+dotHint(intRaw):'Enter the interval as m:ss, for example 1:30.','tlt-so-int'); return; }
+  if(paceRaw&&!pace){ soFail(dotHint(paceRaw)?'Enter the pace as m:ss'+dotHint(paceRaw):'Enter the pace as m:ss, for example 1:08, or leave it blank.','tlt-so-pace'); return; }
   var rows=soCompute(reps,interval,startSec,pace||0), body=$('tlt-so-body'), wrap=$('tlt-so-wrap');
-  if(!rows.length){ soFail('Nothing to list — check reps and interval.'); return; }
+  if(!rows.length){ soFail('Nothing to list — check reps and interval.','tlt-so-reps'); return; }
   if(body){
     body.textContent='';
     rows.forEach(function(r){
@@ -7996,7 +8066,7 @@ window.tlt_sendoff=function(){
   var txt=[head].concat(lines.slice(1)).concat(warns).concat(['']);
   rows.forEach(function(r){ txt.push(String(r.rep)+'\t'+fmtClock(r.clock)+' ('+r.reading+')'+(pace?'\tfinish '+fmtClock(r.finish)+' ('+r.finishReading+')\trest '+(r.rest<0?'−':'')+fmtClock(Math.abs(r.rest)):'')); });
   var ta=$('tlt-so-text'); if(ta) ta.value=txt.join('\n');
-  setStatus('tlt-so-status',''); pcSave();
+  setStatus('tlt-so-status',''); soFlag(''); pcSave();
 };
 
 /* ─── split taker ─────────────────────────────────────────────────────── */
@@ -8078,13 +8148,17 @@ window.tlt_copy=function(kind){
 function onKey(e){
   if(!pageActive()) return;
   var t=e.target, tag=(t&&t.tagName)?t.tagName.toLowerCase():'';
-  if(tag==='input'||tag==='select'||tag==='textarea'||tag==='button'||tag==='a'||(t&&t.isContentEditable)) return;
+  if(tag==='input'||tag==='select'||tag==='textarea'||tag==='button'||tag==='a'||tag==='summary'||(t&&t.isContentEditable)) return;
   // Only act when focus is inside the active tab's timer card (they are
-  // focusable groups) or that timer is already running — Space and the
-  // arrows on the page body keep scrolling the page.
+  // focusable groups) or that timer is already running with focus on nothing
+  // in particular (the body or the view itself) — Space and the arrows on a
+  // disclosure, a scrollable table region or a tab panel keep their own job,
+  // so the help can be opened while the beeps run (R7-A11Y-03).
   var card=$(TAB==='tempo'?'tlt-tempo-card':TAB==='interval'?'tlt-int-display':'tlt-split-card');
   var running=TAB==='tempo'?TP.status==='running':TAB==='interval'?IT.status==='running':SP.status==='running';
-  if(!running&&!(card&&t&&t.nodeType===1&&card.contains(t))) return;
+  var inCard=!!(card&&t&&t.nodeType===1&&card.contains(t));
+  var loose=!t||t===document.body||t===document.documentElement||t===$('page-'+PAGE_ID);
+  if(!inCard&&!(running&&loose)) return;
   if(e.key===' '||e.key==='Spacebar'){
     e.preventDefault();
     if(TAB==='tempo') window.tlt_tempoToggle(); else if(TAB==='interval') window.tlt_intToggle(); else window.tlt_spMain();
@@ -8226,7 +8300,25 @@ function readJSON(k, fallback){
 }
 function pct(x, d){ return (Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d); }
 function plSetText(id, t){ var el = pl$(id); if (el) el.textContent = t; }
-function setErr(id, msg, ok){ var el = pl$(id); if (!el) return; el.textContent = msg || ''; el.classList.toggle('ok', !!ok); }
+// Optional 4th arg: the id of the offending field. It gets aria-invalid, the message joins its
+// aria-describedby (so the field reads the error when focus returns) and focus moves there — the
+// Calculator's calcFail pattern; the flag is cleared on the next call for that message (R7-A11Y-04).
+var errFields = {};
+function plDescribe(el, id, on){
+  var cur = (el.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean), i = cur.indexOf(id);
+  if (on) { if (i >= 0) return false; cur.push(id); } else { if (i < 0) return false; cur.splice(i, 1); }
+  if (cur.length) el.setAttribute('aria-describedby', cur.join(' ')); else el.removeAttribute('aria-describedby');
+  return true;
+}
+function setErr(id, msg, ok, field){
+  var el = pl$(id); if (!el) return; el.textContent = msg || ''; el.classList.toggle('ok', !!ok);
+  var prev = errFields[id];
+  if (prev) { prev.el.removeAttribute('aria-invalid'); if (prev.added) plDescribe(prev.el, id, false); delete errFields[id]; }
+  var f = (field && msg && !ok) ? pl$(field) : null; if (!f) return;
+  f.setAttribute('aria-invalid', 'true');
+  errFields[id] = { el:f, added:plDescribe(f, id, true) };
+  try { f.focus({ preventScroll:true }); } catch (e) { f.focus(); }
+}
 
 // ─── events ─────────────────────────────────────────────────────────────
 var DEFAULT_EVENTS = { fr:['50 FR','100 FR','200 FR','400 FR','800 FR','1500 FR'], bk:['50 BK','100 BK','200 BK'], br:['50 BR','100 BR','200 BR'], fly:['50 FLY','100 FLY','200 FLY'], im:['100 IM','200 IM','400 IM'] };
@@ -8503,11 +8595,11 @@ function runPredict(){
   var stroke = (pl$('pl-pd-stroke') || {}).value || 'fr';
   var ev = (pl$('pl-pd-event') || {}).value; var out = pl$('pl-pd-out'); if (!out) return;
   var t = parseT((pl$('pl-pd-time') || {}).value);
-  if (!ev) { setErr('pl-pd-err', 'Choose an event.'); return; }
-  if (!t) { setErr('pl-pd-err', 'Enter a valid time — ss.ss or m:ss.ss.'); out.innerHTML = ''; return; }
+  if (!ev) { setErr('pl-pd-err', 'Choose an event.', false, 'pl-pd-event'); return; }
+  if (!t) { setErr('pl-pd-err', 'Enter a valid time — ss.ss or m:ss.ss.', false, 'pl-pd-time'); out.innerHTML = ''; return; }
   var d1 = evDist(ev);
   var sanity = sanityPace(d1, t);
-  if (sanity) { setErr('pl-pd-err', sanity); out.innerHTML = ''; return; }
+  if (sanity) { setErr('pl-pd-err', sanity, false, 'pl-pd-time'); out.innerHTML = ''; return; }
   setErr('pl-pd-err', '');
   var useFit = (pl$('pl-pd-profile') || {}).value === 'fitted', fit = useFit ? readFit() : null;
   var delta = (fit && fit.stroke === stroke) ? fit.delta : 0;
@@ -8587,18 +8679,18 @@ function runFit(){
   var a = (pl$('pl-fit-a') || {}).value, b = (pl$('pl-fit-b') || {}).value, out = pl$('pl-fit-out');
   var ta = parseT((pl$('pl-fit-ta') || {}).value), tb = parseT((pl$('pl-fit-tb') || {}).value);
   // An error must not leave the previous exponent card (and its "Saved" line) under the message.
-  var fail = function(msg){ setErr('pl-fit-err', msg); if (out) out.innerHTML = ''; };
-  if (!a || !b || a === b) { fail('Pick two different events in the same stroke.'); return; }
-  if (!ta || !tb) { fail('Enter both times as ss.ss or m:ss.ss.'); return; }
+  var fail = function(msg, field){ setErr('pl-fit-err', msg, false, field); if (out) out.innerHTML = ''; };
+  if (!a || !b || a === b) { fail('Pick two different events in the same stroke.', !a ? 'pl-fit-a' : 'pl-fit-b'); return; }
+  if (!ta || !tb) { fail('Enter both times as ss.ss or m:ss.ss.', !ta ? 'pl-fit-ta' : 'pl-fit-tb'); return; }
   var d1 = evDist(a), d2 = evDist(b);
-  var sane = sanityPace(d1, ta) || sanityPace(d2, tb); if (sane) { fail(sane); return; }
-  if ((d1 < d2 && ta >= tb) || (d1 > d2 && tb >= ta)) { fail('The longer event must have the longer time.'); return; }
+  var sane = sanityPace(d1, ta) || sanityPace(d2, tb); if (sane) { fail(sane, sanityPace(d1, ta) ? 'pl-fit-ta' : 'pl-fit-tb'); return; }
+  if ((d1 < d2 && ta >= tb) || (d1 > d2 && tb >= ta)) { fail('The longer event must have the longer time.', d1 < d2 ? 'pl-fit-tb' : 'pl-fit-ta'); return; }
   var bFit = fitExponent(d1, ta, d2, tb), bTyp = typicalExponent(stroke, d1, d2);
-  if (bFit === null || bTyp === null) { fail('Could not fit those two events.'); return; }
+  if (bFit === null || bTyp === null) { fail('Could not fit those two events.', 'pl-fit-a'); return; }
   // b < 1 means a faster average pace over the longer distance; b > 1.4 is
   // beyond any plausible record ratio. Neither is a real profile — reject it.
-  if (bFit < 1.0) { fail('Your longer swim is faster per 100 than your shorter one — check the times or the course.'); return; }
-  if (bFit > 1.4) { fail('That pair implies more drop-off than any plausible profile — check the times or the course.'); return; }
+  if (bFit < 1.0) { fail('Your longer swim is faster per 100 than your shorter one — check the times or the course.', d1 < d2 ? 'pl-fit-tb' : 'pl-fit-ta'); return; }
+  if (bFit > 1.4) { fail('That pair implies more drop-off than any plausible profile — check the times or the course.', d1 < d2 ? 'pl-fit-tb' : 'pl-fit-ta'); return; }
   setErr('pl-fit-err', '');
   var delta = bFit - bTyp, prof = profileOf(delta);
   var clamped = Math.abs(delta) > EXP_DELTA_MAX;
@@ -8676,11 +8768,11 @@ function buildSplits(o){
   var course = o.course in LENGTH ? o.course : 'LCM', L = LENGTH[course], unit = UNIT[course];
   var dist = +o.dist, T = +o.goal, B = +o.bonus, stroke = STROKE_ABBR[o.stroke] ? o.stroke : 'fr';
   if (!isFinite(B) || B < 0) B = 0;
-  if (!(isFinite(dist) && dist > 0) || dist % L !== 0) return { error:'Distance must be a whole number of ' + L + ' ' + unit + ' lengths.' };
-  if (distsFor(course, stroke).indexOf(dist) < 0) return { error:dist + ' ' + unit + ' is not a standard ' + course + ' ' + STROKE_ABBR[stroke] + ' race distance.' };
-  if (!(isFinite(T) && T > 0)) return { error:'Enter a valid goal time.' };
+  if (!(isFinite(dist) && dist > 0) || dist % L !== 0) return { error:'Distance must be a whole number of ' + L + ' ' + unit + ' lengths.', field:'dist' };
+  if (distsFor(course, stroke).indexOf(dist) < 0) return { error:dist + ' ' + unit + ' is not a standard ' + course + ' ' + STROKE_ABBR[stroke] + ' race distance.', field:'dist' };
+  if (!(isFinite(T) && T > 0)) return { error:'Enter a valid goal time.', field:'goal' };
   var N = dist / L, strategy = o.strategy || 'even', pk = patternKey(stroke, dist), pat = pk ? PATTERNS[pk] : null;
-  if (N > 1 && B > (T / N) * 0.25) return { error:'Start bonus is unrealistically large for this pace — keep it under ' + ((T / N) * 0.25).toFixed(1) + ' s for these lengths.' };
+  if (N > 1 && B > (T / N) * 0.25) return { error:'Start bonus is unrealistically large for this pace — keep it under ' + ((T / N) * 0.25).toFixed(1) + ' s for these lengths.', field:'bonus' };
   var lengths = [], mode, segLabels = null;
   var usePattern = (stroke === 'im' || strategy === 'elite') && pat && N % pat.segs.length === 0;
   if (N === 1) { lengths = [T]; mode = 'single'; }
@@ -8706,7 +8798,7 @@ function buildSplits(o){
     var a = (total - slope * N * (N + 1) / 2) / N;
     for (var j = 1; j <= N; j++) { var v = a + slope * j; if (j === 1) v -= B; lengths.push(v); }
   }
-  for (var q = 0; q < lengths.length; q++) if (!(lengths[q] > 0)) return { error:'Start bonus is too large for this race — every length must stay above zero.' };
+  for (var q = 0; q < lengths.length; q++) if (!(lengths[q] > 0)) return { error:'Start bonus is too large for this race — every length must stay above zero.', field:'bonus' };
   var cum = [], c = 0; lengths.forEach(function(v){ c += v; cum.push(c); });
   var half = N / 2, h1 = 0, h2 = 0;
   lengths.forEach(function(v, i){ if (i < half) h1 += v; else h2 += v; });
@@ -8790,16 +8882,16 @@ function runSplits(){
   var o = { course:(pl$('pl-sp-course') || {}).value, stroke:(pl$('pl-sp-stroke') || {}).value, dist:+((pl$('pl-sp-dist') || {}).value),
     goal:parseT((pl$('pl-sp-goal') || {}).value), strategy:(pl$('pl-sp-strategy') || {}).value, fade:fadeRaw === '' ? NaN : +fadeRaw, bonus:bonusRaw === '' ? NaN : +bonusRaw };
   // An error must not leave the previous plan (table, comparison, Copy button) on screen.
-  var fail = function(msg){ setErr('pl-sp-err', msg); out.innerHTML = 'Choose an event, enter a goal time, and generate.'; if (copy) copy.hidden = true; if (cmp) cmp.innerHTML = ''; plSetText('pl-sp-status', ''); lastSplit = null; };
-  if (!o.goal) { fail('Enter a valid goal time — ss.ss or m:ss.ss.'); return; }
-  var sane = sanityPace(o.dist, o.goal); if (sane) { fail(sane); return; }
-  if (bonusRaw === '') { fail('Enter the start bonus in seconds (0 to 3) — the ' + (o.course in START_BONUS ? o.course : 'LCM') + ' default is ' + START_BONUS[o.course in START_BONUS ? o.course : 'LCM'].toFixed(1) + ' s.'); return; }
-  if (!(o.bonus >= 0 && o.bonus <= 3)) { fail('Start bonus must be between 0 and 3 seconds.'); return; }
-  if (fadeRaw === '' && (o.strategy === 'neg' || o.strategy === 'pos')) { fail('Enter the second-half difference as a percentage (−15 to 15) — 0 means even halves.'); return; }
+  var fail = function(msg, field){ setErr('pl-sp-err', msg, false, field); out.innerHTML = 'Choose an event, enter a goal time, and generate.'; if (copy) copy.hidden = true; if (cmp) cmp.innerHTML = ''; plSetText('pl-sp-status', ''); lastSplit = null; };
+  if (!o.goal) { fail('Enter a valid goal time — ss.ss or m:ss.ss.', 'pl-sp-goal'); return; }
+  var sane = sanityPace(o.dist, o.goal); if (sane) { fail(sane, 'pl-sp-goal'); return; }
+  if (bonusRaw === '') { fail('Enter the start bonus in seconds (0 to 3) — the ' + (o.course in START_BONUS ? o.course : 'LCM') + ' default is ' + START_BONUS[o.course in START_BONUS ? o.course : 'LCM'].toFixed(1) + ' s.', 'pl-sp-bonus'); return; }
+  if (!(o.bonus >= 0 && o.bonus <= 3)) { fail('Start bonus must be between 0 and 3 seconds.', 'pl-sp-bonus'); return; }
+  if (fadeRaw === '' && (o.strategy === 'neg' || o.strategy === 'pos')) { fail('Enter the second-half difference as a percentage (−15 to 15) — 0 means even halves.', 'pl-sp-fade'); return; }
   if (fadeRaw === '') o.fade = 0; // the field is disabled and unused for the other strategies
-  if (!(o.fade >= -15 && o.fade <= 15)) { fail('Second half vs first must be between −15% and +15%.'); return; }
+  if (!(o.fade >= -15 && o.fade <= 15)) { fail('Second half vs first must be between −15% and +15%.', 'pl-sp-fade'); return; }
   var r = buildSplits(o);
-  if (r.error) { fail(r.error); return; }
+  if (r.error) { fail(r.error, r.field ? 'pl-sp-' + r.field : null); return; }
   setErr('pl-sp-err', '');
   lastSplit = r;
   lsPut(KEY_SPLIT, JSON.stringify({ course:o.course, stroke:o.stroke, dist:o.dist, goal:fmtPlain(o.goal, false), strategy:o.strategy, fade:o.fade, bonus:o.bonus }));
@@ -8975,15 +9067,15 @@ function saveMeet(){
   var name = String((pl$('pl-mt-name') || {}).value || '').trim().slice(0, 60), date = String((pl$('pl-mt-date') || {}).value || '').trim();
   var course = (pl$('pl-mt-course') || {}).value || 'LCM', taper = (pl$('pl-mt-taper') || {}).value || 'sprint';
   var name2 = String((pl$('pl-mt-name2') || {}).value || '').trim().slice(0, 60), date2 = String((pl$('pl-mt-date2') || {}).value || '').trim();
-  if (!date) { setErr('pl-mt-status', 'Enter the first day of the meet.'); return; }
-  if (!parseISODate(date)) { setErr('pl-mt-status', 'That date is not valid.'); return; }
-  if (date2 && !parseISODate(date2)) { setErr('pl-mt-status', 'The second meet date is not valid.'); return; }
+  if (!date) { setErr('pl-mt-status', 'Enter the first day of the meet.', false, 'pl-mt-date'); return; }
+  if (!parseISODate(date)) { setErr('pl-mt-status', 'That date is not valid.', false, 'pl-mt-date'); return; }
+  if (date2 && !parseISODate(date2)) { setErr('pl-mt-status', 'The second meet date is not valid.', false, 'pl-mt-date2'); return; }
   // A mistyped year (1999, 2099) is the only way to get a five-digit countdown, and the taper phase
   // and checkpoints mean nothing that far out — bound both meets like every other date on the site.
   var farOff = function(d){ var n = daysUntil(d); return n === null || Math.abs(n) > MEET_RANGE_DAYS; };
-  if (farOff(date)) { setErr('pl-mt-status', 'Check the year — meets are planned within two years of today.'); return; }
-  if (date2 && farOff(date2)) { setErr('pl-mt-status', 'Check the second meet\'s year — meets are planned within two years of today.'); return; }
-  if (name2 && !date2) { setErr('pl-mt-status', 'Add a date for the second meet, or clear its name.'); return; }
+  if (farOff(date)) { setErr('pl-mt-status', 'Check the year — meets are planned within two years of today.', false, 'pl-mt-date'); return; }
+  if (date2 && farOff(date2)) { setErr('pl-mt-status', 'Check the second meet\'s year — meets are planned within two years of today.', false, 'pl-mt-date2'); return; }
+  if (name2 && !date2) { setErr('pl-mt-status', 'Add a date for the second meet, or clear its name.', false, 'pl-mt-date2'); return; }
   var ok = lsPut(KEY_MEET, JSON.stringify({ v:1, name:name, date:date, course:course, taper:taper, name2:name2, date2:date2 }));
   var summary = renderMeet();
   setErr('pl-mt-status', ok ? 'Saved — ' + (summary || 'countdown updated.') : 'Could not save — browser storage may be full or blocked.', ok);
@@ -10010,9 +10102,16 @@ window.tl_an_toggleTable = function(){
 };
 
 // ─── calculators ──────────────────────────────────────────────────────────
+// The offending field is flagged, reads the message through aria-describedby and takes focus — the
+// Calculator's calcFail pattern (R7-A11Y-04).
 function anSetErr(errId, fields, msg, badId){
   var e = an$(errId); if (e) e.textContent = msg || '';
-  fields.forEach(function(id){ var f = an$(id); if (f) { if (badId === id) f.setAttribute('aria-invalid', 'true'); else f.removeAttribute('aria-invalid'); } });
+  fields.forEach(function(id){ var f = an$(id); if (!f) return;
+    if (badId === id && msg) { f.setAttribute('aria-invalid', 'true'); f.setAttribute('aria-describedby', errId); }
+    else { f.removeAttribute('aria-invalid'); if (f.getAttribute('aria-describedby') === errId) f.removeAttribute('aria-describedby'); }
+  });
+  var bad = (msg && badId) ? an$(badId) : null;
+  if (bad) { try { bad.focus({ preventScroll:true }); } catch (err) { bad.focus(); } }
 }
 function calcSwolfValues(timeStr, strokesRaw, pool){
   var t = parseSecs(timeStr);
@@ -10641,7 +10740,10 @@ window.tl_an_debug = {
   }
   function pageLabel(id){
     var a = document.getElementById('nav-' + id);
-    if (a && clean(a.textContent)) return clean(a.textContent);
+    // The link's own text only: the dropdown description is a child <span class="nav-desc"> and textContent
+    // would glue "Calculator" + "Golf Score, splits…" into one word (R7-A11Y-01).
+    var own = a ? Array.prototype.filter.call(a.childNodes, function(n){ return n.nodeType === 3; }).map(function(n){ return n.textContent; }).join('') : '';
+    if (clean(own)) return clean(own);
     var PT = pageTitles();
     if (PT[id]) return String(PT[id]).split(/\s[—–-]\s/)[0].trim();
     var st = document.querySelector('#page-' + id + ' .section-title');
@@ -11373,6 +11475,15 @@ function linkFor(link){
   // //host/x.html), no dot segments (rules out ../), one .html extension.
   return /^[a-z0-9_-]+(?:\/[a-z0-9_-]+)*\.html$/i.test(link) ? link : null;
 }
+// "#technique" → "Technique Library" (the page's short title); "privacy.html" → "Privacy".
+function linkLabel(href){
+  if (href.charAt(0) === '#'){
+    const id = href.slice(1), PT = (typeof PAGE_TITLES !== 'undefined' && PAGE_TITLES) || {};
+    return id === 'home' ? 'Home' : PT[id] ? String(PT[id]).split(' — ')[0] : id.charAt(0).toUpperCase() + id.slice(1);
+  }
+  const base = href.replace(/^.*\//, '').replace(/\.html$/i, '').replace(/[-_]+/g, ' ');
+  return base.charAt(0).toUpperCase() + base.slice(1);
+}
 // "Timers — tempo trainer…" → bold lead + rest (presentation only).
 function splitHead(text){
   const t = String(text || '');
@@ -11402,7 +11513,9 @@ function renderRelease(rel, i){
     const p = splitHead(it.text);
     const inner = p.head ? '<strong>' + esc(p.head) + '</strong> — ' + esc(p.rest) : esc(p.rest);
     const href = linkFor(it.link);
-    const body = href ? '<a href="' + esc(href) + '">' + inner + '</a>' : '<span>' + inner + '</span>';
+    // The bullet stays text and a short trailing link names where it leads — as one 220–330 character
+    // link the destination was unsaid and Tab landed on a 92 px block (R7-A11Y-06).
+    const body = '<span>' + inner + (href ? ' <a href="' + esc(href) + '">Open ' + esc(linkLabel(href)) + '</a>' : '') + '</span>';
     return '<li><span class="tl-upd-tag ' + cls + '">' + esc(it.tag) + '</span>' + body + '</li>';
   }).join('');
   return '<li class="tl-upd-rel' + (latest ? ' latest' : '') + (unseen ? ' unseen' : '') + '" tabindex="-1">'
@@ -12113,6 +12226,8 @@ if (window.__TL_TEST__ === true){
       try { return getComputedStyle(el).display !== 'none'; } catch (e) { return true; }
     });
     b.classList.toggle('has-badge', has);
+    // The dot mirrors a badge parked inside the closed drawer, so on phones the cue was visual only (R7-A11Y-11).
+    b.setAttribute('aria-label', has ? 'Menu — new release available' : 'Menu');
   }
   function syncMode(){
     var desktop = isDesktop();
