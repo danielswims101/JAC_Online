@@ -136,6 +136,17 @@ THREE.OrbitControls = function (camera, domElement) {
   this.domElement.addEventListener('touchstart', onTouchStart, { passive: true });
   this.domElement.addEventListener('touchmove', onTouchMove, { passive: false });
   this.domElement.addEventListener('touchend', onTouchEnd);
+  // Programmatic zoom (the lab's Zoom in / Zoom out buttons and +/- keys): `factor` is the total
+  // change in camera distance. With damping the step eases in over the next frames like a wheel
+  // tick (update() compounds `scale` by 1/dampingFactor frames); `immediate` applies it at once.
+  this.dolly = function (factor, immediate) {
+    if (!immediate && self.enableDamping) { scale *= Math.pow(factor, self.dampingFactor); return; }
+    updateSpherical();
+    spherical.radius = Math.max(self.minDistance, Math.min(self.maxDistance, spherical.radius * factor));
+    var off = new THREE.Vector3().setFromSpherical(spherical);
+    self.camera.position.copy(self.target).add(off);
+    self.camera.lookAt(self.target);
+  };
   this.update = function () {
     updateSpherical();
     spherical.theta += sphericalDelta.theta;
@@ -209,7 +220,7 @@ input,textarea,select{font-family:var(--fb)}
 .noise{position:fixed;inset:0;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");z-index:9999}
 /* NAV */
 nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;gap:8px}
-.nav-brand{font-family:var(--fh);font-size:1.45rem;letter-spacing:3px;color:var(--cyan);cursor:pointer;flex-shrink:0;white-space:nowrap}
+.nav-brand{font-family:var(--fh);font-size:1.45rem;letter-spacing:3px;color:var(--cyan);cursor:pointer;flex-shrink:0;white-space:nowrap;text-decoration:none}
 .nav-brand span{color:var(--white)}
 .nav-brand{display:flex;align-items:center;gap:9px}
 .nav-mark{border-radius:6px;flex-shrink:0;display:block}
@@ -235,9 +246,9 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .hero h1 .l1{display:block;color:var(--white)}.hero h1 .l2{display:block;color:var(--cyan);text-shadow:0 0 80px rgba(0,212,255,0.5)}.hero h1 .l3{display:block;color:var(--white)}
 .hero-desc{font-size:1.05rem;color:var(--white2);max-width:580px;margin:0 auto 2.5rem;line-height:1.85;font-weight:300;position:relative}
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;position:relative}
-.btn-hero{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:600;transition:all 0.25s;text-transform:uppercase;cursor:pointer}
+.btn-hero{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:600;transition:all 0.25s;text-transform:uppercase;cursor:pointer;display:inline-block;text-align:center;line-height:normal;text-decoration:none}
 .btn-hero:hover{background:var(--cyan2);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,212,255,0.35)}
-.btn-hero-ghost{background:transparent;color:var(--cyan);border:1.5px solid rgba(0,212,255,0.4);border-radius:var(--r8);padding:13px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:500;transition:all 0.25s;text-transform:uppercase;cursor:pointer}
+.btn-hero-ghost{background:transparent;color:var(--cyan);border:1.5px solid rgba(0,212,255,0.4);border-radius:var(--r8);padding:13px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:500;transition:all 0.25s;text-transform:uppercase;cursor:pointer;display:inline-block;text-align:center;line-height:normal;text-decoration:none}
 .btn-hero-ghost:hover{background:var(--cyan-dim);transform:translateY(-3px);border-color:var(--cyan)}
 .hero-stats{display:flex;gap:3rem;justify-content:center;flex-wrap:wrap;position:relative}
 .hstat{text-align:center}.hstat-val{font-family:var(--fh);font-size:2.6rem;color:var(--cyan);display:block;line-height:1;letter-spacing:1px}.hstat-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--white3);text-transform:uppercase;margin-top:5px;display:block}
@@ -319,6 +330,7 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .viz-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem}
 .viz-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:7px 14px;min-height:34px;display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1.2;font-family:var(--fm);font-size:0.65rem;letter-spacing:0.8px;cursor:pointer;transition:all 0.2s;text-transform:uppercase}
 .viz-btn.active{background:var(--cyan-dim);color:var(--cyan);border-color:rgba(0,212,255,0.4)}
+.viz-btn:disabled{opacity:0.45;cursor:not-allowed} /* parked while the 3D engine is unavailable */
 /* Hover is a lighter cue than the filled "selected" look so the current choice in each toggle row stays unambiguous */
 @media(hover:hover){.viz-btn:hover:not(.active){color:var(--white);border-color:rgba(0,212,255,0.4)}}
 /* 3D lab: swimmer model / skin-tone controls */
@@ -366,6 +378,14 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);opacity:0.4;animation:bounce 1.4s infinite}.typing-dot:nth-child(2){animation-delay:0.2s}.typing-dot:nth-child(3){animation-delay:0.4s}
 @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-7px);opacity:1}}
 .quick-prompts{padding:0.75rem 1.1rem;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border2)}
+/* Landscape phones (a deck-mounted phone is usually sideways): a 340px pane plus a ten-chip prompt block put the
+   composer two screens down. Shorten the pane and make the prompts a one-line strip so the input is within reach. */
+@media(max-height:480px) and (orientation:landscape){
+  .ai-messages{min-height:160px;height:calc(100dvh - 260px)}
+  .quick-prompts{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .quick-prompts::-webkit-scrollbar{display:none}
+  .qp{flex:0 0 auto;white-space:nowrap}
+}
 .qp{background:var(--navy3);border:1px solid var(--border2);border-radius:20px;padding:5px 13px;font-size:0.71rem;color:var(--white3);cursor:pointer;transition:all 0.2s;font-family:var(--fm);letter-spacing:0.3px}.qp:hover{color:var(--cyan);border-color:rgba(0,212,255,0.4);background:var(--cyan-dim)}
 .ai-input-row{border-top:1px solid var(--border);padding:1rem 1.25rem;display:flex;gap:10px;align-items:stretch}
 .ai-input{flex:1;background:var(--navy3);border:1px solid var(--border-input);border-radius:var(--r8);padding:11px 14px;color:var(--white);font-size:0.88rem;outline:none;transition:border-color 0.2s}.ai-input::placeholder{color:var(--white4)}.ai-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
@@ -413,7 +433,7 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .log-entry{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;margin-bottom:0.75rem;display:flex;gap:1rem;align-items:flex-start;transition:border-color 0.2s}.log-entry:hover{border-color:var(--border)}
 .log-del{background:none;border:0;color:var(--white4);cursor:pointer;font-size:1.1rem;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin:-8px -10px -8px 0;border-radius:var(--r8);transition:color 0.2s}.log-del:hover,.log-del:focus-visible{color:var(--red)}
 .log-date{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--cyan);text-transform:uppercase;min-width:70px;flex-shrink:0}
-.log-content{flex:1}.log-title{font-family:var(--fh);font-size:1.1rem;letter-spacing:1px;margin-bottom:0.25rem}.log-meta{font-size:0.8rem;color:var(--white3);font-family:var(--fm)}.log-notes{font-size:0.83rem;color:var(--white2);margin-top:0.5rem;line-height:1.6}
+.log-list{list-style:none;margin:0;padding:0}.log-content{flex:1}.log-title{font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:0.25rem;line-height:1.3}.log-meta{font-size:0.8rem;color:var(--white3);font-family:var(--fm)}.log-notes{font-size:0.83rem;color:var(--white2);margin-top:0.5rem;line-height:1.6}
 .log-del{background:none;border:none;color:var(--white4);cursor:pointer;font-size:1.1rem;padding:4px;border-radius:var(--r8);transition:color 0.2s}.log-del:hover,.log-del:focus-visible{color:var(--red)}
 /* NUTRITION */
 .nutr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem}
@@ -491,11 +511,12 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 /* ACCESSIBILITY */
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.qp:focus-visible,[role="button"]:focus-visible,[role="link"]:focus-visible,[tabindex]:not(.page):focus-visible,#viz3d-container:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 /* Inside overflow:hidden parents (accordion, canvas wrap) an outside ring is clipped — draw it inset */
-.acc-header:focus-visible,#viz3d-container:focus-visible,.phase-step:focus-visible{outline-offset:-3px}
+.acc-header:focus-visible,#viz3d-container:focus-visible,.phase-step:focus-visible,.tab-btn:focus-visible,.ai-mode-btn:focus-visible,.ai-messages:focus-visible{outline-offset:-3px} /* .tabs / .ai-mode-btns scroll horizontally and are exactly one button tall */
 .sr-only{position:absolute;left:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
   html{scroll-behavior:auto}
+  .ai-messages{scroll-behavior:auto} /* every streamed chunk scrolls the pane — no animation for reduced motion */
   .particle{display:none}
 }
 
@@ -1458,8 +1479,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="noise"></div>
 <!-- NAV -->
 <nav aria-label="Primary">
-  <div class="nav-brand" onclick="showPage('home')" role="link" tabindex="0"
-       onkeydown="if(event.key==='Enter')showPage('home')" aria-label="Tidelyne — home"><img src="logo-mark.svg" alt="" width="26" height="26" class="nav-mark">TIDE<span>LYNE</span></div>
+  <a class="nav-brand" href="#home" aria-label="Tidelyne — home"><img src="logo-mark.svg" alt="" width="26" height="26" class="nav-mark">TIDE<span>LYNE</span></a>
   <!-- One markup tree for both layouts: inline group buttons with dropdowns at >=900px,
        a slide-in drawer with headed (collapsible) sections below that. Disclosure pattern
        throughout — button[aria-expanded][aria-controls] + a plain list of links. -->
@@ -1537,9 +1557,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <h1><span class="l1">TRAIN</span> <span class="l2">ELITE.</span> <span class="l3">SWIM FAST.</span></h1>
   <p class="hero-desc">AI coaching, 3D biomechanics visualizer, technique library, workout generator, pool-deck timers, race planner, training analytics, race strategy, nutrition, mental performance, taper protocols — everything a competitive swimmer needs.</p>
   <div class="hero-btns">
-    <button class="btn-hero" onclick="showPage('ai')">Talk to AI Coach <span aria-hidden="true">✦</span></button>
-    <button class="btn-hero-ghost" onclick="showPage('visualizer')">3D Visualizer</button>
-    <button class="btn-hero-ghost" onclick="showPage('workouts')">Generate Workout</button>
+    <a class="btn-hero" href="#ai">Talk to AI Coach <span aria-hidden="true">✦</span></a>
+    <a class="btn-hero-ghost" href="#visualizer">3D Visualizer</a>
+    <a class="btn-hero-ghost" href="#workouts">Generate Workout</a>
   </div>
   <div class="hero-stats">
     <div class="hstat"><span class="hstat-val">3D</span><span class="hstat-lbl">Force Visualizer</span></div>
@@ -1557,7 +1577,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="metric-card"><span class="val">3</span><span class="lbl">Deck Tools</span><span class="sub">Timers, Planner, Analytics</span></div>
   </div>
   <div class="section-eyebrow">Everything You Need</div>
-  <h2 class="section-title">A COMPLETE<br><span>TRAINING PLATFORM</span></h2>
+  <h2 class="section-title">A COMPLETE <br><span>TRAINING PLATFORM</span></h2>
   <p class="section-intro">Built on established sports science and competitive programming.</p>
   <div class="grid-3 reveal">
     <div class="card card-clickable" style="border-color:rgba(168,85,247,0.3)">
@@ -1629,7 +1649,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="section-eyebrow">Study It — Interactive 3D Biomechanics Lab</div>
   <p class="section-intro" style="margin-bottom:1.5rem">A realistic human swimmer — built in your browser from real athlete proportions, with wet skin, race swimwear, silicone cap and goggles — swimming underwater in caustic light and depth haze, every joint driven by elite stroke-phase timing. Slow it down, orbit any angle, zoom in on a hand or a foot, isolate a single phase, switch between the male and female swimmer or X-ray the skeleton, or describe any movement and the AI reconstructs it. It exists so you can see what video moves too fast to show.</p>
   <div class="viz-canvas-wrap" style="position:relative">
-    <div id="viz3d-container" role="application" tabindex="0" aria-label="Interactive 3D swimmer. Left and Right arrow keys step through the stroke phases; the stroke and phase buttons below do the same. Each phase is described in words in the panel underneath."></div>
+    <div id="viz3d-container" role="application" tabindex="0" aria-label="Interactive 3D swimmer. Left and Right arrow keys step through the stroke phases; the stroke and phase buttons below do the same. Plus and Minus zoom in and out. Each phase is described in words in the panel underneath."></div>
     <div class="viz-overlay-stats">
       <div class="vos-item"><span class="vos-val" id="stat-drag">—</span><span class="vos-lbl">Drag (N)</span></div>
       <div class="vos-item"><span class="vos-val" id="stat-thrust">—</span><span class="vos-lbl">Thrust (N)</span></div>
@@ -1650,12 +1670,14 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple-text);font-weight:600"><span aria-hidden="true">✦ </span>AI Reconstruct</button>
   </div>
   <div id="motion-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px">Try "breaststroke pullout off the wall" or "backstroke start" — the lab rebuilds it joint by joint.</div>
-  <div class="viz-controls viz-row-view" style="margin-top:8px">
-    <span style="font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px">View:</span>
+  <div class="viz-controls viz-row-view" style="margin-top:8px" role="group" aria-label="Camera view">
+    <span style="font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px" aria-hidden="true">View:</span>
     <button class="viz-btn" data-view="side" aria-pressed="false" onclick="setView3D('side')">Side</button>
     <button class="viz-btn" data-view="front" aria-pressed="false" onclick="setView3D('front')">Front</button>
     <button class="viz-btn" data-view="top" aria-pressed="false" onclick="setView3D('top')">Below</button>
     <button class="viz-btn" data-view="three-quarter" aria-pressed="false" onclick="setView3D('three-quarter')">3/4 View</button>
+    <button class="viz-btn" onclick="zoomView3D(1)" title="Zoom in (plus key on the swimmer)"><span aria-hidden="true">＋ </span>Zoom in</button>
+    <button class="viz-btn" onclick="zoomView3D(-1)" title="Zoom out (minus key on the swimmer)"><span aria-hidden="true">－ </span>Zoom out</button>
   </div>
   <div class="viz-controls" style="margin-top:8px" role="group" aria-label="Swimmer model and skin tone">
     <span class="viz-ctl-lbl" aria-hidden="true">Swimmer:</span>
@@ -1676,7 +1698,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <button class="viz-btn active" id="vbtn-forces" aria-pressed="true" onclick="toggleForces3D(this)">Forces: On</button>
   </div>
-  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px"><span aria-hidden="true">🖱 </span>Drag to orbit · Scroll to zoom · Tap a phase below to jump to it</p>
+  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px"><span aria-hidden="true">🖱 </span>Drag to orbit · Scroll or the zoom buttons to zoom · Tap a phase below to jump to it</p>
   <div id="human-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:4px;letter-spacing:0.3px"></div>
   <div class="force-legend">
     <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Drag</div>
@@ -1985,6 +2007,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="form-group" style="margin-bottom:1.25rem"><label>Additional Notes (optional)</label>
       <input class="form-input" id="gen-notes" maxlength="300" placeholder="e.g. sore shoulders, include Golf score sets, pre-meet sharpener..."></div>
     <button class="btn-sm" id="gen-btn" onclick="generateWorkout()" style="padding:12px 28px;font-size:0.78rem">Generate Full Workout <span aria-hidden="true">✦</span></button>
+    <p class="form-notice" id="gen-notice" role="alert" hidden></p>
   </div>
   <div class="gen-output" id="gen-output">
     <div class="loading-state" id="gen-loading" role="status" aria-live="polite" style="display:none">
@@ -2149,7 +2172,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <p class="form-notice" id="log-notice" role="alert" hidden></p>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
-    <h2 style="font-family:var(--fh);font-weight:400;font-size:1.5rem;letter-spacing:1px">SESSION HISTORY</h2>
+    <h2 id="log-history-heading" style="font-family:var(--fh);font-weight:400;font-size:1.5rem;letter-spacing:1px">SESSION HISTORY</h2>
     <button class="btn-ghost-sm" onclick="clearLog()">Clear All</button>
   </div>
   <div id="log-entries"></div>
@@ -2531,7 +2554,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="ai-dot"></div>
         <div class="ai-header-text"><h3>AI SWIM COACH</h3><p>Expert coaching knowledge · Streaming · Free account</p></div>
       </div>
-      <div class="ai-mode-btns">
+      <div class="ai-mode-btns" role="group" aria-label="Coach mode">
         <button class="ai-mode-btn active" id="mode-coach" aria-pressed="true" onclick="setMode('coach',this)"><span aria-hidden="true">🏊 </span>Coaching</button>
         <button class="ai-mode-btn" id="mode-tech" aria-pressed="false" onclick="setMode('technique',this)"><span aria-hidden="true">⚙️ </span>Technique</button>
         <button class="ai-mode-btn" id="mode-race" aria-pressed="false" onclick="setMode('race',this)"><span aria-hidden="true">🏁 </span>Race</button>
@@ -2541,13 +2564,14 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button class="ai-mode-btn" id="mode-clear" onclick="clearChat()"><span aria-hidden="true">✕ </span>Clear</button>
       </div>
     </div>
-    <div class="ai-messages" id="ai-messages">
+    <p class="sr-only" id="ai-messages-hint">Scrollable conversation. When focused, use the arrow keys to scroll it.</p>
+    <div class="ai-messages" id="ai-messages" tabindex="0" aria-describedby="ai-messages-hint">
       <div class="msg">
         <div class="msg-avatar ai-av">AI</div>
         <div class="msg-bubble">Welcome. I'm your AI swim coach — covering swimming science, meso-cycle programming, technique biomechanics, race strategy, nutrition, mental performance, and competitive physiology.<br><br>Responses stream in real time. Ask me anything. (AI answers can be wrong — always confirm health or injury questions with a coach or physician.)</div>
       </div>
     </div>
-    <div class="quick-prompts">
+    <div class="quick-prompts" role="group" aria-label="Suggested questions">
       <span class="qp" onclick="usePrompt(this)">What's AeT and why does it matter?</span>
       <span class="qp" onclick="usePrompt(this)">How do I improve my freestyle catch?</span>
       <span class="qp" onclick="usePrompt(this)">Explain the Golf Score system</span>
@@ -2960,7 +2984,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button type="button" class="btn-ghost-sm an-table-btn" id="an-table-btn" aria-expanded="false" aria-controls="an-table-wrap" onclick="tl_an_toggleTable()">Show as table</button>
       </div>
       <div class="an-chart-wrap" id="an-chart-wrap">
-        <canvas id="an-chart" class="an-chart-canvas" role="img" tabindex="0" aria-describedby="an-chart-help" aria-label="Weekly training volume, last 12 weeks"></canvas>
+        <canvas id="an-chart" class="an-chart-canvas" role="application" tabindex="0" aria-describedby="an-chart-help" aria-label="Weekly training volume, last 12 weeks"></canvas>
         <div class="an-tooltip" id="an-tooltip" hidden></div>
       </div>
       <p id="an-chart-help" class="an-sr">Stacked bar chart of weekly training volume for the last 12 weeks with a four-week rolling average line. Focus the chart and use the left and right arrow keys to read each week, Home and End for the first and last week, and Escape to clear. The same data is available as a table with the Show as table button.</p>
@@ -3195,8 +3219,25 @@ function onSupabaseScript(state){
   sbScriptState = state === 'failed' ? 'failed' : 'done';
   // The DOM below this script (the auth overlay) may still be parsing: let DOMContentLoaded run initSupabaseAuth then.
   if (sbScriptState === 'done' && document.readyState !== 'loading') initSupabaseAuth();
+  if (sbScriptState === 'failed') markLoginUnavailable();
   _sbScriptWaiters.splice(0).forEach(function(fn){ try { fn(); } catch(e){} });
 }
+// Why sign-in cannot open right now (supabase-js blocked, or an offline return visit — the library is
+// cross-origin and not precached). Every auth entry point reports this inline (no blocking alert()).
+function authUnavailableMsg(){
+  return navigator.onLine === false
+    ? 'You are offline — sign-in and the AI features need a connection. All content is still available.'
+    : 'Account features are unavailable right now — the sign-in service could not load. All content is still accessible without an account.';
+}
+// The nav Log In button stays focusable (clicking re-announces the reason) but is annotated so it
+// no longer invites a dead end.
+function markLoginUnavailable(){
+  var b = document.getElementById('nav-login-btn');
+  if (!b) return;
+  b.setAttribute('aria-disabled', 'true');
+  b.title = navigator.onLine === false ? 'You are offline' : 'Sign-in service unavailable';
+}
+if (sbScriptState === 'failed') markLoginUnavailable(); // the script tag errored before this block parsed
 // AI calls route through the ask-ai Edge Function -- the server holds the
 // Anthropic key and enforces the rate limit (20 messages per 5 hours).
 var currentUser = null;   // Supabase auth user object once logged in
@@ -3217,12 +3258,16 @@ function openAuthGate(screen) {
     initSupabaseAuth();
     if (!sb && sbScriptState === 'loading') { // library still downloading: open as soon as it lands
       _sbScriptWaiters.push(function(){ openAuthGate(screen); });
-      return;
+      return true;
     }
-    if (!sb) { alert('Account features are unavailable right now — the sign-in service could not load. All content is still accessible without an account.'); return; }
+    if (!sb) { // blocked / offline: announce inline instead of a blocking alert(); callers show their own notice
+      markLoginUnavailable();
+      if (typeof tlAnnounce === 'function') tlAnnounce(authUnavailableMsg());
+      return false;
+    }
   }
   var g = document.getElementById('access-gate');
-  if (!g) { document.addEventListener('DOMContentLoaded', function(){ openAuthGate(screen); }, { once: true }); return; } // overlay markup not parsed yet
+  if (!g) { document.addEventListener('DOMContentLoaded', function(){ openAuthGate(screen); }, { once: true }); return true; } // overlay markup not parsed yet
   if (_authHideTimer) { clearTimeout(_authHideTimer); _authHideTimer = 0; }
   _authReturnFocus = document.activeElement; // restore focus here on close
   g.classList.remove('closing');
@@ -3230,6 +3275,7 @@ function openAuthGate(screen) {
   g.style.transition = 'none';
   g.style.display = 'flex';
   g.style.opacity = '1';
+  setAuthInert(true); // aria-modal alone is not enforced everywhere: the page behind really is inert while the dialog shows
   showAuthScreen(screen || 'login');
   // Move focus into the dialog and trap Tab within it.
   setTimeout(function(){
@@ -3237,6 +3283,19 @@ function openAuthGate(screen) {
     var first = visible.querySelector('input, button, a[href], [tabindex]');
     if (first) try { first.focus(); } catch(e){}
   }, 30);
+  return true;
+}
+// Everything outside the sign-in dialog (the nav, the page, the update toast) is inert while it is open, so a
+// screen reader's virtual cursor or swipe navigation cannot wander behind it. Marked with data-tl-inert so an
+// element some other overlay made inert (the drawer uses the same marker) is not un-inerted by mistake.
+function setAuthInert(on){
+  ['main', 'nav', '#tl-upd-toast'].forEach(function(sel){
+    var el = document.querySelector(sel); if (!el || !('inert' in el)) return;
+    try {
+      if (on) { if (!el.inert) { el.setAttribute('data-tl-inert', 'auth'); el.inert = true; } }
+      else if (el.getAttribute('data-tl-inert') === 'auth') { el.removeAttribute('data-tl-inert'); el.inert = false; }
+    } catch(e){}
+  });
 }
 // True while the dialog is really open (a fading-out overlay no longer counts).
 function authGateVisible(){
@@ -3265,6 +3324,8 @@ function showAuthScreen(name) {
   });
   document.querySelectorAll('#access-gate [aria-invalid]').forEach(function(i){ i.removeAttribute('aria-invalid'); i.removeAttribute('aria-describedby'); });
   var gate = document.getElementById('access-gate'), shown = document.getElementById('screen-' + name);
+  // Name the dialog after the screen it shows (Welcome back / Create your account / …), not a static "Account".
+  if (gate && document.getElementById('auth-h-' + name)) { gate.setAttribute('aria-labelledby', 'auth-h-' + name); gate.removeAttribute('aria-label'); }
   if (gate && gate.style.display === 'flex' && shown) {
     var first = shown.querySelector('input');
     if (first) try { first.focus(); } catch(e){}
@@ -3436,6 +3497,7 @@ function closeAuthGate() {
   g.style.pointerEvents = 'none';
   g.style.transition = 'opacity 0.4s ease';
   g.style.opacity = '0';
+  setAuthInert(false); // before focus returns to the page
   if (_authHideTimer) clearTimeout(_authHideTimer);
   _authHideTimer = setTimeout(function(){
     _authHideTimer = 0;
@@ -3485,7 +3547,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
   <div id="screen-login" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
     <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🏊</div>
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne</div>
-    <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">WELCOME<br><span style="color:var(--cyan)">BACK</span></h2>
+    <h2 id="auth-h-login" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">WELCOME <br><span style="color:var(--cyan)">BACK</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
       <input id="login-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Password</label>
@@ -3501,7 +3563,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
   <div id="screen-signup" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
     <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🏊</div>
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne — Free Account</div>
-    <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">CREATE YOUR<br><span style="color:var(--cyan)">ACCOUNT</span></h2>
+    <h2 id="auth-h-signup" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">CREATE YOUR <br><span style="color:var(--cyan)">ACCOUNT</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Choose a Username</label>
       <input id="signup-username" type="text" autocomplete="username" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(event.key==='Enter')doSignup()"></div>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
@@ -3519,7 +3581,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
   <!-- FORGOT PASSWORD -->
   <div id="screen-forgot" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
     <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🔑</div>
-    <h2 style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:1.25rem">RESET YOUR<br><span style="color:var(--cyan)">PASSWORD</span></h2>
+    <h2 id="auth-h-forgot" style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:1.25rem">RESET YOUR <br><span style="color:var(--cyan)">PASSWORD</span></h2>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Email</label>
       <input id="forgot-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doForgotPassword()"></div>
     <button onclick="doForgotPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SEND RESET LINK →</button>
@@ -3528,8 +3590,8 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
   </div>
   <!-- NEW PASSWORD (opened by the emailed recovery link) -->
   <div id="screen-newpass" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
-    <div style="font-size:2.6rem;margin-bottom:1rem">🔑</div>
-    <h2 style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:0.75rem">CHOOSE A NEW<br><span style="color:var(--cyan)">PASSWORD</span></h2>
+    <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🔑</div>
+    <h2 id="auth-h-newpass" style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:0.75rem">CHOOSE A NEW <br><span style="color:var(--cyan)">PASSWORD</span></h2>
     <p style="font-size:0.82rem;color:var(--white3);line-height:1.5;margin-bottom:1.1rem">Your reset link checked out. Pick a new password for your account.</p>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>New Password</label>
       <input id="newpass-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(event.key==='Enter')doSetNewPassword()"></div>
@@ -3585,8 +3647,15 @@ function activatePage(name,opts){
   if(!alreadyActive){
     const smooth=!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
     window.scrollTo({top:0,behavior:smooth?'smooth':'auto'});
-    // Move focus to the new view for screen-reader/keyboard users.
-    if(page&&!(opts&&opts.focus===false)){ page.setAttribute('tabindex','-1'); try{ page.focus({preventScroll:true}); }catch(e){ page.focus(); } }
+    // Move focus to the new view for screen-reader/keyboard users. The view is named (a labelled
+    // region) so the focus move itself says where they are, and the change is also announced —
+    // document.title changes are silent in an SPA.
+    if(page&&!(opts&&opts.focus===false)){
+      const shortTitle=name==='home'?'Home':String(PAGE_TITLES[name]||name).split(' — ')[0];
+      page.setAttribute('role','region'); page.setAttribute('aria-label',shortTitle);
+      page.setAttribute('tabindex','-1'); try{ page.focus({preventScroll:true}); }catch(e){ page.focus(); }
+      if(typeof tlAnnounce==='function') tlAnnounce(shortTitle+' page');
+    }
   }
   if(typeof setPageTitle==='function') setPageTitle(name);
   initReveal();
@@ -3799,6 +3868,7 @@ function enhanceA11y(){
   // Make the 3D lab's arrow-key phase stepping real (the aria-label promised it)
   const vc=document.getElementById('viz3d-container');
   if(vc){ vc.addEventListener('keydown',function(e){
+    if((e.key==='+'||e.key==='='||e.key==='-'||e.key==='_')&&!e.ctrlKey&&!e.metaKey&&!e.altKey){ e.preventDefault(); if(typeof zoomView3D==='function') zoomView3D(e.key==='-'||e.key==='_'?-1:1); return; }
     if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight') return;
     if(typeof STROKES==='undefined'||typeof currentStroke==='undefined'||!STROKES[currentStroke]) return;
     e.preventDefault();
@@ -3807,6 +3877,8 @@ function enhanceA11y(){
     const idx=(cur+(e.key==='ArrowRight'?1:-1)+ph.length)%ph.length;
     if(typeof playing!=='undefined'&&playing&&typeof togglePlay3D==='function') togglePlay3D();
     if(typeof jumpToPhase3D==='function') jumpToPhase3D(idx);
+    // The info panel is not live (autoplay rewrites it every second), so say where the key landed.
+    if(typeof tlAnnounce==='function') tlAnnounce('Phase '+(idx+1)+' of '+ph.length+': '+(ph[idx].name||''));
   }); }
 }
 document.addEventListener('DOMContentLoaded', enhanceA11y);
@@ -3920,7 +3992,7 @@ function initViz3D() {
   try {
     renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
   } catch (err) {
-    container.innerHTML = '<div class="viz-fallback">3D isn\'t supported on this device or browser.<br>Use the stroke demo videos above — they cover the same technique.</div>';
+    vizLabUnavailable('3D isn\'t supported on this device or browser. Use the stroke demo videos above — they cover the same technique.', false);
     return; // viz3DInitialized stays false; the render loop never starts
   }
   renderer.setSize(container.clientWidth, container.clientHeight);
@@ -4771,6 +4843,15 @@ function markView3D(name) {
     b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
 }
+// Single-pointer / keyboard zoom (WCAG 2.5.1): the wheel and a pinch are not the only way in. One press
+// changes the camera distance by 25%, eased like a wheel tick unless the user prefers reduced motion.
+function zoomView3D(dir) {
+  if (!viz3DInitialized || !controls) return;
+  cancelViewTween3D(true); markView3D(null);
+  let reduced = false;
+  try { reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch(e){}
+  controls.dolly(dir > 0 ? 0.8 : 1.25, reduced || document.hidden);
+}
 let viewClearBound = false;
 function bindViewClear3D() {
   if (viewClearBound || !renderer || !renderer.domElement) return;
@@ -5092,10 +5173,38 @@ function ensureViz3DReady() {
   s.onload = function(){ installOrbitControls(); loadHumanScripts(startViz3D); };
   s.onerror = function(){
     threeLoading = false;
-    const c = document.getElementById('viz3d-container');
-    if (c) c.innerHTML = '<div class="viz-fallback">The 3D engine could not load (your connection may be blocking the CDN).<br>The stroke demo videos above cover the same technique. Reopen this page to retry.</div>';
+    vizLabUnavailable('The 3D engine could not load (your connection may be blocking the CDN). The stroke demo videos above cover the same technique.', true);
   };
   document.head.appendChild(s);
+}
+// The lab cannot run (CDN blocked / offline / no WebGL): show the reason where the canvas was, announce
+// it, drop the application role and its arrow-key promise from the empty container, and park the
+// render-only controls that would otherwise flip aria-pressed / Play-Pause with no effect. `retry`
+// adds a real Retry button (the CDN case); WebGL-unsupported gets none.
+let _vizLabA11y = null;
+function vizLabUnavailable(msg, retry){
+  const c = document.getElementById('viz3d-container');
+  if (!c) return;
+  if (!_vizLabA11y) _vizLabA11y = { role: c.getAttribute('role'), tabindex: c.getAttribute('tabindex'), label: c.getAttribute('aria-label') };
+  c.removeAttribute('role'); c.removeAttribute('tabindex'); c.removeAttribute('aria-label');
+  c.innerHTML = '<div class="viz-fallback"><div><p>' + escapeHTML(msg) + '</p>' +
+    (retry ? '<button type="button" class="viz-btn" id="viz-retry-btn" style="margin-top:1rem" onclick="vizLabRetry()">Retry loading the 3D lab</button>' : '') + '</div></div>';
+  document.querySelectorAll('#page-visualizer .viz-controls .viz-btn:not(#motion-btn)').forEach(b => { b.disabled = true; b.setAttribute('aria-disabled', 'true'); });
+  if (typeof tlAnnounce === 'function') tlAnnounce(msg);
+}
+function vizLabRetry(){
+  const c = document.getElementById('viz3d-container');
+  if (!c) return;
+  if (_vizLabA11y){
+    if (_vizLabA11y.role) c.setAttribute('role', _vizLabA11y.role);
+    if (_vizLabA11y.tabindex) c.setAttribute('tabindex', _vizLabA11y.tabindex);
+    if (_vizLabA11y.label) c.setAttribute('aria-label', _vizLabA11y.label);
+  }
+  c.innerHTML = '';
+  document.querySelectorAll('#page-visualizer .viz-controls .viz-btn[aria-disabled="true"]').forEach(b => { b.disabled = false; b.removeAttribute('aria-disabled'); });
+  if (typeof tlAnnounce === 'function') tlAnnounce('Retrying the 3D lab…');
+  try { c.focus({ preventScroll: true }); } catch(e){}
+  ensureViz3DReady();
 }
 // A11y: give every video iframe a title (screen readers announce these),
 // derived from its own card heading so it never goes stale.
@@ -5183,7 +5292,7 @@ async function generateMotion(){
   const btn=document.getElementById('motion-btn');
   const desc=(inp.value||'').trim();
   if(!desc){ statusEl.textContent='Describe a movement first — e.g. "breaststroke pullout off the wall".'; return; }
-  if(!currentUser){ statusEl.textContent='AI reconstruction needs a free account — log in to continue.'; openAuthGate('login'); return; }
+  if(!currentUser){ statusEl.textContent=openAuthGate('login') ? 'AI reconstruction needs a free account — log in to continue.' : authUnavailableMsg(); return; }
   ensureViz3DReady();
   btn.disabled=true;
   statusEl.textContent='✦ Reconstructing — the AI is computing joint keyframes for "'+desc+'"…';
@@ -5400,9 +5509,8 @@ async function sendToAI(){
   const msg=input.value.trim();
   if(!msg) return;
   if(!currentUser){
-    const gateMsg='The AI Coach needs a free account (it keeps the service free for everyone). Log in or sign up to continue.';
+    const gateMsg=openAuthGate('login') ? 'The AI Coach needs a free account (it keeps the service free for everyone). Log in or sign up to continue.' : authUnavailableMsg();
     if(lastAIBubbleText()!==gateMsg) addMsg(gateMsg,'ai');
-    openAuthGate('login');
     return;
   }
   const btn=document.getElementById('ai-send-btn');
@@ -5547,7 +5655,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 // ─── WORKOUT GENERATOR — STREAMING ────────────
 async function generateWorkout(){
-  if(!currentUser){ openAuthGate('login'); return; }
+  if(!currentUser){ if(!openAuthGate('login')) tlNotice('gen-notice',authUnavailableMsg()); return; }
+  tlNotice('gen-notice','');
   const genBtn=document.getElementById('gen-btn');
   if(genBtn&&genBtn.disabled) return; // double-click = two streams + two rate-limit hits
   if(genBtn) genBtn.disabled=true;
@@ -5567,6 +5676,7 @@ async function _generateWorkoutInner(){
   const actions=document.getElementById('gen-actions');
   output.classList.add('show');
   loading.style.display='flex';
+  tlAnnounce('Building your session…'); // #gen-loading's text exists while hidden, so un-hiding it does not reliably announce
   result.innerHTML='';
   result.setAttribute('aria-busy','true');
   actions.style.display='none';
@@ -5699,7 +5809,7 @@ const VIZ_CONCEPTS={
   'custom':''
 };
 async function generateVisualization(){
-  if(!currentUser){ openAuthGate('login'); return; }
+  if(!currentUser){ if(!openAuthGate('login')) tlNotice('viz-notice',authUnavailableMsg()); return; }
   const vgBtn=document.getElementById('viz-gen-btn');
   if(vgBtn&&vgBtn.disabled) return;
   if(vgBtn) vgBtn.disabled=true;
@@ -6226,19 +6336,20 @@ function renderLog(){
     if(statsEl) statsEl.style.display='none'; return;
   }
   // Every stored field is coerced or escaped: a crafted backup must render as text, never as markup.
-  container.innerHTML=entries.map(e=>{
+  // A real list with a heading per session: screen readers hear "list, N items" and can jump between sessions.
+  container.innerHTML='<ul class="log-list" aria-label="Logged sessions">'+entries.map(e=>{
     const dist=Number(e.dist)||0, dur=Number(e.dur)||0, effort=Number(e.effort)||0, id=Number(e.id)||0;
     return `
-    <div class="log-entry">
+    <li class="log-entry">
       <div class="log-date">${escapeHTML(e.date)}</div>
       <div class="log-content">
-        <div class="log-title">${escapeHTML(e.type)}</div>
+        <h3 class="log-title">${escapeHTML(e.type)}</h3>
         <div class="log-meta">${dist>0?dist.toLocaleString()+' m · ':''}${dur>0?dur+' min · ':''}${escapeHTML(e.zone)} · ${effort>0?'Effort '+effort+'/10':'Effort —'}</div>
         ${e.mainset?`<div class="log-notes" style="color:var(--cyan)">${escapeHTML(e.mainset)}</div>`:''}
         ${e.notes?`<div class="log-notes">${escapeHTML(e.notes)}</div>`:''}
       </div>
       <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(e.date)} ${escapeHTML(e.type)}" title="Delete session"><span aria-hidden="true">✕</span></button>
-    </div>`;}).join('');
+    </li>`;}).join('')+'</ul>';
   const now=new Date(), thirtyAgo=new Date(now-30*24*60*60*1000);
   const recent=entries.filter(e=>new Date(e.date)>=thirtyAgo);
   if(statsEl&&recent.length>0){
@@ -6256,11 +6367,23 @@ function renderLog(){
   }
 }
 function deleteLogEntry(id){
+  // renderLog() rebuilds the list, destroying the button that had focus: remember its position and
+  // put focus on the delete button now at that index (or the last one), else the history heading.
+  const dels=Array.prototype.slice.call(document.querySelectorAll('#log-entries .log-del'));
+  const at=dels.findIndex(b=>Number(b.getAttribute('data-del-id'))===id);
   lsSet('swimiq_log',JSON.stringify(readLog().filter(e=>e.id!==id)));
   renderLog();
   setLogStatus('Session deleted.');
+  focusLogAfterChange(at);
 }
-function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog(); setLogStatus('All sessions cleared.');}
+function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog(); setLogStatus('All sessions cleared.'); focusLogAfterChange(0);}
+function focusLogAfterChange(at){
+  const rest=document.querySelectorAll('#log-entries .log-del');
+  let target=rest.length?rest[Math.max(0,Math.min(at<0?0:at,rest.length-1))]:document.getElementById('log-history-heading');
+  if(!target) return;
+  if(!target.matches('button')&&!target.hasAttribute('tabindex')) target.setAttribute('tabindex','-1');
+  try{ target.focus({preventScroll:true}); }catch(e){ try{ target.focus(); }catch(e2){} }
+}
 // The date field defaults to today, and is refreshed when the page is shown
 // again or the tab comes back (an installed app left open overnight must not
 // offer yesterday). A date the swimmer typed themselves is left alone: only
@@ -9889,7 +10012,12 @@ window.tl_an_debug = {
     if ((k === 'Home' || k === 'End') && state.flat.length && (e.ctrlKey || document.activeElement !== $('tl-pal-input'))){
       e.preventDefault(); setActive(k === 'Home' ? 0 : state.flat.length - 1); return;
     }
-    if (k === 'Enter'){ e.preventDefault(); if (state.active >= 0) select(state.active); return; }
+    if (k === 'Enter'){
+      // Only the search box opens the highlighted result; the ✕ Close button and the
+      // "/" checkbox keep their native Enter/Space activation.
+      if (document.activeElement !== $('tl-pal-input')) return;
+      e.preventDefault(); if (state.active >= 0) select(state.active); return;
+    }
     if (k === 'Tab'){
       // Keep focus inside the dialog: input → close button → "/" toggle (when shown) → input.
       var stops = [$('tl-pal-input'), $('tl-pal-close'), $('tl-pal-slash')].filter(function(el){ return el && el.getClientRects().length > 0; });
@@ -10372,17 +10500,34 @@ function markShellStale(){
   if (swVersion && cmpVer(swVersion, window.TL_VERSION) > 0) window.TL_SHELL_STALE = true;
 }
 window.tlShowUpdateToast = function(note){ showUpdateToast(swVersion, note); };
+// The toast is a named region placed right after <nav> (early in the tab order, not after every control on
+// the page); only its message span is live, so the button labels and the ✕ glyph are not read as part of
+// the announcement. Escape dismisses it like every other overlay, and dismissing never strands focus.
+let _updToastOpener = null;
+function onUpdToastKey(e){
+  if (e.key !== 'Escape' || e.defaultPrevented || !$('tl-upd-toast')) return;
+  // Leave Escape to an open overlay (palette, sign-in dialog, mobile drawer) unless focus is in the toast.
+  const inToast = $('tl-upd-toast').contains(document.activeElement);
+  const pal = $('tl-palette'), burger = $('nav-menu-btn');
+  const overlayOpen = (pal && !pal.hidden) || (typeof authGateVisible === 'function' && authGateVisible()) || (burger && burger.getAttribute('aria-expanded') === 'true');
+  if (overlayOpen && !inToast) return;
+  e.preventDefault();
+  hideUpdateToast();
+}
 function showUpdateToast(version, note){
   if (!document.body) return;
   let t = $('tl-upd-toast');
   if (t && t.parentNode) t.parentNode.removeChild(t);
+  else _updToastOpener = document.activeElement;
   t = document.createElement('div');
   t.id = 'tl-upd-toast';
   t.className = 'tl-upd-toast';
-  t.setAttribute('role', 'status');
-  t.setAttribute('aria-live', 'polite');
+  t.setAttribute('role', 'region');
+  t.setAttribute('aria-label', 'Update available');
   const msg = document.createElement('span');
   msg.className = 'tl-upd-toast-msg';
+  msg.setAttribute('role', 'status');
+  msg.setAttribute('aria-live', 'polite');
   const same = !version || cmpVer(version, window.TL_VERSION) === 0;
   msg.textContent = same ? 'Tidelyne was updated' : 'Tidelyne updated to ';
   if (!same){ const b = document.createElement('b'); b.textContent = 'v' + version; msg.appendChild(b); }
@@ -10391,15 +10536,27 @@ function showUpdateToast(version, note){
   reload.type = 'button'; reload.className = 'btn-sm'; reload.textContent = 'Reload';
   reload.addEventListener('click', function(){ try { location.reload(); } catch(e){} });
   const x = document.createElement('button');
-  x.type = 'button'; x.className = 'tl-upd-toast-x'; x.textContent = '✕';
+  x.type = 'button'; x.className = 'tl-upd-toast-x';
+  x.innerHTML = '<span aria-hidden="true">✕</span>';
   x.setAttribute('aria-label', 'Dismiss');
   x.addEventListener('click', hideUpdateToast);
   t.appendChild(msg); t.appendChild(reload); t.appendChild(x);
-  document.body.appendChild(t);
+  const nav = document.querySelector('nav');
+  if (nav && nav.parentNode) nav.parentNode.insertBefore(t, nav.nextSibling); else document.body.appendChild(t);
+  document.addEventListener('keydown', onUpdToastKey);
 }
 function hideUpdateToast(){
   const t = $('tl-upd-toast');
-  if (t && t.parentNode) t.parentNode.removeChild(t);
+  document.removeEventListener('keydown', onUpdToastKey);
+  if (!t || !t.parentNode) return;
+  const hadFocus = t.contains(document.activeElement);
+  t.parentNode.removeChild(t);
+  if (!hadFocus) return;
+  const op = _updToastOpener; _updToastOpener = null;
+  const back = (op && op !== document.body && document.contains(op) && typeof op.focus === 'function') ? op : ($('nav-updates') || $('main'));
+  if (!back) return;
+  if (back.id === 'main' && !back.hasAttribute('tabindex')) back.setAttribute('tabindex', '-1');
+  try { back.focus({ preventScroll: true }); } catch(e){ try { back.focus(); } catch(e2){} }
 }
 window.tlCheckForUpdates = function(){
   if (!swSupported || !swReg){
