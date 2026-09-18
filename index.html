@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Tidelyne — Swimming Technique & Training Tools</title>
 <!-- description / og:description / twitter:description stay ≤155 chars, differentiators first: search snippets cut at ~155 and chat link previews at ~200; the fuller feature list lives in the JSON-LD below. -->
 <meta name="description" content="Free swim training app that works offline: 3D stroke visualizer, technique library, AI coach, pace calculators, deck timers, race planner and training log.">
@@ -35,18 +35,19 @@
 <meta property="og:site_name" content="Tidelyne">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:image" content="https://danielswims101.github.io/JAC_Online/og.png">
+<meta name="twitter:image:alt" content="Tidelyne — 3D stroke lab for competitive swimmers">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://danielswims101.github.io/JAC_Online/#org","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","logo":{"@type":"ImageObject","url":"https://danielswims101.github.io/JAC_Online/icon-512.png","width":512,"height":512}},{"@type":"WebSite","@id":"https://danielswims101.github.io/JAC_Online/#website","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Free training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, pool-deck timers, race planner, training log and analytics — installable and works offline.","inLanguage":"en","publisher":{"@id":"https://danielswims101.github.io/JAC_Online/#org"}},{"@type":"WebApplication","@id":"https://danielswims101.github.io/JAC_Online/#app","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Free training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, pool-deck timers, race planner, training log and analytics — installable and works offline.","applicationCategory":"SportsApplication","operatingSystem":"Web","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://danielswims101.github.io/JAC_Online/og.png","inLanguage":"en","publisher":{"@id":"https://danielswims101.github.io/JAC_Online/#org"},"featureList":["AI swim coach","3D stroke visualizer","Technique library","Workout generator","Pace and race calculators","Training log and analytics","Race planner","Pool-deck timers"]}]}
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://gzqovsffnziumfbmqdes.supabase.co" crossorigin>
 <link rel="dns-prefetch" href="https://i.ytimg.com">
 <link rel="dns-prefetch" href="https://www.youtube-nocookie.com">
 <!-- Fonts CSS is preloaded and promoted to a stylesheet once it arrives, so first paint never waits on the cross-origin request (display=swap covers the font files). crossorigin makes the response non-opaque so sw.js can cache it for offline typography. -->
-<link rel="preload" as="style" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap"></noscript>
+<link rel="preload" as="style" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Mono:wght@400;500&display=swap"></noscript>
 <!-- supabase-js is pinned (not the floating @2 tag) so an upstream release cannot change the auth path unseen; integrity is that file's sha384 — bump version and hash together.
      It is injected on demand (loadSupabase below), async and never render-blocking: only a stored session, an auth-callback link, a Log In click or an AI feature needs the
      218 KB library, so the logged-out majority never downloads or compiles it. At boot it starts here — before the body streams — when a session may exist; otherwise
@@ -101,9 +102,10 @@ THREE.OrbitControls = function (camera, domElement) {
   var scale = 1;
   var rotating = false;
   var lastX = 0, lastY = 0;
+  var _offset = new THREE.Vector3(); // one scratch vector for the whole life of the controls — no per-frame allocation
   function updateSpherical() {
-    var offset = new THREE.Vector3().copy(self.camera.position).sub(self.target);
-    spherical.setFromVector3(offset);
+    _offset.copy(self.camera.position).sub(self.target);
+    spherical.setFromVector3(_offset);
   }
   updateSpherical();
   function onPointerDown(e) {
@@ -178,9 +180,14 @@ THREE.OrbitControls = function (camera, domElement) {
     if (!immediate && self.enableDamping) { scale *= Math.pow(factor, self.dampingFactor); return; }
     updateSpherical();
     spherical.radius = Math.max(self.minDistance, Math.min(self.maxDistance, spherical.radius * factor));
-    var off = new THREE.Vector3().setFromSpherical(spherical);
-    self.camera.position.copy(self.target).add(off);
+    _offset.setFromSpherical(spherical);
+    self.camera.position.copy(self.target).add(_offset);
     self.camera.lookAt(self.target);
+  };
+  // True when the next update() would leave the camera where it is: no pending orbit/zoom input and the damping
+  // has decayed below anything visible. The render loop uses it to skip frames while the lab is paused.
+  this.isSettled = function () {
+    return Math.abs(sphericalDelta.theta) + Math.abs(sphericalDelta.phi) < 1e-4 && Math.abs(scale - 1) < 1e-4;
   };
   this.update = function () {
     updateSpherical();
@@ -190,8 +197,8 @@ THREE.OrbitControls = function (camera, domElement) {
     spherical.makeSafe();
     spherical.radius *= scale;
     spherical.radius = Math.max(self.minDistance, Math.min(self.maxDistance, spherical.radius));
-    var offset = new THREE.Vector3().setFromSpherical(spherical);
-    self.camera.position.copy(self.target).add(offset);
+    _offset.setFromSpherical(spherical);
+    self.camera.position.copy(self.target).add(_offset);
     self.camera.lookAt(self.target);
     if (self.enableDamping) {
       sphericalDelta.theta *= (1 - self.dampingFactor);
@@ -243,7 +250,7 @@ THREE.OrbitControls = function (camera, domElement) {
 }
 html{scroll-behavior:smooth;scroll-padding-top:72px} /* programmatic scrolls and anchors land below the 56px sticky nav */
 #tlt-tempo-card,#viz-output,.tab-panel{scroll-margin-top:72px}
-body{background:var(--navy);color:var(--white);font-family:var(--fb);min-height:100vh;overflow-x:hidden;line-height:1.6}
+body{background:var(--navy);color:var(--white);font-family:var(--fb);min-height:100vh;overflow-x:hidden;line-height:1.6;padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)} /* viewport-fit=cover: the installed app runs edge-to-edge, so in-flow content clears the notch (landscape) and the home indicator; fixed chrome below pads itself */
 ::selection{background:rgba(0,212,255,0.25)}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--navy2)}::-webkit-scrollbar-thumb{background:var(--cyan2);border-radius:3px}
 a{color:var(--cyan);text-decoration:none}
@@ -268,7 +275,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.985);border-bott
 .nav-key-btn{background:var(--navy3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--white3);font-size:0.8rem;cursor:pointer;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;flex-shrink:0}
 .nav-key-btn:hover{color:var(--cyan);border-color:var(--cyan)}
 .page{display:none}.page.active{display:block}.page:focus{outline:none}
-.noscript-note{position:fixed;left:0;right:0;bottom:0;z-index:9000;margin:0;background:var(--navy2);border-top:1px solid var(--border);color:var(--white);font-size:0.85rem;line-height:1.5;padding:0.7rem 1rem;text-align:center}
+.noscript-note{position:fixed;left:0;right:0;bottom:0;z-index:9000;margin:0;background:var(--navy2);border-top:1px solid var(--border);color:var(--white);font-size:0.85rem;line-height:1.5;padding:0.7rem 1rem;padding-bottom:calc(0.7rem + env(safe-area-inset-bottom));text-align:center}
 /* HERO */
 .hero{position:relative;padding:7rem 2rem 5rem;text-align:center;overflow:hidden;min-height:85vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 120% 80% at 50% -5%,rgba(0,212,255,0.08) 0%,transparent 60%)}
@@ -341,7 +348,7 @@ h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-w
 .table-wrap{position:relative;overflow-x:auto;border-radius:var(--r12);border:1px solid var(--border2);margin:1.25rem 0}
 div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollable wrapper: the ring sits inside the box so the right-edge fade mask cannot clip it */
 .data-table th .th-unit{text-transform:none} /* unit symbols are case-sensitive: m, s, m/yd */
-.data-table{width:100%;border-collapse:collapse;font-size:0.84rem}.data-table th{background:var(--navy3);color:var(--cyan);font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--white2);vertical-align:top;line-height:1.6}.data-table tr:hover td{background:rgba(0,212,255,0.03)}.data-table td:first-child{color:var(--white);font-weight:500}
+.data-table{width:100%;border-collapse:collapse;font-size:0.84rem}.data-table th{background:var(--navy3);color:var(--cyan);font-family:var(--fm);font-weight:500;font-size:var(--fs-micro);letter-spacing:2px;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--white2);vertical-align:top;line-height:1.6}.data-table tr:hover td{background:rgba(0,212,255,0.03)}.data-table td:first-child{color:var(--white);font-weight:500}
 .ptag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1px;color:var(--cyan);display:block;margin-bottom:3px}
 .log-stat-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px}
 .viz-phys-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
@@ -358,7 +365,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
    3D VISUALIZER
    ============================================================ */
 .viz-canvas-wrap{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r16);overflow:hidden;position:relative}
-#viz3d-container{display:block;width:100%;height:520px;border-radius:var(--r16);overflow:hidden;cursor:grab}
+#viz3d-container{display:block;width:100%;height:520px;border-radius:var(--r16);overflow:hidden;cursor:grab;touch-action:pan-y pinch-zoom} /* vertical swipes scroll on the compositor without waiting for the (non-passive) touchmove orbit handler; horizontal drags still reach it */
 .viz-fallback{display:flex;align-items:center;justify-content:center;height:100%;padding:2rem;text-align:center;color:var(--white2);font-size:0.9rem;line-height:1.8}
 .viz-overlay-stats{position:absolute;top:12px;right:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px;pointer-events:none}
 .vos-item{background:rgba(4,13,24,0.92);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center}
@@ -417,7 +424,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .ai-messages::-webkit-scrollbar{width:4px}.ai-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .msg{display:flex;gap:10px;align-items:flex-start;animation:fadeUp 0.3s ease}.msg.user{flex-direction:row-reverse}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:700;flex-shrink:0;font-family:var(--fm)}
+.msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:500;flex-shrink:0;font-family:var(--fm)}
 .msg-avatar.ai-av{background:var(--cyan-dim);border:1px solid rgba(0,212,255,0.3);color:var(--cyan)}.msg-avatar.user-av{background:var(--gold-dim);border:1px solid rgba(245,166,35,0.3);color:var(--gold)}
 .msg-bubble{max-width:80%;min-width:0;overflow-wrap:anywhere;background:var(--card3);border-radius:14px;padding:0.85rem 1.1rem;font-size:0.88rem;color:var(--white2);line-height:1.8;font-weight:300;border:1px solid var(--border2)} /* a pasted URL wraps inside the bubble instead of scrolling the chat sideways */
 .msg-bubble.user-b{background:rgba(0,212,255,0.07);border-color:rgba(0,212,255,0.15);color:var(--white)}
@@ -469,7 +476,7 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 .zone-bars{display:flex;flex-direction:column;gap:12px;margin-top:1.5rem}
 .zone-row{display:flex;align-items:center;gap:14px}.zone-name{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--white3);text-transform:uppercase;min-width:95px;text-align:right}
 .zone-track{flex:1;background:var(--navy3);border-radius:4px;height:26px;overflow:hidden;border:1px solid var(--border2)}
-.zone-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 12px;font-family:var(--fm);font-size:var(--fs-micro);color:var(--navy);font-weight:700}
+.zone-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 12px;font-family:var(--fm);font-size:var(--fs-micro);color:var(--navy);font-weight:500}
 .zone-fill.z1{background:linear-gradient(90deg,#00e599,#00c27d);width:18%}.zone-fill.z2{background:linear-gradient(90deg,#00d4ff,#00a8cc);width:42%}.zone-fill.z3{background:linear-gradient(90deg,#f5a623,#d4891a);width:64%}.zone-fill.z4{background:linear-gradient(90deg,#ff7043,#e64a19);width:82%}.zone-fill.z5{background:linear-gradient(90deg,#ff5252,#c62828);width:100%}
 .zone-info{font-family:var(--fm);font-size:0.62rem;color:var(--white3);min-width:140px}
 /* PR TRACKER */
@@ -501,7 +508,7 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2rem}
 .footer-inner{max-width:1176px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2rem;margin-bottom:2rem}
 .footer-brand h3{font-family:var(--fh);font-size:1.8rem;letter-spacing:2px;color:var(--cyan);margin-bottom:0.75rem}.footer-brand h3 span{color:var(--white)}.footer-brand p{font-size:0.83rem;color:var(--white3);line-height:1.8;max-width:300px}
-.footer-col h4{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:1rem}
+.footer-col h4{font-family:var(--fm);font-weight:500;font-size:var(--fs-micro);letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:1rem}
 .footer-col ul{list-style:none}.footer-col ul li{font-size:0.83rem;padding:2px 0}.footer-col ul li a{display:inline-block;padding:5px 0;color:var(--white3);text-decoration:none;transition:color 0.2s}.footer-col ul li a:hover,.footer-col ul li a:focus-visible{color:var(--cyan)}
 .footer-bottom{max-width:1176px;margin:0 auto;padding-top:1.5rem;border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 .footer-bottom p{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white4);text-transform:uppercase}
@@ -596,7 +603,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* ===== REVIEW FIXES: touch targets, a11y, print ===== */
 /* Skip link — first tab stop on every page */
 .skip-link{position:absolute;left:-9999px;top:0;z-index:10001;background:var(--cyan);color:var(--navy);
-  padding:10px 18px;border-radius:0 0 8px 0;font-family:var(--fm);font-size:0.8rem;font-weight:700}
+  padding:10px 18px;border-radius:0 0 8px 0;font-family:var(--fm);font-size:0.8rem;font-weight:500} /* DM Mono's heaviest real weight — 700 would be synthesised */
 .skip-link:focus{left:0}
 /* Pool-deck touch targets: 44px minimum on phones */
 @media(max-width:768px){
@@ -1060,7 +1067,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* 3 · Zones */
 #page-analytics .an-zone-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.5rem}
 #page-analytics .an-zone-bar{display:flex;width:100%;height:34px;border-radius:6px;overflow:hidden;background:var(--navy3);border:1px solid var(--border2)}
-#page-analytics .an-zone-seg{height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:0.62rem;font-weight:700;color:var(--navy);overflow:hidden;white-space:nowrap;min-width:0}
+#page-analytics .an-zone-seg{height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:0.62rem;font-weight:500;color:var(--navy);overflow:hidden;white-space:nowrap;min-width:0}
 #page-analytics .an-zone-seg.dim{color:var(--navy);background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.08) 0 6px,transparent 6px 12px)}
 #page-analytics .an-zone-empty{display:flex;align-items:center;justify-content:center;width:100%;font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--white3);text-transform:uppercase}
 #page-analytics .an-zone-list{list-style:none;margin:1rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:6px 18px}
@@ -1233,7 +1240,7 @@ html.tl-pal-lock{overflow:hidden}
 /* Mobile: full-screen sheet, big input, tappable rows */
 @media(max-width:640px){
   .tl-pal{padding:0;align-items:stretch}
-  .tl-pal-dialog{width:100%;max-height:none;height:100vh;height:100dvh;border-radius:0;border:none;animation:none}
+  .tl-pal-dialog{width:100%;max-height:none;height:100vh;height:100dvh;border-radius:0;border:none;animation:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
   .tl-pal-head{padding:8px 8px 8px 14px}
   .tl-pal-input{font-size:1.12rem;padding:12px 0}
   .tl-pal-esc{display:none}
@@ -1336,7 +1343,7 @@ html.tl-pal-lock{overflow:hidden}
 #nav-updates .tl-upd-dot{position:absolute;top:13px;right:-1px;margin-left:0}
 
 /* ── Update toast (created by the What's New module of the inline script, appended to <body>) ── */
-.tl-upd-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);background:var(--card2);border:1px solid var(--border);border-radius:var(--r12);padding:10px 10px 10px 18px;box-shadow:0 16px 40px rgba(0,0,0,0.45),0 0 40px rgba(0,212,255,0.08);animation:tlUpdIn 0.3s ease}
+.tl-upd-toast{position:fixed;left:50%;bottom:20px;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);background:var(--card2);border:1px solid var(--border);border-radius:var(--r12);padding:10px 10px 10px 18px;box-shadow:0 16px 40px rgba(0,0,0,0.45),0 0 40px rgba(0,212,255,0.08);animation:tlUpdIn 0.3s ease}
 @keyframes tlUpdIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
 .tl-upd-toast-msg{font-family:var(--fm);font-size:0.72rem;letter-spacing:0.3px;color:var(--white);line-height:1.5}
 .tl-upd-toast-msg b{color:var(--cyan);font-weight:600}
@@ -1444,7 +1451,7 @@ nav #nav-search-btn[hidden]{display:none}
        closing — translated off-screen while the slide-out runs; the nav module marks it inert meanwhile.
        open    — in place, focusable immediately.
      the nav module un-parks and forces a reflow before adding .open, and parks after the slide-out. */
-  nav .nav-drawer{position:fixed;top:0;right:0;height:100vh;height:100dvh;width:min(360px,88vw);flex:none;display:flex;flex-direction:column;justify-content:flex-start;background:var(--navy2);border-left:1px solid var(--border);box-shadow:-24px 0 60px rgba(0,0,0,0.5);transform:translateX(102%);transition:transform 0.28s cubic-bezier(0.2,0.7,0.2,1);z-index:5;overflow:hidden}
+  nav .nav-drawer{position:fixed;top:0;right:0;height:100vh;height:100dvh;width:min(360px,88vw);padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) 0;flex:none;display:flex;flex-direction:column;justify-content:flex-start;background:var(--navy2);border-left:1px solid var(--border);box-shadow:-24px 0 60px rgba(0,0,0,0.5);transform:translateX(102%);transition:transform 0.28s cubic-bezier(0.2,0.7,0.2,1);z-index:5;overflow:hidden}
   nav .nav-drawer.open{transform:none}
   nav .nav-drawer.parked{display:none}
   nav .nav-scrim{width:100%}
@@ -3762,7 +3769,7 @@ async function initSupabaseAuth(){
 document.addEventListener('DOMContentLoaded', initSupabaseAuth);
 </script>
 <div id="access-gate" onclick="if(event.target===this)closeAuthGate()" style="position:fixed;inset:0;background:rgba(4,13,24,0.94);z-index:9998;display:none">
-  <button type="button" onclick="closeAuthGate()" aria-label="Close log-in dialog" title="Close" style="position:fixed;top:8px;right:8px;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:none;border:none;color:var(--white3);font-size:1.6rem;cursor:pointer;line-height:1;z-index:1"><span aria-hidden="true">✕</span></button>
+  <button type="button" onclick="closeAuthGate()" aria-label="Close log-in dialog" title="Close" style="position:fixed;top:8px;right:8px;top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:none;border:none;color:var(--white3);font-size:1.6rem;cursor:pointer;line-height:1;z-index:1"><span aria-hidden="true">✕</span></button>
   <div class="auth-card-wrap" style="max-width:440px;width:100%;margin:auto">
   <!-- LOGIN -->
   <div id="screen-login" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
@@ -3773,7 +3780,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
       <input id="login-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doLogin()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Password</label>
       <input id="login-password" type="password" autocomplete="current-password" class="form-input" placeholder="••••••••" onkeydown="if(tlPlainEnter(event))doLogin()"></div>
-    <button id="login-btn" onclick="doLogin()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">LOG IN <span aria-hidden="true">→</span></button>
+    <button id="login-btn" onclick="doLogin()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:500;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">LOG IN <span aria-hidden="true">→</span></button>
     <p id="login-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p class="auth-links" style="font-size:0.82rem;color:var(--white3)">
       <button type="button" class="tl-linkbtn" onclick="showAuthScreen('forgot')">Forgot password?</button>
@@ -3794,7 +3801,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <label class="auth-consent">
       <input type="checkbox" id="signup-age"> I confirm I am 13 years of age or older.
     </label>
-    <button id="signup-btn" onclick="doSignup()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.6rem">CREATE ACCOUNT <span aria-hidden="true">→</span></button>
+    <button id="signup-btn" onclick="doSignup()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:500;text-transform:uppercase;cursor:pointer;margin-bottom:0.6rem">CREATE ACCOUNT <span aria-hidden="true">→</span></button>
     <p class="auth-legal">By creating an account you agree to our <a href="terms.html" target="_blank" rel="noopener">Terms of Use</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</p>
     <p id="signup-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><span>Already have an account?</span> <button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Log in</button></p>
@@ -3805,7 +3812,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <h2 id="auth-h-forgot" style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:1.25rem">RESET YOUR <br><span style="color:var(--cyan)">PASSWORD</span></h2>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Email</label>
       <input id="forgot-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doForgotPassword()"></div>
-    <button id="forgot-btn" onclick="doForgotPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SEND RESET LINK <span aria-hidden="true">→</span></button>
+    <button id="forgot-btn" onclick="doForgotPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:500;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SEND RESET LINK <span aria-hidden="true">→</span></button>
     <p id="forgot-msg" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.78rem;letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Back to login</button></p>
   </div>
@@ -3818,7 +3825,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
       <input id="newpass-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(tlPlainEnter(event))doSetNewPassword()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Confirm New Password</label>
       <input id="newpass-confirm" type="password" autocomplete="new-password" class="form-input" placeholder="Type it again" onkeydown="if(tlPlainEnter(event))doSetNewPassword()"></div>
-    <button id="newpass-btn" onclick="doSetNewPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SET NEW PASSWORD <span aria-hidden="true">→</span></button>
+    <button id="newpass-btn" onclick="doSetNewPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:500;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SET NEW PASSWORD <span aria-hidden="true">→</span></button>
     <p id="newpass-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
   </div>
   </div>
@@ -3908,6 +3915,7 @@ function activatePage(name,opts){
   } else if (typeof stopViz3DLoop === 'function') {
     stopViz3DLoop(); // stop the render loop when leaving the visualizer
   }
+  if (name === 'home' && typeof scheduleLabWarm === 'function') scheduleLabWarm(); // idle home page → prefetch the 3D lab's files
   if (name === 'season' && typeof renderSeasonPage === 'function') {
     renderSeasonPage();
     if (typeof markNewTabLinks === 'function') markNewTabLinks(page);
@@ -3941,6 +3949,8 @@ function showPageTab(page, tabId, elId){
 }
 window.addEventListener('hashchange', function(){ activatePage(location.hash.slice(1)||'home'); });
 document.addEventListener('DOMContentLoaded', function(){ activatePage(location.hash.slice(1)||'home',{focus:false}); }); // initial load: leave focus at the top so the skip link and nav come first
+// Every title + ' — Tidelyne' stays ≤ 60 characters (the brand suffix is what tab strips and search snippets drop
+// first) — the README release check verifies it.
 const PAGE_TITLES={
   home:'Tidelyne — Swimming Technique & Training Tools',
   technique:'Technique Library — Freestyle, Back, Breast, Fly',
@@ -3949,7 +3959,7 @@ const PAGE_TITLES={
   dryland:'Dryland Training for Swimmers',
   visualizer:'3D Stroke Visualizer — Swimming Biomechanics Lab',
   workouts:'Swim Workout Generator',
-  calculator:'Pace Calculators — Golf, Splits, Zones & Pool Conversion',
+  calculator:'Pace Calculators — Golf, Splits, Zones & Pools',
   zones:'Swim Training Zones — AeT, Threshold, VO2 max',
   profile:'My PRs — Personal Record Tracker',
   log:'Training Log & Weekly Volume',
@@ -4910,6 +4920,7 @@ function showHumanRig(rig, sd){
   rig.setSuitColor(sd.color);
   applyHumanTone(rig, humanTone);
   rig.setXray(humanXray);
+  requestRender3D();
 }
 function buildHumanRig(sex, quality, sd){
   const key = sex + '|' + quality;
@@ -4968,6 +4979,7 @@ function showMannequin(sd){
   swimmer = buildSwimmer(sd.color);
   swimmerOrient.add(swimmer.root);
   if (window.TL_HumanMaterials && scene && scene.environment) { try { TL_HumanMaterials.tameEnvironment(scene, 0.25); } catch (e) {} }
+  requestRender3D();
 }
 // Called on every stroke change and every AI motion. For the human this is
 // orientation + suit colour only — the rig is built ONCE per (sex, quality)
@@ -4975,6 +4987,7 @@ function showMannequin(sd){
 function rebuildSwimmer(strokeKey) {
   const sd = STROKES[strokeKey];
   setBodyOrientation(!!sd.supine);
+  requestRender3D();
   if (humanModulesReady() && !humanFailed) {
     if (swimmer && swimmer.isHuman) swimmer.setSuitColor(sd.color); // whatever is on screen follows the stroke colour
     ensureHumanRig(sd);                                               // cache hit → show; miss → async build
@@ -4996,7 +5009,8 @@ function toggleXray3D(){
   const b = document.getElementById('vbtn-xray');
   if (b) { b.classList.toggle('active', humanXray); b.setAttribute('aria-pressed', humanXray ? 'true' : 'false'); }
   if (swimmer && swimmer.isHuman) swimmer.setXray(humanXray);
-  else if (humanXray && viz3DInitialized) humanStatus('X-ray shows the skeleton inside the realistic swimmer once it has built.');
+  requestRender3D();
+  if (!(swimmer && swimmer.isHuman) && humanXray && viz3DInitialized) humanStatus('X-ray shows the skeleton inside the realistic swimmer once it has built.');
 }
 function setSkinTone3D(tone){
   if (!SKIN_TONE_HEX[tone]) return;
@@ -5006,6 +5020,7 @@ function setSkinTone3D(tone){
     if (b) { b.classList.toggle('active', k === tone); b.setAttribute('aria-pressed', k === tone ? 'true' : 'false'); }
   });
   for (const k in humanRigCache) applyHumanTone(humanRigCache[k], tone);
+  requestRender3D();
 }
 function easeInOut(t) { return t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
 // NOTE on signs: keyframe data uses the convention "positive shoulder/hip x
@@ -5187,6 +5202,7 @@ function zoomView3D(dir) {
   if (!viz3DInitialized || !controls) return;
   cancelViewTween3D(true); markView3D(null);
   controls.dolly(dir > 0 ? 0.8 : 1.25, tlReducedMotion() || document.hidden);
+  requestRender3D();
 }
 let viewClearBound = false;
 function bindViewClear3D() {
@@ -5205,6 +5221,7 @@ function cancelViewTween3D(finish) {
   if (tw.raf) cancelAnimationFrame(tw.raf);
   if (finish) { camera.position.copy(tw.endPos); controls.target.copy(tw.endTarget); }
   controls.enabled = true;
+  requestRender3D();
 }
 function setView3D(name) {
   if (!viz3DInitialized) return;
@@ -5215,7 +5232,7 @@ function setView3D(name) {
   const startTarget = controls.target.clone();
   const endPos = new THREE.Vector3(...v.pos);
   const endTarget = new THREE.Vector3(...v.target);
-  if (document.hidden || tlReducedMotion()) { camera.position.copy(endPos); controls.target.copy(endTarget); controls.enabled = true; return; }
+  if (document.hidden || tlReducedMotion()) { camera.position.copy(endPos); controls.target.copy(endTarget); controls.enabled = true; requestRender3D(); return; }
   const tw = { raf: 0, endPos, endTarget, t0: performance.now() };
   _viewTween3D = tw;
   controls.enabled = false;
@@ -5269,6 +5286,7 @@ function pointArrow(arrowGrp, originY, dirVec, magnitude, maxLen, originX, origi
 }
 function toggleForces3D(btn) {
   vizShowForces3D = !vizShowForces3D;
+  requestRender3D();
   if (btn) {
     btn.classList.toggle('active', vizShowForces3D);
     btn.setAttribute('aria-pressed', vizShowForces3D ? 'true' : 'false');
@@ -5298,6 +5316,7 @@ function jumpToPhase3D(i) {
   // updateSwimmer can leave a floating-point residue that resolves to the
   // END of the previous phase (its title with this phase's numbers).
   clockT = t + 1e-4;
+  requestRender3D();
 }
 // The phase the panel labels right now — same walk as updateSwimmer (nearest keyframe), but
 // synchronous, so keyboard stepping never reads a frame-old currentPhaseInfo.
@@ -5396,6 +5415,7 @@ function setStroke3D(s, btn) {
 }
 function togglePlay3D() {
   playing = !playing;
+  requestRender3D();
   const btn = document.getElementById('vbtn-play');
   if (btn) {
     btn.innerHTML = playing ? '<span aria-hidden="true">⏸ </span>Pause' : '<span aria-hidden="true">▶ </span>Play'; // static markup; glyph hidden from AT
@@ -5418,7 +5438,12 @@ function resizeViz3D() {
   const h = container.clientHeight || 520;
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
-  renderer.setSize(w, h);
+  // The window may have moved to a screen with another pixel density since init (1× monitor ↔ 2× panel, device
+  // emulation): re-read it, or the swimmer renders at half resolution on Retina and at 4× the pixels on 1×.
+  const pr = Math.min(window.devicePixelRatio || 1, 2);
+  if (renderer.getPixelRatio() !== pr) renderer.setPixelRatio(pr);
+  renderer.setSize(w, h);   // clears the drawing buffer — a paused lab must draw one more frame
+  requestRender3D();
 }
 let _vizResizeRaf = 0; // resize events are coalesced to one re-size per frame
 window.addEventListener('resize', function(){ if (_vizResizeRaf) return; _vizResizeRaf = requestAnimationFrame(function(){ _vizResizeRaf = 0; resizeViz3D(); }); });
@@ -5426,12 +5451,38 @@ let lastTime3D = performance.now();
 let _axNegX, _axPosX, _axPosY, _netDir; // scratch axes, created in startViz3D
 let _vizPageEl = null;
 let _raf3D = 0;
+// ─── Render only what can be seen ───────────────────────────────────────
+// The canvas sits below the intro and the video strip, so on every first open the loop would draw ~75k shadowed
+// triangles per frame for a swimmer nobody can see yet, and keep doing so while the phase table below is read.
+// One IntersectionObserver tracks the canvas and the info panel: no work at all while both are off-screen, and
+// the (cheap) pose + readout update without the (expensive) render while only the panel is in view.
+let _vizCanvasInView = true, _vizPanelInView = true, _vizInViewObs = null;
+function observeVizInView(){
+  if (_vizInViewObs || !('IntersectionObserver' in window)) return;
+  const canvas = document.getElementById('viz3d-container'), panel = document.getElementById('viz-info-panel');
+  if (!canvas) return;
+  _vizInViewObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.target === canvas){ _vizCanvasInView = en.isIntersecting; if (en.isIntersecting) requestRender3D(); }
+      else _vizPanelInView = en.isIntersecting;
+    });
+  }, { threshold: 0 });
+  _vizInViewObs.observe(canvas);
+  if (panel) _vizInViewObs.observe(panel);
+}
+// On-demand rendering while paused: with nothing moving, a paused scene is redrawn only after something changed
+// it — an orbit/zoom, a phase jump, a stroke/model/tone/x-ray/forces change, a resize, a rig arriving from its
+// async build. Every such site calls requestRender3D(), which keeps the loop working for 150 ms (long enough for
+// the damping tail and the 10 Hz readout throttle to catch up); the loop itself only ever skips work, so a
+// missed site costs a stale frame, never a wrong one.
+let _render3DUntil = 0;
+function requestRender3D(){ _render3DUntil = performance.now() + 150; }
 // Fully stop the render loop when leaving the visualizer (called by the
 // router), and resume it on return — so no requestAnimationFrame fires for
 // the page's whole lifetime once the lab has been opened.
 function vizLabActive(){ const p=document.getElementById('page-visualizer'); return !!(p&&p.classList.contains('active')); }
 function stopViz3DLoop(){ if(_raf3D){ cancelAnimationFrame(_raf3D); _raf3D=0; } if(typeof cancelViewTween3D==='function'&&_viewTween3D) cancelViewTween3D(true); }
-function startViz3DLoop(){ if(viz3DInitialized && !_raf3D){ lastTime3D=performance.now(); _raf3D=requestAnimationFrame(animate3D); } }
+function startViz3DLoop(){ if(viz3DInitialized && !_raf3D){ lastTime3D=performance.now(); requestRender3D(); _raf3D=requestAnimationFrame(animate3D); } }
 function animate3D(){
   _raf3D = requestAnimationFrame(animate3D);
   if (!viz3DInitialized) return;
@@ -5443,6 +5494,11 @@ function animate3D(){
     return;
   }
   const now = performance.now();
+  // Scrolled past: neither the canvas nor the readout panel is on screen (the tween keeps running so a preset
+  // click while scrolled away still lands on the right pose).
+  if (!_vizCanvasInView && !_vizPanelInView && !_viewTween3D) { lastTime3D = now; return; }
+  // Paused and idle: nothing has asked for a frame, the camera is settled and no view tween is running.
+  if (!playing && now > _render3DUntil && !_viewTween3D && (!controls.isSettled || controls.isSettled())) { lastTime3D = now; return; }
   let dt = (now - lastTime3D) / 1000; lastTime3D = now;
   // Clamp: after a background-tab pause dt can be seconds — without this the
   // swimmer and water lurch violently on return.
@@ -5482,7 +5538,7 @@ function animate3D(){
     pointArrow(vizForceGroup.userData.net,    hipY + over,  _netDir.lengthSq()>0.001 ? _netDir : _axPosX, _netDir.length(), 1.3, -0.25, 0);
   }
   controls.update();
-  renderer.render(scene, camera);
+  if (_vizCanvasInView) renderer.render(scene, camera); // panel-only view: pose + readouts update, no draw
   syncInfoPanel3D();
 }
 // ─── LAZY INIT — loads Three.js from CDN the first time the page opens ──
@@ -5508,11 +5564,50 @@ function startViz3D() {
   buildPhaseBar3D(currentStroke);
   seedInfoPanel3D(currentStroke);
   resizeViz3D();
+  observeVizInView();
   lastTime3D = performance.now();
   // Three.js may have finished downloading after the user left the lab: build the scene now (one-time)
   // but leave the loop stopped — the router starts it on the next visit (activatePage → startViz3DLoop).
   if (vizLabActive()) animate3D();
 }
+// ─── WARM-UP — put the lab's two files (Three.js 148 KB + viz-human.js 331 KB) in the HTTP cache before the
+// first click. Intent shows up early: a pointer over "3D Viz" / the Tools group / the home CTAs, or simply an idle
+// home page on a fast connection. rel=prefetch is idle-priority and never blocks anything; `as="script"` makes the
+// CSP judge it under script-src (jsDelivr + self), and crossorigin matches the loader's anonymous request so the
+// cached response is the one the <script> reuses. Data-saver users are never warmed. Idempotent.
+let _labWarmed = false;
+function tlWarmLab(){
+  if (_labWarmed) return;
+  const conn = navigator.connection;
+  if (conn && conn.saveData) return;
+  if (window.THREE && humanModulesReady()) { _labWarmed = true; return; }
+  _labWarmed = true;
+  [{ href: 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js', cross: true },
+   { href: HUMAN_SCRIPT + '?v=' + encodeURIComponent(window.TL_VERSION || ''), cross: false }].forEach(function(f){
+    const l = document.createElement('link');
+    l.rel = 'prefetch'; l.as = 'script'; l.href = f.href;
+    if (f.cross) l.crossOrigin = 'anonymous';
+    document.head.appendChild(l);
+  });
+}
+// Home page idle: warm only on an unmetered, fast connection (unknown = assume fine).
+function scheduleLabWarm(){
+  if (_labWarmed) return;
+  const conn = navigator.connection;
+  if (conn && (conn.saveData || (conn.effectiveType && conn.effectiveType !== '4g'))) return;
+  const go = function(){ if (location.hash.replace('#','') === 'home' || !location.hash) tlWarmLab(); };
+  if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 4000 });
+  else setTimeout(go, 2500);
+}
+document.addEventListener('DOMContentLoaded', function(){
+  ['#nav-visualizer', '#tl-grp-tools', '.hero-btns a[href="#visualizer"]', '#page-home a.card-link[href="#visualizer"]'].forEach(function(sel){
+    document.querySelectorAll(sel).forEach(function(el){
+      el.addEventListener('pointerenter', tlWarmLab, { passive: true });
+      el.addEventListener('focus', tlWarmLab, { passive: true });
+      el.addEventListener('touchstart', tlWarmLab, { passive: true });
+    });
+  });
+});
 function ensureViz3DReady() {
   if (viz3DInitialized) { resizeViz3D(); retryHumanModules(); return; }
   if (window.THREE) { loadHumanScripts(startViz3D); return; }

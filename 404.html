@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Page not found — Tidelyne</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#040d18">
@@ -10,15 +10,15 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <link rel="icon" href="/JAC_Online/favicon.ico" sizes="16x16 32x32">
 <link rel="icon" type="image/svg+xml" href="/JAC_Online/logo-mark.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Fonts CSS is preloaded and promoted to a stylesheet once it arrives, so first paint never waits on the cross-origin request (display=swap covers the font files). -->
-<link rel="preload" as="style" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&display=swap"></noscript>
+<link rel="preload" as="style" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700&display=swap"></noscript>
 <style>
 html{color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#040d18;color:#b0c4d8;font-family:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem;line-height:1.7}
+body{background:#040d18;color:#b0c4d8;font-family:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem;padding-left:max(2rem,env(safe-area-inset-left));padding-right:max(2rem,env(safe-area-inset-right));line-height:1.7}
 .wrap{max-width:460px}
 h1{font-family:'Bebas Neue','DM Sans',sans-serif;font-weight:400;color:#eef3f8;font-size:4.5rem;letter-spacing:3px;line-height:1;margin-bottom:0.5rem}
 p{font-size:1rem;margin-bottom:1.5rem}
