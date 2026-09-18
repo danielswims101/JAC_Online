@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tidelyne — Swimming Technique & Training Tools</title>
 <meta name="description" content="Free swimming training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition, and mental performance.">
-<meta property="og:title" content="Tidelyne — Elite Swimming Platform">
+<meta property="og:title" content="Tidelyne — Swimming Technique & Training Tools">
 <meta property="og:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator, race strategy, nutrition, and mental performance — free for competitive swimmers.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://danielswims101.github.io/JAC_Online/">
 <link rel="canonical" href="https://danielswims101.github.io/JAC_Online/">
 <meta name="theme-color" content="#040d18">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Tidelyne — Elite Swimming Platform">
+<meta name="twitter:title" content="Tidelyne — Swimming Technique & Training Tools">
 <meta name="twitter:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator and more for competitive swimmers.">
 <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -372,7 +372,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .content-block ul{list-style:none}.content-block ul li{font-size:0.85rem;color:var(--white2);padding:7px 0;border-bottom:1px solid var(--border2);display:flex;gap:10px;align-items:flex-start;line-height:1.6}.content-block ul li:before{content:'→';color:var(--cyan);flex-shrink:0;font-size:0.75rem;margin-top:2px}.content-block ul li:last-child{border-bottom:none}
 /* FOOTER */
 footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2rem}
-.footer-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:2rem;margin-bottom:2rem}
+.footer-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2rem;margin-bottom:2rem}
 .footer-brand h3{font-family:var(--fh);font-size:1.8rem;letter-spacing:2px;color:var(--cyan);margin-bottom:0.75rem}.footer-brand h3 span{color:var(--white)}.footer-brand p{font-size:0.83rem;color:var(--white3);line-height:1.8;max-width:300px}
 .footer-col h4{font-family:var(--fm);font-size:0.61rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:1rem}
 .footer-col ul{list-style:none}.footer-col ul li{font-size:0.83rem;padding:4px 0}.footer-col ul li a{color:var(--white3);text-decoration:none;transition:color 0.2s}.footer-col ul li a:hover,.footer-col ul li a:focus-visible{color:var(--cyan)}
@@ -380,11 +380,11 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .footer-bottom p{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white4);text-transform:uppercase}
 /* IMGGEN */
 .imggen-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2rem}
-.imggen-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
-@media(max-width:700px){.imggen-grid{grid-template-columns:1fr}}
+.imggen-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.5rem}
+@media(max-width:700px){.imggen-grid{grid-template-columns:minmax(0,1fr)}}
 .imggen-result{background:var(--navy3);border:1px solid var(--border2);border-radius:var(--r12);min-height:280px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .imggen-placeholder{text-align:center;color:var(--white3);padding:2rem}.imggen-placeholder .icon{font-size:2.5rem;opacity:0.3;margin-bottom:1rem;display:block}
-.imggen-controls{display:flex;flex-direction:column;gap:1rem}
+.imggen-controls{display:flex;flex-direction:column;gap:1rem;min-width:0}.imggen-controls .form-select,.imggen-controls .form-textarea{width:100%;min-width:0}
 /* REVEAL ANIMATION */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}.reveal.visible{opacity:1;transform:none}
 /* MISC BUTTONS */
@@ -1021,7 +1021,7 @@ html.tl-pal-lock{overflow:hidden}
 /* Destination highlight ring (1.5 s) */
 .tl-pal-hit{outline:2px solid var(--cyan);outline-offset:4px;border-radius:6px;box-shadow:0 0 0 8px rgba(0,212,255,0.14);scroll-margin-top:84px;animation:tlPalHit 1.5s ease-out forwards}
 @keyframes tlPalHit{0%,55%{outline-color:var(--cyan);box-shadow:0 0 0 8px rgba(0,212,255,0.14)}100%{outline-color:transparent;box-shadow:0 0 0 8px rgba(0,212,255,0)}}
-/* Nav button (nav_button.html) */
+/* Nav search button (opens the command palette) */
 .tl-pal-navbtn{display:inline-flex;align-items:center;gap:6px}
 .tl-pal-navbtn svg{display:block}
 .tl-pal-navhint{font-family:var(--fm);font-size:0.56rem;letter-spacing:0.5px;color:var(--white3);line-height:1}
@@ -1130,7 +1130,7 @@ html.tl-pal-lock{overflow:hidden}
 #nav-updates{position:relative}
 #nav-updates .tl-upd-dot{position:absolute;top:13px;right:-1px;margin-left:0}
 
-/* ── Update toast (created by script.js, appended to <body>) ── */
+/* ── Update toast (created by the What's New script, appended to <body>) ── */
 .tl-upd-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);background:var(--card2);border:1px solid var(--border);border-radius:var(--r12);padding:10px 10px 10px 18px;box-shadow:0 16px 40px rgba(0,0,0,0.45),0 0 40px rgba(0,212,255,0.08);animation:tlUpdIn 0.3s ease}
 @keyframes tlUpdIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
 .tl-upd-toast-msg{font-family:var(--fm);font-size:0.72rem;letter-spacing:0.3px;color:var(--white);line-height:1.5}
@@ -1194,7 +1194,7 @@ nav .nav-menu a:hover,nav .nav-menu a:focus-visible{background:var(--cyan-dim);c
 nav .nav-menu a.active{background:var(--cyan-dim);color:var(--cyan);box-shadow:inset 2px 0 0 var(--cyan);border-bottom-color:transparent}
 /* Right cluster: keep a long username from pushing the row off-screen (CSS only; markup untouched). */
 nav #current-username-display{max-width:120px;overflow:hidden;text-overflow:ellipsis}
-/* script.js sets [hidden] on the search button until window.openPalette exists; the site's
+/* The nav script sets [hidden] on the search button until window.openPalette exists; the site's
    768px rule gives .nav-key-btn display:inline-flex, which would otherwise override [hidden]. */
 nav #nav-search-btn[hidden]{display:none}
 @media(max-width:999px){nav #current-username-display{display:none}}
@@ -1212,16 +1212,16 @@ nav #nav-search-btn[hidden]{display:none}
   /* Mirrors a badge appended inside #nav-updates (the link is out of sight in the closed drawer). */
   nav .nav-burger.has-badge::after{content:'';position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 2px var(--navy3)}
   /* top/left/width/height are explicit (not inset:0) because the nav's backdrop-filter can make it,
-     rather than the viewport, the containing block for fixed children; script.js re-anchors on open. */
+     rather than the viewport, the containing block for fixed children; the nav script re-anchors on open. */
   nav .nav-scrim{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;background:rgba(4,13,24,0.62);opacity:0;pointer-events:none;transition:opacity 0.25s ease;z-index:4}
   nav .nav-scrim.open{opacity:1;pointer-events:auto}
   /* Three states, no visibility transition (a transitioned visibility only resolves when the
      animation timeline ticks, which made the Close button unfocusable for a frame):
        parked  — display:none. Fully closed. A translated-off-screen box still counts as scrollable
                  overflow of its containing block (it made the page 344px wider than the phone).
-       closing — translated off-screen while the slide-out runs; script.js marks it inert meanwhile.
+       closing — translated off-screen while the slide-out runs; the nav script marks it inert meanwhile.
        open    — in place, focusable immediately.
-     script.js un-parks and forces a reflow before adding .open, and parks after the slide-out. */
+     The nav script un-parks and forces a reflow before adding .open, and parks after the slide-out. */
   nav .nav-drawer{position:fixed;top:0;right:0;height:100vh;height:100dvh;width:min(360px,88vw);flex:none;display:flex;flex-direction:column;justify-content:flex-start;background:var(--navy2);border-left:1px solid var(--border);box-shadow:-24px 0 60px rgba(0,0,0,0.5);transform:translateX(102%);transition:transform 0.28s cubic-bezier(0.2,0.7,0.2,1);z-index:5;overflow:hidden}
   nav .nav-drawer.open{transform:none}
   nav .nav-drawer.parked{display:none}
@@ -1266,7 +1266,7 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-drawer,nav .nav-drawer.open,nav .nav-scrim,nav .nav-burger-bars span,nav .nav-caret{transition:none}
   nav .nav-group-btn[aria-expanded="true"]+.nav-menu{animation:none}
 }
-/* Body scroll lock while the drawer is open (script.js also fixes the body for iOS). Keeps the
+/* Body scroll lock while the drawer is open (the nav script also fixes the body for iOS). Keeps the
    scrollbar gutter so desktop-width narrow windows do not shift when the page stops scrolling. */
 html.tl-nav-lock{overflow-y:scroll}
 html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
@@ -1337,9 +1337,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="nav-scrim" id="tl-nav-scrim"></div>
   <div class="nav-right">
-    <!-- Same markup as the palette bundle's nav_button.html (the palette's initPalette() rewrites the hint and
-         labels for the platform). Skip that bundle's "insert nav_button.html" step: the button is already here.
-         script.js hides it while window.openPalette is undefined so it is never a dead control. -->
+    <!-- Search button: initPalette() rewrites the hint and labels for the platform, and the nav script
+         hides it while window.openPalette is undefined so it is never a dead control. -->
     <button type="button" class="nav-key-btn tl-pal-navbtn" id="nav-search-btn" aria-label="Search (Cmd+K)" title="Search (Cmd+K)" onclick="if(window.openPalette)openPalette()"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg><span class="tl-pal-navhint" aria-hidden="true">⌘K</span></button>
     <button class="nav-ai-btn" onclick="showPage('ai')">AI Coach ✦</button>
     <button class="nav-ai-btn" id="nav-login-btn" onclick="openAuthGate('login')" style="background:var(--navy3);color:var(--cyan);border:1px solid var(--border)">Log In</button>
@@ -1356,7 +1355,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="hero-particles" id="hero-particles"></div>
   <p class="hero-eyebrow">A Complete Platform for Competitive Swimmers</p>
   <h1><span class="l1">TRAIN</span><span class="l2">ELITE.</span><span class="l3">SWIM FAST.</span></h1>
-  <p class="hero-desc">AI coaching, 3D biomechanics visualizer, technique library, workout generator, race strategy, nutrition, mental performance, taper protocols — everything a competitive swimmer needs.</p>
+  <p class="hero-desc">AI coaching, 3D biomechanics visualizer, technique library, workout generator, pool-deck timers, race planner, training analytics, race strategy, nutrition, mental performance, taper protocols — everything a competitive swimmer needs.</p>
   <div class="hero-btns">
     <button class="btn-hero" onclick="showPage('ai')">Talk to AI Coach ✦</button>
     <button class="btn-hero-ghost" onclick="showPage('visualizer')">3D Visualizer</button>
@@ -1375,7 +1374,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="metric-card"><span class="val">15m</span><span class="lbl">UW Off Walls</span><span class="sub">Free/back/fly max</span></div>
     <div class="metric-card"><span class="val">3D</span><span class="lbl">Force Viz</span><span class="sub">Drag, thrust, lift</span></div>
     <div class="metric-card"><span class="val">HR</span><span class="lbl">10-sec Count</span><span class="sub">24–28 at AeT</span></div>
-    <div class="metric-card"><span class="val">6</span><span class="lbl">New Sections</span><span class="sub">Race, Nutrition, Mental…</span></div>
+    <div class="metric-card"><span class="val">3</span><span class="lbl">Deck Tools</span><span class="sub">Timers, Planner, Analytics</span></div>
   </div>
   <div class="section-eyebrow">Everything You Need</div>
   <div class="section-title">A COMPLETE<br><span>TRAINING PLATFORM</span></div>
@@ -1390,7 +1389,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="card" onclick="showPage('ai')" style="cursor:pointer;border-color:rgba(0,212,255,0.2)">
       <span class="card-icon">🤖</span><div class="card-tag" style="color:var(--gold)">Streaming AI ✦</div>
       <h3>AI SWIM COACH</h3>
-      <p>Expert-level coaching that streams its answers word by word, instantly — trained on race strategy, technique, and physiology. Free account required.</p>
+      <p>Expert-level coaching that streams its answers word by word, instantly — briefed on race strategy, technique, and physiology. Free account required.</p>
       <ul><li>Real-time streaming output</li><li>Full program knowledge</li><li>Race prep & taper advice</li><li>Physiology with real numbers</li></ul>
     </div>
     <div class="card" onclick="showPage('technique')" style="cursor:pointer">
@@ -1417,9 +1416,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="footer-brand"><img src="logo-mark.svg" alt="" width="40" height="40" style="border-radius:9px;display:block;margin-bottom:10px"><h3>TIDE<span>LYNE</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
     <div class="footer-col"><h4>Learn</h4><ul><li><a href="#technique">Technique Library</a></li><li><a href="#videos">Video Library</a></li><li><a href="#sets">Training Sets</a></li><li><a href="#zones">Training Zones</a></li></ul></div>
     <div class="footer-col"><h4>Train</h4><ul><li><a href="#workouts">Workout Generator</a></li><li><a href="#dryland">Dryland</a></li><li><a href="#log">Training Log</a></li><li><a href="#profile">My PRs</a></li></ul></div>
-    <div class="footer-col"><h4>Compete</h4><ul><li><a href="#race">Race Strategy</a></li><li><a href="#nutrition">Nutrition</a></li><li><a href="#mental">Mental Performance</a></li><li><a href="#taper">Taper Protocol</a></li></ul></div>
+    <div class="footer-col"><h4>Tools</h4><ul><li><a href="#calculator">Pace Calculator</a></li><li><a href="#timers">Timers</a></li><li><a href="#planner">Race Planner</a></li><li><a href="#analytics">Training Analytics</a></li></ul></div>
+    <div class="footer-col"><h4>Compete</h4><ul><li><a href="#race">Race Strategy</a></li><li><a href="#nutrition">Nutrition</a></li><li><a href="#mental">Mental Performance</a></li><li><a href="#taper">Taper Protocol</a></li><li><a href="#injury">Injury Prevention</a></li><li><a href="#season">Season Calendar</a></li></ul></div>
   </div>
-  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a></p><p>Educational information only — not medical advice</p></div>
+  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p><a href="#updates">What's New</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a></p><p>Educational information only — not medical advice</p></div>
 </footer>
 </div>
 <!-- 3D VISUALIZER PAGE -->
@@ -1619,13 +1619,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="t-uw">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>UNDERWATER DOLPHIN KICK — THE 5TH STROKE</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Underwater dolphin kick is the fastest human movement through water. At elite level, UW velocity exceeds surface swimming speed. The program features UW 15m on nearly every session.</p>
+    <div class="acc-body open"><p>Underwater dolphin kick is the fastest human movement through water. At elite level, UW velocity exceeds surface swimming speed. Elite programs feature UW 15m work on nearly every session.</p>
     <div class="cue-box">🎯 Every rep is a race-simulation. Count kicks per 15m weekly.</div>
     <div class="key-grid">
       <div class="key-point"><span class="kp-label">Streamline</span><p>Hands stacked dominant-on-top, arms past ears, core rigid.</p></div>
       <div class="key-point"><span class="kp-label">Kick depth</span><p>25–35cm amplitude. Hip-driven.</p></div>
       <div class="key-point"><span class="kp-label">Swim depth</span><p>0.5–0.6m below surface.</p></div>
-      <div class="key-point"><span class="kp-label">Elite rate</span><p>180–210 kicks/min.</p></div>
+      <div class="key-point"><span class="kp-label">Elite rate</span><p>About 110–130 kicks/min at race speed (1.8–2.2 Hz). Rate, not amplitude, is what rises with speed.</p></div>
     </div></div></div>
   </div>
   <div class="tab-panel" id="t-turns">
@@ -1636,7 +1636,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="t-starts">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>GRAB START & TRACK START MECHANICS</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Track start (one foot back) is now dominant at elite level. Reaction time target: &lt;0.65 seconds. Takeoff angle: 35–45°.</p>
+    <div class="acc-body open"><p>Track start (one foot back) is now dominant at elite level; the grab start (both feet at the front edge, hands gripping the block) is the older alternative — a stronger but slower push, now rare in elite racing. Reaction time target: &lt;0.65 seconds. Takeoff angle: 35–45°.</p>
     <div class="key-grid">
       <div class="key-point"><span class="kp-label">Reaction time</span><p>Fast-elite: ~0.60–0.64s; most swimmers are slower — chase clean, not just fast.</p></div>
       <div class="key-point"><span class="kp-label">Takeoff angle</span><p>35–45° for maximum horizontal distance.</p></div>
@@ -1650,7 +1650,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="key-grid">
       <div class="key-point"><span class="kp-label">Fly pacing</span><p>Go out controlled — 200 IM is not a 50 fly sprint.</p></div>
       <div class="key-point"><span class="kp-label">Breast leg</span><p>The race decider. If you've gone out too hard, breaststroke is where you pay.</p></div>
-      <div class="key-point"><span class="kp-label">Elite split</span><p>200 IM — fly ~23%, back ~26%, breast ~28%, free ~23%: breaststroke is the slowest leg.</p></div>
+      <div class="key-point"><span class="kp-label">Elite split</span><p>200 IM — fly ~22%, back ~25%, breast ~29%, free ~24% of race time: breaststroke is the slowest leg, fly (with the dive) the fastest. Full patterns in the <a href="#planner" onclick="showPageTab('planner','pl-splits');return false;">Race Planner</a>.</p></div>
     </div></div></div>
   </div>
 </div>
@@ -1713,9 +1713,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel active" id="s-aet">
     <div class="info-box">AeT sets are the backbone of Meso I and majority of Meso II. <strong>80%+ of all training volume lives in this zone.</strong></div>
     <div class="table-wrap"><table class="data-table"><thead><tr><th>Set</th><th>Details</th><th>Purpose & Notes</th></tr></thead><tbody>
-      <tr><td>20×50 FR @ :55</td><td>Rd 1: Sub-thresh · Rd 2: AeT<br>DB check Rd 2</td><td><span class="ptag">Aerobic Base Benchmark</span>Primary testing set. HR 25–27 Rd 1, AeT ceiling Rd 2.</td></tr>
-      <tr><td>12×200 FR @ 3:00</td><td>Reps 1–2: Cruise · 3–12: AeT<br>HR 24–28 · 2,400m</td><td><span class="ptag">Volume Load</span>Flagship Meso 2 aerobic set.</td></tr>
-      <tr><td>5×100 BK ×5 Rds @ 1:25</td><td>60–90s between rounds<br>Rd 1 with Duck</td><td><span class="ptag">Stroke-Specific AeT</span>Backstroke aerobic maintenance.</td></tr>
+      <tr><td>20×50 FR @ :55</td><td>Rd 1: Sub-thresh · Rd 2: AeT<br>Benchmark check on Rd 2</td><td><span class="ptag">Aerobic Base Benchmark</span>Primary testing set. HR 25–27 Rd 1, AeT ceiling Rd 2.</td></tr>
+      <tr><td>12×200 FR @ 3:00</td><td>Reps 1–2: Cruise · 3–12: AeT<br>HR 24–28 · 2,400m</td><td><span class="ptag">Volume Load</span>Flagship Meso II aerobic set.</td></tr>
+      <tr><td>5×100 BK ×5 Rds @ 1:25</td><td>60–90s between rounds<br>Rd 1 with the Duck drill (Technique › Backstroke)</td><td><span class="ptag">Stroke-Specific AeT</span>Backstroke aerobic maintenance.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-thresh">
@@ -1886,7 +1886,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="info-box"><strong>Read the HR numbers as a 10-second count, not bpm.</strong> Stop, find your pulse, count for 10 seconds — "HR 24–28" means 24–28 beats in that 10 seconds (roughly 144–168 bpm). Lactate values are typical ranges from the literature, not measurements of you.</div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2.5rem">
     <div class="zone-bars">
-      <div class="zone-row"><div class="zone-name">Recovery</div><div class="zone-track"><div class="zone-fill z1">Z1</div></div><div class="zone-info">&lt;1.5 mmol · HR &lt;23</div></div>
+      <div class="zone-row"><div class="zone-name">Recovery</div><div class="zone-track"><div class="zone-fill z1">Z1</div></div><div class="zone-info">&lt;1.5 mmol · HR &lt;22</div></div>
       <div class="zone-row"><div class="zone-name">AeT / Base</div><div class="zone-track"><div class="zone-fill z2">Z2 AeT</div></div><div class="zone-info">2.0–3.0 mmol · HR 24–28</div></div>
       <div class="zone-row"><div class="zone-name">Threshold</div><div class="zone-track"><div class="zone-fill z3">Z3 Thresh</div></div><div class="zone-info">3.0–5.0 mmol · HR 27–31</div></div>
       <div class="zone-row"><div class="zone-name">VO₂ Max</div><div class="zone-track"><div class="zone-fill z4">Z4 VO₂</div></div><div class="zone-info">5.0–8.0 mmol · HR 31–35</div></div>
@@ -1894,9 +1894,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
   </div>
   <div style="display:flex;flex-direction:column;gap:1.25rem">
-    <div class="card"><div class="badge green">Zone 1</div><h3>RECOVERY</h3><p><strong>Lactate:</strong> below 1.5 mmol/L · <strong>HR:</strong> under 23 on the 10-second count · Easy enough to hold a full conversation. Used for warm-up, cool-down, and between hard sets — it clears lactate rather than building fitness, and going too hard here is the most common way swimmers blunt the next quality set.</p></div>
-    <div class="card"><div class="badge cyan">Zone 2 — AeT</div><h3>AEROBIC THRESHOLD</h3><p><strong>Lactate:</strong> 2.0–3.0 mmol/L · <strong>HR:</strong> 24–28 Golf scale · <strong>80%+ of total training volume.</strong> Builds mitochondrial density, oxidative enzyme capacity, cardiac output.</p></div>
-    <div class="card"><div class="badge gold">Zone 3</div><h3>THRESHOLD</h3><p><strong>Lactate:</strong> 3.0–5.0 mmol/L · <strong>HR:</strong> 27–31 Golf scale · <strong>3–4 word sentences max.</strong> First appears Week 4, expands progressively through Meso II.</p></div>
+    <div class="card"><div class="badge green">Zone 1</div><h3>RECOVERY</h3><p><strong>Lactate:</strong> below 1.5 mmol/L · <strong>HR:</strong> under 22 on the 10-second count · Easy enough to hold a full conversation. Used for warm-up, cool-down, and between hard sets — it clears lactate rather than building fitness, and going too hard here is the most common way swimmers blunt the next quality set.</p></div>
+    <div class="card"><div class="badge cyan">Zone 2 — AeT</div><h3>AEROBIC THRESHOLD</h3><p><strong>Lactate:</strong> 2.0–3.0 mmol/L · <strong>HR:</strong> 24–28 on the 10-second count · <strong>80%+ of total training volume.</strong> Builds mitochondrial density, oxidative enzyme capacity, cardiac output.</p></div>
+    <div class="card"><div class="badge gold">Zone 3</div><h3>THRESHOLD</h3><p><strong>Lactate:</strong> 3.0–5.0 mmol/L · <strong>HR:</strong> 27–31 on the 10-second count · <strong>3–4 word sentences max.</strong> Typically introduced around Week 4 of a season and expanded progressively through Meso II.</p></div>
     <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX &amp; SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · 3–8 min intervals · 48–72 hr recovery. <strong>Zone 5:</strong> 8.0+ mmol/L · 10–30 sec reps · full rest only.</p></div>
   </div>
 </div>
@@ -1920,13 +1920,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="section-eyebrow" style="margin-top:1.5rem">Breaststroke</div><div class="pr-grid" id="pr-grid-br"></div>
   <div class="section-eyebrow" style="margin-top:1.5rem">Butterfly</div><div class="pr-grid" id="pr-grid-fly"></div>
   <div class="section-eyebrow" style="margin-top:1.5rem">Individual Medley</div><div class="pr-grid" id="pr-grid-im"></div>
-  <p style="font-size:0.82rem;color:var(--white3);margin-top:1.75rem;line-height:1.7">Everything here is saved only in this browser. <strong style="color:var(--white2)">Export a backup</strong> before clearing your data or switching devices, then import it to restore your PRs, name, and training log.</p>
+  <p style="font-size:0.82rem;color:var(--white3);margin-top:1.75rem;line-height:1.7">Everything here is saved only in this browser. <strong style="color:var(--white2)">Export a backup</strong> before clearing your data or switching devices, then import it to restore your PRs, name, training log, and Race Planner goals and meets.</p>
   <div style="margin-top:0.75rem;display:flex;gap:10px;flex-wrap:wrap">
     <button class="btn-sm" onclick="exportBackup()">⬇ Export Backup</button>
     <button class="btn-ghost-sm" onclick="document.getElementById('import-file').click()">⬆ Import Backup</button>
     <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importBackup(event)">
-    <button class="btn-ghost-sm" onclick="clearAllPRs()">Clear All PRs</button>
-    <button class="btn-sm" onclick="showPage('calculator')">Calculate Pace Zones →</button>
+    <button class="btn-ghost-sm" onclick="clearAllPRs()">Clear All PR<span style="text-transform:none">s</span></button>
+    <button class="btn-sm" onclick="showPageTab('calculator','c-pace')">Calculate Pace Zones →</button>
   </div>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
@@ -1942,7 +1942,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="gen-row">
       <div class="form-group"><label>Date</label><input class="form-input" id="log-date" type="date"></div>
       <div class="form-group"><label>Session Type</label><select class="form-select" id="log-type"><option value="AM Pool">AM Pool</option><option value="PM Pool">PM Pool</option><option value="Dryland">Dryland</option><option value="Race">Race</option><option value="Time Trial">Time Trial</option></select></div>
-      <div class="form-group"><label>Distance (m)</label><input class="form-input" id="log-distance" type="number" placeholder="e.g. 4500"></div>
+      <div class="form-group"><label>Distance (m or yd)</label><input class="form-input" id="log-distance" type="number" placeholder="e.g. 4500 — use one unit"></div>
     </div>
     <div class="gen-row">
       <div class="form-group"><label>Duration (min)</label><input class="form-input" id="log-duration" type="number" placeholder="e.g. 75"></div>
@@ -1962,7 +1962,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div style="font-family:var(--fh);font-size:1.1rem;letter-spacing:1px;margin-bottom:1rem;color:var(--cyan)">30-DAY SUMMARY</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem">
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-sessions" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div style="font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px">Sessions</div></div>
-      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-km" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div style="font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px">Km Swum</div></div>
+      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-km" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div style="font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px">K swum (m or yd)</div></div>
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-hours" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div style="font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px">Hours</div></div>
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-avg-effort" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">—</div><div style="font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px">Avg Effort</div></div>
     </div>
@@ -1983,12 +1983,12 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel active" id="n-daily"><div class="nutr-grid">
     <div class="nutr-card"><div class="nutr-time">Pre-AM Session (60–90 min before)</div><h4>MORNING FUEL</h4><ul><li>1–2 slices white toast + jam (fast carbs)</li><li>Banana or 200ml orange juice</li><li>250ml water on waking</li><li>Avoid high-fat, high-fiber</li></ul></div>
-    <div class="nutr-card"><div class="nutr-time">Recovery Window</div><h4>POST-SESSION</h4><ul><li>Within 30 min: 40–60g carbs + 20–30g protein</li><li>Chocolate milk, Greek yogurt + banana</li><li>1–1.5L water over next 2 hours</li></ul></div>
+    <div class="nutr-card"><div class="nutr-time">Recovery Window</div><h4>POST-SESSION</h4><ul><li>Within 30 min: ~1 g/kg carbs (60–80g for most swimmers) + 20–30g protein</li><li>Chocolate milk, Greek yogurt + banana</li><li>1–1.5L water over next 2 hours</li></ul></div>
     <div class="nutr-card"><div class="nutr-time">Pre-PM Session (2–3 hrs before)</div><h4>AFTERNOON FUEL</h4><ul><li>80–100g carbs, 30g protein, low fat</li><li>Chicken + rice + vegetables</li><li>500ml water in the 2 hours before</li></ul></div>
   </div>
   <div class="divider"></div>
   <div class="grid-2">
-    <div class="content-block"><h4>CARBOHYDRATE TARGETS</h4><ul><li>Base training: 6–7 g/kg bodyweight</li><li>Double days: 8–10 g/kg</li><li>Taper weeks: 7–8 g/kg</li><li>Race day: 8–10 g/kg (2 days before)</li></ul></div>
+    <div class="content-block"><h4>CARBOHYDRATE TARGETS</h4><ul><li>Base training: 6–7 g/kg bodyweight</li><li>Double days: 8–10 g/kg</li><li>Taper weeks: 7–8 g/kg</li><li>Race day: 8–10 g/kg on the day before (start 2 days out for multi-day meets)</li></ul></div>
     <div class="content-block"><h4>PROTEIN TARGETS</h4><ul><li>Total daily: 1.6–2.2 g/kg</li><li>Per meal: 20–40g</li><li>Post-session priority: within 30 min</li><li>Pre-bed: casein-rich foods</li></ul></div>
   </div></div>
   <div class="tab-panel" id="n-race">
@@ -2043,7 +2043,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <li>2×15m sprint: Full race pace from a push.</li>
       <li>200m easy cool-down: Drop HR before the race.</li>
     </ul></div>
-    <div class="warn-box"><strong>Total warm-up: 1,200–1,800m max.</strong> More than that is a training set before your race.</div>
+    <div class="warn-box"><strong>Total: about 1,200–1,400m.</strong> Anything past ~1,800m is a training set before your race.</div>
   </div>
   <div class="tab-panel" id="r-events">
     <div class="table-wrap"><table class="data-table"><thead><tr><th>Event</th><th>Strategy</th><th>Key Tactic</th><th>Common Error</th></tr></thead><tbody>
@@ -2055,7 +2055,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="r-pacing">
-    <div class="content-block"><h4>PACING SCIENCE</h4><p>100m target: front half no more than 2% faster than back half. 200m target: back half 1–3% faster than front. 400m+: descending 100m splits throughout.</p></div>
+    <div class="content-block"><h4>PACING SCIENCE</h4><p><strong>100m:</strong> the second 50 is normally 1.5–2.5 s slower than the first — most of that gap is the dive, not fatigue. More than ~3 s slower means you went out too hard. <strong>200m:</strong> the second 100 within ~2–3% of the first (which includes the dive) in freestyle and backstroke, with the last 50 held or lifted; butterfly and breaststroke 200s fade more. <strong>400m and up:</strong> even 100s, with a lift on the final segment. The championship-final split patterns behind these targets are in the <a href="#planner" onclick="showPageTab('planner','pl-splits');return false;">Race Planner's split reference</a>.</p></div>
   </div>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
@@ -2087,12 +2087,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="info-box"><strong>The Taper "Flat" is Normal.</strong> Most swimmers feel terrible mid-taper. This almost always resolves by race day. Do NOT extend training because taper feels bad.</div>
   </div>
   <div class="tab-panel" id="tp-recovery"><div class="nutr-grid">
-    <div class="nutr-card"><div class="nutr-time">Evidence: Strong</div><h4>SLEEP</h4><ul><li>9–10 hrs for elite adolescents</li><li>8–9 hrs for adult competitive swimmers</li><li>Naps (20–30 min) between AM/PM sessions</li></ul></div>
+    <div class="nutr-card"><div class="nutr-time">Evidence: Strong</div><h4>SLEEP</h4><ul><li>The strongest recovery tool there is</li><li>Hours, naps and sleep hygiene: see the <a href="#taper" onclick="showPageTab('taper','tp-sleep');return false;">Sleep tab</a></li></ul></div>
     <div class="nutr-card"><div class="nutr-time">Evidence: Strong</div><h4>COLD WATER</h4><ul><li>10–15 min at 10–15°C post-training</li><li>Avoid after strength training</li><li>Best within 30 min of finishing</li></ul></div>
-    <div class="nutr-card"><div class="nutr-time">Evidence: Moderate</div><h4>ACTIVE RECOVERY</h4><ul><li>Easy pool swim 1,000–1,500m Zone 1</li><li>HR below 22 Golf scale</li><li>10–20 min beats complete inactivity</li></ul></div>
+    <div class="nutr-card"><div class="nutr-time">Evidence: Moderate</div><h4>ACTIVE RECOVERY</h4><ul><li>Easy pool swim 1,000–1,500m Zone 1</li><li>HR below 22 on the 10-second count</li><li>10–20 min beats complete inactivity</li></ul></div>
   </div></div>
   <div class="tab-panel" id="tp-sleep">
     <div class="content-block"><h4>SLEEP OPTIMIZATION</h4><ul>
+      <li>9–10 hrs for elite adolescents, 8–9 hrs for adult competitive swimmers</li>
       <li>Consistent sleep schedule matters more than occasional extra hours</li>
       <li>16–18°C optimal sleep temperature</li>
       <li>Avoid screens 60+ min before bed</li>
@@ -2287,7 +2288,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <p id="season-calendar-note" style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;line-height:1.6">Dates reflect the published USA Swimming national events calendar and are subject to official updates — always confirm with usaswimming.org before planning travel.</p>
   <div class="divider"></div>
   <div class="section-eyebrow">Cuts & Motivational Standards</div>
-  <div class="section-title" style="font-size:2.2rem">FUTURES, JUNIORS<span>, & NATIONAL CUTS</span></div>
+  <div class="section-title" style="font-size:2.2rem">FUTURES, JUNIORS <span>& NATIONAL CUTS</span></div>
   <div class="warn-box"><strong>Exact cut times aren't shown here on purpose.</strong> Futures, Speedo Junior Nationals, Toyota Nationals, and the B/BB/A/AA/AAA/AAAA Motivational Standards are each a full table of times split by event, age group, gender, and course (SCY/LCM) — and they get revised. Rather than risk showing you a stale or wrong number for a swim that matters, this links straight to the official current standard.</div>
   <div class="grid-2">
     <div class="card">
@@ -2332,7 +2333,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="ai-header">
       <div class="ai-header-left">
         <div class="ai-dot"></div>
-        <div class="ai-header-text"><h3>COACH AI</h3><p>Expert coaching knowledge · Streaming · Always online</p></div>
+        <div class="ai-header-text"><h3>COACH AI</h3><p>Expert coaching knowledge · Streaming · Free account</p></div>
       </div>
       <div class="ai-mode-btns">
         <button class="ai-mode-btn active" id="mode-coach" onclick="setMode('coach',this)">🏊 Coaching</button>
@@ -2444,22 +2445,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="table-wrap">
       <table class="data-table tlt-preset-table">
         <thead><tr><th>Event</th><th>Cycles / min</th><th>s per cycle</th><th>Strokes / min<br><span class="tlt-th-sub">single-arm, free &amp; back</span></th><th><span class="tlt-vh">Load into the tempo trainer</span></th></tr></thead>
-        <tbody>
-          <tr data-name="50 FR" data-lo="56" data-hi="64"><td>50 FR</td><td>56–64</td><td>1.07–0.94</td><td>112–128</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>
-          <tr data-name="100 FR" data-lo="46" data-hi="53"><td>100 FR</td><td>46–53</td><td>1.30–1.13</td><td>92–106</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>
-          <tr data-name="200 FR" data-lo="41" data-hi="48"><td>200 FR</td><td>41–48</td><td>1.46–1.25</td><td>82–96</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>
-          <tr data-name="400 FR" data-lo="38" data-hi="46"><td>400 FR</td><td>38–46</td><td>1.58–1.30</td><td>76–92</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>
-          <tr data-name="800 / 1500 FR" data-lo="35" data-hi="46"><td>800 / 1500 FR<br><span class="tlt-td-sub">two styles: long-stroke ~35–38, high-rate ~42–46</span></td><td>35–46</td><td>1.71–1.30</td><td>70–92</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>
-          <tr data-name="100 BK" data-lo="48" data-hi="54"><td>100 BK</td><td>48–54</td><td>1.25–1.11</td><td>96–108</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>
-          <tr data-name="200 BK" data-lo="37" data-hi="46"><td>200 BK</td><td>37–46</td><td>1.62–1.30</td><td>74–92</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>
-          <tr data-name="100 BR" data-lo="47" data-hi="58"><td>100 BR</td><td>47–58</td><td>1.28–1.03</td><td>same as cycles</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>
-          <tr data-name="200 BR" data-lo="31" data-hi="39"><td>200 BR</td><td>31–39</td><td>1.94–1.54</td><td>same as cycles</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>
-          <tr data-name="100 FLY" data-lo="52" data-hi="60"><td>100 FLY<br><span class="tlt-td-sub">estimate, bracketed by 50 and 200 fly data</span></td><td>52–60</td><td>1.15–1.00</td><td>same as cycles</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>
-          <tr data-name="200 FLY" data-lo="48" data-hi="55"><td>200 FLY</td><td>48–55</td><td>1.25–1.09</td><td>same as cycles</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>
-        </tbody>
+        <tbody id="tlt-preset-body"></tbody>
       </table>
     </div>
-    <p class="tlt-note">Load sets the middle of a range in cycles/min. Ranges merge men and women and long- and short-course clean-swimming data, rounded outward: the 2019 European Short-Course Championships freestyle analysis (324 swimmers, Frontiers in Sports and Active Living 2025), a 2025 analysis of 59 elite 100 free finalists (Scientific Reports), the 2021 European Championships 200 m analysis of all four strokes and its 50 m butterfly counterpart, a 2020 study of short-course 100 breaststroke, and The Race Club's published backstroke stroke rates. No published 100 fly race series was found, so that row is an estimate between the 50 and 200 fly data.</p>
+    <p class="tlt-note">Load sets the middle of a range in cycles/min. Ranges merge men and women and long- and short-course clean-swimming data, rounded outward: the 2019 European Short-Course Championships freestyle analysis (324 swimmers, Frontiers in Sports and Active Living 2025), a 2025 analysis of 59 elite 100 free finalists (Scientific Reports), the 2021 European Championships 200 m analysis of all four strokes and its 50 m butterfly counterpart, a 2020 study of short-course 100 breaststroke, and The Race Club's published backstroke stroke rates. No published 100 fly race series was found, so that row is an estimate between the 50 and 200 fly data. The freestyle rows are the men's and women's bands from the <a href="#analytics">Analytics</a> elite freestyle reference merged into one envelope, so the two pages always agree.</p>
   </div>
 
   <!-- ══════════════ TAB 2 · INTERVAL / CIRCUIT TIMER ══════════════ -->
@@ -2518,7 +2507,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         </div>
         <div class="tlt-pc-analog">
           <svg id="tlt-pc-svg" viewBox="0 0 200 200" role="img" aria-labelledby="tlt-pc-svg-title">
-            <title id="tlt-pc-svg-title">Analog pace clock: red seconds hand, grey minute hand</title>
+            <title id="tlt-pc-svg-title">Analog pace clock: red seconds hand, black minute hand (drawn grey here)</title>
             <circle cx="100" cy="100" r="96" class="tlt-pc-face"/>
             <g id="tlt-pc-ticks"></g>
             <g id="tlt-pc-labels"></g>
@@ -2538,7 +2527,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="tlt-status" id="tlt-pc-status" role="status" aria-live="polite"></div>
     </div>
 
-    <div class="info-box"><strong>Reading the clock.</strong> An analog pace clock has a red seconds hand and a black minute hand, with 60 at the top where a 12 would be. "The top" is :00, "the bottom" is :30, and the quarters are ":15" and ":45". "Leave on the top" means push off when the red hand reaches 60; "on the bottom" means at 30. The face here tints the upper half red so top and bottom read at a glance. The clock runs on your device's time, so two phones on the same deck agree — tap a sync button to line it up with a pool clock that is not.</div>
+    <div class="info-box"><strong>Reading the clock.</strong> An analog pace clock has a red seconds hand and a black minute hand (drawn grey here so it shows on the dark face), with 60 at the top where a 12 would be. "The top" is :00, "the bottom" is :30, and the quarters are ":15" and ":45". "Leave on the top" means push off when the red hand reaches 60; "on the bottom" means at 30. The face here tints the upper half red so top and bottom read at a glance. The clock runs on your device's time, so two phones on the same deck agree — tap a sync button to line it up with a pool clock that is not.</div>
 
     <div class="section-eyebrow" style="margin-top:2rem">Send-off calculator</div>
     <div class="calc-wrapper">
@@ -2588,7 +2577,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Plan the Swim</div>
   <div class="section-title">RACE <span>PLANNER</span></div>
-  <p class="section-intro">Set goal times against your PRs, see what one swim implies about the others, plan every length of a race, and count down to the meet. Everything here saves in this browser only.</p>
+  <p class="section-intro">Set goal times against your PRs, see what one swim implies about the others, plan every length of a race, and count down to the meet. Everything here saves in this browser only and is included in the <a href="#profile">My PRs</a> backup.</p>
   <div class="tabs">
     <button class="tab-btn active" id="pl-tab-goals" onclick="switchTab(this,'pl-goals')">Goal Times</button>
     <button class="tab-btn" id="pl-tab-predict" onclick="switchTab(this,'pl-predict')">Race Predictor</button>
@@ -2718,7 +2707,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Training Analytics</div>
   <div class="section-title">VOLUME, CONSISTENCY <span>&amp; EFFICIENCY</span></div>
-  <p class="section-intro">Everything on this page is computed in your browser from the Training Log — weekly volume, consistency, intensity distribution and a set of rule-based observations — plus three pool-deck efficiency calculators. Distances are shown in whatever unit you log (metres or yards). Nothing is sent anywhere.</p>
+  <p class="section-intro">Everything on this page is computed in your browser from the Training Log — weekly volume, consistency, intensity distribution and a set of rule-based observations — plus three pool-deck efficiency calculators. Distances are shown in whatever unit you log (meters or yards). Nothing is sent anywhere.</p>
 
   <div class="an-toolbar">
     <button class="btn-sm" type="button" id="an-copy-btn" onclick="tl_an_copySummary()">Copy summary</button>
@@ -2732,7 +2721,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <!-- EMPTY STATE — shown when the log has no usable entries -->
   <div id="an-empty" class="an-empty" hidden>
-    <div class="an-empty-title">NOTHING TO ANALYSE YET</div>
+    <div class="an-empty-title">NOTHING TO ANALYZE YET</div>
     <p>This page reads the sessions you save on the <a href="#log">Training Log</a> page. Three things make the analytics useful from the first week:</p>
     <ol class="an-steps">
       <li><strong>Log every session</strong> — pool and dryland — with the date it happened. Weeks run Monday to Sunday.</li>
@@ -2751,7 +2740,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <div class="an-periods" id="an-periods"></div>
     <div class="an-metrics" id="an-metrics"></div>
-    <p class="an-hint">Weeks run Monday to Sunday (ISO weeks). Distance is in the unit you log — the Log form says metres, but if you enter yards, every number here is in yards. A streak counts consecutive weeks with at least one logged session of any type; the current week does not break a streak until it ends.</p>
+    <p class="an-hint">Weeks run Monday to Sunday (ISO weeks). Distance is in the unit you log — meters or yards; pick one and stick to it, and every number here is in that unit. A streak counts consecutive weeks with at least one logged session of any type; the current week does not break a streak until it ends.</p>
 
     <div class="divider an-divider"></div>
 
@@ -2802,7 +2791,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="an-zone-bar" id="an-zone-bar" role="img" aria-label="Share of pool minutes by training zone"></div>
       <ul class="an-zone-list" id="an-zone-list"></ul>
       <p class="an-zone-read" id="an-zone-read"></p>
-      <p class="an-hint">Method: each pool session's minutes are attributed to the primary zone you logged for it (dryland sessions are excluded; Mixed sessions are shown but cannot be split). Warm-up and cool-down are therefore counted at the session's main zone, so the true low-intensity share is somewhat higher than shown. The reading compares against published elite distributions (Seiler 2010; Hellard et al. 2019), which describe what elite programmes do, not what any individual should do. Informational only — your coach's plan takes precedence.</p>
+      <p class="an-hint">Method: each pool session's minutes are attributed to the primary zone you logged for it (dryland sessions are excluded; Mixed sessions are shown but cannot be split). Warm-up and cool-down are therefore counted at the session's main zone, so the true low-intensity share is somewhat higher than shown. The reading compares against published elite distributions (Seiler 2010; Hellard et al. 2019), which describe what elite programs do, not what any individual should do. Informational only — your coach's plan takes precedence.</p>
     </div>
 
     <div class="divider an-divider"></div>
@@ -2836,7 +2825,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="calc-wrapper">
         <div class="calc-panel"><h4>SWOLF — ONE LENGTH</h4>
           <div class="form-group an-fg"><label for="an-sw-pool">Pool length</label>
-            <select class="form-select" id="an-sw-pool"><option value="25m">25 m (short course metres)</option><option value="50m">50 m (long course)</option><option value="25yd">25 yd (short course yards)</option></select></div>
+            <select class="form-select" id="an-sw-pool"><option value="25m">25 m (short course meters)</option><option value="50m">50 m (long course)</option><option value="25yd">25 yd (short course yards)</option></select></div>
           <div class="form-group an-fg"><label for="an-sw-time">Time for one length (seconds)</label>
             <input class="form-input" id="an-sw-time" inputmode="decimal" autocomplete="off" placeholder="e.g. 17.8" maxlength="8"></div>
           <div class="form-group an-fg"><label for="an-sw-strokes">Stroke count for that length</label>
@@ -2869,7 +2858,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
             <div class="form-group an-fg"><label for="an-sr-stroke">Stroke</label>
               <select class="form-select" id="an-sr-stroke"><option value="fr">Freestyle</option><option value="bk">Backstroke</option><option value="fly">Butterfly</option><option value="br">Breaststroke</option></select></div>
             <div class="form-group an-fg"><label for="an-sr-unit">Distance unit</label>
-              <select class="form-select" id="an-sr-unit"><option value="m">Metres</option><option value="yd">Yards</option></select></div>
+              <select class="form-select" id="an-sr-unit"><option value="m">Meters</option><option value="yd">Yards</option></select></div>
           </div>
           <div class="form-group an-fg"><label for="an-sr-dist">Distance swum</label>
             <input class="form-input" id="an-sr-dist" type="number" inputmode="decimal" min="5" max="1500" step="any" placeholder="e.g. 50"></div>
@@ -2886,17 +2875,12 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         </div>
         <div class="calc-panel"><h4>ELITE FREESTYLE REFERENCE</h4>
           <p class="an-panel-p">Approximate mid-pool race values for finalists and semi-finalists at the 2019 European Short-Course Championships (25 m pool, 324 swimmers; Staunton, Ruiz-Navarro &amp; Born 2025). Read from published density plots, so treat the bands as rounded. Rate is in cycles per minute; distance per cycle is per two arm strokes.</p>
-          <div class="table-wrap an-ref-wrap"><table class="data-table an-ref-table"><thead><tr><th scope="col">Event</th><th scope="col">Rate — men</th><th scope="col">Per cycle — men</th><th scope="col">Rate — women</th><th scope="col">Per cycle — women</th></tr></thead><tbody>
-            <tr><td>50 free</td><td>58–67</td><td>1.9–2.2 m</td><td>56–64</td><td>1.8–2.0 m</td></tr>
-            <tr><td>100 free</td><td>48–55</td><td>2.1–2.3 m</td><td>46–52</td><td>2.0–2.4 m</td></tr>
-            <tr><td>200 free</td><td>38–50</td><td>2.2–2.7 m</td><td>39–45</td><td>2.1–2.6 m</td></tr>
-            <tr><td>400 free</td><td>38–48</td><td>2.2–2.6 m</td><td>47–53</td><td>1.8–2.1 m</td></tr>
-            <tr><td>800 / 1500 free</td><td>35–48</td><td>2.2–2.6 m</td><td>48–55</td><td>1.8–2.0 m</td></tr>
-          </tbody></table></div>
+          <div class="table-wrap an-ref-wrap"><table class="data-table an-ref-table"><thead><tr><th scope="col">Event</th><th scope="col">Rate — men</th><th scope="col">Per cycle — men</th><th scope="col">Rate — women</th><th scope="col">Per cycle — women</th></tr></thead><tbody id="an-ref-body"></tbody></table></div>
           <ul class="an-list">
             <li><strong>Measure a mid-pool segment.</strong> Time and count strokes between two marks (for example the 15 m and 45 m lines, or flags to flags). A full length includes the push-off and glide, which inflates distance per stroke.</li>
             <li><strong>Speed = rate × distance per cycle.</strong> The two trade off. Judge a technique change by speed at a fixed effort, or by stroke index (speed × distance per cycle), not by distance per stroke alone. Across elite fields, faster swimmers in the same event mostly cover more distance per stroke rather than stroking faster (Craig et al. 1985).</li>
             <li><strong>Race values are not training values.</strong> Rate and length at training speeds differ from race values, and short-course figures include the extra underwater distance per length, so a comparison against this table is indicative only.</li>
+            <li><strong>Women's distance rows.</strong> In the 400 the winner held 47–53 cycles/min with the field widely spread; in the 800 the field split into two clusters — about 39–40 cycles/min at ~2.2 m and 45–46 at ~1.9 m — with every medallist in the faster-rate cluster and the winner at 48–55. Women's distance rates at this meet were higher than their 100 rates, the opposite of the men's pattern.</li>
           </ul>
         </div>
       </div>
@@ -2907,7 +2891,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="calc-wrapper">
         <div class="calc-panel"><h4>CRITICAL SWIM SPEED (400 / 200)</h4>
           <div class="form-group an-fg"><label for="an-css-unit">Pool unit</label>
-            <select class="form-select" id="an-css-unit"><option value="m">Metres</option><option value="yd">Yards</option></select></div>
+            <select class="form-select" id="an-css-unit"><option value="m">Meters</option><option value="yd">Yards</option></select></div>
           <div class="form-group an-fg"><label for="an-css-400">400 time trial (m:ss.ss)</label>
             <input class="form-input" id="an-css-400" inputmode="decimal" autocomplete="off" placeholder="e.g. 4:38.5" maxlength="10"></div>
           <div class="form-group an-fg"><label for="an-css-200">200 time trial (m:ss.ss)</label>
@@ -2928,13 +2912,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
             <li><strong>Both swims all-out, from a push,</strong> in the same pool, well rested. A common field protocol is the 400 first, then full recovery (or a separate session), then the 200. A soft 400 or a 200 swum tired makes CSS wrong in opposite directions.</li>
             <li><strong>What it approximates.</strong> Critical velocity is defined as the speed that could in theory be held without exhaustion; in practice it correlates strongly with 400 m performance and sits close to the 4 mmol/L lactate speed (Wakayoshi et al. 1992, 1993). Later work found it slightly <em>overestimates</em> the pace at maximal lactate steady state (Dekerle et al. 2005), so repeats "at CSS" are demanding threshold work, not comfortable aerobic swimming.</li>
             <li><strong>The table below the result</strong> lists your own 400 and 200 paces beside CSS for comparison. How to train around CSS — offsets, repeat distance, rest — is your coach's call; this page does not prescribe it.</li>
-            <li><strong>D′ (anaerobic distance capacity)</strong> is the line's intercept: roughly the distance you can cover above CSS before fatigue forces you back down. From only two swims it is a rough estimate — read it in tens of metres, not units.</li>
+            <li><strong>D′ (anaerobic distance capacity)</strong> is the line's intercept: roughly the distance you can cover above CSS before fatigue forces you back down. From only two swims it is a rough estimate — read it in tens of meters, not units.</li>
           </ul>
         </div>
       </div>
     </div>
   </div>
-  <p class="an-hint an-foot">Informational only, not coaching or medical advice. Physiological references are population ranges from the sources listed in the project notes, not measurements of you.</p>
+  <p class="an-hint an-foot">Informational only, not coaching or medical advice. Physiological references are population ranges from the sources named on this page (Seiler 2010; Hellard et al. 2019; Wakayoshi et al. 1992; Dekerle et al. 2005; Staunton, Ruiz-Navarro &amp; Born 2025), not measurements of you.</p>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p><p>Analytics run on your device — log data never leaves it</p></div></footer>
 </div>
@@ -3288,6 +3272,14 @@ function activatePage(name){
 function showPage(name){
   if(location.hash.slice(1)===name){ activatePage(name); }  // re-click same page
   else { location.hash = name; }                            // → hashchange → activatePage
+}
+// Open a page on a specific tab, e.g. showPageTab('calculator','c-pace'). The tab
+// button is found next to the panel, so a renamed tab never leaves a dead link.
+function showPageTab(page, tabId){
+  showPage(page);
+  const panel=document.getElementById(tabId);
+  const btn=panel&&panel.parentElement.querySelector('.tab-btn[onclick*="\''+tabId+'\'"]');
+  if(btn) switchTab(btn, tabId);
 }
 window.addEventListener('hashchange', function(){ activatePage(location.hash.slice(1)||'home'); });
 document.addEventListener('DOMContentLoaded', function(){ activatePage(location.hash.slice(1)||'home'); });
@@ -4728,6 +4720,8 @@ function loadCustomMotion(motion, statusEl, prefix){
   buildPhaseBar3D('custom');
   statusEl.textContent=(prefix||'✓ Reconstructed: ')+motion.name+' ('+motion.phases.length+' phases). Orbit it, slow to 0.3×, or tap a phase under the canvas.';
 }
+// One rate-limit message for every AI entry point (coach, generator, visualizer analysis, 3D reconstruction).
+const AI_LIMIT_MSG='You\'ve reached the limit of 20 AI messages per 5 hours. Take a break and come back soon.';
 async function generateMotion(){
   const inp=document.getElementById('motion-prompt');
   const statusEl=document.getElementById('motion-status');
@@ -4751,7 +4745,7 @@ async function generateMotion(){
       const fb=tryFallbackMotion(desc);
       if(fb){ loadCustomMotion(fb, statusEl, '⚠ AI backend unavailable — built-in reconstruction: '); btn.disabled=false; return; }
       const err=await resp.json().catch(()=>({}));
-      statusEl.textContent=err.error||(resp.status===429?'You\'ve reached the limit of 20 AI messages per 5 hours.'
+      statusEl.textContent=err.error||(resp.status===429?AI_LIMIT_MSG
         :(resp.status===404?'AI 3D reconstruction is temporarily unavailable — try a built-in stroke, or the stroke buttons.'
         :'Error: HTTP '+resp.status));
       btn.disabled=false; return;
@@ -4788,13 +4782,8 @@ async function generateMotion(){
   btn.disabled=false;
 }
 // ─── SEASON & MEET CALENDAR — time-aware (reads the real device date) ────
-// PATCH BUNDLE — this file REPLACES the block in index.html that starts at the
-// header line above and ends just before "// ─── AI COACH — STREAMING". It is
-// not an add-on: pasting it anywhere else would redeclare SEASON_MEETS and
-// break the whole script. See NOTES.md for the exact edit.
-//
 // Meet dates below reflect the published 2026-27 USA Swimming national events
-// calendar (verified 2026-09-13; sources in NOTES.md). The page never invents
+// calendar (verified 2026-09-13 against usaswimming.org). The page never invents
 // specific cut times -- it links to the official standards instead. Always
 // confirm on usaswimming.org. Shape is unchanged: {name,start,end,course,tag}.
 const SEASON_MEETS = [
@@ -4975,7 +4964,7 @@ async function sendToAI(){
     if(!resp.ok){
       conversationHistory.pop(); // roll back the unanswered user turn (keeps the API from getting two user turns in a row and wedging the chat)
       const err=await resp.json().catch(()=>({}));
-      finishStreamBubble(streamBubble, err.error || (resp.status===429 ? 'You\'ve reached the limit of 20 AI messages per 5 hours. Take a break and come back soon.' : `Error: HTTP ${resp.status}`));
+      finishStreamBubble(streamBubble, err.error || (resp.status===429 ? AI_LIMIT_MSG : `Error: HTTP ${resp.status}`));
       btn.disabled=false; return;
     }
     const reader=resp.body.getReader();
@@ -5124,7 +5113,7 @@ MAIN SET (Xm):
 COOL-DOWN (Xm):
 TOTAL: Xm
 COACH NOTES:
-Every set needs interval, equipment, HR targets on Golf scale. Volume targets: 45min=2500-3500m, 60min=3500-5000m, 75min=4500-6500m, 90min=5500-8000m.`;
+Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g. HR 24–28). Volume targets: 45min=2500-3500m, 60min=3500-5000m, 75min=4500-6500m, 90min=5500-8000m.`;
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
@@ -5144,7 +5133,7 @@ Every set needs interval, equipment, HR targets on Golf scale. Volume targets: 4
     loading.style.display='none';
     if(!resp.ok){
       const err=await resp.json().catch(()=>({}));
-      result.innerHTML=`<p style="color:var(--red)">${err.error || (resp.status===429 ? 'You\'ve reached the limit of 20 AI messages per 5 hours. Try again later.' : `Error: HTTP ${resp.status}`)}</p>`;
+      result.innerHTML=`<p style="color:var(--red)">${err.error || (resp.status===429 ? AI_LIMIT_MSG : `Error: HTTP ${resp.status}`)}</p>`;
       return;
     }
     const reader=resp.body.getReader();
@@ -5269,7 +5258,7 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
     resultDiv.innerHTML='<div style="padding:1.25rem;text-align:center"><div style="font-family:var(--fm);font-size:0.6rem;letter-spacing:3px;color:var(--green)">✓ STREAMING</div></div>';
     if(!resp.ok){
       const err=await resp.json().catch(()=>({}));
-      contentDiv.innerHTML=`<p style="color:var(--red)">${err.error || (resp.status===429 ? 'You\'ve reached the limit of 20 AI messages per 5 hours. Try again later.' : 'API error')}</p>`;
+      contentDiv.innerHTML=`<p style="color:var(--red)">${err.error || (resp.status===429 ? AI_LIMIT_MSG : 'API error')}</p>`;
       return;
     }
     const reader=resp.body.getReader();
@@ -5448,12 +5437,16 @@ function clearAllPRs(){
 // On-device data (name + PRs + training log) never reaches a server, so a
 // downloadable JSON backup is the only way to move it between devices or
 // survive a browser-data clear. Referenced by the Privacy Policy / Terms.
+// Race Planner keys included in the backup (schema v2; v1 files without them still import).
+const BACKUP_PLANNER_KEYS=['tl_goals','tl_meet','tl_pred_fit'];
 function exportBackup(){
-  const data={ app:'Tidelyne', version:1, exported:new Date().toISOString(),
-    name:localStorage.getItem('swimmer_name')||'', prs:{}, log:readLog() };
+  const data={ app:'Tidelyne', version:2, exported:new Date().toISOString(),
+    name:localStorage.getItem('swimmer_name')||'', prs:{}, log:readLog(), planner:{} };
   Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>{
     const k='pr_'+e.replace(/ /g,'_'); const v=localStorage.getItem(k); if(v) data.prs[k]=v;
   }));
+  // v2: Race Planner goals, meet dates and the fitted predictor exponent (JSON strings as stored).
+  BACKUP_PLANNER_KEYS.forEach(k=>{ const v=localStorage.getItem(k); if(v) data.planner[k]=v; });
   try{
     const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
     const a=document.createElement('a');
@@ -5475,8 +5468,14 @@ function importBackup(ev){
       });
       if(typeof d.name==='string') lsSet('swimmer_name', d.name.slice(0,30));
       if(Array.isArray(d.log)) lsSet('swimiq_log', JSON.stringify(d.log.slice(0,100)));
+      const hasPlanner=!!(d.planner&&typeof d.planner==='object');   // v2 files; v1 files have no planner block
+      if(hasPlanner) BACKUP_PLANNER_KEYS.forEach(k=>{
+        const v=d.planner[k]; if(typeof v!=='string'||v.length>20000) return;
+        try{ JSON.parse(v); lsSet(k, v); }catch(e){}   // only well-formed JSON, never executed
+      });
       initProfile(); if(typeof renderLog==='function') renderLog();
-      alert('Backup imported — your PRs, name, and training log have been restored.');
+      if(hasPlanner&&typeof window.onShow_planner==='function') try{ window.onShow_planner(); }catch(e){}
+      alert('Backup imported — your PRs, name'+(hasPlanner?', training log and Race Planner goals':' and training log')+' have been restored.');
     }catch(e){ alert('That file is not a valid Tidelyne backup.'); }
   };
   r.readAsText(f);
@@ -5563,6 +5562,47 @@ function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swim
 const todayInput=document.getElementById('log-date');
 if(todayInput){const _d=new Date();_d.setMinutes(_d.getMinutes()-_d.getTimezoneOffset());todayInput.value=_d.toISOString().split('T')[0];}
 renderLog();
+// ─── ELITE RACE STROKE-RATE REFERENCE ────────────────────────────────────
+// ONE source for the Timers preset table and the Analytics elite-freestyle
+// table, so the two pages can never disagree. Cycles per minute (race analyses
+// count full arm cycles and call them "strokes"). men/women bands are read
+// from the 2019 European SC Championships density plots (Staunton, Ruiz-Navarro
+// & Born 2025): the women's 400 is the winner's range (field widely spread);
+// the women's 800 spans both field clusters (~39–40 and ~45–46) and the winner
+// (48–55). dpc = metres per cycle. Rows with a single lo/hi band merge the
+// other sources named on the Timers page. arms: strokes/min = 2 × cycles
+// (freestyle and backstroke); otherwise strokes and cycles are the same.
+const ELITE_RATES = [
+  { name:'50 FR',         men:[58,67], women:[56,64], dpcM:'1.9–2.2', dpcW:'1.8–2.0', arms:true },
+  { name:'100 FR',        men:[48,55], women:[46,52], dpcM:'2.1–2.3', dpcW:'2.0–2.4', arms:true },
+  { name:'200 FR',        men:[38,50], women:[39,45], dpcM:'2.2–2.7', dpcW:'2.1–2.6', arms:true },
+  { name:'400 FR',        men:[38,48], women:[47,53], dpcM:'2.2–2.6', dpcW:'1.8–2.1', arms:true },
+  { name:'800 / 1500 FR', men:[35,48], women:[39,55], dpcM:'2.2–2.6', dpcW:'1.8–2.2', arms:true, sub:'two styles: long-stroke ~35–40, high-rate ~45–55' },
+  { name:'100 BK',  lo:48, hi:54, arms:true },
+  { name:'200 BK',  lo:37, hi:46, arms:true },
+  { name:'100 BR',  lo:47, hi:58 },
+  { name:'200 BR',  lo:31, hi:39 },
+  { name:'100 FLY', lo:52, hi:60, sub:'estimate, bracketed by 50 and 200 fly data' },
+  { name:'200 FLY', lo:48, hi:55 }
+];
+// Timers envelope: the row's own band, or min/max across the men's and women's bands.
+function eliteRateBand(r){
+  return r.lo != null ? [r.lo, r.hi] : [Math.min(r.men[0], r.women[0]), Math.max(r.men[1], r.women[1])];
+}
+function renderEliteRateTables(){
+  const tb = document.getElementById('tlt-preset-body');
+  if (tb) tb.innerHTML = ELITE_RATES.map(r => {
+    const b = eliteRateBand(r), lo = b[0], hi = b[1];
+    const sub = r.sub ? '<br><span class="tlt-td-sub">' + r.sub + '</span>' : '';
+    const strokes = r.arms ? (lo * 2) + '–' + (hi * 2) : 'same as cycles';
+    return '<tr data-name="' + r.name + '" data-lo="' + lo + '" data-hi="' + hi + '"><td>' + r.name + sub + '</td><td>' + lo + '–' + hi + '</td><td>' + (60 / lo).toFixed(2) + '–' + (60 / hi).toFixed(2) + '</td><td>' + strokes + '</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>';
+  }).join('');
+  const ab = document.getElementById('an-ref-body');
+  if (ab) ab.innerHTML = ELITE_RATES.filter(r => r.men).map(r =>
+    '<tr><td>' + r.name.replace(' FR', ' free') + '</td><td>' + r.men[0] + '–' + r.men[1] + '</td><td>' + r.dpcM + ' m</td><td>' + r.women[0] + '–' + r.women[1] + '</td><td>' + r.dpcW + ' m</td></tr>'
+  ).join('');
+}
+renderEliteRateTables();
 // ─── TIMERS ───
 /* ═══════════════════════════════════════════════════════════════════════
    TIDELYNE — TIMERS PAGE  (tempo trainer · interval timer · pace clock)
@@ -5982,7 +6022,7 @@ function itStart(){
   auEnsure(); // null on browsers without Web Audio: the timer still runs, silently
   IT.status='running'; IT.startedAt=nowMs(); IT.pausedAccum=0; IT.segIdx=-1; IT.scheduled={};
   storeSet('tl_interval',c,'tlt-int-status'); wlHold('interval'); itLoopStart(); itButtons();
-  setStatus('tlt-int-status',AU.ctx?'':'No sound on this browser — watch the colours.');
+  setStatus('tlt-int-status',AU.ctx?'':'No sound on this browser — watch the colors.');
 }
 function itPause(){
   if(IT.status!=='running') return;
@@ -6513,8 +6553,8 @@ function quickFill(ev, p){
 // Exponents per stroke and event-ladder step: [low, typical, high].
 // "typical" sits between the men's and women's long-course world-record
 // ratios for that step; low/high bracket the spread between speed-type and
-// endurance-type swimmers (about ±3% at one doubling). Derivation and the
-// record list are in NOTES.md.
+// endurance-type swimmers (about ±3% at one doubling), derived from the
+// men's and women's long-course world records current when this shipped.
 // ═══════════════════════════════════════════════════════════════════════
 var EXP = {
   fr:  { '50-100':[1.11,1.15,1.19], '100-200':[1.09,1.13,1.17], '200-400':[1.06,1.09,1.12], '400-800':[1.02,1.04,1.06], '800-1500':[1.01,1.03,1.05] },
@@ -6752,7 +6792,8 @@ var LENGTH = { SCY:25, SCM:25, LCM:50 };
 var UNIT = { SCY:'y', SCM:'m', LCM:'m' };
 var START_BONUS = { SCY:0.9, SCM:1.0, LCM:1.4 };
 // Share (%) of total race time per segment in elite championship finals.
-// Includes the dive in the opening segment. tol = ± band. Sources: NOTES.md.
+// Includes the dive in the opening segment. tol = ± band. Read from published
+// championship-final split analyses; the Split Planner caption explains the shape.
 var PATTERNS = {
   '100 FR':  { segs:[48.1, 51.9], tol:0.5 },
   '100 BK':  { segs:[48.3, 51.7], tol:0.5 },
@@ -7555,11 +7596,11 @@ function buildInsights(m){
   recent.forEach(function(e){ if (e.date >= weekAgo && e.effort >= 8) hard++; });
   if (hard >= 3) out.push({ level:'note',
     text: hard + ' sessions at effort 8 or above in the last seven days.',
-    why:'Hard–easy sequencing is the norm in endurance programmes because high-intensity sessions need roughly 48–72 hours before the same system is ready to be loaded again. If these were back-to-back, recovery may be the limiter; if it is a planned race-pace block or a meet, it is expected.' });
+    why:'Hard–easy sequencing is the norm in endurance programs because high-intensity sessions need roughly 48–72 hours before the same system is ready to be loaded again. If these were back-to-back, recovery may be the limiter; if it is a planned race-pace block or a meet, it is expected.' });
   var dry = recent.filter(function(e){ return e.type === 'Dryland'; }).length;
   if (pool.length >= 8 && dry === 0) out.push({ level:'note',
     text:'No dryland logged in the last four weeks alongside ' + pool.length + ' pool sessions.',
-    why:'Not necessarily a gap — many programmes run dryland separately — but if you do it, logging it (type Dryland, minutes, effort) keeps the load picture honest.' });
+    why:'Not necessarily a gap — many programs run dryland separately — but if you do it, logging it (type Dryland, minutes, effort) keeps the load picture honest.' });
 
   // 12 · Consistency
   if (m.streak.current >= 4) out.push({ level:'good',
@@ -7585,11 +7626,11 @@ function zoneReading(z){
   } else {
     var lowPct = Math.round(low * 100), highPct = Math.round(high * 100), thrPct = Math.max(0, 100 - lowPct - highPct);
     parts.push('Of your classified pool minutes over the last four weeks, <strong>' + lowPct + '%</strong> were low intensity (Z1–Z2), <strong>' + thrPct + '%</strong> threshold (Z3) and <strong>' + highPct + '%</strong> high intensity (Z4–Z5).');
-    // Reference patterns (see NOTES.md): general endurance sport ~80% of
+    // Reference patterns: general endurance sport ~80% of
     // sessions at low intensity (Seiler 2010); elite swimmers 86–90% of
     // volume at or below ~4 mmol/L lactate, split ~40–44% below 2 mmol/L and
     // ~44–46% between 2 and 4 mmol/L (Hellard et al. 2019).
-    if (high >= 0.25) parts.push('The high-intensity share is well above what published elite programmes carry over a season — roughly 10–20% in endurance sport generally (Seiler 2010) and around 10–14% above 4 mmol/L lactate in elite swimmers (Hellard et al. 2019). Plausible for a short race-pace block or a meet fortnight, less so as a steady state.');
+    if (high >= 0.25) parts.push('The high-intensity share is well above what published elite programs carry over a season — roughly 10–20% in endurance sport generally (Seiler 2010) and around 10–14% above 4 mmol/L lactate in elite swimmers (Hellard et al. 2019). Plausible for a short race-pace block or a meet fortnight, less so as a steady state.');
     else if (low + thr >= 0.80) {
       if (low >= 0.70) parts.push('Low-intensity work dominates, close to the roughly 80/20 pattern described for elite endurance athletes (Seiler 2010). Elite swimming cohorts typically log a larger threshold block — around 44–46% of volume between 2 and 4 mmol/L, with 40–44% below 2 mmol/L (Hellard et al. 2019) — so a bigger Z3 share is not by itself a concern.');
       else parts.push('Aerobic and threshold work make up ' + Math.round((low + thr) * 100) + '% of classified minutes, which is consistent with the 86–90% at or below 4 mmol/L lactate reported for elite swimmers (Hellard et al. 2019).');
@@ -9191,7 +9232,7 @@ window.tl_an_debug = {
 // tag: 'New' | 'Improved' | 'Fixed'.  link: a page hash such as '#videos' —
 // rendered as a link only when that page exists in the DOM, so a note can
 // never point at a page that has not shipped.  Keep the top entry's version
-// in sync with VERSION in sw.js (see NOTES.md / README snippet).
+// in sync with VERSION in sw.js (see README.md, "Releasing a new version").
 const UPDATES = [
   {
     version: '3.1.1', date: '2026-09-16',
@@ -9232,14 +9273,14 @@ const UPDATES = [
   {
     version: '3.0.0', date: '2026-09-13',
     title: 'Deck tools, search and an offline app',
-    summary: 'Three new tool pages built for the pool deck, a command palette, an installable offline app and a reorganised, faster-loading site. Your log and PRs stay on your device.',
+    summary: 'Three new tool pages built for the pool deck, a command palette, an installable offline app and a reorganized, faster-loading site. Your log and PRs stay on your device.',
     items: [
       { tag: 'New',      text: 'Timers — tempo trainer, interval timer, and a pace clock with a send-off calculator and split taker.', link: '#timers' },
       { tag: 'New',      text: 'Race Planner — goal times, race predictor, split planner and meet countdown.', link: '#planner' },
       { tag: 'New',      text: 'Training Analytics — weekly volume chart, streaks, zone distribution and insights built from your training log, plus SWOLF, DPS and CSS calculators.', link: '#analytics' },
       { tag: 'New',      text: 'Global search — press ⌘K (Ctrl+K on Windows and Linux) anywhere to open the command palette and jump to any page or tool.' },
       { tag: 'Improved', text: 'Navigation — pages are grouped by purpose instead of one long strip, with a proper menu on phones.' },
-      { tag: 'New',      text: 'Installable app — add Tidelyne to your home screen or desktop; pages, calculators, timers, your log and PRs work offline.', link: '#updates' },
+      { tag: 'New',      text: 'Installable app — add Tidelyne to your home screen or desktop; pages, calculators, timers, your log and PRs work offline.' },
       { tag: 'Improved', text: 'Videos page — embeds load only when you tap a video, so the page opens in a fraction of the time.', link: '#videos' },
       { tag: 'Improved', text: 'Season calendar — refreshed for 2026–27 with the new national meet dates.', link: '#season' },
       { tag: 'New',      text: 'What\'s New — this page. A dot on the nav link means there is a release you have not read yet.' }
