@@ -38,7 +38,7 @@
 <meta name="twitter:image" content="https://danielswims101.github.io/JAC_Online/og.png">
 <meta name="twitter:image:alt" content="Tidelyne — 3D stroke lab for competitive swimmers">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://danielswims101.github.io/JAC_Online/#org","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","logo":{"@type":"ImageObject","url":"https://danielswims101.github.io/JAC_Online/icon-512.png","width":512,"height":512}},{"@type":"WebSite","@id":"https://danielswims101.github.io/JAC_Online/#website","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Free training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, pool-deck timers, race planner, training log and analytics — installable and works offline.","inLanguage":"en","publisher":{"@id":"https://danielswims101.github.io/JAC_Online/#org"}},{"@type":"WebApplication","@id":"https://danielswims101.github.io/JAC_Online/#app","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Free training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, pool-deck timers, race planner, training log and analytics — installable and works offline.","applicationCategory":"SportsApplication","operatingSystem":"Web","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://danielswims101.github.io/JAC_Online/og.png","inLanguage":"en","publisher":{"@id":"https://danielswims101.github.io/JAC_Online/#org"},"featureList":["AI swim coach","3D stroke visualizer","Technique library","Workout generator","Pace and race calculators","Training log and analytics","Race planner","Pool-deck timers"]}]}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://danielswims101.github.io/JAC_Online/#org","name":"Scarpline","url":"https://danielswims101.github.io/JAC_Online/","logo":{"@type":"ImageObject","url":"https://danielswims101.github.io/JAC_Online/icon-512.png","width":512,"height":512}},{"@type":"WebSite","@id":"https://danielswims101.github.io/JAC_Online/#website","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Free training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, pool-deck timers, race planner, training log and analytics — installable and works offline.","inLanguage":"en","publisher":{"@id":"https://danielswims101.github.io/JAC_Online/#org"}},{"@type":"WebApplication","@id":"https://danielswims101.github.io/JAC_Online/#app","name":"Tidelyne","brand":{"@type":"Brand","name":"Tidelyne"},"url":"https://danielswims101.github.io/JAC_Online/","description":"Free training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, pool-deck timers, race planner, training log and analytics — installable and works offline.","applicationCategory":"SportsApplication","operatingSystem":"Web","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://danielswims101.github.io/JAC_Online/og.png","inLanguage":"en","publisher":{"@id":"https://danielswims101.github.io/JAC_Online/#org"},"featureList":["AI swim coach","3D stroke visualizer","Technique library","Workout generator","Pace and race calculators","Training log and analytics","Race planner","Pool-deck timers"]}]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1483,8 +1483,7 @@ nav .nav-drawer{flex:1 1 auto;min-width:0;display:flex;align-items:stretch;justi
 @media(min-width:900px){
   nav{display:grid;grid-template-columns:1fr auto 1fr}
   nav>.nav-brand{justify-self:start}
-  nav>.nav-right{justify-self:end;margin-left:24px} /* breathing room before the ⌘K pill: the link group met it 8px away at the breakpoint (and at 1000–1040px once the username and logout appear) */
-  nav #nav-logout-btn{width:30px;height:30px;padding:0} /* 31×31 beside the 30px pills */
+  nav>.nav-right{justify-self:end;margin-left:24px} /* breathing room before the ⌘K pill: the link group met it 8px away at the breakpoint (and at 1000–1099px once the username and the Log Out pill appear) */
 }
 nav .nav-drawer-head,nav .nav-drawer-search,nav .nav-scrim,nav .nav-burger{display:none}
 nav .nav-drawer-scroll{display:flex;align-items:center;min-width:0}
@@ -1513,7 +1512,11 @@ nav #current-username-display{max-width:120px;overflow:hidden;text-overflow:elli
 /* the nav module sets [hidden] on the search button until window.openPalette exists; the site's
    768px rule gives .nav-key-btn display:inline-flex, which would otherwise override [hidden]. */
 nav #nav-search-btn[hidden]{display:none}
+/* Log Out is a worded pill like Log In (R8-COPY-15: the ⎋ glyph was the one unlabeled header control). It is 43px wider than
+   the glyph, so at 1000–1099px the ellipsised username gives that width back (78px; title/aria-label keep the full name) and the
+   link row still fits on one line beside the wordmark; from 1100px the name has its 120px again. */
 @media(max-width:999px){nav #current-username-display{display:none}}
+@media(min-width:1000px) and (max-width:1099px){nav #current-username-display{max-width:78px}}
 /* ---------- Mobile / tablet: hamburger + slide-in drawer ---------- */
 @media(max-width:899px){
   nav{gap:8px}
@@ -1522,9 +1525,8 @@ nav #nav-search-btn[hidden]{display:none}
      (a ::before keeps the 44px hit area). */
   nav .nav-right{margin-left:auto}
   nav .nav-brand{min-height:44px;padding:0 4px;margin-left:-4px} /* the wordmark was the one nav control under 40px on touch (100×31) */
-  nav .nav-ai-btn,nav #nav-login-btn{min-height:40px;padding:6px 10px;font-size:0.66rem;letter-spacing:0.6px;position:relative}
+  nav .nav-ai-btn,nav #nav-login-btn,nav #nav-logout-btn{min-height:40px;padding:6px 10px;font-size:0.66rem;letter-spacing:0.6px;position:relative} /* both auth pills: the 768px touch rule names them by id, which outranks .nav-ai-btn */
   nav .nav-ai-btn::before,nav .nav-burger::before,nav #nav-search-btn::before{content:"";position:absolute;inset:-2px}
-  nav #nav-logout-btn{min-width:40px;min-height:40px}
   /* The ⌘K pill was the one header control off the 40px line (32×30 at 769–899, 44×44 at 481–768): icon-only, 40×40, same hit area */
   nav #nav-search-btn{width:40px;min-width:40px;height:40px;min-height:40px;padding:0;display:inline-flex;align-items:center;justify-content:center;position:relative}
   nav #nav-search-btn .tl-pal-navhint{display:none}
@@ -1599,7 +1601,7 @@ nav #nav-search-btn[hidden]{display:none}
    (navCramped() also catches this now); 2px less gap and 7px pill padding keep the wordmark and the 12px gutter */
 @media(max-width:340px){
   nav.tl-pal-nav{gap:4px}
-  nav .nav-ai-btn,nav #nav-login-btn{padding:6px 7px}
+  nav .nav-ai-btn,nav #nav-login-btn,nav #nav-logout-btn{padding:6px 7px}
 }
 /* Body scroll lock while the drawer is open (the nav module also fixes the body for iOS). Keeps the
    scrollbar gutter so desktop-width narrow windows do not shift when the page stops scrolling. */
@@ -1849,7 +1851,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="nav-ai-btn" id="nav-ai-coach-btn" onclick="showPage('ai')"><span class="nav-ai-label">AI Coach</span> <span aria-hidden="true">✦</span></button>
     <button class="nav-ai-btn" id="nav-login-btn" onclick="openAuthGate('login')" style="background:var(--navy3);color:var(--cyan);border:1px solid var(--border)">Log In</button>
     <span id="current-username-display" style="font-family:var(--fm);font-size:0.65rem;color:var(--cyan);letter-spacing:0.5px;white-space:nowrap;padding:0 4px"></span>
-    <button class="nav-key-btn" id="nav-logout-btn" onclick="doLogout()" title="Log out" style="display:none">⎋</button>
+    <button class="nav-ai-btn" id="nav-logout-btn" onclick="doLogout()" style="display:none;background:var(--navy3);color:var(--cyan);border:1px solid var(--border)">Log Out</button>
   </div>
   <button type="button" class="nav-key-btn nav-burger" id="nav-menu-btn" aria-expanded="false" aria-controls="nav-drawer" aria-label="Menu"><span class="nav-burger-bars" aria-hidden="true"><span></span><span></span><span></span></span></button>
 </nav>
@@ -1859,7 +1861,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="hero">
   <div class="hero-bg"></div>
   <div class="hero-particles" id="hero-particles"></div>
-  <p class="hero-eyebrow">A Complete Platform for Competitive Swimmers</p>
+  <p class="hero-eyebrow">Training Tools for Competitive Swimmers</p>
   <h1><span class="l1">TRAIN</span> <span class="l2">ELITE.</span> <span class="l3">SWIM FAST.</span></h1>
   <p class="hero-desc">AI coaching, 3D biomechanics visualizer, technique library, workout generator, <span class="tl-nowrap">pool-deck</span> timers, race planner, training analytics, race strategy, nutrition, mental performance, taper protocols — everything a competitive swimmer needs.</p>
   <div class="hero-btns">
@@ -1887,8 +1889,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <p class="section-intro">Built on established sports science and competitive programming.</p>
   <div class="grid-3 reveal">
     <div class="card card-clickable" style="border-color:rgba(168,85,247,0.3)">
-      <span class="card-icon" aria-hidden="true">🎯</span><div class="card-tag" style="color:var(--purple-text)">Video + 3D Biomechanics</div>
-      <h3><a href="#visualizer" class="card-link">STROKE TECHNIQUE LAB</a></h3>
+      <span class="card-icon" aria-hidden="true">🎯</span><div class="card-tag" style="color:var(--purple-text)">Stroke Technique Lab</div>
+      <h3><a href="#visualizer" class="card-link">3D STROKE VISUALIZER</a></h3>
       <p>Elite stroke demos on video, paired with an interactive 3D biomechanics model — slow any movement down, orbit any angle, isolate a single phase.</p>
       <ul><li>Real elite technique video for every stroke</li><li>Joint-by-joint 3D reconstruction</li><li>AI: describe any movement, watch it rebuilt</li><li>Phase-by-phase coaching breakdown</li></ul>
     </div>
@@ -1923,13 +1925,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 </div>
 <footer role="contentinfo" aria-label="Site footer">
   <div class="footer-inner">
-    <div class="footer-brand"><img src="logo-mark.svg" alt="" width="40" height="40" style="border-radius:9px;display:block;margin-bottom:10px"><h3>TIDE<span>LYNE</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
+    <div class="footer-brand"><img src="logo-mark.svg" alt="" width="40" height="40" style="border-radius:9px;display:block;margin-bottom:10px"><h3>TIDE<span>LYNE</span></h3><p>Sports science, AI coaching and 3D biomechanics for competitive swimmers.</p></div>
     <div class="footer-col"><h4>Learn</h4><ul><li><a href="#technique">Technique Library</a></li><li><a href="#videos">Video Library</a></li><li><a href="#sets">Training Sets</a></li><li><a href="#dryland">Dryland</a></li><li><a href="#nutrition">Nutrition</a></li></ul></div>
     <div class="footer-col"><h4>Tools</h4><ul><li><a href="#visualizer">3D Visualizer</a></li><li><a href="#workouts">Workout Generator</a></li><li><a href="#calculator">Pace Calculator</a></li><li><a href="#zones">Training Zones</a></li><li><a href="#timers">Timers</a></li><li><a href="#planner">Race Planner</a></li></ul></div>
     <div class="footer-col"><h4>Track</h4><ul><li><a href="#profile">My PRs</a></li><li><a href="#log">Training Log</a></li><li><a href="#analytics">Training Analytics</a></li></ul></div>
     <div class="footer-col"><h4>Compete</h4><ul><li><a href="#race">Race Strategy</a></li><li><a href="#taper">Taper &amp; Recovery</a></li><li><a href="#mental">Mental Performance</a></li><li><a href="#injury">Injury Prevention</a></li><li><a href="#season">Season Calendar</a></li></ul></div>
   </div>
-  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p class="footer-links"><a href="#ai">AI Coach</a><a href="#updates">What's New</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="disclaimer.html">Medical Disclaimer</a><span id="tl-footer-install-wrap" hidden><button type="button" class="footer-install" id="tl-footer-install" onclick="tlFooterInstall()">Install app</button></span></p><p>Educational information only — not medical advice</p></div>
+  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p class="footer-links"><a href="#ai">AI Coach</a><a href="#updates">What's New</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="disclaimer.html">Medical Disclaimer</a><span id="tl-footer-install-wrap" hidden><button type="button" class="footer-install" id="tl-footer-install" onclick="tlFooterInstall()">Install app</button></span></p><p>Informational only — not medical or coaching advice</p></div>
 </footer>
 </div>
 <!-- 3D VISUALIZER PAGE -->
@@ -2132,7 +2134,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="acc-body open"><p>Butterfly is wave-driven, not arm-driven. The movement: chest presses DOWN → hips rise → feet drive DOWN. Hip amplitude: about 10–20 cm — the wave grows toward the feet (toes 45–60 cm).</p>
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Cue: "Chest DOWN first — everything else follows."</div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>2-2-2 DRILL & ONE-ARM FLY</h4><span class="chevron">▾</span></div>
-    <div class="acc-body"><p>2-2-2 drill: 2 right-arm strokes, 2 left-arm strokes, 2 full butterfly strokes. Isolates each side's pull pattern and makes bilateral asymmetries obvious immediately.</p><p>One-arm fly: the full body wave and both kicks with one arm stroking and the other extended in front (breathe to the side or to the front), 25s on each arm — it isolates the kick timing against the pull and shows which side's catch collapses.</p></div></div>
+    <div class="acc-body"><p>2-2-2 drill: 2 right-arm strokes, 2 left-arm strokes, 2 full butterfly strokes. Isolates each side's pull pattern and makes bilateral asymmetries obvious immediately.</p><p>One-arm fly: the full body wave and both kicks with one arm stroking and the other extended in front (breathe to the side or to the front), 25 m on each arm — it isolates the kick timing against the pull and shows which side's catch collapses.</p></div></div>
   </div>
   <div class="tab-panel" id="t-uw">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>UNDERWATER DOLPHIN KICK — THE 5TH STROKE</h4><span class="chevron open">▾</span></div>
@@ -2238,8 +2240,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="s-thresh">
     <div class="warn-box">Threshold sets first appear in Meso I, Week 4. <strong>Base before threshold — always.</strong></div>
     <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Set</th><th scope="col" role="columnheader">Details</th><th scope="col" role="columnheader">Purpose</th></tr></thead><tbody role="rowgroup">
-      <tr role="row"><td role="cell" data-label="Set">6×400 FR @ 6:00</td><td role="cell" data-label="Details">Threshold · HR 28–30 · 2,400 m</td><td role="cell" data-label="Purpose"><span class="ptag">Threshold Introduction</span>Week 4 first threshold.</td></tr>
-      <tr role="row"><td role="cell" data-label="Set">3 rounds: 3×400 FR @ 6:00 / 5:45 / 5:30</td><td role="cell" data-label="Details">Threshold · HR 28–30 · interval tightens each round · 3,600 m</td><td role="cell" data-label="Purpose"><span class="ptag">Progressive Pressure</span>Hold threshold pace; rest shrinks from ~60 s to ~30 s as the send-off tightens.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">6×400 FR @ 6:00</td><td role="cell" data-label="Details">Threshold · HR 28–31 · 2,400 m</td><td role="cell" data-label="Purpose"><span class="ptag">Threshold Introduction</span>Week 4 first threshold.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">3 rounds: 3×400 FR @ 6:00 / 5:45 / 5:30</td><td role="cell" data-label="Details">Threshold · HR 28–31 · interval tightens each round · 3,600 m</td><td role="cell" data-label="Purpose"><span class="ptag">Progressive Pressure</span>Hold threshold pace; rest shrinks from ~60 s to ~30 s as the send-off tightens.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-kick">
@@ -2259,7 +2261,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="s-warmup">
     <div class="info-box">Warm-up is programming — not filler. <strong>Each element serves a specific physiological function.</strong></div>
     <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Element</th><th scope="col" role="columnheader">Prescription</th><th scope="col" role="columnheader">Purpose</th></tr></thead><tbody role="rowgroup">
-      <tr role="row"><td role="cell" data-label="Element">Easy swim + IM 400–600 m</td><td role="cell" data-label="Prescription">HR below 22</td><td role="cell" data-label="Purpose"><span class="ptag">Thermal + Neural Priming</span>Raises muscle temperature 1–2°C.</td></tr>
+      <tr role="row"><td role="cell" data-label="Element">Easy swim + IM 400–600 m</td><td role="cell" data-label="Prescription">HR below 22 (easy end of Zone 1)</td><td role="cell" data-label="Purpose"><span class="ptag">Thermal + Neural Priming</span>Raises muscle temperature 1–2°C.</td></tr>
       <tr role="row"><td role="cell" data-label="Element">Kick on back 4–8×50</td><td role="cell" data-label="Prescription">Fins, dolphin or flutter</td><td role="cell" data-label="Purpose"><span class="ptag">Hip Activation</span>Fin overspeed primes kick velocity.</td></tr>
       <tr role="row"><td role="cell" data-label="Element">Build swims 4×50</td><td role="cell" data-label="Prescription">Build to ~80%</td><td role="cell" data-label="Purpose"><span class="ptag">Lactate Priming</span>Primes clearance system for main set.</td></tr>
     </tbody></table></div>
@@ -2336,7 +2338,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-calculator">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Performance Tools</div>
-  <h1 class="section-title">RACE & PACE <span>CALCULATOR</span></h1>
+  <h1 class="section-title">PACE <span>CALCULATOR</span></h1>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'c-golf')">Golf Score</button>
     <button class="tab-btn" onclick="switchTab(this,'c-splits')">Race Splits</button>
@@ -2380,12 +2382,12 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="c-pace">
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>TRAINING PACE ZONES</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label>Best 100 <span class="th-unit">m</span> Freestyle <span class="th-unit">(m:ss)</span></label><input class="form-input" id="pace-100" enterkeyhint="done" placeholder="e.g. 0:55.5 or 1:02.0"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Best 100 <span class="th-unit">m</span> Freestyle <span class="th-unit">(ss.ss or m:ss.ss)</span></label><input class="form-input" id="pace-100" enterkeyhint="done" placeholder="e.g. 55.50 or 1:02.00"></div>
         <button class="calc-btn" onclick="calcPaceZones()">Calculate Zones <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="pace-notice" role="alert" hidden></p>
       </div>
       <div class="calc-panel"><h4>ZONE TABLE</h4><div id="pace-result" aria-live="polite" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Enter your best 100 m time to see your zone paces.</div>
-        <p style="font-size:0.76rem;color:var(--white3);margin-top:1rem;line-height:1.6">Rough reference paces derived from your 100 m time, not lab-tested lactate zones. Use them as a starting point and adjust to feel, heart rate, and how the set actually goes.</p>
+        <p style="font-size:0.76rem;color:var(--white3);margin-top:1rem;line-height:1.6">Reference paces scaled from your best 100, not lab-tested lactate zones — the drop-off from a best time varies by swimmer, so adjust to feel, heart rate and how the set actually goes. For a measured threshold pace, run the <a href="#analytics" onclick="showPageTab('analytics','an-css');return false;">Critical Swim Speed test in Analytics</a>.</p>
       </div>
     </div>
   </div>
@@ -2427,15 +2429,15 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX &amp; SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · HR 31–33 on the 10-second count · 3–8 min intervals · 48–72 h recovery. <strong>Zone 5:</strong> sprint / anaerobic — two kinds. Alactic speed: 10–30 s efforts on full rest; lactate stays low and HR is not the guide. Lactate production: 50–100 m maximal efforts (8.0+ mmol/L, HR near max), 2–5 min rest, 1–2× a week at most.</p></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — typical published ranges, not measurements of you. Zones set by your coach or a Critical Swim Speed test take precedence.</p></div></footer>
 </div>
 <!-- MY PRs PAGE -->
 <div class="page" id="page-profile">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Personal Records</div>
   <h1 class="section-title">MY <span>PRs</span></h1>
-  <p class="section-intro">Tap any time field and type your personal record. All data saved locally in your browser — never sent anywhere.</p>
-  <span id="pr-format-hint" class="sr-only">Enter the time as minutes:seconds.hundredths, for example 1:02.45 (1.02.45 also works on a number keypad)</span>
+  <p class="section-intro">Tap any time field and type your personal record as ss.ss or m:ss.ss (24.10, 1:02.45). All data saved locally in your browser — never sent anywhere.</p>
+  <span id="pr-format-hint" class="sr-only">Enter the time as ss.ss or m:ss.ss, for example 24.10 or 1:02.45 (1.02.45 also works on a number keypad)</span>
   <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:2rem">
     <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
       <div style="width:58px;height:58px;border-radius:50%;background:var(--cyan-dim);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0" aria-hidden="true">🏊</div>
@@ -2536,7 +2538,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
   </div>
   <div class="tab-panel" id="n-recovery">
-    <div class="content-block"><h4>THE 30-MINUTE RECOVERY WINDOW</h4><p>Glycogen resynthesis rate is highest in the first 30–45 minutes after training. Target: 1–1.2 g/kg carbs + 0.3–0.4 g/kg protein. Best options: chocolate milk, rice + protein, yogurt + banana.</p></div>
+    <div class="content-block"><h4>THE 30-MINUTE RECOVERY WINDOW</h4><p>Glycogen resynthesis is fastest in the first 30 minutes after training (the rate stays high to about 45). Target: ~1 g/kg carbs + 0.3 g/kg protein — the same dose as the Post-Session card under Daily Fueling. Best options: chocolate milk, rice + protein, yogurt + banana.</p></div>
   </div>
   <div class="tab-panel" id="n-hydration">
     <div class="info-box"><strong>Even 2% dehydration measurably reduces performance.</strong> Swimmers underestimate fluid loss — you still sweat in the pool, typically 0.3–0.6 L per hour, and never notice it.</div>
@@ -2572,7 +2574,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div></div>
   <div class="tab-panel" id="r-warmup">
     <div class="content-block"><h4>COMPETITION WARM-UP PROTOCOL</h4><ul>
-      <li>400–600 m easy: HR below 22. No rushing.</li>
+      <li>400–600 m easy: HR below 22 (easy end of Zone 1). No rushing.</li>
       <li>4×50 kick: Fins, easy to moderate.</li>
       <li>4×50 drills: Race-stroke drills. One technical cue.</li>
       <li>4×25 builds: Gradually build to 85% on final 25.</li>
@@ -2596,7 +2598,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <p><strong>400 m and up:</strong> even 100s, with the lift coming at the end. The championship-final split patterns behind these targets are in the <a href="#planner" onclick="showPageTab('planner','pl-splits','pl-sp-ref');return false;">Race Planner's split reference</a>.</p></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not coaching or medical advice. Warm-ups and race plans are starting points; your coach's plan takes precedence.</p></div></footer>
 </div>
 <!-- TAPER PAGE -->
 <div class="page" id="page-taper">
@@ -2629,7 +2631,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="tp-recovery"><div class="nutr-grid">
     <div class="nutr-card"><div class="nutr-time">Evidence: Strong</div><h4>SLEEP</h4><ul><li>The strongest recovery tool there is</li><li>Hours, naps and sleep hygiene: see the <a href="#taper" onclick="showPageTab('taper','tp-sleep');return false;">Sleep tab</a></li></ul></div>
     <div class="nutr-card"><div class="nutr-time">Evidence: Moderate</div><h4>COLD WATER</h4><ul><li>10–15 min at 10–15°C post-training</li><li>Avoid after strength training</li><li>Best within 30 min of finishing</li><li>Useful in a meet or a hard week, not a daily habit</li></ul></div>
-    <div class="nutr-card"><div class="nutr-time">Evidence: Moderate</div><h4>ACTIVE RECOVERY</h4><ul><li>Easy pool swim 800–1,200 m (15–25 min), Zone 1</li><li>HR below 22 on the 10-second count</li><li>Even 10–20 min beats complete inactivity</li></ul></div>
+    <div class="nutr-card"><div class="nutr-time">Evidence: Moderate</div><h4>ACTIVE RECOVERY</h4><ul><li>Easy pool swim 800–1,200 m (15–25 min), Zone 1</li><li>HR below 22 on the 10-second count — the easy end of Zone 1 (its ceiling is 24)</li><li>Even 10–20 min beats complete inactivity</li></ul></div>
   </div></div>
   <div class="tab-panel" id="tp-sleep">
     <div class="content-block"><h4>SLEEP OPTIMIZATION</h4><ul>
@@ -2749,7 +2751,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <li><strong>Primary cause:</strong> excessive paddle volume before the forearm has built tolerance</li>
         <li><strong>Secondary cause:</strong> a catch that relies on wrist/forearm flexion instead of a high elbow — the small muscles around the elbow take over for the big back muscles</li>
         <li><strong>Prevention:</strong> introduce paddles gradually over weeks, not days; fix the high-elbow catch first so the lat does the work</li>
-        <li><strong>Dryland:</strong> wrist curls and reverse wrist curls, 3×12, to build tendon tolerance</li>
+        <li><strong>Forearm work:</strong> wrist curls and reverse wrist curls, 3×12, two or three times a week if you paddle-train, to build tendon tolerance — an add-on, not a slot in the <a href="#dryland">Dryland plan</a></li>
         <li><strong>Self-test:</strong> pain when gripping or extending the wrist against resistance points to the elbow, not the shoulder</li>
       </ul>
     </div>
@@ -4137,11 +4139,12 @@ function showPage(name){
   else { location.hash = name; }                            // → hashchange → activatePage
 }
 // Open a page on a specific tab, e.g. showPageTab('calculator','c-pace'). The tab
-// button is found next to the panel, so a renamed tab never leaves a dead link.
+// button is found within the panel's page (Analytics wraps its panels in .an-tab-panels, so
+// "next to the panel" missed its strip), so a renamed tab never leaves a dead link.
 function showPageTab(page, tabId, elId){
   showPage(page);
   const panel=document.getElementById(tabId);
-  const btn=panel&&panel.parentElement.querySelector('.tab-btn[onclick*="\''+tabId+'\'"]');
+  const btn=panel&&(panel.closest('.page')||panel.parentElement).querySelector('.tab-btn[onclick*="\''+tabId+'\'"]');
   if(btn) switchTab(btn, tabId);
   // Optional third id: an accordion inside that tab — open it and bring it into view
   // (activatePage's scroll-to-top runs on hashchange, so the scroll waits for it).
@@ -4177,7 +4180,7 @@ const PAGE_TITLES={
   dryland:'Dryland Training for Swimmers',
   visualizer:'3D Stroke Visualizer — Swimming Biomechanics Lab',
   workouts:'Swim Workout Generator',
-  calculator:'Pace Calculators — Golf, Splits, Zones & Pools',
+  calculator:'Pace Calculator — Golf, Splits, Zones & Pools',
   zones:'Swim Training Zones — AeT, Threshold, VO2 max',
   profile:'My PRs — Personal Record Tracker',
   log:'Training Log & Weekly Volume',
@@ -4893,7 +4896,7 @@ const STROKES = {
         L:{ sh:[-145, 10, 35], el:[35], hi:[22, 0, 0], kn:[10] },
         R:{ sh:[5, -5, 0], el:[10], hi:[10, 0, 0], kn:[8] } },
       { name:'Bent-Arm Pull', dur:0.19, drag:56, thrust:78, lift:30, vel:1.78, eff:68,
-        desc:'The elbow bends to ~90° and points to the bottom while the hand — now at its widest, about half a metre outside the shoulder line — presses back toward the hip under the shoulder; the upper arm stays close to the body.',
+        desc:'The elbow bends to ~90° and points to the bottom while the hand — now at its widest, about half a meter outside the shoulder line — presses back toward the hip under the shoulder; the upper arm stays close to the body.',
         L:{ sh:[-100, 30, 85], el:[80], hi:[18, 0, 0], kn:[34] },
         R:{ sh:[-160, -10, 8], el:[8], hi:[20, 0, 0], kn:[10] } },
       { name:'In-Sweep to Hip', dur:0.18, drag:40, thrust:34, lift:12, vel:1.86, eff:62,
@@ -6107,7 +6110,7 @@ async function generateMotion(){
   if(!desc){ statusEl.textContent='Describe a movement first — e.g. "breaststroke pullout off the wall".'; return; }
   if(!currentUser){
     if(authUnavailable()){ statusEl.textContent=AUTH_DOWN_MSG; return; }
-    statusEl.textContent='AI 3D reconstruction needs a free account — log in or sign up to continue.'; openAuthGate('login'); return;
+    statusEl.textContent='AI 3D reconstruction needs a free account — log in or create one to continue.'; openAuthGate('login'); return;
   }
   ensureViz3DReady();
   tlSetBusy(btn,true);
@@ -6328,7 +6331,7 @@ async function sendToAI(){
     // Library failed to load: say so in the chat instead of "log in to continue" plus a native alert saying the opposite.
     const down=authUnavailable();
     const gateMsg=down?'The AI coach needs a free account, and '+AUTH_DOWN_MSG.charAt(0).toLowerCase()+AUTH_DOWN_MSG.slice(1)
-      :'The AI coach needs a free account — log in or sign up to continue.';
+      :'The AI coach needs a free account — log in or create one to continue.';
     if(lastAIBubbleText()!==gateMsg) addMsg(gateMsg,'ai');
     if(!down) openAuthGate('login');
     return;
@@ -6526,7 +6529,7 @@ async function generateWorkout(){
       tlAnnounce(AUTH_DOWN_MSG); return;
     }
     // Say why the dialog appeared, so closing it does not leave a silent page.
-    const gateMsg='The workout generator needs a free account — log in or sign up to continue.';
+    const gateMsg='The workout generator needs a free account — log in or create one to continue.';
     if(out&&res){ out.classList.add('show'); res.innerHTML='<p style="color:var(--white3)">'+gateMsg+'</p>'; }
     tlAnnounce(gateMsg);
     openAuthGate('login'); return;
@@ -6690,7 +6693,7 @@ async function generateVisualization(){
   tlNotice('viz-notice','');
   if(!currentUser){
     if(authUnavailable()){ tlNotice('viz-notice',AUTH_DOWN_MSG); return; } // in the page, not a native alert
-    const gateMsg='Ask the Visualizer needs a free account — log in or sign up to continue.';
+    const gateMsg='Ask the Visualizer needs a free account — log in or create one to continue.';
     const res=document.getElementById('viz-result');
     if(res) res.innerHTML='<div class="imggen-placeholder"><span class="icon" aria-hidden="true">🔬</span><p style="font-size:0.88rem;line-height:1.75">'+gateMsg+'</p></div>';
     tlAnnounce(gateMsg);
@@ -6904,7 +6907,7 @@ function calcSplits(){
 function calcPaceZones(){
   const rawPace=String(document.getElementById('pace-100').value||'').trim();
   const t=parseTime(rawPace);
-  if(!t){calcFail('pace-notice',/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100 m time as m:ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100 m time (ss.ss or m:ss.ss).','pace-100','pace-result');return;}
+  if(!t){calcFail('pace-notice',/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100 m time as m:ss.ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100 m time (ss.ss or m:ss.ss).','pace-100','pace-result');return;}
   if(t<40||t>240){calcFail('pace-notice','A 100 m time between 40 s and 4:00 is expected — check the value (use m:ss for minutes).','pace-100','pace-result');return;}
   tlNotice('pace-notice','');
   const zones=[
@@ -6919,7 +6922,7 @@ function calcPaceZones(){
     const fast=t*z.pct[0], slow=t*z.pct[1];
     html+=`<tr><td style="color:${z.color}">${z.name}</td><td>${formatTime(fast)}–${formatTime(slow)}</td><td>${formatTime(fast/2)}–${formatTime(slow/2)}</td><td style="color:var(--white3);font-size:0.76rem">${z.desc}</td></tr>`;
   });
-  html+='</tbody></table></div><div class="info-box" style="margin-top:1rem">Bands are scaled from your best 100 — a rough guide, since the drop-off from a best time varies by swimmer. For a measured threshold pace, run the Critical Swim Speed test in Analytics.</div>';
+  html+='</tbody></table></div>';   // the caveat and the Critical Swim Speed pointer are the standing note under this box (R8-COPY-19: it was printed twice)
   document.getElementById('pace-result').innerHTML=html;
 }
 function convertTime(){
@@ -7985,7 +7988,7 @@ function itPreview(c){
   setText('tlt-int-summary',line);
   if(IT.status==='idle'){
     itSetCount(fmtMS(cc.total)); setText('tlt-int-round','—');
-    setText('tlt-int-next','Press Start: '+line);
+    setText('tlt-int-next','Press Start — '+fmtMS(cc.total)+' total ('+c.rounds+' × '+c.work+' s work).');   // the full circuit line is #tlt-int-summary under CIRCUIT SETUP (R8-COPY-17: it was printed twice)
     setText('tlt-int-times','Elapsed 0:00 · Remaining '+fmtMS(cc.total)+' · Total '+fmtMS(cc.total));
     var sb=$('tlt-int-segbar'); if(sb) sb.style.width='0%'; var tb=$('tlt-int-totbar'); if(tb) tb.style.width='0%';
   }
@@ -10220,7 +10223,8 @@ function buildSummaryText(m){
   var ef = function(w){ return w.effortN ? ' · Avg effort ' + fmtDec(w.effortSum / w.effortN, 1) : ''; };
   var byType = function(w){
     var parts = [];
-    TYPE_SERIES.forEach(function(s){ var b = w.byType[s.key]; if (b) parts.push(s.label + ' ' + b.n + (b.dist > 0 ? ' / ' + fmtInt(b.dist) : '') + (b.dur > 0 ? ' / ' + fmtInt(b.dur) + ' min' : '')); });
+    // Fields are named, as on the week lines ("AM Pool 5 sessions, 14,500 m/yd, 285 min · Dryland 1 session, 40 min"): a bare "5 / 14,500 / 285 min" read by position, and dryland rows were one field shorter.
+    TYPE_SERIES.forEach(function(s){ var b = w.byType[s.key]; if (b) parts.push(s.label + ' ' + b.n + ' session' + (b.n === 1 ? '' : 's') + (b.dist > 0 ? ', ' + fmtInt(b.dist) + ' m/yd' : '') + (b.dur > 0 ? ', ' + fmtInt(b.dur) + ' min' : '')); });
     return parts.length ? parts.join(' · ') : 'none';
   };
   var sessions = function(w){
@@ -10741,7 +10745,7 @@ window.tl_an_debug = {
     timers: ['tempo', 'metronome', 'stroke rate', 'interval timer', 'pace clock'],
     planner: ['race planner', 'race plan', 'split plan'],
     analytics: ['charts', 'trends', 'stats', 'progress'],
-    updates: ["what's new", 'changelog', 'release notes']
+    updates: ["what's new", 'changelog', 'release notes', 'version']
   };
   // Quick actions. Each is included only when its destination exists on the
   // page (other bundles may or may not be integrated) or its function is defined.
@@ -10762,7 +10766,17 @@ window.tl_an_debug = {
     { text: 'Ask the AI coach', page: 'ai', keys: ['chat', 'question', 'coach', 'help'],
       after: function(){ focusField('ai-input'); } },
     { text: 'Open 3D visualizer', page: 'visualizer', keys: ['stroke lab', 'biomechanics', 'model', '3d'] },
-    { text: "What's new", page: 'updates', keys: ['changelog', 'release notes', 'updates', 'version'] },
+    // A real action rather than a second "What's New" row: open the page and run its update check.
+    { text: 'Check for updates', page: 'updates', keys: ['update', 'updates', 'version', 'changelog', 'release notes', 'new version', 'reload'],
+      after: function(){ if (typeof window.tlCheckForUpdates === 'function') window.tlCheckForUpdates(); focusField('tl-upd-check-btn'); } },
+    // The gates say "log in or create a free account" and the palette promises every tool, so the
+    // sign-in dialog and signing out are reachable from it too (one row or the other, by auth state).
+    { text: 'Log in or create a free account', fnName: 'openAuthGate', crumb: 'Opens the sign-in dialog',
+      keys: ['sign up', 'signup', 'sign in', 'signin', 'log in', 'login', 'account', 'create account', 'register', 'password', 'free account'],
+      when: function(){ return !window.currentUser; } },
+    { text: 'Log out', fnName: 'doLogout', crumb: 'Signs you out of your account',
+      keys: ['sign out', 'signout', 'logout', 'log off', 'account'],
+      when: function(){ return !!window.currentUser; } },
     // Only while the browser holds an install prompt (window.__tlCanInstall, set by the What's New module):
     // capturing beforeinstallprompt suppresses the browser's own banner, so the app must offer it somewhere reachable.
     { text: 'Install Tidelyne as an app', fnName: 'tlPromptInstall', keys: ['install', 'app', 'home screen', 'add to home', 'pwa', 'desktop'],
@@ -10975,7 +10989,10 @@ window.tl_an_debug = {
   // display:none tab panels).
   var SEP_TAG = /^(P|DIV|BR|TD|TH|H[1-6]|UL|OL|TABLE|TBODY|THEAD)$/;
   var DOT_TAG = /^(LI|TR)$/;
-  function blockText(root){
+  // Eyebrows, badges and day labels sit above a card's heading and are not its content: a snippet that
+  // opened with them ("Zone 1 RECOVERY Lactate: …") repeated the row's own title in shouting caps.
+  var LABEL_SEL = '.badge, .nutr-time, .dl-day, .card-tag, .card-icon, .section-eyebrow, .zone-name';
+  function blockText(root, titleEl){
     var out = '';
     (function walk(n){
       if (n.nodeType === 3){ out += n.nodeValue; return; }
@@ -10984,7 +11001,9 @@ window.tl_an_debug = {
       // result boxes) into a snippet, even when it sits inside an indexed card.
       if (n !== root && n.matches && n.matches(EXCLUDE)) return;
       if (/^(SCRIPT|STYLE|TEMPLATE|INPUT|TEXTAREA|SELECT)$/.test(n.tagName)) return;
-      var sep = DOT_TAG.test(n.tagName) ? ' · ' : (SEP_TAG.test(n.tagName) || n.classList.contains('kp-label') || n.classList.contains('ptag') || n.classList.contains('video-tag')) ? ' ' : '';
+      if (n !== root && (n === titleEl || (n.matches && n.matches(LABEL_SEL)))) return;   // the row's title and its eyebrow/badge
+      if (n !== root && /^H[1-6]$/.test(n.tagName)){ out += ' ' + titleCaseCaps(clean(n.textContent)) + ' '; return; }   // sub-headings in Title Case, like the rows
+      var sep = DOT_TAG.test(n.tagName) ? ' · ' : (SEP_TAG.test(n.tagName) || n.classList.contains('kp-label') || n.classList.contains('ptag') || n.classList.contains('video-tag') || n.classList.contains('reps')) ? ' ' : '';   // .reps: "3×12Y-T-W-L" glued the dose to the exercise
       out += sep;
       for (var c = n.firstChild; c; c = c.nextSibling) walk(c);
       out += sep;
@@ -10996,7 +11015,7 @@ window.tl_an_debug = {
   var KEEP_CAPS = /^(IM|UW|EIB|SWOLF|HR|RPE|ATP|CSS|DQ|SCY|SCM|LCM|PR|PRS|AI|3D|2K1|USA|NCAA|VO₂|VO2|AET|II|III|IV|BB|AA|AAA|AAAA)$/;   // BB…AAAA: USA Swimming motivational tiers
   var SMALL_WORDS = /^(a|an|and|the|of|to|for|on|in|at|from|with|by|or|vs|per)$/;
   function titleCaseCaps(s){
-    var core = s.replace(/\([^)]*\)/g, '').trim();   // "SPRINT TAPER (7–14 days)" is shouting even with a lower-case parenthetical
+    var core = s.replace(/\([^)]*\)/g, '').trim();   // "SPRINT TAPER (14–21 days)" is shouting even with a lower-case parenthetical
     if (core.length < 4 || core !== core.toUpperCase() || !/[A-Z]/.test(core)) return s;
     return s.replace(/[A-Z0-9][A-Z0-9'’₂]*/g, function(w, i){
       if (/^\d+(ST|ND|RD|TH)$/.test(w)) return w.toLowerCase();   // 5TH → 5th
@@ -11026,7 +11045,7 @@ window.tl_an_debug = {
       box = el.closest('.card, .content-block, .calc-panel, .dl-card, .nutr-card, .video-info, .info-box, .warn-box, .success-box, .key-point, .workout-phase');
     }
     if (!box) return '';
-    var txt = blockText(box);
+    var txt = blockText(box, el);
     var head = headingText(el);
     if (head && txt.slice(0, head.length).toLowerCase() === head.toLowerCase()) txt = txt.slice(head.length).trim();
     txt = txt.replace(/^[\s:·—–-]+/, '');
@@ -11044,6 +11063,15 @@ window.tl_an_debug = {
     var items = [], seen = {}, PT = pageTitles();
     var navOrder = {}, links = document.querySelectorAll('.nav-links a[href^="#"]');
     for (var i = 0; i < links.length; i++) navOrder[links[i].getAttribute('href').slice(1)] = i;
+    // The Home feature cards each open another page: their heading and tag line become search keys of
+    // that page's row instead of "Stroke Technique Lab | Home" sections that landed on the card.
+    var cardKeys = {};
+    Array.prototype.forEach.call(document.querySelectorAll('#page-home .card-clickable'), function(card){
+      var a = card.querySelector('.card-link[href^="#"]'), tag = card.querySelector('.card-tag');
+      if (!a) return;
+      var target = a.getAttribute('href').slice(1);
+      cardKeys[target] = (cardKeys[target] || []).concat([clean(a.textContent), tag ? clean(tag.textContent) : '']);
+    });
     var pages = Array.prototype.slice.call(document.querySelectorAll('.page[id^="page-"]'));
     pages.sort(function(a, b){
       var ia = navOrder[a.id.slice(5)], ib = navOrder[b.id.slice(5)];
@@ -11058,13 +11086,14 @@ window.tl_an_debug = {
       var intro = page.querySelector('.section-intro');
       items.push(makeItem({
         kind: 'page', page: id, text: label,
-        keys: [PT[id] || '', st ? clean(st.textContent) : '', id].concat(PAGE_ALIASES[id] || []),
+        keys: [PT[id] || '', st ? clean(st.textContent) : '', id].concat(PAGE_ALIASES[id] || [], cardKeys[id] || []),
         snip: intro ? clean(intro.textContent) : ''
       }));
       var els = page.querySelectorAll('.acc-header, h2, h3, h4, .tab-btn, .key-point .kp-label, .video-card .video-tag');
       for (var j = 0; j < els.length; j++){
         var el = els[j];
         if (el.closest(EXCLUDE)) continue;
+        if (el.closest('#page-home .card-clickable')) continue;   // a feature card is its destination page's row (cardKeys above)
         if (/^H[234]$/.test(el.tagName) && el.closest('.acc-header')) continue;   // header row carries it
         var isVideo = !!el.closest('.video-card');
         if (el.classList.contains('video-tag') && el.parentElement && el.parentElement.querySelector('h4')) continue; // card already indexed by its h4
@@ -11091,7 +11120,7 @@ window.tl_an_debug = {
       var hasPage = a.page && document.getElementById('page-' + a.page);
       if (!fn && !hasPage) return;
       items.push(makeItem({
-        kind: 'action', page: a.page || '', text: a.text, crumb: hasPage ? pageLabel(a.page) : 'Runs immediately',
+        kind: 'action', page: a.page || '', text: a.text, crumb: a.crumb || (hasPage ? pageLabel(a.page) : 'Runs immediately'),
         keys: (a.keys || []).concat(hasPage ? [pageLabel(a.page)] : []), fn: fn, after: a.after, when: a.when
       }));
     });
