@@ -391,7 +391,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:700;flex-shrink:0;font-family:var(--fm)}
 .msg-avatar.ai-av{background:var(--cyan-dim);border:1px solid rgba(0,212,255,0.3);color:var(--cyan)}.msg-avatar.user-av{background:var(--gold-dim);border:1px solid rgba(245,166,35,0.3);color:var(--gold)}
-.msg-bubble{max-width:80%;background:var(--card3);border-radius:14px;padding:0.85rem 1.1rem;font-size:0.88rem;color:var(--white2);line-height:1.8;font-weight:300;border:1px solid var(--border2)}
+.msg-bubble{max-width:80%;background:var(--card3);border-radius:14px;padding:0.85rem 1.1rem;font-size:0.88rem;color:var(--white2);line-height:1.8;font-weight:300;border:1px solid var(--border2);overflow-wrap:anywhere}
 .msg-bubble.user-b{background:rgba(0,212,255,0.07);border-color:rgba(0,212,255,0.15);color:var(--white)}
 /* streaming cursor */
 .msg-bubble.streaming::after{content:'▋';color:var(--cyan);animation:blink 0.8s step-end infinite}
@@ -456,7 +456,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .log-entry{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;margin-bottom:0.75rem;display:flex;gap:1rem;align-items:flex-start;transition:border-color 0.2s}.log-entry:hover{border-color:var(--border)}
 .log-del{background:none;border:0;color:var(--white4);cursor:pointer;font-size:1.1rem;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin:-8px -10px -8px 0;border-radius:var(--r8);transition:color 0.2s}.log-del:hover,.log-del:focus-visible{color:var(--red)}
 .log-date{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--cyan);text-transform:uppercase;min-width:70px;flex-shrink:0}
-.log-list{list-style:none;margin:0;padding:0}.log-content{flex:1}.log-title{font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:0.25rem;line-height:1.3}.log-meta{font-size:0.8rem;color:var(--white3);font-family:var(--fm)}.log-notes{font-size:0.83rem;color:var(--white2);margin-top:0.5rem;line-height:1.6}
+.log-list{list-style:none;margin:0;padding:0}.log-content{flex:1;min-width:0}.log-title{font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:0.25rem;line-height:1.3}.log-meta{font-size:0.8rem;color:var(--white3);font-family:var(--fm)}.log-notes{font-size:0.83rem;color:var(--white2);margin-top:0.5rem;line-height:1.6}.log-title,.log-meta,.log-notes{overflow-wrap:anywhere}
 .log-del{background:none;border:none;color:var(--white4);cursor:pointer;font-size:1.1rem;padding:4px;border-radius:var(--r8);transition:color 0.2s}.log-del:hover,.log-del:focus-visible{color:var(--red)}
 /* NUTRITION */
 .nutr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem}
@@ -927,7 +927,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-countdown-empty{font-size:0.9rem;color:var(--white2);line-height:1.8;font-weight:300}
 #page-planner .pl-countdown-empty strong{color:var(--cyan);font-weight:500}
 #page-planner .pl-cp-wrap{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.5rem}
-#page-planner .pl-cp-wrap h4{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:1rem}
+#page-planner .pl-cp-wrap h4{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:1rem;overflow-wrap:anywhere}
 #page-planner .pl-timeline{list-style:none;margin:0 0 0 8px;padding:0;border-left:2px solid var(--border)}
 #page-planner .pl-timeline li{position:relative;padding:0 0 1.15rem 1.35rem}
 #page-planner .pl-timeline li:last-child{padding-bottom:0}
@@ -1919,11 +1919,11 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="acc-body"><p>The kick supplies up to ~30% of propulsion in sprint freestyle (≈10–15% at distance pace). The kick originates at the hip — knee bends only 30–40° on the downbeat. Ankle plantarflexion is the biggest limiter for most swimmers.</p>
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Cue: "Kick from your hip pocket, not your knee."</div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>GOLF SCORE SYSTEM</h4><span class="chevron">▾</span></div>
-    <div class="acc-body"><p>Golf Score = 50 m split (seconds) + stroke count per 50 m (count each arm in free and back; one stroke per cycle in fly and breast). Lower is always better. Elite benchmarks (a 50 at 100-pace effort, 50 m pool): Below 60 = world class. 60–67 = senior national. 67–75 = competitive club. Fly and breast read about 15 lower on this scale, so compare those against your own trend.</p></div></div>
+    <div class="acc-body"><p>Golf Score = 50 m split (seconds) + stroke count per 50 m (count each arm in free and back; one stroke per cycle in fly and breast). Lower is always better. Elite benchmarks (a 50 at 100-pace effort, 50 m pool): Below 60 = world class. 60–66 = senior national. 67–74 = competitive club. Fly and breast read about 15 lower on this scale, so compare those against your own trend.</p></div></div>
   </div>
   <div class="tab-panel" id="t-bk">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>BODY POSITION & DUCK DRILL</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Correct position: hips at the surface, ears slightly submerged, eyes up toward the ceiling with the chin neutral (look at the flags, not at your feet — a chin-tuck lifts the head, drops the hips and loads the neck). Even a small hip drop creates exponentially increasing drag.</p>
+    <div class="acc-body open"><p>Correct position: hips at the surface, ears slightly submerged, eyes up toward the ceiling with the chin neutral (look at the flags, not at your feet — a chin-tuck lifts the head, drops the hips and loads the neck). Even a small hip drop creates exponentially increasing drag. The Duck drill is that position without the arms: backstroke kick with the arms at your sides, chin neutral and hips riding high, so the body sits on the surface the way a duck does — kick a length this way before adding the arms, then keep exactly the same head and hip position once you do.</p>
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Cue: "Squeeze a coin between your glutes, belly button to the ceiling."</div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>PINKY ENTRY & 2-2-2 DRILL</h4><span class="chevron">▾</span></div>
     <div class="acc-body"><p>Entry is pinky-first, hand rotated so the palm faces out — pinky down, thumb up. Arm enters directly above the shoulder. The 2-2-2 drill (2 right strokes, 2 left strokes, 2 full) isolates each side.</p></div></div>
@@ -1962,7 +1962,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="t-starts">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>GRAB START & TRACK START MECHANICS</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Track start (one foot back) is now dominant at elite level; the grab start (both feet at the front edge, hands gripping the block) is the older alternative — a stronger but slower push, now rare in elite racing and kept mainly for relay take-overs, where the arm swing is timed to the incoming swimmer. Reaction time target: &lt;0.65 seconds. Takeoff is near horizontal — the block height gives the flight.</p>
+    <div class="acc-body open"><p>Track start (one foot back) is now dominant at elite level; the grab start (both feet at the front edge, hands gripping the block) is the older alternative — a stronger but slower push, now rare in elite racing and kept mainly for relay takeovers, where the arm swing is timed to the incoming swimmer. Reaction time target: &lt;0.65 seconds. Takeoff is near horizontal — the block height gives the flight.</p>
     <dl class="key-grid">
       <div class="key-point"><dt class="kp-label">Reaction time</dt><dd>Fast-elite: ~0.60–0.64 s; most swimmers are slower — chase clean, not just fast.</dd></div>
       <div class="key-point"><dt class="kp-label">Takeoff angle</dt><dd>Near horizontal — about 0–10° above the horizontal; the 0.5–0.75 m block height gives the flight.</dd></div>
@@ -2093,9 +2093,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="dl-card"><div class="dl-day">Day 1 — Monday</div><h4>PULL STRENGTH</h4><ul>
       <li><span class="reps">4×6</span>Weighted Pull-Ups</li><li><span class="reps">3×10</span>Single-Arm Cable Row</li><li><span class="reps">3×12</span>Face Pulls with Band</li><li><span class="reps">3×8</span>Trap Bar Deadlift</li><li><span class="reps">4×30 s</span>Dead Bug</li></ul></div>
     <div class="dl-card"><div class="dl-day">Day 2 — Tuesday</div><h4>ROTATIONAL POWER</h4><ul>
-      <li><span class="reps">4×8</span>Med Ball Rotational Throws</li><li><span class="reps">3×10</span>Cable Chops High-Low</li><li><span class="reps">3×10</span>Pallof Press</li><li><span class="reps">3×8</span>Single-Leg RDL</li><li><span class="reps">3×10</span>Copenhagen Plank</li></ul></div>
+      <li><span class="reps">4×8</span>Med Ball Rotational Throws</li><li><span class="reps">3×10</span>Cable Chops High-Low</li><li><span class="reps">3×10</span>Pallof Press</li><li><span class="reps">3×8</span>Single-Leg RDL</li><li><span class="reps">3×20 s</span>Copenhagen Plank</li></ul></div>
     <div class="dl-card"><div class="dl-day">Day 3 — Thursday</div><h4>EXPLOSIVE POWER</h4><ul>
-      <li><span class="reps">4×4</span>Box Jumps</li><li><span class="reps">4×6</span>Hang Power Clean</li><li><span class="reps">3×8</span>Lat Pulldown + Pause</li><li><span class="reps">3×12</span>Hip Thrust</li><li><span class="reps">3×10</span>Serratus Punch</li></ul></div>
+      <li><span class="reps">4×4</span>Box Jumps</li><li><span class="reps">4×6</span>Hang Power Clean</li><li><span class="reps">3×8</span>Lat Pulldown + Pause</li><li><span class="reps">3×12</span>Hip Thrust</li><li><span class="reps">3×15</span>Serratus Punch</li></ul></div>
     <div class="dl-card"><div class="dl-day">Day 4 — Friday</div><h4>SHOULDER HEALTH</h4><ul>
       <li><span class="reps">3×15</span>Sidelying External Rotation</li><li><span class="reps">3×12</span>Y-T-W-L on Incline</li><li><span class="reps">3×30 s</span>Sleeper Stretch (for GIRD — limited internal rotation)</li><li><span class="reps">3×20</span>Ankle Circles + Toe Spreads</li></ul></div>
     <div class="dl-card"><div class="dl-day">Daily</div><h4>MOBILITY ROUTINE</h4><ul>
@@ -2165,9 +2165,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="info-box" style="margin-top:0">Golf Score = Split (seconds) + Stroke Count. Lower is always better. Free/back: count each arm; fly/breast: one stroke per cycle — the same convention as the Analytics SWOLF calculator.</div>
         <div class="table-wrap" style="margin-top:1rem"><table class="data-table"><thead><tr><th scope="col">Score</th><th scope="col">Level</th></tr></thead><tbody>
           <tr><td style="color:var(--green)">Below 60</td><td>World Class / National Elite</td></tr>
-          <tr><td style="color:var(--cyan)">60–67</td><td>High Performance / Senior National</td></tr>
-          <tr><td style="color:var(--gold)">67–75</td><td>Competitive Age-Group / Senior Club</td></tr>
-          <tr><td>75–85</td><td>Developing</td></tr>
+          <tr><td style="color:var(--cyan)">60–66</td><td>High Performance / Senior National</td></tr>
+          <tr><td style="color:var(--gold)">67–74</td><td>Competitive Age-Group / Senior Club</td></tr>
+          <tr><td>75–84</td><td>Developing</td></tr>
           <tr><td style="color:var(--red)">85+</td><td>Beginner — major gains available</td></tr>
         </tbody></table></div>
         <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--white3);line-height:1.7">Bands assume a 50 at 100-pace effort in a 50 m pool with every hand entry counted; fly and breast (one count per cycle) read about 15 lower, so compare those against your own trend.</p>
@@ -2223,13 +2223,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="zone-bars">
       <div class="zone-row"><div class="zone-name">Recovery</div><div class="zone-track"><div class="zone-fill z1">Z1</div></div><div class="zone-info">&lt;2.0 mmol · HR &lt;22</div></div>
       <div class="zone-row"><div class="zone-name"><span style="text-transform:none">AeT</span> / Base</div><div class="zone-track"><div class="zone-fill z2">Z2 AeT</div></div><div class="zone-info">2.0–3.0 mmol · HR 24–28</div></div>
-      <div class="zone-row"><div class="zone-name">Threshold</div><div class="zone-track"><div class="zone-fill z3">Z3 Thresh</div></div><div class="zone-info">3.0–5.0 mmol · HR 27–31</div></div>
+      <div class="zone-row"><div class="zone-name">Threshold</div><div class="zone-track"><div class="zone-fill z3">Z3 Threshold</div></div><div class="zone-info">3.0–5.0 mmol · HR 27–31</div></div>
       <div class="zone-row"><div class="zone-name">VO₂ max</div><div class="zone-track"><div class="zone-fill z4">Z4 VO₂ max</div></div><div class="zone-info">5.0–8.0 mmol · HR 30–33</div></div>
       <div class="zone-row"><div class="zone-name">Anaerobic</div><div class="zone-track"><div class="zone-fill z5">Z5 Sprint</div></div><div class="zone-info">8.0+ mmol on lactate work · rest-dependent</div></div>
     </div>
   </div>
   <div style="display:flex;flex-direction:column;gap:1.25rem">
-    <div class="card"><div class="badge green">Zone 1</div><h3>RECOVERY</h3><p><strong>Lactate:</strong> below 2.0 mmol/L · <strong>HR:</strong> under 22 on the 10-second count · Easy enough to hold a full conversation. Warm-up, cool-down, recovery between hard sets — and a large share of base volume: elite programs log about 40% of their metres here (Hellard et al. 2019). Going too hard in what should be Zone 1 is the most common way swimmers blunt the next quality set.</p></div>
+    <div class="card"><div class="badge green">Zone 1</div><h3>RECOVERY</h3><p><strong>Lactate:</strong> below 2.0 mmol/L · <strong>HR:</strong> under 22 on the 10-second count · Easy enough to hold a full conversation. Warm-up, cool-down, recovery between hard sets — and a large share of base volume: elite programs log about 40% of their meters here (Hellard et al. 2019). Going too hard in what should be Zone 1 is the most common way swimmers blunt the next quality set.</p></div>
     <div class="card"><div class="badge cyan">Zone 2 — <span style="text-transform:none">AeT</span></div><h3>AEROBIC THRESHOLD</h3><p><strong>Lactate:</strong> 2.0–3.0 mmol/L · <strong>HR:</strong> 24–28 on the 10-second count · <strong>Zones 1–2 together carry 80%+ of total training volume.</strong> Builds mitochondrial density, oxidative enzyme capacity, cardiac output.</p></div>
     <div class="card"><div class="badge gold">Zone 3</div><h3>THRESHOLD</h3><p><strong>Lactate:</strong> 3.0–5.0 mmol/L · <strong>HR:</strong> 27–31 on the 10-second count · <strong>Three-to-four-word sentences at most.</strong> Typically introduced around Week 4 of a season and expanded progressively through Meso II.</p></div>
     <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX &amp; SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · HR 30–33 on the 10-second count · 3–8 min intervals · 48–72 h recovery. <strong>Zone 5:</strong> sprint / anaerobic — two kinds. Alactic speed: 10–30 s efforts on full rest; lactate stays low and HR is not the guide. Lactate production: 50–100 m maximal efforts (8.0+ mmol/L, HR near max), 2–5 min rest, 1–2× a week at most.</p></div>
@@ -2517,7 +2517,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
   </div>
   <div class="tab-panel" id="i-knee">
-    <div class="content-block"><h4>BREASTSTROKER'S KNEE</h4><ul><li>Primary cause: valgus/rotation load from a wide-knee recovery and kick volume; hip abductor/adductor weakness adds to it</li><li>Copenhagen planks 3×/week</li><li>Narrow heel recovery drill</li><li>Self-test: kick on your back — can you see the inside of your knees?</li></ul></div>
+    <div class="content-block"><h4>BREASTSTROKER'S KNEE</h4><ul><li>Primary cause: valgus/rotation load from a wide-knee recovery and kick volume; hip abductor/adductor weakness adds to it</li><li>Copenhagen plank: 3×20 s daily (in the <a href="#injury" onclick="showPageTab('injury','i-prevention');return false;">Prevention routine</a>; also on Dryland Day 2)</li><li>Narrow heel recovery drill</li><li>Self-test: kick on your back — can you see the inside of your knees?</li></ul></div>
   </div>
   <div class="tab-panel" id="i-back">
     <div class="content-block"><h4>LOW BACK PAIN</h4><ul><li>Cause: tight hip flexors + weak glutes + weak deep core</li><li>Daily hip flexor stretching (90/90, couch stretch)</li><li>Glute activation: hip thrusts, clamshells</li><li>Dead bug for deep core stability</li></ul></div>
@@ -2563,7 +2563,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <p>Neck pain in swimmers is almost always a head-position problem, not a neck-strength problem. Habitually lifting the head to breathe instead of rotating it within the body's bow wave puts repetitive strain on the cervical spine across thousands of strokes per week.</p>
       <ul>
         <li><strong>Freestyle:</strong> lifting the head to breathe instead of rotating with the body roll — fix the stroke before treating the symptom</li>
-        <li><strong>Backstroke:</strong> Duck-drill imbalance or chronic chin-tuck looking at the feet — keep the neck neutral</li>
+        <li><strong>Backstroke:</strong> Duck drill imbalance or chronic chin-tuck looking at the feet — keep the neck neutral (Technique › Backstroke)</li>
         <li><strong>Breaststroke:</strong> lifting the chin to breathe instead of riding the body's natural lift from the pull</li>
         <li><strong>Prevention:</strong> daily neck CARs (controlled articular rotations), and film yourself breathing from above to check for head lift</li>
         <li><strong>Persistent neck pain unrelated to a recent technique change</strong> warrants a look from a physio rather than continued self-treatment</li>
@@ -2794,7 +2794,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <tbody id="tlt-preset-body"></tbody>
       </table>
     </div>
-    <p class="tlt-note">Load sets the middle of a range in cycles/min. Ranges merge men and women and long- and short-course clean-swimming data, rounded outward: the 2019 European Short-Course Championships freestyle analysis (324 swimmers, Frontiers in Sports and Active Living 2025), a 2025 analysis of 59 elite 100 free finalists (Scientific Reports), the 2021 European Championships 200 m analysis of all four strokes and its 50 m butterfly counterpart, a 2020 study of short-course 100 breaststroke, and The Race Club's published backstroke stroke rates. No published 100 fly race series was found, so that row is an estimate between the 50 and 200 fly data. The freestyle rows are the men's and women's bands from the <a href="#analytics">Analytics</a> elite freestyle reference merged into one envelope, so the two pages always agree.</p>
+    <p class="tlt-note">Load sets the middle of a range in cycles/min. Ranges merge men and women and long- and short-course clean-swimming data, rounded outward: the 2019 European Short-Course Championships freestyle analysis (324 swimmers; Staunton, Ruiz-Navarro &amp; Born 2025), a 2025 analysis of 59 elite 100 free finalists (Scientific Reports), the 2021 European Championships 200 m analysis of all four strokes and its 50 m butterfly counterpart, a 2020 study of short-course 100 breaststroke, and The Race Club's published backstroke stroke rates. No published 100 fly race series was found, so that row is an estimate between the 50 and 200 fly data. The freestyle rows are the men's and women's bands from the <a href="#analytics">Analytics</a> elite freestyle reference merged into one envelope, so the two pages always agree.</p>
   </div>
 
   <!-- ══════════════ TAB 2 · INTERVAL / CIRCUIT TIMER ══════════════ -->
@@ -3057,7 +3057,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <div class="an-toolbar">
     <button class="btn-sm" type="button" id="an-copy-btn" onclick="tl_an_copySummary()">Copy summary</button>
-    <a class="btn-ghost-sm an-link-btn" href="#log">Open training log</a>
+    <a class="btn-ghost-sm an-link-btn" href="#log">Open the Training Log</a>
     <span id="an-copy-status" class="an-status" role="status" aria-live="polite"></span>
   </div>
   <div id="an-copy-manual" hidden>
@@ -3076,7 +3076,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </ol>
     <p>Once a few weeks are in, this page shows week-over-week volume, streaks, your low-versus-high intensity split, and calm rule-based observations a coach can act on. The efficiency calculators further down work without any log data.</p>
     <p id="an-empty-future" hidden></p>
-    <a class="btn-sm an-link-btn" href="#log">Go to the Training Log</a>
+    <a class="btn-sm an-link-btn" href="#log">Open the Training Log</a>
   </div>
 
   <div id="an-body">
@@ -3265,7 +3265,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       </div>
     </div>
   </div>
-  <p class="an-hint an-foot">Informational only, not coaching or medical advice. Physiological references are population ranges from the sources named on this page (Seiler 2010; Hellard et al. 2019; Wakayoshi et al. 1992, 1993; Dekerle et al. 2005; Staunton, Ruiz-Navarro &amp; Born 2025), not measurements of you.</p>
+  <p class="an-hint an-foot">Informational only, not coaching or medical advice. Physiological and load-management references are population findings from the sources named on this page (Craig et al. 1985; Wakayoshi et al. 1992, 1993; Mujika &amp; Padilla 2000; Dekerle et al. 2005; Seiler 2010; Gabbett 2016; Hellard et al. 2019; Impellizzeri et al. 2020; Staunton, Ruiz-Navarro &amp; Born 2025), not measurements of you.</p>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p><p>Analytics run on your device — log data never leaves it</p></div></footer>
 </div>
@@ -3560,7 +3560,7 @@ async function doSignup() {
     await onAuthSuccess(data.user);
   } else {
     showAuthScreen('login');
-    showAuthError('login', 'Account created! Check your email to confirm, then log in.', null);
+    showAuthError('login', 'Account created — check your email to confirm, then log in.', null);
     document.getElementById('login-error').style.color = 'var(--green)';
   }
   btn.disabled = false; btn.innerHTML = 'CREATE ACCOUNT <span aria-hidden="true">→</span>';
@@ -4548,7 +4548,7 @@ const STROKES = {
         L:{ sh:[-100, 30, 85], el:[80], hi:[18, 0, 0], kn:[34] },
         R:{ sh:[-160, -10, 8], el:[8], hi:[20, 0, 0], kn:[10] } },
       { name:'In-Sweep to Hip', dur:0.18, drag:40, thrust:34, lift:12, vel:1.86, eff:62,
-        desc:'The hand sweeps back in toward the hip as the elbow extends, finishing the push as the lat and tricep fully engage near hip exit — while the opposite arm enters pinky-first overhead.',
+        desc:'The hand sweeps back in toward the hip as the elbow extends, finishing the push as the lat and triceps fully engage near hip exit — while the opposite arm enters pinky-first overhead.',
         L:{ sh:[-30, 5, 15], el:[20], hi:[16, 0, 0], kn:[12] },
         R:{ sh:[-170, 0, -8], el:[6], hi:[18, 0, 0], kn:[8] } },
       { name:'Hip Exit', dur:0.13, drag:38, thrust:24, lift:20, vel:1.76, eff:58,
@@ -5576,7 +5576,7 @@ window.tlCopyText=function(text){
 // idle timer aborts after AI_IDLE_MS without a chunk (touch() resets it per chunk), so a half-open mobile
 // connection or a never-closing stream cannot wedge the button until reload; stop() is the user's Stop control.
 const AI_IDLE_MS=20000;
-const AI_TIMEOUT_MSG='The coach did not answer in time — try again.';
+const AI_TIMEOUT_MSG='The AI did not answer in time — try again.';
 function aiStreamGuard(){
   const ac=new AbortController(); let timer=0;
   const g={ signal:ac.signal, timedOut:false, stopped:false,
@@ -5695,7 +5695,7 @@ async function generateMotion(){
 // confirm on usaswimming.org. Shape is unchanged: {name,start,end,course,tag}.
 const SEASON_MEETS = [
   { name: 'Short Course World Championship Trials',      start: '2026-10-28', end: '2026-10-31', course: 'SCM',        tag: 'Senior · Westmont, IL · selects the Beijing SC Worlds team' },
-  { name: 'World Aquatics Swimming Championships (25m)', start: '2026-12-01', end: '2026-12-06', course: 'SCM',        tag: 'International · Beijing' },
+  { name: 'World Aquatics Swimming Championships (25 m)', start: '2026-12-01', end: '2026-12-06', course: 'SCM',        tag: 'International · Beijing' },
   { name: 'Toyota U.S. Open',                            start: '2026-12-02', end: '2026-12-05', course: 'LCM',        tag: 'Senior · Austin, TX' },
   { name: 'Speedo Winter Junior Championships',          start: '2026-12-09', end: '2026-12-12', course: 'SCY',        tag: 'Junior · East: Indianapolis · West: Austin' },
   { name: 'Open Water National & Junior Championships',  start: '2027-04-02', end: '2027-04-04', course: 'Open Water', tag: 'Senior/Junior · Sarasota, FL' },
@@ -5709,7 +5709,7 @@ const SEASON_MEETS = [
 // list under the table so the page says so instead of guessing. `expected`
 // is free text; `url` must be https or the entry renders without a link.
 const SEASON_TBA = [
-  { name: 'TYR Futures Championships 2027', expected: 'host sites to be announced — dates are set (Jul 28–31, 2027)', url: 'https://www.usaswimming.org/events' }
+  { name: 'TYR Futures Championships 2027', expected: 'host sites not yet published; dates are set (Jul 28–31, 2027)', url: 'https://www.usaswimming.org/events' }
 ];
 // Season label derived from the data ("2026–27"), so the page copy never
 // goes stale when the array is swapped for the next season.
@@ -6335,8 +6335,8 @@ function calcGolf(){
   if(split<GOLF_LIMITS.split[0]||split>GOLF_LIMITS.split[1]){calcFail('golf-notice','50 m split should be between '+GOLF_LIMITS.split[0]+' and '+GOLF_LIMITS.split[1]+' seconds.','golf-split','golf-result');return;}
   if(strokes<GOLF_LIMITS.strokes[0]||strokes>GOLF_LIMITS.strokes[1]){calcFail('golf-notice','Stroke count should be between '+GOLF_LIMITS.strokes[0]+' and '+GOLF_LIMITS.strokes[1]+' per 50 m.','golf-strokes','golf-result');return;}
   tlNotice('golf-notice','');
-  const score=split+strokes;
-  document.getElementById('golf-score').textContent=score.toFixed(0);
+  const score=Math.round(split+strokes); // rated on the integer shown, so the result never sits in a different band from the guide table
+  document.getElementById('golf-score').textContent=String(score);
   const r=document.getElementById('golf-rating');
   const rating=score<60?['🌟','World-class efficiency. Elite national/international level.']
     :score<67?['✅','High performance. Senior national standard.']
@@ -6732,7 +6732,7 @@ function renderLog(){
       <div class="log-date">${isoDate?`<time datetime="${escapeHTML(e.date)}">${escapeHTML(shownDate)}</time>`:escapeHTML(e.date)}</div>
       <div class="log-content">
         <h3 class="log-title">${escapeHTML(e.type)}<span class="sr-only"> — ${escapeHTML(shownDate)}</span></h3>
-        <div class="log-meta">${dist>0?dist.toLocaleString()+' m/yd · ':''}${dur>0?dur+' min · ':''}${escapeHTML(e.zone)} · ${effort>0?'Effort '+effort+'/10':'Effort —'}</div>
+        <div class="log-meta">${[dist>0?dist.toLocaleString()+' m/yd':'',dur>0?dur+' min':'',escapeHTML(e.zone),effort>0?'Effort '+effort+'/10':''].filter(Boolean).join(' · ')}</div>
         ${e.mainset?`<div class="log-notes" style="color:var(--cyan)">${escapeHTML(e.mainset)}</div>`:''}
         ${e.notes?`<div class="log-notes">${escapeHTML(e.notes)}</div>`:''}
       </div>
@@ -8250,7 +8250,7 @@ function runSplits(){
   if (!o.goal) { fail('Enter a valid goal time — ss.ss or m:ss.ss.'); return; }
   var sane = sanityPace(o.dist, o.goal); if (sane) { fail(sane); return; }
   if (!(o.bonus >= 0 && o.bonus <= 3)) { fail('Start bonus must be between 0 and 3 seconds.'); return; }
-  if (!(o.fade >= -15 && o.fade <= 15)) { fail('Half-split difference must be between −15% and +15%.'); return; }
+  if (!(o.fade >= -15 && o.fade <= 15)) { fail('Second half vs first must be between −15% and +15%.'); return; }
   var r = buildSplits(o);
   if (r.error) { fail(r.error); return; }
   setErr('pl-sp-err', '');
@@ -10295,7 +10295,7 @@ window.tl_an_debug = {
     var q = raw.length > 60 ? raw.slice(0, 57) + '…' : raw;
     return makeItem({
       kind: 'action', icon: 'ask', page: 'ai', transient: true,
-      text: 'Ask the AI coach: “' + q + '”', crumb: 'Opens the coach with your question filled in',
+      text: 'Ask the AI coach: "' + q + '"', crumb: 'Opens the coach with your question filled in',
       after: function(){ var i = $('ai-input'); if (i){ i.value = raw.slice(0, 600); try { i.focus({ preventScroll: true }); } catch(e){ i.focus(); } } }
     });
   }
