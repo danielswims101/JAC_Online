@@ -94,7 +94,6 @@
   function isPow2(n) { return n > 0 && (n & (n - 1)) === 0; }
   function smoothstep(e0, e1, x) { var t = clamp01((x - e0) / (e1 - e0)); return t * t * (3 - 2 * t); }
   function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
-  function srgbToLinear(c) { return c < 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
   function linearToSrgb(c) { return c < 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 1 / 2.4) - 0.055; }
 
   // Tileable value-noise lattice with integer period P (wraps by construction).
