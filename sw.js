@@ -9,7 +9,9 @@
    Strategy
      navigations + *.html   network-first → cache → ./index.html
      other same-origin GET  stale-while-revalidate
-     cross-origin           never intercepted (Supabase, jsDelivr,
+     three.min.js (CDN)     cache-first in a version-independent cache, so
+                            the 3D lab works offline once it has been opened
+     other cross-origin     never intercepted (Supabase, jsDelivr,
                             Google Fonts, YouTube go straight through)
    ============================================================ */
 'use strict';
@@ -18,6 +20,11 @@ const VERSION      = '3.1.1';
 const CACHE_PREFIX = 'tidelyne-v';
 const CACHE        = CACHE_PREFIX + VERSION;
 const INDEX        = './index.html';
+// The pinned, immutable Three.js build the 3D lab injects (index.html ensureViz3DReady, loaded with
+// crossorigin so the response is not opaque). It lives in its own cache that survives version sweeps:
+// its name must NOT start with CACHE_PREFIX ('tidelyne-v…'), or activate() would delete it.
+const THREE_URL    = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
+const VENDOR_CACHE = 'tl-vendor-cache';
 
 // Numeric dotted-version compare ("3.10.0" > "3.9.1"); mirrors cmpVer in index.html.
 function cmpVer(a, b){
@@ -54,7 +61,7 @@ const PRECACHE = [
   './disclaimer.html',
   './site.webmanifest',
   './logo-mark.svg',
-  './logo-full.svg',
+  './favicon.ico',
   './favicon-32.png',
   './favicon-192.png',
   './apple-touch-180.png',
@@ -84,6 +91,7 @@ self.addEventListener('activate', function(event){
       // caches.keys() order is unspecified: pick the newest stale version, not an arbitrary one.
       const previous = old.length ? old.map(function(k){ return k.slice(CACHE_PREFIX.length); }).sort(cmpVer).pop() : null;
       return Promise.all(old.map(function(k){ return caches.delete(k); }))
+        .then(function(){ return sweepVendor(); })
         .then(function(){ return self.clients.claim(); })
         .then(function(){ return self.clients.matchAll({ type: 'window', includeUncontrolled: true }); })
         .then(function(clients){
@@ -111,7 +119,10 @@ self.addEventListener('fetch', function(event){
   if (req.method !== 'GET') return;
   let url;
   try { url = new URL(req.url); } catch(e){ return; }
-  if (url.origin !== self.location.origin) return;               // cross-origin: untouched
+  if (url.origin !== self.location.origin){                       // cross-origin: untouched …
+    if (url.href === THREE_URL) event.respondWith(vendorCacheFirst(req)); // … except the pinned Three.js build
+    return;
+  }
   if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
 
   const isPage = req.mode === 'navigate' || /\.html$/i.test(url.pathname) || url.pathname.charAt(url.pathname.length - 1) === '/';
@@ -152,6 +163,28 @@ function staleWhileRevalidate(event, req){
         .then(function(res){ return res || offlineResponse(); });
     });
   });
+}
+
+// Three.js is pinned and immutable, so a cached copy is always right: serve it first and only fetch
+// on a miss. Non-OK and opaque responses are passed through uncached; ignoreVary covers the CDN's
+// Vary: Accept-Encoding header.
+function vendorCacheFirst(req){
+  return caches.open(VENDOR_CACHE).then(function(cache){
+    return cache.match(req, { ignoreVary: true }).then(function(hit){
+      if (hit) return hit;
+      return fetch(req).then(function(res){
+        if (res && res.ok && res.type !== 'opaque') cache.put(req, res.clone()).catch(function(){});
+        return res;
+      });
+    });
+  }).catch(function(){ return fetch(req); });
+}
+function sweepVendor(){
+  return caches.open(VENDOR_CACHE).then(function(cache){
+    return cache.keys().then(function(reqs){
+      return Promise.all(reqs.filter(function(r){ return r.url !== THREE_URL; }).map(function(r){ return cache.delete(r); }));
+    });
+  }).catch(function(){});
 }
 
 function offlineResponse(){
