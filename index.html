@@ -243,7 +243,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .hstat{text-align:center}.hstat-val{font-family:var(--fh);font-size:2.6rem;color:var(--cyan);display:block;line-height:1;letter-spacing:1px}.hstat-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--white3);text-transform:uppercase;margin-top:5px;display:block}
 /* LAYOUT */
 .section-wrap{max-width:1240px;margin:0 auto;padding:5rem 2rem}.section-wrap.narrow{max-width:960px}
-.section-eyebrow{font-family:var(--fm);font-size:0.6rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.75rem;opacity:0.85}
+.section-eyebrow{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.75rem;opacity:0.85}
 h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* section titles promoted from <div> to real headings keep their look */
 .section-title{font-family:var(--fh);font-weight:400;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:2px;line-height:0.92;margin-top:0;margin-bottom:1rem}
 .section-title span{color:var(--cyan)}
@@ -269,7 +269,8 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2.5rem;overflow-x:auto;gap:0;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
 .tabs{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--tabs-fl,0px),#000 calc(100% - var(--tabs-fr,0px)),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 var(--tabs-fl,0px),#000 calc(100% - var(--tabs-fr,0px)),transparent 100%)}
 .tabs::-webkit-scrollbar{display:none}
-.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--white3);font-family:var(--fb);font-size:0.78rem;font-weight:500;letter-spacing:0.3px;text-transform:uppercase;padding:11px 16px;cursor:pointer;margin-bottom:-1px;transition:color 0.2s,border-color 0.2s;white-space:nowrap;scroll-snap-align:start}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--white3);font-family:var(--fb);font-size:0.78rem;font-weight:500;letter-spacing:0.3px;text-transform:uppercase;line-height:1.3;padding:11px 16px;cursor:pointer;margin-bottom:-1px;transition:color 0.2s,border-color 0.2s;white-space:nowrap;scroll-snap-align:start}
+.tab-btn>span[aria-hidden]{display:inline-block;line-height:1;vertical-align:-1px}
 .tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}.tab-btn:hover:not(.active){color:var(--white)}
 .tab-panel{display:none}.tab-panel.active{display:block}
 /* ACCORDION */
@@ -290,8 +291,10 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 /* TABLES */
 .table-wrap{position:relative;overflow-x:auto;border-radius:var(--r12);border:1px solid var(--border2);margin:1.25rem 0}
 .data-table th .th-unit{text-transform:none} /* unit symbols are case-sensitive: m, s, m/yd */
-.data-table{width:100%;border-collapse:collapse;font-size:0.84rem}.data-table th{background:var(--navy3);color:var(--cyan);font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--white2);vertical-align:top;line-height:1.6}.data-table tr:hover td{background:rgba(0,212,255,0.03)}.data-table td:first-child{color:var(--white);font-weight:500}
+.data-table{width:100%;border-collapse:collapse;font-size:0.84rem}.data-table th{background:var(--navy3);color:var(--cyan);font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--white2);vertical-align:top;line-height:1.6}.data-table tr:hover td{background:rgba(0,212,255,0.03)}.data-table td:first-child{color:var(--white);font-weight:500}
 .ptag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1px;color:var(--cyan);display:block;margin-bottom:3px}
+.log-stat-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px}
+.viz-phys-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
 /* METRICS */
 .metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:1rem;margin-bottom:3rem}
 .metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border)}@media(hover:hover){.metric-card[onclick]:hover{transform:translateY(-3px)}}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4}
@@ -328,11 +331,17 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .viz-tone{display:inline-flex;align-items:center;gap:7px;padding-left:10px}
 .tone-swatch{width:12px;height:12px;border-radius:50%;border:1px solid rgba(255,255,255,0.35);flex:0 0 auto}
 .viz-btn.viz-busy{opacity:.55;cursor:progress}
+#viz-info-panel{padding:1.5rem}
+/* Six physics tiles: 6 across on desktop, 3+3 on tablets, 2+2+2 on phones (auto-fit gave 5+1 / 4+2 orphans) */
+#viz-physics-row{display:grid;grid-template-columns:repeat(6,1fr);gap:0.75rem;margin-top:1rem}
+@media(max-width:899px){#viz-physics-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:480px){#viz-physics-row{grid-template-columns:repeat(2,1fr)}}
 .force-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:1rem;padding:1rem;background:var(--navy3);border-radius:var(--r8);border:1px solid var(--border2)}
 .legend-item{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:0.65rem;letter-spacing:0.5px;color:var(--white3);text-transform:uppercase}
 .legend-dot{width:12px;height:12px;border-radius:50%}
 /* AI SECTION */
 #ai-section{max-width:1200px;margin:0 auto;padding:0 2rem 3rem}
+#page-ai .ai-title-wrap{max-width:1200px;padding:1.75rem 2rem 0.75rem} /* same gutter as #ai-section at every width (was an inline 2rem the phone rule could not override) */
 .ai-wrapper{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);overflow:hidden;box-shadow:0 0 80px rgba(0,212,255,0.07)}
 .ai-header{background:var(--card2);border-bottom:1px solid var(--border);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .ai-header-left{display:flex;align-items:center;gap:12px}
@@ -395,13 +404,13 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .zone-bars{display:flex;flex-direction:column;gap:12px;margin-top:1.5rem}
 .zone-row{display:flex;align-items:center;gap:14px}.zone-name{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--white3);text-transform:uppercase;min-width:95px;text-align:right}
 .zone-track{flex:1;background:var(--navy3);border-radius:4px;height:26px;overflow:hidden;border:1px solid var(--border2)}
-.zone-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 12px;font-family:var(--fm);font-size:0.6rem;color:var(--navy);font-weight:700}
+.zone-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 12px;font-family:var(--fm);font-size:var(--fs-micro);color:var(--navy);font-weight:700}
 .zone-fill.z1{background:linear-gradient(90deg,#00e599,#00c27d);width:18%}.zone-fill.z2{background:linear-gradient(90deg,#00d4ff,#00a8cc);width:42%}.zone-fill.z3{background:linear-gradient(90deg,#f5a623,#d4891a);width:64%}.zone-fill.z4{background:linear-gradient(90deg,#ff7043,#e64a19);width:82%}.zone-fill.z5{background:linear-gradient(90deg,#ff5252,#c62828);width:100%}
 .zone-info{font-family:var(--fm);font-size:0.62rem;color:var(--white3);min-width:140px}
 /* PR TRACKER */
 .pr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.85rem;margin-bottom:1.25rem}
 .pr-item{background:var(--card);border-radius:var(--r8);padding:0.9rem;border:1px solid var(--border2);text-align:center;transition:border-color 0.2s}.pr-item:hover{border-color:var(--border)}
-.pr-event{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:7px;display:block}
+.pr-event{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:7px;display:block}
 .pr-input{background:var(--navy2);border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.6rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s}.pr-input:focus{border-color:var(--cyan)}.pr-input::placeholder{color:var(--white4);font-size:1rem}
 /* DRYLAND */
 .dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem}
@@ -451,22 +460,27 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .btn-ghost-sm{background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.35);border-radius:6px;padding:7px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.btn-ghost-sm:hover{background:var(--cyan-dim)}
 /* Same 30px box whether the control is a <button>, an <a> (which would inherit the body line-height) or carries an emoji glyph */
 .btn-sm,.btn-ghost-sm{line-height:1.2;min-height:30px}
+.tl-actions{display:flex;gap:10px;flex-wrap:wrap}
+/* Pressed feedback: touch has no hover, so a tap acknowledges itself before the page changes (the timers already did this) */
+.btn-sm:active,.btn-ghost-sm:active,.btn-hero:active,.btn-hero-ghost:active,.viz-btn:active,.tab-btn:active,.qp:active,.ai-mode-btn:active,.calc-btn:active,.ai-send:active,.phase-step:active,nav .nav-menu a:active,nav .nav-links>li>a:active,nav .nav-group-btn:active{transform:scale(0.97);filter:brightness(1.15);transition-duration:60ms}
+@media(prefers-reduced-motion:reduce){
+  .btn-sm:active,.btn-ghost-sm:active,.btn-hero:active,.btn-hero-ghost:active,.viz-btn:active,.tab-btn:active,.qp:active,.ai-mode-btn:active,.calc-btn:active,.ai-send:active,.phase-step:active,nav .nav-menu a:active,nav .nav-links>li>a:active,nav .nav-group-btn:active{transform:none}
+}
 /* RESPONSIVE */
 @media(max-width:768px){
   nav{height:52px}
   .section-wrap{padding:3rem 1.25rem}
   .ai-messages{height:calc(100dvh - 320px);min-height:280px}
-  #ai-section{padding:0 1rem 2rem}
+  #ai-section{padding:0 1.25rem 2rem}
+  #page-ai .ai-title-wrap{padding:1.5rem 1.25rem 0.75rem}
   #viz3d-container{height:380px}
   .viz-overlay-stats{grid-template-columns:1fr 1fr;top:8px;right:8px}
   .vos-item{padding:6px 8px}
   .vos-val{font-size:0.95rem}
-  .phase-step{font-size:0.58rem}
 }
 @media(max-width:480px){
   .hero h1{font-size:3.5rem}
   .metrics-row{grid-template-columns:repeat(2,1fr)}
-  .viz-phase-bar{display:none}
   #viz3d-container{height:320px}
   /* HUD: one translucent strip along the top (was a 2×2 block over 56% of the canvas width) */
   .viz-overlay-stats{grid-template-columns:repeat(4,1fr);left:8px;right:8px;gap:4px}
@@ -482,16 +496,18 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .ai-header{padding:0.9rem 1rem}
   .ai-mode-btns{gap:4px;flex:1 1 100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
   .ai-mode-btns::-webkit-scrollbar{display:none}
-  .ai-mode-btn{padding:4px 10px;font-size:0.58rem;flex:0 0 auto;white-space:nowrap}
+  .ai-mode-btn{padding:4px 10px;flex:0 0 auto;white-space:nowrap}
   .quick-prompts{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0.6rem 1rem}
   .quick-prompts::-webkit-scrollbar{display:none}
   .qp{flex:0 0 auto;white-space:nowrap}
-  .ai-messages{height:calc(100dvh - 300px)}
+  .ai-messages{height:calc(100dvh - 300px);padding:14px;gap:0.85rem}
+  /* Bubbles take the full width beside the avatar (80% of a 265px row was a 212px column that made the welcome 409px tall) */
+  .msg-bubble{max-width:calc(100% - 42px);padding:0.75rem 0.9rem;line-height:1.6}
 }
 /* ACCESSIBILITY */
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.qp:focus-visible,[role="button"]:focus-visible,[role="link"]:focus-visible,[tabindex]:not(.page):focus-visible,#viz3d-container:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
-/* Inside overflow:hidden parents (accordion, canvas wrap) an outside ring is clipped — draw it inset */
-.acc-header:focus-visible,#viz3d-container:focus-visible,.phase-step:focus-visible{outline-offset:-3px}
+/* Inside overflow:hidden/auto parents (accordion, canvas wrap, the .tabs and .ai-mode-btns scroll strips) an outside ring is clipped — draw it inset */
+.acc-header:focus-visible,#viz3d-container:focus-visible,.phase-step:focus-visible,.tabs .tab-btn:focus-visible,.ai-mode-btns .ai-mode-btn:focus-visible{outline-offset:-3px} /* tabs carry a roving tabindex, so the selector must outrank [tabindex]:not(.page):focus-visible above */
 .sr-only{position:absolute;left:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
@@ -508,6 +524,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:768px){
   .viz-btn,.btn-sm,.btn-ghost-sm,.qp,.tab-btn,.ai-mode-btn{min-height:44px;display:inline-flex;
     align-items:center;justify-content:center}
+  .viz-phase-bar{height:44px} /* the six phase steps stretch to the bar, so they become 44px targets too */
   .nav-links li a{line-height:44px;padding:4px 12px;font-size:0.72rem}
   .nav-ai-btn,.nav-key-btn,#nav-login-btn,#nav-logout-btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
   .form-input,.form-select,.form-textarea,.pr-input{min-height:44px}
@@ -521,7 +538,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* The phase bar is the point of the lab — keep it readable by letting it
    scroll horizontally on small screens instead of crushing the labels. */
 @media(max-width:480px){
-  .viz-phase-bar{display:flex!important;height:36px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity}
+  .viz-phase-bar{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity}
   .viz-phase-bar::-webkit-scrollbar{display:none}
   .phase-step{scroll-snap-align:start}
   .phase-step{font-size:0.62rem;letter-spacing:0;min-width:74px;flex:0 0 auto}
@@ -557,8 +574,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-timers .tlt-note{font-size:0.78rem;color:var(--white3);line-height:1.65;margin:0.75rem 0 1.5rem}
 #page-timers .tlt-note a{color:var(--cyan)}
 #page-timers .tlt-hint{font-family:var(--fm);font-size:0.64rem;color:var(--white4);letter-spacing:0.3px;margin-top:0.75rem;line-height:1.7}
-/* Keyboard-only hints mean nothing on a touch-only pool-deck phone */
-@media (hover:none) and (pointer:coarse){#page-timers .tlt-kbd-hint{display:none}}
+/* Keyboard and mouse hints only where there is a keyboard or a wheel; touch screens get the touch wording instead */
+.viz-hint-touch{display:none}
+@media(hover:none) and (pointer:coarse){.tl-kbd-only,.viz-hint-pointer{display:none}.viz-hint-touch{display:inline}}
 #page-timers .tlt-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.5rem;margin-bottom:1.5rem}
 #page-timers .tlt-card-title{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1rem}
 #page-timers .tlt-card:focus-visible,#page-timers .tlt-int-display:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
@@ -741,7 +759,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-status{font-family:var(--fm);font-size:0.68rem;color:var(--green);letter-spacing:0.3px}
 #page-planner .pl-fine{font-size:0.76rem;color:var(--white3);line-height:1.65;margin-top:1.5rem}
 #page-planner .pl-fine a,#page-planner .info-box a{color:var(--cyan)}
-#page-planner .pl-tag{display:inline-block;font-family:var(--fm);font-size:0.56rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid;white-space:nowrap}
+#page-planner .pl-tag{display:inline-block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid;white-space:nowrap}
 #page-planner .pl-tag.good{color:var(--green);border-color:rgba(0,229,153,0.35);background:var(--green-dim)}
 #page-planner .pl-tag.mid{color:var(--gold);border-color:rgba(245,166,35,0.35);background:var(--gold-dim)}
 #page-planner .pl-tag.low{color:var(--red);border-color:rgba(255,82,82,0.35);background:var(--red-dim)}
@@ -831,7 +849,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-countdown.today .pl-days{color:var(--green);text-shadow:0 0 60px rgba(0,229,153,0.4)}
 #page-planner .pl-days-wrap{text-align:center;min-width:120px}
 #page-planner .pl-days{font-family:var(--fh);font-size:clamp(3.4rem,13vw,6.2rem);line-height:0.9;color:var(--cyan);letter-spacing:2px;text-shadow:0 0 60px rgba(0,212,255,0.35)}
-#page-planner .pl-days-lbl{font-family:var(--fm);font-size:0.58rem;letter-spacing:3px;color:var(--white3);text-transform:uppercase;margin-top:8px}
+#page-planner .pl-days-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--white3);text-transform:uppercase;margin-top:8px}
 #page-planner .pl-meet-name{font-family:var(--fh);font-size:clamp(1.5rem,4.5vw,2.3rem);letter-spacing:1px;line-height:1.05;overflow-wrap:anywhere}
 #page-planner .pl-meet-date{font-family:var(--fm);font-size:0.72rem;color:var(--white2);margin-top:5px;letter-spacing:0.3px}
 #page-planner .pl-meet-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:0.75rem}
@@ -871,6 +889,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:480px){
   #page-planner .pl-two{grid-template-columns:1fr}
   #page-planner .pl-grid{grid-template-columns:1fr}
+  /* Empty cards (no goal, no PR) drop the dash tiles and the disabled button until something is entered: 18 one-column cards were 247px each */
+  #page-planner .pl-goal-card.is-empty .pl-goal-stats,#page-planner .pl-goal-card.is-empty .pl-to-splits{display:none}
   #page-planner .pl-summary{grid-template-columns:1fr 1fr}
   #page-planner .pl-summary>:last-child:nth-child(odd){grid-column:1/-1}
   #page-planner .pl-bar-row{grid-template-columns:1fr;gap:3px}
@@ -932,7 +952,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-chart-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.25rem 1.25rem 1rem}
 #page-analytics .an-chart-controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:1rem}
 #page-analytics .an-seg{display:inline-flex;align-items:center;gap:0;border:1px solid var(--border2);border-radius:8px;overflow:hidden;background:var(--navy3)}
-#page-analytics .an-seg-lbl{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;padding:0 10px 0 12px;white-space:nowrap}
+#page-analytics .an-seg-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;padding:0 10px 0 12px;white-space:nowrap}
 #page-analytics .an-seg-btn{background:transparent;border:none;border-left:1px solid var(--border2);color:var(--white3);font-family:var(--fm);font-size:0.65rem;letter-spacing:0.8px;text-transform:uppercase;padding:9px 13px;cursor:pointer;transition:background 0.2s,color 0.2s;white-space:nowrap;min-height:36px}
 #page-analytics .an-seg-btn:hover{color:var(--white)}
 #page-analytics .an-seg-btn[aria-pressed="true"]{background:var(--cyan-dim);color:var(--cyan);font-weight:600}
@@ -943,7 +963,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-tooltip{position:absolute;z-index:5;pointer-events:none;background:rgba(8,21,38,0.97);border:1px solid var(--border);border-radius:8px;padding:9px 12px;min-width:150px;max-width:230px;box-shadow:0 10px 30px rgba(0,0,0,0.45);font-size:0.76rem;color:var(--white2);line-height:1.5}
 #page-analytics .an-tt-title{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;margin-bottom:4px}
 #page-analytics .an-tt-total{font-family:var(--fh);font-size:1.35rem;color:var(--white);letter-spacing:1px;line-height:1.1;margin-bottom:5px}
-#page-analytics .an-tt-total small{font-family:var(--fm);font-size:0.58rem;letter-spacing:1px;color:var(--white3);margin-left:4px}
+#page-analytics .an-tt-total small{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1px;color:var(--white3);margin-left:4px}
 #page-analytics .an-tt-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:var(--fm);font-size:0.68rem;padding:1px 0}
 #page-analytics .an-tt-row span:last-child{color:var(--white)}
 #page-analytics .an-tt-row .an-swatch{margin-right:6px}
@@ -962,7 +982,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-zone-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.5rem}
 #page-analytics .an-zone-bar{display:flex;width:100%;height:34px;border-radius:6px;overflow:hidden;background:var(--navy3);border:1px solid var(--border2)}
 #page-analytics .an-zone-seg{height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:0.62rem;font-weight:700;color:var(--navy);overflow:hidden;white-space:nowrap;min-width:0}
-#page-analytics .an-zone-seg.dim{color:var(--white);background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.08) 0 6px,transparent 6px 12px)}
+#page-analytics .an-zone-seg.dim{color:var(--navy);background-image:repeating-linear-gradient(135deg,rgba(255,255,255,0.08) 0 6px,transparent 6px 12px)}
 #page-analytics .an-zone-empty{display:flex;align-items:center;justify-content:center;width:100%;font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--white3);text-transform:uppercase}
 #page-analytics .an-zone-list{list-style:none;margin:1rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:6px 18px}
 #page-analytics .an-zone-list li{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:0.7rem;color:var(--white2);padding:5px 0;border-bottom:1px solid var(--border2);white-space:nowrap}
@@ -976,7 +996,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-insights{display:flex;flex-direction:column;gap:0.75rem}
 #page-analytics .an-insight{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.1rem 1.25rem;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:start;transition:border-color 0.2s}
 #page-analytics .an-insight:hover{border-color:var(--border)}
-#page-analytics .an-tag{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;text-transform:uppercase;padding:4px 9px;border-radius:4px;white-space:nowrap;margin-top:2px;border:1px solid transparent}
+#page-analytics .an-tag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;text-transform:uppercase;padding:4px 9px;border-radius:4px;white-space:nowrap;margin-top:2px;border:1px solid transparent}
 #page-analytics .an-tag.caution{background:var(--gold-dim);color:var(--gold);border-color:rgba(245,166,35,0.3)}
 #page-analytics .an-tag.note{background:var(--cyan-dim);color:var(--cyan);border-color:rgba(0,212,255,0.25)}
 #page-analytics .an-tag.good{background:var(--green-dim);color:var(--green);border-color:rgba(0,229,153,0.25)}
@@ -998,8 +1018,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-kv-center{margin-top:1rem}
 #page-analytics .an-kv-item{background:var(--card);border:1px solid var(--border2);border-radius:var(--r8);padding:0.7rem 0.75rem;text-align:center}
 #page-analytics .an-kv-item .v{font-family:var(--fh);font-size:1.5rem;color:var(--cyan);letter-spacing:1px;line-height:1;display:block;font-variant-numeric:tabular-nums}
-#page-analytics .an-kv-item .v small{font-family:var(--fm);font-size:0.58rem;color:var(--white3);letter-spacing:0.5px;margin-left:3px}
-#page-analytics .an-kv-item .k{font-family:var(--fm);font-size:0.54rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;margin-top:5px;display:block;line-height:1.3}
+#page-analytics .an-kv-item .v small{font-family:var(--fm);font-size:var(--fs-micro);color:var(--white3);letter-spacing:0.5px;margin-left:3px}
+#page-analytics .an-kv-item .k{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;margin-top:5px;display:block;line-height:1.3}
 #page-analytics .an-box-top{margin-top:0}
 #page-analytics .an-list{list-style:none;margin:1rem 0 0;padding:0}
 #page-analytics .an-list li{font-size:0.83rem;color:var(--white2);line-height:1.7;padding:8px 0;border-bottom:1px solid var(--border2);font-weight:300}
@@ -1035,7 +1055,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #page-analytics .an-seg{width:100%}
   #page-analytics .an-seg-btn{flex:1}
   #page-analytics .an-zone-bar{height:30px}
-  #page-analytics .an-zone-seg{font-size:0.56rem}
   #page-analytics .an-tooltip{max-width:200px}
 }
 @media print{
@@ -1085,7 +1104,7 @@ html.tl-pal-lock{overflow:hidden}
 .tl-pal-input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:var(--white);font-family:var(--fb);font-size:1.05rem;font-weight:400;padding:10px 0;line-height:1.3}
 .tl-pal-input::placeholder{color:var(--white4)}
 .tl-pal-input:focus-visible{outline:none;box-shadow:0 2px 0 0 var(--cyan)}
-.tl-pal-esc{font-family:var(--fm);font-size:0.58rem;letter-spacing:1px;color:var(--white3);background:var(--navy3);border:1px solid var(--border);border-radius:4px;padding:2px 6px;text-transform:uppercase;flex-shrink:0}
+.tl-pal-esc{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1px;color:var(--white3);background:var(--navy3);border:1px solid var(--border);border-radius:4px;padding:2px 6px;text-transform:uppercase;flex-shrink:0}
 .tl-pal-close{background:none;border:none;color:var(--white3);font-size:1rem;line-height:1;width:36px;height:36px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:color 0.15s,background 0.15s}
 .tl-pal-close:hover{color:var(--cyan);background:var(--cyan-dim)}
 /* Results */
@@ -1104,12 +1123,12 @@ html.tl-pal-lock{overflow:hidden}
 .tl-pal-crumb{font-family:var(--fm);font-size:0.6rem;letter-spacing:0.5px;color:var(--white3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tl-pal-snip{font-size:0.78rem;color:var(--white2);font-weight:300;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tl-pal-mark{background:none;color:var(--cyan);font-weight:600}
-.tl-pal-kindtag{font-family:var(--fm);font-size:0.54rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--white4);flex-shrink:0}
+.tl-pal-kindtag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;color:var(--white4);flex-shrink:0}
 .tl-pal-opt[aria-selected="true"] .tl-pal-kindtag{color:var(--white3)}
 .tl-pal-empty{padding:18px 14px 6px;font-size:0.88rem;color:var(--white2);line-height:1.7;font-weight:300}
 /* Footer hints */
 .tl-pal-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid var(--border2);background:var(--card2);font-family:var(--fm);font-size:0.6rem;letter-spacing:0.5px;color:var(--white3)}
-.tl-pal-foot kbd{display:inline-block;font-family:var(--fm);font-size:0.58rem;color:var(--white2);background:var(--navy3);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin-right:4px;line-height:1.6}
+.tl-pal-foot kbd{display:inline-block;font-family:var(--fm);font-size:var(--fs-micro);color:var(--white2);background:var(--navy3);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin-right:4px;line-height:1.6}
 .tl-pal-foot-r{margin-left:auto}
 .tl-pal-slash{display:inline-flex;align-items:center;gap:4px;cursor:pointer;color:inherit}.tl-pal-slash input{accent-color:var(--cyan);margin:0 4px 0 0;width:14px;height:14px;cursor:pointer}.tl-pal-slash input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 .tl-pal-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
@@ -1119,7 +1138,7 @@ html.tl-pal-lock{overflow:hidden}
 /* Nav search button (opens the command palette) */
 .tl-pal-navbtn{display:inline-flex;align-items:center;gap:6px}
 .tl-pal-navbtn svg{display:block}
-.tl-pal-navhint{font-family:var(--fm);font-size:0.56rem;letter-spacing:0.5px;color:var(--white3);line-height:1}
+.tl-pal-navhint{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:0.5px;color:var(--white3);line-height:1}
 .tl-pal-navbtn:hover .tl-pal-navhint{color:var(--cyan)}
 /* Mobile: full-screen sheet, big input, tappable rows */
 @media(max-width:640px){
@@ -1254,6 +1273,10 @@ html.tl-pal-lock{overflow:hidden}
   #page-updates .tl-upd-install-actions{width:100%}
   #page-updates .tl-upd-install-actions .btn-sm,#page-updates .tl-upd-install-actions .btn-ghost-sm{flex:1 1 auto}
   #page-updates .tl-upd-date{margin-left:0;width:100%}
+  /* Release notes: the tag sits above full-width text instead of a fixed 74px column that left 192px for the sentence */
+  #page-updates .tl-upd-items li{flex-wrap:wrap;gap:4px 12px}
+  #page-updates .tl-upd-tag{flex:0 0 auto;padding:2px 8px;margin-top:0}
+  #page-updates .tl-upd-items li>a,#page-updates .tl-upd-items li>span:not(.tl-upd-tag){flex:1 1 100%}
   .tl-upd-toast{left:16px;right:16px;transform:none;max-width:none;flex-wrap:wrap;animation:none}
   .tl-upd-toast-msg{flex:1 1 100%}
 }
@@ -1287,6 +1310,7 @@ nav .nav-menu a{display:flex;flex-direction:column;justify-content:center;gap:2p
 nav .nav-menu a[data-desc]::after{content:attr(data-desc);display:block;font-size:0.68rem;font-weight:300;letter-spacing:0;color:var(--white3);line-height:1.35}
 nav .nav-menu a:hover,nav .nav-menu a:focus-visible{background:var(--cyan-dim);color:var(--cyan);border-bottom-color:transparent}
 nav .nav-menu a.active{background:var(--cyan-dim);color:var(--cyan);box-shadow:inset 2px 0 0 var(--cyan);border-bottom-color:transparent}
+nav .nav-menu a.active:hover,nav .nav-menu a.active:focus-visible{background:rgba(0,212,255,0.16);color:var(--white)} /* the current page's row still answers the pointer (hover and selected were identical) */
 /* Right cluster: keep a long username from pushing the row off-screen (CSS only; markup untouched). */
 nav #current-username-display{max-width:120px;overflow:hidden;text-overflow:ellipsis}
 /* the nav module sets [hidden] on the search button until window.openPalette exists; the site's
@@ -1340,9 +1364,9 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-links>li>a:hover,nav .nav-links>li>a.active{background:var(--cyan-dim);color:var(--cyan);border-bottom-color:transparent}
   nav .nav-links>li>a.active{box-shadow:inset 2px 0 0 var(--cyan)}
   nav #nav-updates{margin-top:8px}
-  /* Groups become headed, collapsible sections (expanded by default). */
+  /* Groups become headed, collapsible sections (the current page's section is expanded when the drawer opens). */
   nav .nav-group{margin-top:8px}
-  nav .nav-group-btn{display:flex;width:100%;justify-content:space-between;align-items:center;min-height:44px;padding:0 12px;line-height:1.2;font-family:var(--fm);font-size:0.6rem;letter-spacing:3px;color:var(--cyan);opacity:0.85;border:0;border-radius:8px}
+  nav .nav-group-btn{display:flex;width:100%;justify-content:space-between;align-items:center;min-height:44px;padding:0 12px;line-height:1.2;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--cyan);opacity:0.85;border:0;border-radius:8px}
   nav .nav-group-btn:hover,nav .nav-group-btn[aria-expanded="true"],nav .nav-group-btn.active{color:var(--cyan);border-bottom-color:transparent}
   nav .nav-group-btn.active{opacity:1}
   nav .nav-group-btn .nav-caret{transform:translateY(-1px) rotate(45deg)}
@@ -1356,6 +1380,10 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-menu a:hover{border-color:var(--border)}
   nav .nav-menu a.active{border-color:rgba(0,212,255,0.4);box-shadow:inset 2px 0 0 var(--cyan)}
 }
+@media(max-width:768px){
+  /* The bar is 52px from 768px down, so the drawer head matches it and the ✕ lands exactly where the burger was */
+  nav .nav-drawer-head{height:52px}
+}
 @media(max-width:480px){
   nav{padding:0 12px}
   nav .nav-brand{font-size:1.2rem;letter-spacing:2px;gap:7px}
@@ -1363,8 +1391,7 @@ nav #nav-search-btn[hidden]{display:none}
   nav #nav-search-btn{display:none}   /* the drawer carries a full-width Search row instead */
   nav .nav-ai-btn{padding:6px 8px}
   nav .nav-drawer{width:min(340px,90vw)}
-  /* The drawer head matches the 52px phone bar so the ✕ lands exactly where the burger was */
-  nav .nav-drawer-head{height:52px;padding-right:12px}
+  nav .nav-drawer-head{padding-right:12px}
 }
 @media (prefers-reduced-motion: reduce){
   nav .nav-drawer,nav .nav-drawer.open,nav .nav-scrim,nav .nav-burger-bars span,nav .nav-caret{transition:none}
@@ -1415,7 +1442,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 @media(max-width:480px){
   #access-gate{padding:1rem 0.75rem}
   .auth-card{padding:2rem 1.25rem}
-  .footer-inner{grid-template-columns:1fr}
+  /* Footer: brand on top, link columns 2×2 (one column was 24 links on 1,139px), gutter matched to the page's 20px */
+  .footer-inner{grid-template-columns:repeat(2,1fr);gap:1.5rem 1rem;margin-bottom:1.5rem}
+  .footer-inner>.footer-brand{grid-column:1/-1}
+  .footer-inner>.footer-col:last-child:nth-child(odd){grid-column:auto}
+  footer{padding:2.5rem 1.25rem}
+  .page:not(#page-home) footer{padding:1.25rem}
+  .footer-bottom{padding-top:1rem}
   .key-grid{grid-template-columns:1fr}
   #page-home .metrics-row{grid-template-columns:repeat(2,1fr);gap:0.75rem}
   #page-home .metrics-row .metric-card:nth-child(n){grid-column:auto}
@@ -1429,6 +1462,12 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   .hstat{min-width:0}
   /* Phone forms: give the inputs the width back; PR cards stay two-up */
   .gen-form,.gen-output,.imggen-wrap,.calc-panel,.tl-panel{padding:1.1rem}
+  /* Action rows: buttons share the width two-up (was 2+1+1 at four different widths); the form's primary CTA spans the panel like .calc-btn */
+  .tl-actions>button{flex:1 1 calc(50% - 5px)}
+  #gen-btn,#log-save-btn{width:100%}
+  /* Phone reading surfaces: 16px side padding instead of 28px, so body text and key-point tiles get a 301px column instead of 277px */
+  .acc-body,.card,.content-block,#viz-info-panel{padding:1.1rem 1rem}
+  .acc-header{padding:0.9rem 1rem}
   .pr-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
   /* Log entries: date and delete share the first line so the content spans the card instead of a 157px column */
   .log-entry{flex-wrap:wrap;gap:0.35rem 1rem;padding:1rem 1.1rem}
@@ -1451,6 +1490,17 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   #season-meet-table td:nth-child(2)::before{content:"Dates: "}
   #season-meet-table td:nth-child(3)::before{content:"Course: "}
   #season-meet-table td:nth-child(4)::before{content:"Status: "}
+  /* Prose tables (training sets, race event plans): one card per row on phones, the column header printed above each cell (roles in the markup keep table semantics) */
+  .data-table.tl-stack thead{display:none}
+  .data-table.tl-stack,.data-table.tl-stack tbody,.data-table.tl-stack tr,.data-table.tl-stack td{display:block;width:100%}
+  .data-table.tl-stack tr{padding:12px 14px;border-bottom:1px solid var(--border2)}
+  .data-table.tl-stack tr:last-child{border-bottom:0}
+  .data-table.tl-stack tr:hover td{background:none}
+  .data-table.tl-stack td{padding:0 0 9px;border:0;white-space:normal}
+  .data-table.tl-stack td:last-child{padding-bottom:0}
+  .data-table.tl-stack td::before{content:attr(data-label);display:block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;color:var(--white3);line-height:1.4;margin-bottom:2px}
+  .data-table.tl-stack td:first-child{font-size:0.95rem;line-height:1.4;padding-bottom:8px}
+  .data-table.tl-stack td:first-child::before{display:none}
 }
 </style>
 </head>
@@ -1628,8 +1678,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="vd-fly"><div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="o6Pnv10wyHk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/o6Pnv10wyHk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Butterfly · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Butterfly · Demo</span><p>Olympian Dylan Carter on mastering butterfly undulation.</p></div></div></div>
   <div class="tab-panel" id="vd-uw"><div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="bjDfI0NMVY8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/bjDfI0NMVY8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Underwater · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
   <div class="divider"></div>
-  <div class="section-eyebrow">Study It — Interactive 3D Biomechanics Lab</div>
-  <p class="section-intro" style="margin-bottom:1.5rem">A realistic human swimmer — built in your browser from real athlete proportions, with wet skin, race swimwear, silicone cap and goggles — swimming underwater in caustic light and depth haze, every joint driven by elite stroke-phase timing. Slow it down, orbit any angle, zoom in on a hand or a foot, isolate a single phase, switch between the male and female swimmer or X-ray the skeleton, or describe any movement and the AI reconstructs it. It exists so you can see what video moves too fast to show.</p>
+  <div class="section-eyebrow">Study It — 3D Biomechanics Lab</div>
+  <p class="section-intro" style="margin-bottom:1.5rem">A realistic human swimmer, built in your browser from real athlete proportions and driven by elite stroke-phase timing. Slow it down, orbit any angle, isolate a phase or X-ray the skeleton — and see what video moves too fast to show.</p>
   <div class="viz-canvas-wrap" style="position:relative">
     <div id="viz3d-container" role="application" tabindex="0" aria-label="Interactive 3D swimmer. Left and Right arrow keys step through the stroke phases; the stroke and phase buttons below do the same. Each phase is described in words in the panel underneath."></div>
     <div class="viz-overlay-stats">
@@ -1678,7 +1728,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <button class="viz-btn active" id="vbtn-forces" aria-pressed="true" onclick="toggleForces3D(this)">Forces: On</button>
   </div>
-  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px"><span aria-hidden="true">🖱 </span>Drag to orbit · Scroll to zoom · Tap a phase below to jump to it</p>
+  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px"><span class="viz-hint-pointer"><span aria-hidden="true">🖱 </span>Drag to orbit · Scroll to zoom · </span><span class="viz-hint-touch">Drag to orbit · Pinch to zoom · </span>Tap a phase below to jump to it</p>
   <div id="human-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:4px;letter-spacing:0.3px"></div>
   <div class="force-legend">
     <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Drag</div>
@@ -1687,13 +1737,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="legend-item"><div class="legend-dot" style="background:#ffaa00"></div>Net Force (+ accelerating / − decelerating)</div>
   </div>
   <p style="font-size:0.7rem;color:var(--white4);margin-top:0.5rem;font-family:var(--fm)">Force and velocity values are illustrative teaching approximations, not measured data.</p>
-  <div id="viz-info-panel" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r12);padding:1.5rem">
+  <div id="viz-info-panel" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r12)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
       <h2 id="viz-phase-name" style="font-family:var(--fh);font-weight:400;font-size:1.4rem;letter-spacing:1px;color:var(--cyan)">Select a stroke</h2>
       <div id="viz-stroke-name" style="font-family:var(--fm);font-size:0.65rem;letter-spacing:3px;color:var(--white3);text-transform:uppercase"></div>
     </div>
-    <div id="viz-phase-text" style="font-size:0.9rem;color:var(--white2);line-height:1.8;font-weight:300">The lab renders a realistic 3D swimmer — anatomically proportioned, with wet skin, swimwear, cap and goggles — whose joints move on timing from elite stroke-phase research. Orbit freely, zoom in close, or use the view buttons to inspect technique from any angle; X-ray shows the skeleton underneath.</div>
-    <div id="viz-physics-row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem;margin-top:1rem"></div>
+    <div id="viz-phase-text" style="font-size:0.9rem;color:var(--white2);line-height:1.8;font-weight:300">The lab renders a realistic 3D swimmer — anatomically proportioned, with wet skin, race swimwear, silicone cap and goggles, underwater in caustic light and depth haze — whose joints move on timing from elite stroke-phase research. Orbit freely, zoom in on a hand or a foot, or use the view buttons to inspect technique from any angle; switch between the male and female swimmer, X-ray the skeleton underneath, or describe any movement and the AI reconstructs it.</div>
+    <div id="viz-physics-row"></div>
   </div>
   <div class="divider"></div>
   <div class="section-eyebrow">AI Technique Analysis</div>
@@ -1901,46 +1951,46 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel active" id="s-aet">
     <div class="info-box">AeT sets are the backbone of Meso I and the majority of Meso II. <strong>80%+ of all training volume lives in this zone.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose & Notes</th></tr></thead><tbody>
-      <tr><td>20×50 FR @ :55</td><td>Rd 1: sub-threshold · Rd 2: AeT<br>Benchmark check on Rd 2</td><td><span class="ptag">Aerobic Base Benchmark</span>Primary testing set. HR 25–27 Rd 1, AeT ceiling Rd 2.</td></tr>
-      <tr><td>12×200 FR @ 3:00</td><td>Reps 1–2: Cruise · 3–12: AeT<br>HR 24–28 · 2,400 m</td><td><span class="ptag">Volume Load</span>Flagship Meso II aerobic set.</td></tr>
-      <tr><td>5×100 BK ×5 Rds @ 1:25</td><td>60–90 s between rounds<br>Rd 1 with the Duck drill (Technique › Backstroke)</td><td><span class="ptag">Stroke-Specific AeT</span>Backstroke aerobic maintenance.</td></tr>
+    <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Set</th><th scope="col" role="columnheader">Details</th><th scope="col" role="columnheader">Purpose & Notes</th></tr></thead><tbody role="rowgroup">
+      <tr role="row"><td role="cell" data-label="Set">20×50 FR @ :55</td><td role="cell" data-label="Details">Rd 1: sub-threshold · Rd 2: AeT<br>Benchmark check on Rd 2</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Aerobic Base Benchmark</span>Primary testing set. HR 25–27 Rd 1, AeT ceiling Rd 2.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">12×200 FR @ 3:00</td><td role="cell" data-label="Details">Reps 1–2: Cruise · 3–12: AeT<br>HR 24–28 · 2,400 m</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Volume Load</span>Flagship Meso II aerobic set.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">5×100 BK ×5 Rds @ 1:25</td><td role="cell" data-label="Details">60–90 s between rounds<br>Rd 1 with the Duck drill (Technique › Backstroke)</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Stroke-Specific AeT</span>Backstroke aerobic maintenance.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-thresh">
     <div class="warn-box">Threshold sets first appear in Meso I, Week 4. <strong>Base before threshold — always.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose</th></tr></thead><tbody>
-      <tr><td>6×400 FR @ 6:00</td><td>Threshold · HR 28–30 · 2,400 m</td><td><span class="ptag">Threshold Introduction</span>Week 4 first threshold.</td></tr>
-      <tr><td>3 rounds: 3×400 descending</td><td>60 s rest · Rd 1: 6:00 / Rd 2: 5:45 / Rd 3: 5:30</td><td><span class="ptag">Progressive Pressure</span>Each round targets faster pace.</td></tr>
+    <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Set</th><th scope="col" role="columnheader">Details</th><th scope="col" role="columnheader">Purpose</th></tr></thead><tbody role="rowgroup">
+      <tr role="row"><td role="cell" data-label="Set">6×400 FR @ 6:00</td><td role="cell" data-label="Details">Threshold · HR 28–30 · 2,400 m</td><td role="cell" data-label="Purpose"><span class="ptag">Threshold Introduction</span>Week 4 first threshold.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">3 rounds: 3×400 descending</td><td role="cell" data-label="Details">60 s rest · Rd 1: 6:00 / Rd 2: 5:45 / Rd 3: 5:30</td><td role="cell" data-label="Purpose"><span class="ptag">Progressive Pressure</span>Each round targets faster pace.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-kick">
     <div class="info-box">Kick training in every session. <strong>Every missed kick set is speed left on the table.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose</th></tr></thead><tbody>
-      <tr><td>10×100 FR Kick</td><td>Intervals by lane group: A 1:45 · B 1:50 · C 2:00 · No board</td><td><span class="ptag">Aerobic Kick Base</span>Correct body position required.</td></tr>
-      <tr><td>Kick Ladder (2,000 m)</td><td>8×100 @2:00 snorkel → 6×100 @1:45 → 4×100 @1:40 → 2×100 @1:35</td><td><span class="ptag">Threshold Kick</span>Most demanding kick set.</td></tr>
+    <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Set</th><th scope="col" role="columnheader">Details</th><th scope="col" role="columnheader">Purpose</th></tr></thead><tbody role="rowgroup">
+      <tr role="row"><td role="cell" data-label="Set">10×100 FR Kick</td><td role="cell" data-label="Details">Intervals by lane group: A 1:45 · B 1:50 · C 2:00 · No board</td><td role="cell" data-label="Purpose"><span class="ptag">Aerobic Kick Base</span>Correct body position required.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">Kick Ladder (2,000 m)</td><td role="cell" data-label="Details">8×100 @2:00 snorkel → 6×100 @1:45 → 4×100 @1:40 → 2×100 @1:35</td><td role="cell" data-label="Purpose"><span class="ptag">Threshold Kick</span>Most demanding kick set.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-tech">
     <div class="info-box">Tech sets require <strong>maximum awareness over maximum effort.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose</th></tr></thead><tbody>
-      <tr><td>10×50 FR Paddles + snorkel</td><td>Reps 1–5: descend to your best-average Golf score · 6–10: hold it</td><td><span class="ptag">Golf Score Tech</span>Descend to Best Average, lock it in.</td></tr>
-      <tr><td>UW 15 m IM Drill @ 1:00</td><td>Max depth · tight streamline · every session</td><td><span class="ptag">Underwater Dev</span>Single most consequential drill.</td></tr>
+    <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Set</th><th scope="col" role="columnheader">Details</th><th scope="col" role="columnheader">Purpose</th></tr></thead><tbody role="rowgroup">
+      <tr role="row"><td role="cell" data-label="Set">10×50 FR Paddles + snorkel</td><td role="cell" data-label="Details">Reps 1–5: descend to your best-average Golf score · 6–10: hold it</td><td role="cell" data-label="Purpose"><span class="ptag">Golf Score Tech</span>Descend to Best Average, lock it in.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">UW 15 m IM Drill @ 1:00</td><td role="cell" data-label="Details">Max depth · tight streamline · every session</td><td role="cell" data-label="Purpose"><span class="ptag">Underwater Dev</span>Single most consequential drill.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-warmup">
     <div class="info-box">Warm-up is programming — not filler. <strong>Each element serves a specific physiological function.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Element</th><th scope="col">Prescription</th><th scope="col">Purpose</th></tr></thead><tbody>
-      <tr><td>Easy swim + IM 400–600 m</td><td>HR below 22</td><td><span class="ptag">Thermal + Neural Priming</span>Raises muscle temperature 1–2°C.</td></tr>
-      <tr><td>Kick on back 4–8×50</td><td>Fins, dolphin or flutter</td><td><span class="ptag">Hip Activation</span>Fin overspeed primes kick velocity.</td></tr>
-      <tr><td>Build swims 4×50</td><td>Build to ~80%</td><td><span class="ptag">Lactate Priming</span>Primes clearance system for main set.</td></tr>
+    <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Element</th><th scope="col" role="columnheader">Prescription</th><th scope="col" role="columnheader">Purpose</th></tr></thead><tbody role="rowgroup">
+      <tr role="row"><td role="cell" data-label="Element">Easy swim + IM 400–600 m</td><td role="cell" data-label="Prescription">HR below 22</td><td role="cell" data-label="Purpose"><span class="ptag">Thermal + Neural Priming</span>Raises muscle temperature 1–2°C.</td></tr>
+      <tr role="row"><td role="cell" data-label="Element">Kick on back 4–8×50</td><td role="cell" data-label="Prescription">Fins, dolphin or flutter</td><td role="cell" data-label="Purpose"><span class="ptag">Hip Activation</span>Fin overspeed primes kick velocity.</td></tr>
+      <tr role="row"><td role="cell" data-label="Element">Build swims 4×50</td><td role="cell" data-label="Prescription">Build to ~80%</td><td role="cell" data-label="Purpose"><span class="ptag">Lactate Priming</span>Primes clearance system for main set.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-speed">
     <div class="warn-box">Speed work is Zone 4–5. <strong>Full recovery mandatory — 2–5 min between efforts, longer for longer reps.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose</th></tr></thead><tbody>
-      <tr><td>10×25 Sprint</td><td>Full rest 2–3 min · max effort each rep</td><td><span class="ptag">Pure Velocity</span>Maximum neuromuscular output.</td></tr>
-      <tr><td>8×50 Race Pace</td><td>Target 100 race pace · 3–4 min rest</td><td><span class="ptag">Race-Pace Specificity</span>Trains exact neuromuscular patterns.</td></tr>
+    <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Set</th><th scope="col" role="columnheader">Details</th><th scope="col" role="columnheader">Purpose</th></tr></thead><tbody role="rowgroup">
+      <tr role="row"><td role="cell" data-label="Set">10×25 Sprint</td><td role="cell" data-label="Details">Full rest 2–3 min · max effort each rep</td><td role="cell" data-label="Purpose"><span class="ptag">Pure Velocity</span>Maximum neuromuscular output.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">8×50 Race Pace</td><td role="cell" data-label="Details">Target 100 race pace · 3–4 min rest</td><td role="cell" data-label="Purpose"><span class="ptag">Race-Pace Specificity</span>Trains exact neuromuscular patterns.</td></tr>
     </tbody></table></div>
   </div>
 </div>
@@ -2116,7 +2166,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <h2 class="section-eyebrow" style="margin-top:1.5rem">Individual Medley</h2><div class="pr-grid" id="pr-grid-im"></div>
   <div class="pr-hint" id="pr-hint" role="status" aria-live="polite"></div>
   <p style="font-size:0.82rem;color:var(--white3);margin-top:1.75rem;line-height:1.7">Everything here is saved only in this browser. <strong style="color:var(--white2)">Export a backup</strong> before clearing your data or switching devices, then import it to restore your PRs, name, training log, Race Planner goals and meets, and your timer and analytics settings.</p>
-  <div style="margin-top:0.75rem;display:flex;gap:10px;flex-wrap:wrap">
+  <div class="tl-actions" style="margin-top:0.75rem">
     <button class="btn-sm" onclick="exportBackup()"><span aria-hidden="true">⬇ </span>Export Backup</button>
     <button class="btn-ghost-sm" onclick="document.getElementById('import-file').click()"><span aria-hidden="true">⬆ </span>Import Backup</button>
     <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importBackup(event)">
@@ -2147,7 +2197,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" maxlength="200" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 24–28"></div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Notes</label><textarea class="form-textarea" id="log-notes" maxlength="1000" placeholder="Technique focus, energy levels, what went well…"></textarea></div>
-    <button class="btn-sm" onclick="saveLogEntry()">Save Session</button>
+    <button class="btn-sm" id="log-save-btn" onclick="saveLogEntry()">Save Session</button>
     <p class="form-notice" id="log-notice" role="alert" hidden></p>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
@@ -2159,10 +2209,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div id="log-stats" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;display:none">
     <h2 style="font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:1rem;color:var(--cyan)">30-DAY SUMMARY</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem">
-      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-sessions" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div style="font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px">Sessions</div></div>
-      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-km" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div style="font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px">K swum (m or yd)</div></div>
-      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-hours" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div style="font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px">Hours</div></div>
-      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-avg-effort" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">—</div><div style="font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px">Avg Effort</div></div>
+      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-sessions" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Sessions</div></div>
+      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-km" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">K swum (m or yd)</div></div>
+      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-hours" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Hours</div></div>
+      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-avg-effort" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">—</div><div class="log-stat-lbl">Avg Effort</div></div>
     </div>
   </div>
 </div>
@@ -2244,12 +2294,12 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="warn-box"><strong>Total: about 1,150–1,350 m.</strong> Anything past ~1,800 m is a training set before your race.</div>
   </div>
   <div class="tab-panel" id="r-events">
-    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Event</th><th scope="col">Strategy</th><th scope="col">Key Tactic</th><th scope="col">Common Error</th></tr></thead><tbody>
-      <tr><td>50 Free</td><td>All-out from start</td><td>Clean start, max UW, no breathing</td><td>Tension in the stroke</td></tr>
-      <tr><td>100 Free</td><td>95% out, hold 75 m, sprint home</td><td>Minimal breathing first 50</td><td>Going out at 100% and dying</td></tr>
-      <tr><td>200 Free</td><td>Even effort — hold the third 50</td><td>First 50 controlled, build 100–150</td><td>Going out too fast</td></tr>
-      <tr><td>100 Breast</td><td>Strong first 50, patient second</td><td>Legal pullout every wall</td><td>Overlap — kick before pull finishes</td></tr>
-      <tr><td>200 IM</td><td>Fly controlled, build through back</td><td>Legal transitions — DQ risk</td><td>Dying on breaststroke leg</td></tr>
+    <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Event</th><th scope="col" role="columnheader">Strategy</th><th scope="col" role="columnheader">Key Tactic</th><th scope="col" role="columnheader">Common Error</th></tr></thead><tbody role="rowgroup">
+      <tr role="row"><td role="cell" data-label="Event">50 Free</td><td role="cell" data-label="Strategy">All-out from start</td><td role="cell" data-label="Key Tactic">Clean start, max UW, no breathing</td><td role="cell" data-label="Common Error">Tension in the stroke</td></tr>
+      <tr role="row"><td role="cell" data-label="Event">100 Free</td><td role="cell" data-label="Strategy">95% out, hold 75 m, sprint home</td><td role="cell" data-label="Key Tactic">Minimal breathing first 50</td><td role="cell" data-label="Common Error">Going out at 100% and dying</td></tr>
+      <tr role="row"><td role="cell" data-label="Event">200 Free</td><td role="cell" data-label="Strategy">Even effort — hold the third 50</td><td role="cell" data-label="Key Tactic">First 50 controlled, build 100–150</td><td role="cell" data-label="Common Error">Going out too fast</td></tr>
+      <tr role="row"><td role="cell" data-label="Event">100 Breast</td><td role="cell" data-label="Strategy">Strong first 50, patient second</td><td role="cell" data-label="Key Tactic">Legal pullout every wall</td><td role="cell" data-label="Common Error">Overlap — kick before pull finishes</td></tr>
+      <tr role="row"><td role="cell" data-label="Event">200 IM</td><td role="cell" data-label="Strategy">Fly controlled, build through back</td><td role="cell" data-label="Key Tactic">Legal transitions — DQ risk</td><td role="cell" data-label="Common Error">Dying on breaststroke leg</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="r-pacing">
@@ -2520,7 +2570,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 </div>
 <!-- AI COACH PAGE -->
 <div class="page" id="page-ai">
-<div class="section-wrap narrow" style="padding:1.75rem 2rem 0.75rem;max-width:1200px">
+<div class="section-wrap narrow ai-title-wrap">
   <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
     <h1 class="section-title" style="font-size:2.2rem;margin-bottom:0.5rem">AI SWIM <span>COACH</span></h1>
     <span style="font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase">Streaming · Free account</span>
@@ -2633,7 +2683,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button type="button" class="tlt-btn ghost" id="tlt-tempo-stop" onclick="tlt_tempoStop()"><span aria-hidden="true">■ </span>Stop</button>
       </div>
       <div class="tlt-status" id="tlt-tempo-status" role="status" aria-live="polite"></div>
-      <p class="tlt-hint"><span class="tlt-kbd-hint">Keys (with the trainer focused, or once it is running): Space start / pause · ↑ ↓ ±1 · Shift + ↑ ↓ ±5. </span>Your last setting is remembered on this device.</p>
+      <p class="tlt-hint"><span class="tl-kbd-only">Keys (with the trainer focused, or once it is running): Space start / pause · ↑ ↓ ±1 · Shift + ↑ ↓ ±5. </span>Your last setting is remembered on this device.</p>
     </div>
 
     <div class="info-box"><strong>Strokes vs cycles.</strong> A stroke is one arm pull — every hand entry counts. A cycle is both arms, right and left. Wearable tempo trainers count arm strokes: 1.00 s per beep is a FINIS Mode 1 tempo of 1.00 and a Mode 3 rate of 60 strokes/min. Race analyses count cycles, so a 100 free swum at 50 cycles/min is a tempo of 0.60 s per arm stroke. In butterfly and breaststroke both arms move together, so one stroke is one cycle and the two units read the same.</div>
@@ -2667,7 +2717,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button type="button" class="tlt-btn ghost" id="tlt-int-reset" onclick="tlt_intReset()">Reset</button>
       </div>
       <div class="tlt-status" id="tlt-int-status" role="status" aria-live="polite"></div>
-      <p class="tlt-hint"><span class="tlt-kbd-hint">Space bar starts and pauses once the timer is focused or running. </span>Short beeps at 3-2-1, a different tone at each change, a rising triple at the end. The screen stays awake while it runs, where the browser allows it.</p>
+      <p class="tlt-hint"><span class="tl-kbd-only">Space bar starts and pauses once the timer is focused or running. </span>Short beeps at 3-2-1, a different tone at each change, a rising triple at the end. The screen stays awake while it runs, where the browser allows it.</p>
     </div>
 
     <div class="tlt-card">
@@ -2761,7 +2811,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       </div>
       <div class="tlt-sp-opts"><div class="form-group"><label for="tlt-sp-dist">Split distance (m or yd) — for pace per 100</label><input class="form-input" type="number" id="tlt-sp-dist" min="0" max="1500" step="1" value="50" inputmode="numeric"></div></div>
       <div class="tlt-status" id="tlt-sp-status" role="status" aria-live="polite"></div>
-      <p class="tlt-hint"><span class="tlt-kbd-hint">With the split taker focused, Space starts, then records a split on each press. </span>Stop records the final split. Times come from the device's high-resolution clock, so a hidden screen does not drift them.</p>
+      <p class="tlt-hint"><span class="tl-kbd-only">With the split taker focused, Space starts, then records a split on each press. </span>Stop records the final split. Times come from the device's high-resolution clock, so a hidden screen does not drift them.</p>
       <div class="table-wrap tlt-hidden" id="tlt-sp-wrap"><table class="data-table tlt-num-table" aria-label="Recorded splits"><thead><tr><th scope="col">#</th><th scope="col">Cumulative</th><th scope="col">Split</th><th scope="col">Δ prev</th><th scope="col">Per 100</th><th scope="col">Note</th></tr></thead><tbody id="tlt-sp-body"></tbody></table></div>
       <div class="tlt-sp-summary" id="tlt-sp-summary"></div>
       <textarea id="tlt-sp-text" class="tlt-copytext" aria-hidden="true" tabindex="-1" readonly></textarea>
@@ -4932,7 +4982,7 @@ function buildPhysicsRow() {
   physRow.dataset.built = '1';
   const box = (id, label, color, border, unit) => `
     <div style="background:var(--navy3);border-radius:var(--r8);padding:.75rem;text-align:center;border:1px solid ${border}">
-      <div style="font-family:var(--fm);font-size:.57rem;letter-spacing:1.5px;color:${color};text-transform:uppercase;margin-bottom:4px">${label}</div>
+      <div class="viz-phys-lbl" style="color:${color}">${label}</div>
       <div style="font-family:var(--fh);font-size:1.4rem;color:${color}"><span id="${id}">—</span><span style="font-size:.7rem">${unit}</span></div>
     </div>`;
   physRow.innerHTML =
@@ -7240,7 +7290,7 @@ function renderGoalCard(ev, goals){
   var prHtml = pr ? 'PR <strong>' + esc(fmtT(pr)) + '</strong>' : '<a href="#profile" class="pl-nopr" aria-label="No PR for ' + esc(ev) + ' — add one">No PR — add one</a>';
   var quick = pr ? '<div class="pl-quick" role="group" aria-label="Quick-fill ' + esc(ev) + ' goal from PR">' +
       [1, 2, 3].map(function(p){ return '<button type="button" class="btn-ghost-sm" data-fill="' + p + '" data-event="' + esc(ev) + '" aria-label="Set ' + esc(ev) + ' goal ' + p + ' percent faster than PR">−' + p + '%</button>'; }).join('') + '</div>' : '';
-  return '<div class="pl-goal-card' + (gs ? ' has-goal' : '') + '" data-event="' + esc(ev) + '" role="group" aria-labelledby="' + id + '-ev">' +
+  return '<div class="pl-goal-card' + (gs ? ' has-goal' : '') + (gs || pr ? '' : ' is-empty') + '" data-event="' + esc(ev) + '" role="group" aria-labelledby="' + id + '-ev">' +
     '<div class="pl-goal-head"><span class="pl-goal-event" id="' + id + '-ev">' + esc(ev) + '</span><span class="pl-goal-pr">' + prHtml + '</span></div>' +
     '<label class="pl-goal-label" for="' + id + '">Goal time<span class="sr-only"> for ' + esc(ev) + '</span></label>' +
     '<input class="pl-goal-input" id="' + id + '" inputmode="decimal" maxlength="10" placeholder="m:ss.ss" autocomplete="off" value="' + esc(raw) + '" aria-describedby="' + id + '-err" data-event="' + esc(ev) + '">' +
@@ -7268,6 +7318,7 @@ function updateGoalCard(ev){
   if (p50) p50.textContent = st.per50;
   if (p100) p100.textContent = st.per100;
   card.classList.toggle('has-goal', !!gs);
+  card.classList.toggle('is-empty', !(gs || pr));
   var btn = card.querySelector('.pl-to-splits'); if (btn) btn.disabled = !(gs || pr);
 }
 function renderGoalSummary(){
@@ -9534,13 +9585,28 @@ window.tl_an_debug = {
     })(root);
     return out.replace(/\s+/g, ' ').replace(/(\s*·\s*)+/g, ' · ').replace(/^\s*·\s*|\s*·\s*$/g, '').trim();
   }
+  // Block titles are typed in caps for the Bebas headings; the palette lists them in Title Case beside the
+  // Title Case page and tab rows (acronyms and alphanumerics such as IM, UW, EIB, 2K1 stay as written).
+  var KEEP_CAPS = /^(IM|UW|EIB|SWOLF|HR|RPE|ATP|CSS|DQ|SCY|SCM|LCM|PR|PRS|AI|3D|2K1|USA|NCAA|VO₂|VO2|AET|MAX|II|III|IV)$/;
+  var SMALL_WORDS = /^(a|an|and|the|of|to|for|on|in|at|from|with|by|or|vs|per)$/;
+  function titleCaseCaps(s){
+    var core = s.replace(/\([^)]*\)/g, '').trim();   // "SPRINT TAPER (7–14 days)" is shouting even with a lower-case parenthetical
+    if (core.length < 4 || core !== core.toUpperCase() || !/[A-Z]/.test(core)) return s;
+    return s.replace(/[A-Z0-9][A-Z0-9'’₂]*/g, function(w, i){
+      if (/^\d+(ST|ND|RD|TH)$/.test(w)) return w.toLowerCase();   // 5TH → 5th
+      if (KEEP_CAPS.test(w) || /^\d/.test(w)) return w;
+      var lower = w.toLowerCase(), lead = s.slice(0, i);
+      if (SMALL_WORDS.test(lower) && lead && !/[—–:(]\s*$/.test(lead)) return lower;
+      return w.charAt(0) + lower.slice(1);
+    });
+  }
   function headingText(el){
     if (el.classList.contains('acc-header')){
       var h = el.querySelector('h2, h3, h4');
-      if (h) return clean(h.textContent);
-      return clean(el.textContent).replace(/\s*[▾▸▴▿]\s*$/, '');
+      if (h) return titleCaseCaps(clean(h.textContent));
+      return titleCaseCaps(clean(el.textContent).replace(/\s*[▾▸▴▿]\s*$/, ''));
     }
-    return clean(el.textContent);
+    return titleCaseCaps(clean(el.textContent));
   }
   function snippetFor(el){
     var box = null;
@@ -9555,7 +9621,7 @@ window.tl_an_debug = {
     if (!box) return '';
     var txt = blockText(box);
     var head = headingText(el);
-    if (head && txt.indexOf(head) === 0) txt = txt.slice(head.length).trim();
+    if (head && txt.slice(0, head.length).toLowerCase() === head.toLowerCase()) txt = txt.slice(head.length).trim();
     txt = txt.replace(/^[\s:·—–-]+/, '');
     return txt.length > 220 ? txt.slice(0, 217).replace(/\s+\S*$/, '') + '…' : txt;
   }
@@ -10554,6 +10620,19 @@ if (window.__TL_TEST__ === true){
     g.classList.toggle('open', !!open);
     if (!open) { var m = menuOf(g); if (m) m.classList.remove('flip'); }
   }
+  var GROUP_KEY = 'tl_nav_group';
+  function readGroup(){ try { return localStorage.getItem(GROUP_KEY) || ''; } catch (e) { return ''; } }
+  function saveGroup(id){ try { if (id) localStorage.setItem(GROUP_KEY, id); } catch (e) {} }
+  // Drawer: expand only the section the current page lives in (else the last one the swimmer opened, else the
+  // first), so the drawer fits a 667px screen without scrolling; any other section is one tap away.
+  function syncDrawerGroups(){
+    var gs = groups(); if (!gs.length) return;
+    var a = document.querySelector('nav .nav-links a.active');
+    var cur = a && a.closest ? a.closest('.nav-group') : null;
+    var remembered = readGroup();
+    var target = cur || gs.filter(function(g){ var b = btnOf(g); return !!b && b.id === remembered; })[0] || gs[0];
+    gs.forEach(function(g){ setOpen(g, g === target); });
+  }
   function clearTimers(){
     if (st.tOpen) { clearTimeout(st.tOpen); st.tOpen = 0; }
     if (st.tClose) { clearTimeout(st.tClose); st.tClose = 0; }
@@ -10593,7 +10672,7 @@ if (window.__TL_TEST__ === true){
   function onGroupClick(e, b){
     var g = b.closest('.nav-group'); if (!g) return;
     e.preventDefault();
-    if (!isDesktop()) { setOpen(g, !isOpen(g)); return; }          // drawer: collapsible section
+    if (!isDesktop()) { var open = !isOpen(g); setOpen(g, open); if (open) saveGroup(btnOf(g).id); return; } // drawer: collapsible section, last opened remembered
     if (isOpen(g)) { if (st.byHover) st.byHover = false; else closeMenu(g, false); } // a click on a hover-opened menu pins it
     else openMenu(g, false);
   }
@@ -10716,6 +10795,7 @@ if (window.__TL_TEST__ === true){
     st.drawer = true;
     if (st.tPark) { clearTimeout(st.tPark); st.tPark = 0; }
     st.focusBack = document.activeElement;
+    syncDrawerGroups();
     lockScroll();
     d.classList.remove('parked');
     setDrawerInert(d, false);
@@ -10817,7 +10897,7 @@ if (window.__TL_TEST__ === true){
     var desktop = isDesktop();
     if (st.drawer) closeDrawer(false);
     clearTimers(); st.open = null; st.byHover = false;
-    groups().forEach(function(g){ setOpen(g, !desktop); });         // desktop: closed; drawer: sections expanded
+    if (desktop) groups().forEach(function(g){ setOpen(g, false); }); else syncDrawerGroups(); // desktop: closed; drawer: current section expanded
     var d = byId('nav-drawer');
     if (d) {
       d.classList.remove('open'); d.removeAttribute('role'); d.removeAttribute('aria-modal'); d.removeAttribute('aria-labelledby'); d.style.top = '';
