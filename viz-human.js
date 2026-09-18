@@ -1532,7 +1532,8 @@
   // ═════════════════════════════════════════════════════════════════════════════════
   // Returns { spineX, bob, neckX } — spineX in rad on the spine pivot (+ = chest DOWN / ventral, the driver's sign), bob in
   // metres on swimmerOrient (whole body, world y), neckX in rad on the neck (− = face forward / up). The page ADDS these to its
-  // own spineX / bob / neckX, which are 0 when it takes this branch (index.html updateSwimmer). u = cycle position, b = the driver's breath envelope (0..1).
+  // own spineX / bob / neckX, which are 0 when it takes this branch (index.html updateSwimmer; see README.md
+  // "Maintainer notes"). u = cycle position, b = the driver's breath envelope (0..1).
   //   sd.wave = { chestAmp (deg), chestPhase (u of the chest-press peak), breathLift (deg of chest-UP folded in with b),
   //               bobAmp (m), bobPhase (u of the highest hip line), breathBob (m·b), neckBreath (rad·b, face forward),
   //               neckAmp? (deg, + = face down) at neckPhase? (defaults to chestPhase) — the dolphin's head-node term (pass 6) }

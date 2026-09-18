@@ -1,5 +1,11 @@
 User-agent: *
 Allow: /
+# GitHub Pages publishes the whole branch: keep the backend sources, maintenance
+# scripts and repo docs out of search results (they are not part of the site).
+Disallow: /supabase/
+Disallow: /tools/
+Disallow: /README.md
+Disallow: /LICENSE
 
 # Update this line when tidelyne.com (or whatever domain you buy) goes live.
 Sitemap: https://danielswims101.github.io/JAC_Online/sitemap.xml

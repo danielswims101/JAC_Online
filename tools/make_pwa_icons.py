@@ -14,6 +14,9 @@ Outputs (into --out, default: the current directory):
                                                  circle; only the badge's own
                                                  near-identical navy corners can
                                                  be clipped by a circular mask
+    favicon.ico             32 px + 16 px BMP entries for legacy clients, link
+                                                 unfurlers and crawlers that request
+                                                 /favicon.ico unconditionally
 
 The mark geometry is taken from tools/make_logo.py when this script sits next
 to it (`from make_logo import draw_mark`), so the app icon can never drift from
@@ -91,6 +94,11 @@ def make_any(size=512):
     return draw_mark(size, bg=True)
 
 
+def make_ico(sizes=(32, 16)):
+    """favicon.ico: the badge at 32 and 16 px, stored as classic BMP entries."""
+    return [draw_mark(s, bg=True) for s in sizes]
+
+
 def make_maskable(size=512, safe=0.80):
     """purpose "maskable": full-bleed navy, mark scaled to the 80 % safe zone."""
     img = Image.new("RGBA", (size, size), NAVY + (255,))
@@ -111,5 +119,8 @@ if __name__ == "__main__":
     m = os.path.join(args.out, "icon-%d-maskable.png" % args.size)
     make_any(args.size).save(a, "PNG", optimize=True)
     make_maskable(args.size).save(m, "PNG", optimize=True)
-    print("Wrote:", a, m)
+    ico = os.path.join(args.out, "favicon.ico")
+    frames = make_ico()
+    frames[0].save(ico, format="ICO", sizes=[f.size for f in frames], append_images=frames[1:], bitmap_format="bmp")
+    print("Wrote:", a, m, ico)
     print("Mark source:", SOURCE)

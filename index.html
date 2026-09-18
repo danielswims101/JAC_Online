@@ -12,9 +12,15 @@
 <link rel="canonical" href="https://danielswims101.github.io/JAC_Online/">
 <meta name="theme-color" content="#040d18">
 <meta name="color-scheme" content="dark">
+<!-- Content-Security-Policy (GitHub Pages cannot send headers, so it lives here; frame-ancestors is not honoured in a meta tag).
+     Scripts: this file + the pinned jsDelivr builds (supabase-js, Three.js). Styles/fonts: inline + Google Fonts. Images: local, data: (inline
+     SVG) and YouTube thumbnails. Fetches: only the Supabase project. Frames: youtube-nocookie facades. 'unsafe-inline' stays until the inline
+     onclick handlers move to delegated listeners; the host allow-list already blocks exfiltration and foreign frames. Add any new origin here. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; connect-src 'self' https://gzqovsffnziumfbmqdes.supabase.co; frame-src https://www.youtube-nocookie.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tidelyne — Swimming Technique & Training Tools">
 <meta name="twitter:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator and more for competitive swimmers.">
+<link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
@@ -40,8 +46,10 @@
 <!-- Fonts CSS is preloaded and promoted to a stylesheet once it arrives, so first paint never waits on the cross-origin request (display=swap covers the font files). -->
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap"></noscript>
-<!-- supabase-js is pinned (not the floating @2 tag) so an upstream release cannot change the auth path unseen; integrity is that file's sha384 — bump version and hash together. -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js" integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP" crossorigin="anonymous" defer></script>
+<!-- supabase-js is pinned (not the floating @2 tag) so an upstream release cannot change the auth path unseen; integrity is that file's sha384 — bump version and hash together.
+     It loads async (not defer): a deferred script holds DOMContentLoaded, and with it the router's first paint of every page, until the CDN answers — the site must render with the
+     library still in flight or blocked. onSupabaseScript() creates the client as soon as it lands (or on DOMContentLoaded, whichever is later); only sign-in and the AI features need it. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js" integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP" crossorigin="anonymous" async id="supabase-js-script" onload="if(typeof onSupabaseScript==='function')onSupabaseScript('done')" onerror="if(typeof onSupabaseScript==='function')onSupabaseScript('failed');else window.__sbScriptFailed=true"></script>
 <script>
 // Minimal OrbitControls implementation compatible with THREE r128 (UMD global build).
 // Supports: left-drag orbit, scroll-wheel zoom, damping. No pan (not needed here).
@@ -162,6 +170,14 @@ THREE.OrbitControls = function (camera, domElement) {
 }
 </script>
 <style>
+/* Metric-matched fallbacks for the display face: Bebas Neue is very condensed, so until it arrives (display=swap)
+   headings would render ~60% wider in the system sans, then snap narrower and shift the whole page (CLS). Each face
+   scales a local font to Bebas Neue's measured width (uppercase sample: Arial Narrow 71%, Impact 76%, Arial/Roboto 59%)
+   and copies its ascent/descent (900/300 per 1000), so a heading occupies the same lines before and after the swap.
+   A family whose local() fonts are all missing is skipped, so the chain degrades to whichever font the device has. */
+@font-face{font-family:'Bebas Fallback';src:local('Arial Narrow'),local('ArialNarrow');size-adjust:71%;ascent-override:90%;descent-override:30%;line-gap-override:0%}
+@font-face{font-family:'Bebas Fallback Impact';src:local('Impact');size-adjust:76%;ascent-override:90%;descent-override:30%;line-gap-override:0%}
+@font-face{font-family:'Bebas Fallback Sans';src:local('Arial'),local('Roboto'),local('Helvetica Neue'),local('Helvetica');size-adjust:59%;ascent-override:90%;descent-override:30%;line-gap-override:0%}
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   color-scheme:dark;
@@ -171,11 +187,11 @@ THREE.OrbitControls = function (camera, domElement) {
   --green:#00e599;--green-dim:rgba(0,229,153,0.1);
   --red:#ff5252;--red-dim:rgba(255,82,82,0.1);
   --purple:#a855f7;--purple-text:#bf8cff;--purple-dim:rgba(168,85,247,0.1);
-  --white:#eef3f8;--white2:#b0c4d8;--white3:#607a92;--white4:#3a5068;
+  --white:#eef3f8;--white2:#b0c4d8;--white3:#8ba5bd;--white4:#7b95ad; /* muted text kept ≥ 4.5:1 against navy */
   --card:#0b1d32;--card2:#0e2238;--card3:#112848;
   --border:rgba(0,212,255,0.15);--border2:rgba(0,212,255,0.07);
   --border-input:rgba(0,212,255,0.5); /* ≥3:1 against the card — text-field boundaries must be perceivable (WCAG 1.4.11); --border stays for decorative outlines */
-  --fh:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
+  --fh:'Bebas Neue','Bebas Fallback','Bebas Fallback Impact','Bebas Fallback Sans',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
   --r8:8px;--r12:12px;--r16:16px;
   --fs-micro:0.62rem; /* floor for uppercase mono micro-labels (tags, badges, captions) */
 }
@@ -248,7 +264,7 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .card ul li:before{content:'→';color:var(--cyan);flex-shrink:0;font-size:0.75rem;margin-top:2px}.card ul li:last-child{border-bottom:none}
 /* BADGES */
 .badge{display:inline-block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;padding:4px 11px;border-radius:4px;text-transform:uppercase;margin-bottom:1rem}
-.badge.cyan{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,212,255,0.25)}.badge.gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(245,166,35,0.25)}.badge.green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,229,153,0.25)}.badge.red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,82,82,0.25)}.badge.purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,0.25)}
+.badge.cyan{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,212,255,0.25)}.badge.gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(245,166,35,0.25)}.badge.green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,229,153,0.25)}.badge.red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,82,82,0.25)}
 /* TABS */
 .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2.5rem;overflow-x:auto;gap:0;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
 .tabs{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--tabs-fl,0px),#000 calc(100% - var(--tabs-fr,0px)),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 var(--tabs-fl,0px),#000 calc(100% - var(--tabs-fr,0px)),transparent 100%)}
@@ -488,15 +504,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .skip-link{position:absolute;left:-9999px;top:0;z-index:10001;background:var(--cyan);color:var(--navy);
   padding:10px 18px;border-radius:0 0 8px 0;font-family:var(--fm);font-size:0.8rem;font-weight:700}
 .skip-link:focus{left:0}
-/* Higher-contrast muted text (was ~2.4:1 against navy) */
-:root{--white3:#8ba5bd;--white4:#7b95ad}
 /* Pool-deck touch targets: 44px minimum on phones */
 @media(max-width:768px){
   .viz-btn,.btn-sm,.btn-ghost-sm,.qp,.tab-btn,.ai-mode-btn{min-height:44px;display:inline-flex;
     align-items:center;justify-content:center}
   .nav-links li a{line-height:44px;padding:4px 12px;font-size:0.72rem}
   .nav-ai-btn,.nav-key-btn,#nav-login-btn,#nav-logout-btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
-  .form-input,.form-select,.form-textarea,.pr-input,.goal-input{min-height:44px}
+  .form-input,.form-select,.form-textarea,.pr-input{min-height:44px}
   .form-input,.form-select,.form-textarea,.ai-input{font-size:16px}
   .tab-btn{padding:11px 13px}
   .calc-btn,.ai-send{min-height:48px}
@@ -3168,11 +3182,21 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <script>
 var SUPABASE_URL = 'https://gzqovsffnziumfbmqdes.supabase.co';
 var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6cW92c2ZmbnppdW1mYm1xZGVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNTgyMTksImV4cCI6MjA5NzgzNDIxOX0.26E4yXVMAjaq_mg4R0BGqRy2adYlG8mgRkbEn3SU36Y';
-// supabase-js is loaded with defer (non-render-blocking), so the client is
-// created after it loads (see initSupabaseAuth on DOMContentLoaded) rather
-// than at parse time. Until then sb is null and the site is fully usable —
+// supabase-js is loaded async (never render-blocking), so the client is
+// created when it lands (onSupabaseScript / initSupabaseAuth) rather than at
+// parse time. Until then sb is null and the site is fully usable —
 // only account/AI features need it.
 var sb = null;
+// 'loading' | 'done' | 'failed' — a Log In click while the library is still
+// in flight waits for it (openAuthGate) instead of reporting an outage.
+var sbScriptState = window.__sbScriptFailed ? 'failed' : (window.supabase ? 'done' : 'loading');
+var _sbScriptWaiters = [];
+function onSupabaseScript(state){
+  sbScriptState = state === 'failed' ? 'failed' : 'done';
+  // The DOM below this script (the auth overlay) may still be parsing: let DOMContentLoaded run initSupabaseAuth then.
+  if (sbScriptState === 'done' && document.readyState !== 'loading') initSupabaseAuth();
+  _sbScriptWaiters.splice(0).forEach(function(fn){ try { fn(); } catch(e){} });
+}
 // AI calls route through the ask-ai Edge Function -- the server holds the
 // Anthropic key and enforces the rate limit (20 messages per 5 hours).
 var currentUser = null;   // Supabase auth user object once logged in
@@ -3189,8 +3213,16 @@ function updateNavAuth() {
 var _authReturnFocus = null;
 var _authHideTimer = 0; // closeAuthGate's pending display:none — cancelled by a quick re-open
 function openAuthGate(screen) {
-  if (!sb) { initSupabaseAuth(); if (!sb) { alert('Account features are unavailable right now — the sign-in service could not load. All content is still accessible without an account.'); return; } }
+  if (!sb) {
+    initSupabaseAuth();
+    if (!sb && sbScriptState === 'loading') { // library still downloading: open as soon as it lands
+      _sbScriptWaiters.push(function(){ openAuthGate(screen); });
+      return;
+    }
+    if (!sb) { alert('Account features are unavailable right now — the sign-in service could not load. All content is still accessible without an account.'); return; }
+  }
   var g = document.getElementById('access-gate');
+  if (!g) { document.addEventListener('DOMContentLoaded', function(){ openAuthGate(screen); }, { once: true }); return; } // overlay markup not parsed yet
   if (_authHideTimer) { clearTimeout(_authHideTimer); _authHideTimer = 0; }
   _authReturnFocus = document.activeElement; // restore focus here on close
   g.classList.remove('closing');
@@ -3223,11 +3255,11 @@ function _authTrap(e){
 }
 document.addEventListener('keydown', _authTrap);
 function showAuthScreen(name) {
-  ['screen-login','screen-signup','screen-forgot'].forEach(function(id){
+  ['screen-login','screen-signup','screen-forgot','screen-newpass'].forEach(function(id){
     var el = document.getElementById(id);
     if (el) el.style.display = (id === 'screen-' + name) ? 'block' : 'none';
   });
-  ['login-error','signup-error','forgot-msg'].forEach(function(id){
+  ['login-error','signup-error','forgot-msg','newpass-error'].forEach(function(id){
     var el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
@@ -3341,6 +3373,47 @@ async function doForgotPassword() {
   msg.style.color = error ? 'var(--red)' : 'var(--green)';
   msg.textContent = error ? error.message : 'Check your email for a password reset link.';
 }
+// Password recovery: the emailed link returns to this page as
+// #access_token=…&type=recovery. supabase-js turns it into a session and
+// fires PASSWORD_RECOVERY; the new-password screen then calls updateUser.
+var _recoveryPending = /(^|[#&])type=recovery(&|$)/.test(location.hash);
+// True for the hashes supabase-js consumes (#access_token=…, #error_description=…): the
+// router must leave them in place until the library has read them (activatePage).
+function isAuthCallbackHash(h) {
+  return /(^|[#&])(access_token|refresh_token|error|error_code|error_description|type)=/.test(h || '');
+}
+async function doSetNewPassword() {
+  var p1 = document.getElementById('newpass-password').value;
+  var p2 = document.getElementById('newpass-confirm').value;
+  var btn = document.getElementById('newpass-btn');
+  if (p1.length < 8) { showAuthError('newpass', 'Password must be at least 8 characters.'); return; }
+  if (p1 !== p2) { showAuthError('newpass', 'The two passwords do not match.'); return; }
+  btn.disabled = true; btn.textContent = 'Saving…';
+  var { data, error } = await sb.auth.updateUser({ password: p1 });
+  btn.disabled = false; btn.textContent = 'SET NEW PASSWORD →';
+  if (error) { showAuthError('newpass', error.message); return; }
+  _recoveryPending = false;
+  try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
+  showAuthError('newpass', 'Password updated — you are signed in.');
+  document.getElementById('newpass-error').style.color = 'var(--green)';
+  document.getElementById('newpass-password').value = ''; document.getElementById('newpass-confirm').value = '';
+  var user = data && data.user ? data.user : currentUser;
+  setTimeout(function(){ if (user) onAuthSuccess(user); else closeAuthGate(); }, 1200);
+}
+// The hash carried an error instead of tokens (expired or already-used link): surface it on the login card.
+function handleAuthCallbackError() {
+  var m = /(^|[#&])error_description=([^&]*)/.exec(location.hash);
+  if (!m) return false;
+  var desc = 'This link is no longer valid.';
+  try { desc = decodeURIComponent(m[2].replace(/\+/g, ' ')).trim() || desc; } catch(e){}
+  if (!/[.!?]$/.test(desc)) desc += '.';
+  var expired = /otp_expired|expired|invalid/i.test(location.hash + ' ' + desc);
+  try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
+  _recoveryPending = false;
+  openAuthGate(expired ? 'forgot' : 'login');
+  showAuthError(expired ? 'forgot' : 'login', desc + (expired ? ' Request a new reset link below.' : ''));
+  return true;
+}
 async function doLogout() {
   await sb.auth.signOut();
   currentUser = null; currentProfile = null;
@@ -3351,6 +3424,7 @@ async function onAuthSuccess(user) {
   var { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).maybeSingle();
   currentProfile = profile;
   updateNavAuth();
+  if (_recoveryPending) return; // the new-password screen is open (or about to open): keep the overlay
   closeAuthGate();
 }
 function closeAuthGate() {
@@ -3375,16 +3449,33 @@ function closeAuthGate() {
 // have to log in every visit). Content is public either way.
 async function initSupabaseAuth(){
   if (sb) return;
-  if (!window.supabase) { updateNavAuth(); return; } // library blocked — content is still public
+  if (!window.supabase) { updateNavAuth(); return; } // library blocked or still loading — content is public either way
   sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // Subscribe before the client's async URL parse resolves: a recovery link opens the new-password screen.
+  try {
+    sb.auth.onAuthStateChange(function(ev){
+      if (ev !== 'PASSWORD_RECOVERY') return;
+      _recoveryPending = true;
+      try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
+      openAuthGate('newpass');
+    });
+  } catch(e){}
+  if (handleAuthCallbackError()) { updateNavAuth(); return; }
   try {
     var { data } = await sb.auth.getSession();
     if (data.session && data.session.user) { await onAuthSuccess(data.session.user); }
     else { updateNavAuth(); }
   } catch(e) { updateNavAuth(); }
+  // The URL parse is complete once getSession() resolves. A callback hash still in place was rejected
+  // (a tampered or already-used link): clean the address bar and, for a reset link, offer a new one.
+  if (isAuthCallbackHash(location.hash)) {
+    var wasRecovery = _recoveryPending; _recoveryPending = false;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
+    if (wasRecovery && !currentUser) { openAuthGate('forgot'); showAuthError('forgot', 'That reset link could not be verified. Request a new one below.'); }
+  }
 }
-// Deferred supabase-js finishes before DOMContentLoaded, so the client is
-// ready before any user can click Log In.
+// The library is async: whichever comes last — its onload (onSupabaseScript)
+// or DOMContentLoaded — creates the client. Both calls are idempotent.
 document.addEventListener('DOMContentLoaded', initSupabaseAuth);
 </script>
 <div id="access-gate" onclick="if(event.target===this)closeAuthGate()" style="position:fixed;inset:0;background:rgba(4,13,24,0.94);z-index:9998;display:none">
@@ -3435,6 +3526,18 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <p id="forgot-msg" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.78rem;letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Back to login</button></p>
   </div>
+  <!-- NEW PASSWORD (opened by the emailed recovery link) -->
+  <div id="screen-newpass" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
+    <div style="font-size:2.6rem;margin-bottom:1rem">🔑</div>
+    <h2 style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:0.75rem">CHOOSE A NEW<br><span style="color:var(--cyan)">PASSWORD</span></h2>
+    <p style="font-size:0.82rem;color:var(--white3);line-height:1.5;margin-bottom:1.1rem">Your reset link checked out. Pick a new password for your account.</p>
+    <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>New Password</label>
+      <input id="newpass-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(event.key==='Enter')doSetNewPassword()"></div>
+    <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Confirm New Password</label>
+      <input id="newpass-confirm" type="password" autocomplete="new-password" class="form-input" placeholder="Type it again" onkeydown="if(event.key==='Enter')doSetNewPassword()"></div>
+    <button id="newpass-btn" onclick="doSetNewPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SET NEW PASSWORD →</button>
+    <p id="newpass-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
+  </div>
   </div>
 </div>
 <script>
@@ -3462,8 +3565,10 @@ function activatePage(name,opts){
       try{ anchor.focus({preventScroll:true}); }catch(e){ anchor.focus(); }
       return;
     }
-    // Unknown hash: show Home and clean the address bar so bookmarks and Back reflect the view.
-    if(name){ try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
+    // Unknown hash: show Home and clean the address bar so bookmarks and Back reflect the view —
+    // except an auth callback (#access_token=…&type=recovery, #error_description=…), which supabase-js
+    // still has to read and clears itself (see initSupabaseAuth).
+    if(name && !(typeof isAuthCallbackHash==='function' && isAuthCallbackHash(name))){ try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
     name='home';
   }
   const page=document.getElementById('page-'+name);
@@ -3486,7 +3591,7 @@ function activatePage(name,opts){
   if(typeof setPageTitle==='function') setPageTitle(name);
   initReveal();
   if (name === 'visualizer' && typeof ensureViz3DReady === 'function') {
-    setTimeout(function(){ ensureViz3DReady(); if(typeof startViz3DLoop==='function') startViz3DLoop(); }, 30);
+    setTimeout(function(){ if(!vizLabActive()) return; ensureViz3DReady(); if(typeof startViz3DLoop==='function') startViz3DLoop(); }, 30); // a Back/palette hop within 30 ms must not start the loop on another page
   } else if (typeof stopViz3DLoop === 'function') {
     stopViz3DLoop(); // stop the render loop when leaving the visualizer
   }
@@ -3514,13 +3619,13 @@ window.addEventListener('hashchange', function(){ activatePage(location.hash.sli
 document.addEventListener('DOMContentLoaded', function(){ activatePage(location.hash.slice(1)||'home',{focus:false}); }); // initial load: leave focus at the top so the skip link and nav come first
 const PAGE_TITLES={
   home:'Tidelyne — Swimming Technique & Training Tools',
-  technique:'Swimming Technique Library — Freestyle, Back, Breast, Fly',
+  technique:'Technique Library — Freestyle, Back, Breast, Fly',
   videos:'Swimming Technique Video Library',
-  sets:'Training Set Library — AeT, Threshold, Kick, Speed',
+  sets:'Swim Set Library — AeT, Threshold, Kick, Speed',
   dryland:'Dryland Training for Swimmers',
   visualizer:'3D Stroke Visualizer — Swimming Biomechanics Lab',
   workouts:'Swim Workout Generator',
-  calculator:'Swim Pace Calculators — Golf Score, Splits, Pace Zones & Conversions',
+  calculator:'Pace Calculators — Golf, Splits, Zones & Units',
   zones:'Swim Training Zones — AeT, Threshold, VO2 Max',
   profile:'My PRs — Personal Record Tracker',
   log:'Training Log & Weekly Volume',
@@ -3530,12 +3635,13 @@ const PAGE_TITLES={
   mental:'Mental Performance for Swimmers',
   injury:'Swimming Injury Prevention',
   season:'Season & Meet Calendar',
-  updates:'What\'s New — Tidelyne Release Notes',
+  updates:'What\'s New — Release Notes',
   ai:'AI Swim Coach',
-  timers:'Swim Timers — Tempo Trainer, Interval Timer & Pace Clock',
-  planner:'Race Planner — Goal Times, Race Predictor, Split Planner & Meet Countdown',
-  analytics:'Training Analytics — Volume, Consistency & Efficiency'
+  timers:'Swim Timers — Tempo, Intervals & Pace Clock',
+  planner:'Race Planner — Predictor, Splits & Countdown',
+  analytics:'Swim Analytics — Volume, Consistency & Efficiency'
 };
+// Every route carries the brand (history, bookmarks, tab strips and share sheets show it); Home already does.
 function setPageTitle(name){
   const t = PAGE_TITLES[name];
   // Every tab/bookmark/history entry names the app; home and What's New already carry it.
@@ -4313,6 +4419,14 @@ function loadHumanScripts(done){
     humanScriptState = 'done';
     _humanScriptQueue.splice(0).forEach(fn => fn());
   };
+  // A newer service worker has taken over this tab (the update toast was dismissed): its precache now holds
+  // the module built for the NEW shell, and the two are coupled (sw.js assetKey collapses ?v=). Show the
+  // mannequin and re-offer the reload instead of running a module this page was not built for.
+  if (window.TL_SHELL_STALE) {
+    console.warn('Tidelyne: a newer version is installed — reload to open the updated 3D lab.');
+    if (typeof window.tlShowUpdateToast === 'function') window.tlShowUpdateToast('reload to open the updated 3D lab');
+    finish(); return;
+  }
   const s = document.createElement('script');
   s.src = HUMAN_SCRIPT + '?v=' + encodeURIComponent(window.TL_VERSION || '');
   s.async = false;
@@ -4887,6 +5001,7 @@ let _raf3D = 0;
 // Fully stop the render loop when leaving the visualizer (called by the
 // router), and resume it on return — so no requestAnimationFrame fires for
 // the page's whole lifetime once the lab has been opened.
+function vizLabActive(){ const p=document.getElementById('page-visualizer'); return !!(p&&p.classList.contains('active')); }
 function stopViz3DLoop(){ if(_raf3D){ cancelAnimationFrame(_raf3D); _raf3D=0; } if(typeof cancelViewTween3D==='function'&&_viewTween3D) cancelViewTween3D(true); }
 function startViz3DLoop(){ if(viz3DInitialized && !_raf3D){ lastTime3D=performance.now(); _raf3D=requestAnimationFrame(animate3D); } }
 function animate3D(){
@@ -4966,7 +5081,9 @@ function startViz3D() {
   seedInfoPanel3D(currentStroke);
   resizeViz3D();
   lastTime3D = performance.now();
-  animate3D();
+  // Three.js may have finished downloading after the user left the lab: build the scene now (one-time)
+  // but leave the loop stopped — the router starts it on the next visit (activatePage → startViz3DLoop).
+  if (vizLabActive()) animate3D();
 }
 function ensureViz3DReady() {
   if (viz3DInitialized) { resizeViz3D(); return; }
@@ -4975,6 +5092,11 @@ function ensureViz3DReady() {
   threeLoading = true;
   const s = document.createElement('script');
   s.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';
+  // Pinned build + its sha384, like supabase-js in <head>: a CDN-served script cannot change unseen (a
+  // mismatch fires onerror and the fallback copy below). crossorigin also makes the response cacheable
+  // by sw.js (the 3D lab works offline once opened) and its errors readable instead of 'Script error.'.
+  s.crossOrigin = 'anonymous';
+  s.integrity = 'sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu';
   // The human modules resolve THREE lazily but must EXECUTE after it: chain them here.
   s.onload = function(){ installOrbitControls(); loadHumanScripts(startViz3D); };
   s.onerror = function(){
@@ -5843,7 +5965,7 @@ function buildPRGrid(stroke){
   grid.innerHTML='';
   PR_EVENTS[stroke].forEach(event=>{
     const key='pr_'+event.replace(/ /g,'_');
-    const saved=localStorage.getItem(key)||'';
+    const saved=lsGet(key)||'';
     const item=document.createElement('div'); item.className='pr-item';
     item.innerHTML=`<label class="pr-event" for="pr-in-${key}">${event}</label><input id="pr-in-${key}" class="pr-input" placeholder="—" maxlength="12" inputmode="decimal" autocomplete="off" aria-describedby="pr-format-hint" value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value,this)" onchange="savePR('${key}',this.value,this,true)">`;
     grid.appendChild(item);
@@ -5933,13 +6055,15 @@ function clearAllPRs(){
 // version-1 files (name + PRs + log only) still import.
 const BACKUP_TL_KEYS=['tl_goals','tl_meet','tl_pred_fit','tl_split_last','tl_tempo','tl_interval','tl_paceclock','tl_an_prefs'];
 function exportBackup(){
-  const data={ app:'Tidelyne', version:2, exported:new Date().toISOString(),
-    name:localStorage.getItem('swimmer_name')||'', prs:{}, log:readLog(), tl:{} };
-  Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>{
-    const k='pr_'+e.replace(/ /g,'_'); const v=localStorage.getItem(k); if(v) data.prs[k]=v;
-  }));
-  BACKUP_TL_KEYS.forEach(k=>{ try{ const v=JSON.parse(localStorage.getItem(k)||'null'); if(v&&typeof v==='object'&&!Array.isArray(v)) data.tl[k]=v; }catch(e){} });
+  // The whole body is guarded: where storage access itself throws (Safari "Block all cookies",
+  // some webviews) the button must say so instead of silently doing nothing.
   try{
+    const data={ app:'Tidelyne', version:2, exported:new Date().toISOString(),
+      name:lsGet('swimmer_name')||'', prs:{}, log:readLog(), tl:{} };
+    Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>{
+      const k='pr_'+e.replace(/ /g,'_'); const v=lsGet(k); if(v) data.prs[k]=v;
+    }));
+    BACKUP_TL_KEYS.forEach(k=>{ try{ const v=JSON.parse(lsGet(k)||'null'); if(v&&typeof v==='object'&&!Array.isArray(v)) data.tl[k]=v; }catch(e){} });
     const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
@@ -5989,7 +6113,7 @@ function importBackup(ev){
   ev.target.value=''; // allow re-importing the same file
 }
 function initProfile(){
-  const name=localStorage.getItem('swimmer_name')||'';
+  const name=lsGet('swimmer_name')||'';
   const ni=document.getElementById('profile-name'); if(ni) ni.value=name;
   const nd=document.getElementById('profile-name-display'); if(nd) nd.textContent=name||'Swimmer';
   Object.keys(PR_EVENTS).forEach(s=>buildPRGrid(s));
@@ -7007,14 +7131,8 @@ function fmtPlain(sec, suffix){
   return m > 0 ? m + ':' + s : (suffix ? s + 's' : s);
 }
 function lsGet(k){ return window.lsGet(k); }   // the app script's guarded reader (hoisted there, always present)
-function lsPut(k, v){
-  if (typeof window.lsSet === 'function') return window.lsSet(k, v);
-  try { localStorage.setItem(k, v); return true; } catch (e) { return false; }
-}
-function lsDel(k){
-  if (typeof window.lsRemove === 'function') { window.lsRemove(k); return; }
-  try { localStorage.removeItem(k); } catch (e) {}
-}
+function lsPut(k, v){ return !!window.lsSet(k, v); }   // guarded writer, hoisted in the app script like lsGet
+function lsDel(k){ window.lsRemove(k); }
 function readJSON(k, fallback){
   try { var v = JSON.parse(lsGet(k) || 'null'); return (v === null || typeof v !== 'object') ? fallback : v; }
   catch (e) { return fallback; }
@@ -8013,7 +8131,6 @@ function zoneKey(z){
   return '__other';
 }
 function seriesFor(stack){ return stack === 'zone' ? ZONE_SERIES : TYPE_SERIES; }
-function seriesLabel(list, key){ for (var i = 0; i < list.length; i++) if (list[i].key === key) return list[i].label; return key; }
 
 // ─── weekly model ─────────────────────────────────────────────────────────
 function newWeek(start){
@@ -9299,7 +9416,7 @@ window.tl_an_debug = {
   // ── Recent selections (tl_recent_search) ────────────────────────────────
   function readRecent(){
     try {
-      var v = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+      var v = JSON.parse((typeof lsGet === 'function' ? lsGet(RECENT_KEY) : localStorage.getItem(RECENT_KEY)) || '[]');
       return Array.isArray(v) ? v.filter(function(x){ return typeof x === 'string'; }).slice(0, RECENT_MAX) : [];
     } catch(e){ return []; }
   }
@@ -9954,10 +10071,7 @@ window.TL_UPDATES = UPDATES;   // read-only reference (e.g. for the command pale
 // ─── SMALL HELPERS (reuse the app's globals when present) ────────────────
 function esc(s){ return window.escapeHTML(s); }   // the app script's escaper
 function lsGet(k){ return window.lsGet(k); }   // the app script's guarded reader (hoisted there, always present)
-function lsPut(k, v){
-  if (typeof window.lsSet === 'function') return !!window.lsSet(k, v);
-  try { localStorage.setItem(k, v); return true; } catch(e){ return false; }
-}
+function lsPut(k, v){ return !!window.lsSet(k, v); }   // guarded writer, hoisted in the app script like lsGet
 function $(id){ return document.getElementById(id); }
 function setText(id, v){ const el = $(id); if (el) el.textContent = v; }
 
@@ -10124,7 +10238,7 @@ function renderStatus(){
   const note = $('tl-upd-offline-note');
   if (note){
     let msg = '';
-    if (controlled) msg = 'Offline ready — pages, calculators, timers, your log and PRs work without signal. The AI coach, videos and the 3D lab need a connection.';
+    if (controlled) msg = 'Offline ready — pages, calculators, timers, your log and PRs work without signal, and the 3D lab does too once you have opened it while online. The AI coach and videos need a connection.';
     else if (swSupported) msg = 'Preparing offline support — reload once to finish caching.';
     else if (swFailed) msg = SW_FAILED_MSG;
     else msg = 'Offline support is unavailable here: it needs https and a browser that supports service workers.';
@@ -10214,7 +10328,7 @@ function registerSW(){
     navigator.serviceWorker.addEventListener('message', onSWMessage);
     navigator.serviceWorker.addEventListener('controllerchange', function(){ askSWVersion(); renderStatus(); });
     navigator.serviceWorker.register('./sw.js', { scope: './' }).then(function(reg){
-      swReg = reg;
+      swReg = reg; swFailed = false;
       reg.addEventListener('updatefound', function(){
         // On the very first install there is no controller yet — say nothing.
         if (!navigator.serviceWorker.controller) return;
@@ -10222,7 +10336,7 @@ function registerSW(){
       });
       askSWVersion();
       renderStatus();
-    }).catch(function(){ swSupported = false; swFailed = true; renderStatus(); });
+    }).catch(function(e){ swSupported = false; swFailed = true; console.warn('Tidelyne: service worker registration failed', e); renderStatus(); });
   } catch(e){ swSupported = false; swFailed = true; }
 }
 function askSWVersion(){
@@ -10234,15 +10348,22 @@ function askSWVersion(){
 function onSWMessage(e){
   const d = e && e.data;
   if (!d || typeof d !== 'object') return;
-  if (d.type === 'TL_VERSION'){ swVersion = String(d.version || ''); renderStatus(); return; }
+  if (d.type === 'TL_VERSION'){ swVersion = String(d.version || ''); markShellStale(); renderStatus(); return; }
   if (d.type !== 'TL_UPDATED') return;
   swVersion = String(d.version || '');
+  markShellStale();
   renderStatus();
   // First-ever install: the page is already the newest — nothing to reload into.
   if (!hadController && !d.previous) return;
   showUpdateToast(swVersion);
 }
-function showUpdateToast(version){
+// A worker newer than this page is in control: its cache serves files built for the newer shell.
+// The 3D lab (loadHumanScripts) reads this flag before injecting viz-human.js.
+function markShellStale(){
+  if (swVersion && cmpVer(swVersion, window.TL_VERSION) > 0) window.TL_SHELL_STALE = true;
+}
+window.tlShowUpdateToast = function(note){ showUpdateToast(swVersion, note); };
+function showUpdateToast(version, note){
   if (!document.body) return;
   let t = $('tl-upd-toast');
   if (t && t.parentNode) t.parentNode.removeChild(t);
@@ -10256,6 +10377,7 @@ function showUpdateToast(version){
   const same = !version || cmpVer(version, window.TL_VERSION) === 0;
   msg.textContent = same ? 'Tidelyne was updated' : 'Tidelyne updated to ';
   if (!same){ const b = document.createElement('b'); b.textContent = 'v' + version; msg.appendChild(b); }
+  if (note) msg.appendChild(document.createTextNode(' — ' + note));
   const reload = document.createElement('button');
   reload.type = 'button'; reload.className = 'btn-sm'; reload.textContent = 'Reload';
   reload.addEventListener('click', function(){ try { location.reload(); } catch(e){} });

@@ -7,10 +7,13 @@
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#040d18">
 <meta name="color-scheme" content="dark">
+<link rel="icon" href="/JAC_Online/favicon.ico" sizes="32x32">
 <link rel="icon" type="image/svg+xml" href="/JAC_Online/logo-mark.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Fonts CSS is preloaded and promoted to a stylesheet once it arrives, so first paint never waits on the cross-origin request (display=swap covers the font files). -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&display=swap"></noscript>
 <style>
 html{color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -42,7 +45,7 @@ button.stay:hover,button.stay:focus-visible{border-color:#00d4ff;color:#00d4ff}
   var ROOT = /\.github\.io$/i.test(location.hostname) ? '/' + (location.pathname.split('/')[1] || '') + '/' : '/';
   if (ROOT === '//') ROOT = '/';
   var link = document.getElementById('home-link'); if (link) link.href = ROOT;
-  var icon = document.querySelector('link[rel="icon"]'); if (icon) icon.href = ROOT + 'logo-mark.svg';
+  document.querySelectorAll('link[rel="icon"]').forEach(function(icon){ icon.href = ROOT + icon.href.split('/').pop(); });
   var note = document.getElementById('redirect-note'), stay = document.getElementById('stay-btn');
   if (location.pathname === ROOT) { if (note) note.textContent = ''; return; }
   var redirectTimer = setTimeout(function(){ location.replace(ROOT); }, 20000);

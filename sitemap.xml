@@ -4,8 +4,9 @@
   NOTE: search engines index PAGES, not #hashes — the three legal pages are
   real files so they will index. The tools (#timers, #calculator, #visualizer)
   will only rank once they are split into real pages or pre-rendered.
-  <lastmod> is the date of the last commit that touched each file — refresh the
-  home entry on every release (git log -1 --format=%cs -- index.html).
+  <lastmod> is the date of the last commit that touched each file. Refresh the
+  home entry on every release (see README.md, "Releasing a new version") and
+  keep this comment free of double hyphens: XML forbids them inside comments.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
