@@ -1617,8 +1617,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
             <option value="custom">Custom (describe below)</option>
           </select>
         </div>
-        <div class="form-group"><label>Custom Description (optional)</label>
-          <textarea class="form-textarea" id="viz-custom" placeholder="e.g. Explain the pressure differential that creates lift on the freestyle pull..."></textarea>
+        <div class="form-group"><label>Extra focus (optional) — or your own concept for Custom</label>
+          <textarea class="form-textarea" id="viz-custom" maxlength="300" placeholder="e.g. Explain the pressure differential that creates lift on the freestyle pull..."></textarea>
         </div>
         <div class="form-group"><label>Detail Level</label>
           <select class="form-select" id="viz-detail">
@@ -3101,10 +3101,15 @@ function updateNavAuth() {
   if (nameEl) nameEl.textContent = loggedIn ? (currentProfile ? currentProfile.username : (currentUser.email || 'Swimmer')) : '';
 }
 var _authReturnFocus = null;
+var _authHideTimer = 0; // closeAuthGate's pending display:none — cancelled by a quick re-open
 function openAuthGate(screen) {
   if (!sb) { initSupabaseAuth(); if (!sb) { alert('Account features are unavailable right now — the sign-in service could not load. All content is still accessible without an account.'); return; } }
   var g = document.getElementById('access-gate');
+  if (_authHideTimer) { clearTimeout(_authHideTimer); _authHideTimer = 0; }
   _authReturnFocus = document.activeElement; // restore focus here on close
+  g.classList.remove('closing');
+  g.style.pointerEvents = '';
+  g.style.transition = 'none';
   g.style.display = 'flex';
   g.style.opacity = '1';
   showAuthScreen(screen || 'login');
@@ -3115,9 +3120,14 @@ function openAuthGate(screen) {
     if (first) try { first.focus(); } catch(e){}
   }, 30);
 }
-function _authTrap(e){
+// True while the dialog is really open (a fading-out overlay no longer counts).
+function authGateVisible(){
   var g = document.getElementById('access-gate');
-  if (!g || g.style.display === 'none' || e.key !== 'Tab') return;
+  return !!(g && g.style.display && g.style.display !== 'none' && !g.classList.contains('closing'));
+}
+function _authTrap(e){
+  if (!authGateVisible() || e.key !== 'Tab') return;
+  var g = document.getElementById('access-gate');
   var f = [].slice.call(g.querySelectorAll('a[href], button, input, [tabindex]:not([tabindex="-1"])'))
             .filter(function(el){ return el.offsetParent !== null && !el.disabled; });
   if (!f.length) return;
@@ -3259,10 +3269,19 @@ async function onAuthSuccess(user) {
 }
 function closeAuthGate() {
   var g = document.getElementById('access-gate');
-  if (g.style.display === 'none') return;
-  g.style.opacity = '0';
+  if (g.style.display === 'none' || g.classList.contains('closing')) return;
+  // The overlay is logically closed at once: it stops taking clicks, the Tab
+  // trap and the palette treat it as gone, and only the fade-out remains.
+  g.classList.add('closing');
+  g.style.pointerEvents = 'none';
   g.style.transition = 'opacity 0.4s ease';
-  setTimeout(function(){ g.style.display = 'none'; }, 450);
+  g.style.opacity = '0';
+  if (_authHideTimer) clearTimeout(_authHideTimer);
+  _authHideTimer = setTimeout(function(){
+    _authHideTimer = 0;
+    if (!g.classList.contains('closing')) return; // re-opened during the fade
+    g.style.display = 'none'; g.classList.remove('closing'); g.style.pointerEvents = '';
+  }, 450);
   if (_authReturnFocus && _authReturnFocus.focus) { try { _authReturnFocus.focus(); } catch(e){} }
   _authReturnFocus = null;
 }
@@ -4554,23 +4573,42 @@ function bindViewClear3D() {
   viewClearBound = true;
   ['mousedown', 'touchstart', 'wheel'].forEach(ev => renderer.domElement.addEventListener(ev, () => { if (controls && controls.enabled) markView3D(null); }, { passive: true }));
 }
+// One camera tween at a time: a second preset click cancels the first (two
+// tweens never fight over the camera), a hidden tab or reduced motion jumps
+// straight to the end pose, and leaving the page finishes any running tween —
+// so orbit controls can never be left disabled.
+let _viewTween3D = null;
+function cancelViewTween3D(finish) {
+  const tw = _viewTween3D; if (!tw) return;
+  _viewTween3D = null;
+  if (tw.raf) cancelAnimationFrame(tw.raf);
+  if (finish) { camera.position.copy(tw.endPos); controls.target.copy(tw.endTarget); }
+  controls.enabled = true;
+}
 function setView3D(name) {
   if (!viz3DInitialized) return;
   const v = VIEWS[name]; if(!v) return;
   markView3D(name); bindViewClear3D();
+  cancelViewTween3D(false);
   const startPos = camera.position.clone();
   const startTarget = controls.target.clone();
   const endPos = new THREE.Vector3(...v.pos);
   const endTarget = new THREE.Vector3(...v.target);
-  let t0 = performance.now();
+  let reduced = false;
+  try { reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch(e){}
+  if (document.hidden || reduced) { camera.position.copy(endPos); controls.target.copy(endTarget); controls.enabled = true; return; }
+  const tw = { raf: 0, endPos, endTarget, t0: performance.now() };
+  _viewTween3D = tw;
   controls.enabled = false;
   function tweenStep(){
-    const t = Math.min(1, (performance.now()-t0)/650);
+    if (_viewTween3D !== tw) return; // cancelled or replaced
+    if (document.hidden) { cancelViewTween3D(true); return; }
+    const t = Math.min(1, (performance.now()-tw.t0)/650);
     const e = easeInOut(t);
     camera.position.lerpVectors(startPos, endPos, e);
     controls.target.lerpVectors(startTarget, endTarget, e);
-    if (t<1) requestAnimationFrame(tweenStep);
-    else controls.enabled = true;
+    if (t<1) tw.raf = requestAnimationFrame(tweenStep);
+    else cancelViewTween3D(true);
   }
   tweenStep();
 }
@@ -4749,7 +4787,7 @@ let _raf3D = 0;
 // Fully stop the render loop when leaving the visualizer (called by the
 // router), and resume it on return — so no requestAnimationFrame fires for
 // the page's whole lifetime once the lab has been opened.
-function stopViz3DLoop(){ if(_raf3D){ cancelAnimationFrame(_raf3D); _raf3D=0; } }
+function stopViz3DLoop(){ if(_raf3D){ cancelAnimationFrame(_raf3D); _raf3D=0; } if(typeof cancelViewTween3D==='function'&&_viewTween3D) cancelViewTween3D(true); }
 function startViz3DLoop(){ if(viz3DInitialized && !_raf3D){ lastTime3D=performance.now(); _raf3D=requestAnimationFrame(animate3D); } }
 function animate3D(){
   _raf3D = requestAnimationFrame(animate3D);
@@ -5129,6 +5167,7 @@ function renderSeasonPage(now) {
 // (20 messages per rolling 5 hours per account).
 let currentMode='coach';
 function setMode(mode,btn){
+  if(currentMode===mode) return; // re-clicking the active chip is a no-op, not another "Mode:" line
   currentMode=mode;
   document.querySelectorAll('.ai-mode-btn').forEach(b=>{ b.classList.remove('active'); if(b.hasAttribute('aria-pressed')) b.setAttribute('aria-pressed','false'); });
   btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
@@ -5136,12 +5175,19 @@ function setMode(mode,btn){
   addMsg('Mode: '+labels[mode]+'. Ask me anything.','ai');
 }
 let conversationHistory=[];
+// The logged-out notice is shown once per chat: a repeated Send/Enter while
+// the login dialog fades must not stack identical bubbles.
+function lastAIBubbleText(){
+  const b=document.querySelectorAll('#ai-messages .msg:not(.user) .msg-bubble');
+  return b.length?b[b.length-1].textContent:'';
+}
 async function sendToAI(){
   const input=document.getElementById('ai-input');
   const msg=input.value.trim();
   if(!msg) return;
   if(!currentUser){
-    addMsg('The AI Coach needs a free account (it keeps the service free for everyone). Log in or sign up to continue.','ai');
+    const gateMsg='The AI Coach needs a free account (it keeps the service free for everyone). Log in or sign up to continue.';
+    if(lastAIBubbleText()!==gateMsg) addMsg(gateMsg,'ai');
     openAuthGate('login');
     return;
   }
@@ -5427,9 +5473,10 @@ async function generateVisualization(){
 }
 async function _generateVisualizationInner(){
   const concept=document.getElementById('viz-concept').value;
-  const custom=document.getElementById('viz-custom').value.trim();
+  const custom=document.getElementById('viz-custom').value.trim().slice(0,300);
   const detail=document.getElementById('viz-detail').value;
-  const basePrompt=concept==='custom'?custom:(VIZ_CONCEPTS[concept]||'');
+  // The free text refines a preset ("— focus: …") and only replaces it for Custom.
+  const basePrompt=concept==='custom'?custom:((VIZ_CONCEPTS[concept]||'')+(custom?' — focus: '+custom:''));
   if(!basePrompt){tlNotice('viz-notice','Please describe the technique concept.');document.getElementById('viz-custom').focus();return;}
   tlNotice('viz-notice','');
   const detailMap={
@@ -5546,12 +5593,25 @@ function formatTime(secs){
   if(h>0) return h+':'+String(m).padStart(2,'0')+':'+s; // 1:00:00.00, not 60:00.00
   return m>0?m+':'+s:s+'s';
 }
+// A failed run never leaves the previous result on screen under the error:
+// the result block goes back to its placeholder (or loses .show) before the
+// notice appears, so a stale table can never be read as the answer.
+const CALC_PLACEHOLDERS={'split-result':'Enter your target time above.','pace-result':'','conv-result':'Fill in the form above.'};
+function calcFail(noticeId,msg,focusId,resultId){
+  const r=document.getElementById(resultId);
+  if(r){ if(r.classList.contains('calc-result')) r.classList.remove('show'); else if(resultId in CALC_PLACEHOLDERS) r.textContent=CALC_PLACEHOLDERS[resultId]; }
+  tlNotice(noticeId,msg);
+  const f=document.getElementById(focusId); if(f){ try{ f.focus({preventScroll:true}); }catch(e){ f.focus(); } }
+}
+// One range for the attributes and the script: a real 50 m split is 20–120 s,
+// a real stroke count 10–60 (see the min/max on #golf-split / #golf-strokes).
+const GOLF_LIMITS={split:[20,120],strokes:[10,60]};
 function calcGolf(){
   const split=parseFloat(document.getElementById('golf-split').value);
   const strokes=parseFloat(document.getElementById('golf-strokes').value);
-  if(isNaN(split)||isNaN(strokes)){tlNotice('golf-notice','Enter both values.');document.getElementById(isNaN(split)?'golf-split':'golf-strokes').focus();return;}
-  if(split<15||split>120){tlNotice('golf-notice','50m split should be between 15 and 120 seconds.');document.getElementById('golf-split').focus();return;}
-  if(strokes<5||strokes>60){tlNotice('golf-notice','Stroke count should be between 5 and 60 per 50m.');document.getElementById('golf-strokes').focus();return;}
+  if(isNaN(split)||isNaN(strokes)){calcFail('golf-notice','Enter both values.',isNaN(split)?'golf-split':'golf-strokes','golf-result');return;}
+  if(split<GOLF_LIMITS.split[0]||split>GOLF_LIMITS.split[1]){calcFail('golf-notice','50m split should be between '+GOLF_LIMITS.split[0]+' and '+GOLF_LIMITS.split[1]+' seconds.','golf-split','golf-result');return;}
+  if(strokes<GOLF_LIMITS.strokes[0]||strokes>GOLF_LIMITS.strokes[1]){calcFail('golf-notice','Stroke count should be between '+GOLF_LIMITS.strokes[0]+' and '+GOLF_LIMITS.strokes[1]+' per 50m.','golf-strokes','golf-result');return;}
   tlNotice('golf-notice','');
   const score=split+strokes;
   document.getElementById('golf-score').textContent=score.toFixed(0);
@@ -5567,10 +5627,10 @@ function calcSplits(){
   const dist=parseInt(document.getElementById('split-dist').value);
   const totalSecs=parseTime(document.getElementById('split-time').value);
   const strategy=document.getElementById('split-strategy').value;
-  if(!totalSecs){tlNotice('split-notice','Enter a valid target time.');document.getElementById('split-time').focus();return;}
+  if(!totalSecs){calcFail('split-notice','Enter a valid target time.','split-time','split-result');return;}
   const n=dist/50, avg=totalSecs/n;
-  if(avg<15){tlNotice('split-notice','That works out to under 15 seconds per 50m — faster than the world record. Check the distance and time.');document.getElementById('split-time').focus();return;}
-  if(avg>120){tlNotice('split-notice','That works out to over 2 minutes per 50m — check the distance and time.');document.getElementById('split-time').focus();return;}
+  if(avg<15){calcFail('split-notice','That works out to under 15 seconds per 50m — faster than the world record. Check the distance and time.','split-time','split-result');return;}
+  if(avg>120){calcFail('split-notice','That works out to over 2 minutes per 50m — check the distance and time.','split-time','split-result');return;}
   tlNotice('split-notice','');
   // Splits come from the planner's buildSplits (one source of truth): the
   // negative/positive ramp is a ±2% half-difference scaled to the race, so a
@@ -5588,7 +5648,7 @@ function calcSplits(){
     splits=w.map((x,i)=>x*avg*k-(i===0?bonus:0));
   } else {
     const r=PL.buildSplits?PL.buildSplits({dist, course:'LCM', goal:totalSecs, stroke:'fr', strategy, fade:2, bonus}):{error:'Split planner unavailable — reload the page.'};
-    if(r.error){tlNotice('split-notice',r.error);return;}
+    if(r.error){calcFail('split-notice',r.error,'split-time','split-result');return;}
     splits=r.lengths;
   }
   let html='<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Distance</th><th scope="col">50m Split</th><th scope="col">Cumulative</th></tr></thead><tbody>';
@@ -5600,8 +5660,8 @@ function calcSplits(){
 function calcPaceZones(){
   const rawPace=String(document.getElementById('pace-100').value||'').trim();
   const t=parseTime(rawPace);
-  if(!t){tlNotice('pace-notice',/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100m time as m:ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100m time (ss.ss or m:ss.ss).');document.getElementById('pace-100').focus();return;}
-  if(t<35||t>240){tlNotice('pace-notice','A 100m time between 35 s and 4:00 is expected — check the value (use m:ss for minutes).');document.getElementById('pace-100').focus();return;}
+  if(!t){calcFail('pace-notice',/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100m time as m:ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100m time (ss.ss or m:ss.ss).','pace-100','pace-result');return;}
+  if(t<35||t>240){calcFail('pace-notice','A 100m time between 35 s and 4:00 is expected — check the value (use m:ss for minutes).','pace-100','pace-result');return;}
   tlNotice('pace-notice','');
   const zones=[
     {name:'Zone 1 — Recovery',pct:[1.35,1.50],color:'#00e599',desc:'HR <22 · <1.5 mmol'},
@@ -5621,7 +5681,7 @@ function calcPaceZones(){
 function convertTime(){
   const t=parseTime(document.getElementById('conv-time').value);
   const from=document.getElementById('conv-from').value;
-  if(!t){tlNotice('conv-notice','Enter a valid time.');document.getElementById('conv-time').focus();return;}
+  if(!t){calcFail('conv-notice','Enter a valid time.','conv-time','conv-result');return;}
   tlNotice('conv-notice','');
   const factors={scy:1.00,scm:1.11,lcm:1.14};
   const labels={scy:'SCY — 25 yards',scm:'SCM — 25 meters',lcm:'LCM — 50 meters'};
@@ -5636,6 +5696,19 @@ function convertTime(){
   html+='</tbody></table></div>';
   document.getElementById('conv-result').innerHTML=html;
 }
+// Enter in a calculator / log / analytics field runs that panel's action
+// button, as the planner, auth and AI fields already do — keyboard users no
+// longer have to Tab to the button. Fields with their own Enter handler
+// (they call preventDefault) and real <form>s are left alone.
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'||e.defaultPrevented||e.isComposing||e.altKey||e.ctrlKey||e.metaKey||e.shiftKey) return;
+  const t=e.target; if(!t||t.tagName!=='INPUT'||t.closest('form')) return;
+  const type=(t.getAttribute('type')||'text').toLowerCase();
+  if(type!=='text'&&type!=='number'&&type!=='date'&&type!=='search'&&type!=='tel') return;
+  const panel=t.closest('.calc-panel, #page-log .tl-panel'); if(!panel) return;
+  const btn=panel.querySelector('.calc-btn')||panel.querySelector('.btn-sm'); if(!btn||btn.disabled||btn.hidden) return;
+  e.preventDefault(); btn.click();
+});
 // ─── PR TRACKER ───────────────────────────────
 const PR_EVENTS={
   fr:['50 FR','100 FR','200 FR','400 FR','800 FR','1500 FR'],
@@ -5677,15 +5750,30 @@ function tlNotice(id,msg,kind){
 // Only a parseable time is stored (ss.ss or m:ss.ss); anything else is flagged
 // inline and left unsaved, so the planner and predictor never see "fast" or "1:75".
 // On change (blur) a valid value is normalised to the canonical form.
+// While typing, neither the error nor the store happens on the keystroke:
+// "1:" or "1:5" mid-way through "1:52.30" must not flash red or be saved as
+// 1:05 — both wait for an 800 ms pause (like the planner's goal fields) and
+// the change event flushes at once. A value that becomes valid clears a
+// previous error immediately.
+const prErrTimers={};
 function savePR(key,value,el,normalize){
+  if(prErrTimers[key]){ clearTimeout(prErrTimers[key]); delete prErrTimers[key]; }
   const v=String(value==null?'':value).trim();
   if(!v){ lsRemove(key); if(el) el.removeAttribute('aria-invalid'); prHint(''); return; }
   const t=parseTime(v);
-  if(t===null){ if(el) el.setAttribute('aria-invalid','true'); prHint('Use ss.ss or m:ss.ss — e.g. 52.30 or 1:52.30'); return; }
+  if(t===null){
+    const showErr=()=>{ delete prErrTimers[key]; if(el) el.setAttribute('aria-invalid','true'); prHint('Use ss.ss or m:ss.ss — e.g. 52.30 or 1:52.30'); };
+    if(normalize) showErr(); else prErrTimers[key]=setTimeout(showErr,800);
+    return;
+  }
   if(el) el.removeAttribute('aria-invalid'); prHint('');
-  const out=normalize?prFmt(t):v;
-  if(normalize&&el&&el.value!==out) el.value=out;
-  lsSet(key,out);
+  const commit=()=>{
+    delete prErrTimers[key];
+    const out=normalize?prFmt(t):v;
+    if(normalize&&el&&el.value!==out) el.value=out;
+    lsSet(key,out);
+  };
+  if(normalize) commit(); else prErrTimers[key]=setTimeout(commit,800);
 }
 function saveName(){
   const n=document.getElementById('profile-name').value;
@@ -5729,13 +5817,25 @@ function importBackup(ev){
       // Only a Tidelyne backup: known app tag, numeric version, plain object.
       if(!d||typeof d!=='object'||Array.isArray(d)||d.app!=='Tidelyne'||!(Number(d.version)>=1)) throw new Error('bad');
       const validKeys={}; Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>{ validKeys['pr_'+e.replace(/ /g,'_')]=1; }));
+      // Importing replaces what the device already holds (like Clear All, it
+      // asks first) — naming only what this file will actually overwrite.
+      const fileHasPR=!!(d.prs&&typeof d.prs==='object'&&Object.keys(d.prs).some(k=>validKeys[k]));
+      const fileHasSet=!!(d.tl&&typeof d.tl==='object'&&BACKUP_TL_KEYS.some(k=>d.tl[k]));
+      const haveLog=Array.isArray(d.log)?readLog().length:0;
+      const havePR=fileHasPR?Object.keys(validKeys).filter(k=>lsGet(k)).length:0;
+      const haveSet=fileHasSet?BACKUP_TL_KEYS.filter(k=>lsGet(k)).length:0;
+      if(haveLog||havePR||haveSet){
+        const parts=[]; if(haveLog) parts.push(haveLog+' session'+(haveLog===1?'':'s')); if(havePR) parts.push(havePR+' PR'+(havePR===1?'':'s')); if(haveSet) parts.push('saved settings');
+        const list=parts.length>1?parts.slice(0,-1).join(', ')+' and '+parts[parts.length-1]:parts[0];
+        if(!confirm('Importing replaces the '+list+' already on this device with the backup file\'s contents. Export a backup first if you want to keep them. Continue?')){ tlNotice('profile-notice','Import cancelled — nothing was changed.'); return; }
+      }
       let nPR=0, nLog=0, nSet=0, skipped=0;
       if(d.prs&&typeof d.prs==='object') Object.keys(d.prs).forEach(k=>{
         const v=String(d.prs[k]==null?'':d.prs[k]).trim().slice(0,12); if(!v) return;
         if(validKeys[k]&&parseTime(v)!==null){ lsSet(k,v); nPR++; } else skipped++;
       });
       const hasName=typeof d.name==='string'&&d.name.trim()!=='';
-      if(typeof d.name==='string') lsSet('swimmer_name', d.name.slice(0,30));
+      if(hasName) lsSet('swimmer_name', d.name.trim().slice(0,30)); // an empty name in the file never blanks the saved one
       if(Array.isArray(d.log)){ const clean=sanitizeLogEntries(d.log); skipped+=Math.max(0,d.log.length-clean.length); lsSet('swimiq_log', JSON.stringify(clean)); nLog=clean.length; }
       if(d.tl&&typeof d.tl==='object') BACKUP_TL_KEYS.forEach(k=>{ const v=d.tl[k]; if(v&&typeof v==='object'&&!Array.isArray(v)&&lsSet(k, JSON.stringify(v))) nSet++; });
       initProfile(); if(typeof renderLog==='function') renderLog();
@@ -5761,6 +5861,22 @@ try{ initProfile(); }catch(e){ console.error('initProfile failed',e); }
 // Crash-proof read: renderLog() runs at page load — a single corrupted
 // localStorage entry must never take down the whole site's JavaScript.
 const LOG_MAX=2000, LOG_MAX_DIST=100000, LOG_MAX_DUR=600; // session cap (~600 kB) and per-field limits
+// Strict YYYY-MM-DD round-trip (2026-02-31 is rejected, not rolled to March 3),
+// the same rule the planner and analytics use, so every page agrees on a date.
+function parseLogDate(s){
+  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s||'').trim()); if(!m) return null;
+  const d=new Date(+m[1],+m[2]-1,+m[3]);
+  return (d.getFullYear()===+m[1]&&d.getMonth()===+m[2]-1&&d.getDate()===+m[3])?d:null;
+}
+function logTodayISO(offsetDays){
+  const d=new Date(); d.setDate(d.getDate()+(offsetDays||0));
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+// History order is by session date (newest first), then by save time — a
+// session logged after the fact sits where it happened, not where it was typed.
+function sortLogEntries(list){
+  return list.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||(Number(b.id)||0)-(Number(a.id)||0));
+}
 function readLog(){
   try{
     const v=JSON.parse(localStorage.getItem('swimiq_log')||'[]');
@@ -5781,12 +5897,12 @@ function readLog(){
 // Accept only plain session objects with a real date; coerce the numeric
 // fields, cap the text fields and assign ids where missing.
 function sanitizeLogEntries(list){
-  const out=[]; let seq=Date.now();
+  const out=[]; let seq=Date.now(), latest=logTodayISO(1);
   const num=(v,max)=>{ const n=Math.round(Number(v)); return (isFinite(n)&&n>0)?Math.min(n,max):0; };
   (Array.isArray(list)?list:[]).forEach(e=>{
     if(!e||typeof e!=='object'||Array.isArray(e)) return;
     const date=String(e.date||'').slice(0,10);
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||isNaN(new Date(date+'T00:00:00').getTime())) return;
+    if(!parseLogDate(date)||date>latest) return; // a real calendar day, no later than tomorrow
     const id=Number(e.id), eff=Math.round(Number(e.effort));
     out.push({ id:(isFinite(id)&&id>0)?id:seq++, date, type:String(e.type||'').slice(0,40),
       dist:num(e.dist,LOG_MAX_DIST), dur:num(e.dur,LOG_MAX_DUR), zone:String(e.zone||'').slice(0,40),
@@ -5801,7 +5917,8 @@ function saveLogEntry(){
   tlNotice('log-notice','');
   // Inline validation: the HTML min/max attributes are advisory only.
   const fail=(msg,id)=>{ tlNotice('log-notice',msg); const el=document.getElementById(id); if(el){ el.setAttribute('aria-invalid','true'); try{ el.focus({preventScroll:true}); }catch(e){} } };
-  if(!date||isNaN(new Date(date+'T00:00:00').getTime())){ fail('Please select a date.','log-date'); return; }
+  if(!parseLogDate(date)){ fail('Please select a date.','log-date'); return; }
+  if(date>logTodayISO(1)){ fail('That date is in the future — log a session once it has happened (today or tomorrow at the latest).','log-date'); return; }
   const raw=id=>String(document.getElementById(id).value||'').trim();
   const distRaw=raw('log-distance'), durRaw=raw('log-duration'), effRaw=raw('log-effort');
   const dist=distRaw===''?0:Number(distRaw), dur=durRaw===''?0:Number(durRaw), effort=effRaw===''?0:Number(effRaw);
@@ -5819,8 +5936,8 @@ function saveLogEntry(){
     mainset:document.getElementById('log-mainset').value,
     notes:document.getElementById('log-notes').value
   };
-  const entries=readLog();
-  entries.unshift(entry); entries.splice(LOG_MAX);
+  const entries=sortLogEntries([entry].concat(readLog())); // newest save first on an equal date (stable sort)
+  entries.splice(LOG_MAX);
   if(!lsSet('swimiq_log',JSON.stringify(entries))){ tlNotice('log-notice','Could not save the session — your device storage may be full or blocked.'); return; }
   tlNotice('log-notice','Session saved — '+entries.length+' logged.','ok');
   ['log-distance','log-duration','log-effort','log-mainset','log-notes'].forEach(id=>{
@@ -5835,7 +5952,7 @@ function setLogStatus(msg){
 }
 function renderLog(){
   if(typeof window.onLogChange==='function'){ try{ window.onLogChange(); }catch(e){ console.error(e); } }
-  const entries=readLog();
+  const entries=sortLogEntries(readLog());
   const container=document.getElementById('log-entries');
   const statsEl=document.getElementById('log-stats');
   if(!container)return;
@@ -5869,6 +5986,8 @@ function renderLog(){
     document.getElementById('stat-km').textContent=(totDist/1000).toFixed(1);
     document.getElementById('stat-hours').textContent=(totDur/60).toFixed(1);
     document.getElementById('stat-avg-effort').textContent=avgEffort.toFixed(1);
+  } else if(statsEl){
+    statsEl.style.display='none'; // history exists but nothing in the window — never show a stale summary
   }
 }
 function deleteLogEntry(id){
@@ -5877,8 +5996,21 @@ function deleteLogEntry(id){
   setLogStatus('Session deleted.');
 }
 function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog(); setLogStatus('All sessions cleared.');}
-const todayInput=document.getElementById('log-date');
-if(todayInput){const _d=new Date();_d.setMinutes(_d.getMinutes()-_d.getTimezoneOffset());todayInput.value=_d.toISOString().split('T')[0];}
+// The date field defaults to today, and is refreshed when the page is shown
+// again or the tab comes back (an installed app left open overnight must not
+// offer yesterday). A date the swimmer typed themselves is left alone: only
+// an empty field or the previous auto-filled value is replaced.
+let _logAutoDate='';
+function setLogDateToday(){
+  const el=document.getElementById('log-date'); if(!el) return;
+  const today=logTodayISO(0);
+  if(el.value===''||el.value===_logAutoDate){ el.value=today; }
+  _logAutoDate=today;
+  el.setAttribute('max',logTodayISO(1));
+}
+setLogDateToday();
+window.onShow_log=function(){ setLogDateToday(); };
+document.addEventListener('visibilitychange',function(){ if(!document.hidden) setLogDateToday(); });
 // Delete buttons are delegated (no inline onclick built from stored ids).
 (function(){ const c=document.getElementById('log-entries'); if(c) c.addEventListener('click',function(ev){ const b=ev.target&&ev.target.closest?ev.target.closest('[data-del-id]'):null; if(b) deleteLogEntry(Number(b.getAttribute('data-del-id'))); }); })();
 try{ renderLog(); }catch(e){ console.error('renderLog failed',e); }
@@ -6116,8 +6248,14 @@ function tpSet(bpm){ TP.bpm=Math.round(clamp(bpm,TP_MIN,TP_MAX)); tpRender(); tp
 window.tlt_nudge=function(d){ tpSet(TP.bpm+Number(d||0)); };
 window.tlt_setMode=function(m){
   if((m!=='spm'&&m!=='cpm')||TP.mode===m) return;
+  var prev={mode:TP.mode,bpm:TP.bpm};
   var nb=(m==='cpm')?TP.bpm/2:TP.bpm*2; // keep the swimmer's real tempo, change the count
+  // An odd strokes/min rounds on the way to cycles (65 → 33, and 33 × 2 would
+  // be 66): switching straight back with no edit in between restores the exact
+  // tempo the swimmer had, so a round trip never drifts.
+  if(TP.undo&&TP.undo.mode===m&&TP.undo.at===TP.bpm) nb=TP.undo.bpm;
   TP.mode=m; tpSet(nb);
+  TP.undo={mode:prev.mode,bpm:prev.bpm,at:TP.bpm};
   var clamped=TP.bpm!==Math.round(nb);
   setStatus('tlt-tempo-status',(m==='cpm'
     ?'Cycles per minute — one beep per full cycle (both arms in free and back).'
@@ -9405,7 +9543,7 @@ window.tl_an_debug = {
   }
   function authGateOpen(){
     var g = $('access-gate');
-    return !!(g && g.style.display && g.style.display !== 'none');
+    return !!(g && g.style.display && g.style.display !== 'none' && !g.classList.contains('closing'));
   }
   window.openPalette = function(opts){
     if (!state.inited) window.initPalette();
@@ -9786,6 +9924,8 @@ window.tlRefreshUpdateBadge = function(){
 
 // ─── STATUS CARD ──────────────────────────────────────────────────────────
 let swReg = null, swSupported = false, swVersion = null;
+let swFailed = false;   // registration was attempted on a supported host but failed (blocked worker, sw.js fetch error)
+const SW_FAILED_MSG = 'Offline support could not be set up in this browser session — reload to try again; the site still works online.';
 
 function isStandalone(){
   try {
@@ -9822,6 +9962,7 @@ function renderStatus(){
     let msg = '';
     if (controlled) msg = 'Offline ready — pages, calculators, timers, your log and PRs work without signal. The AI coach, videos and the 3D lab need a connection.';
     else if (swSupported) msg = 'Preparing offline support — reload once to finish caching.';
+    else if (swFailed) msg = SW_FAILED_MSG;
     else msg = 'Offline support is unavailable here: it needs https and a browser that supports service workers.';
     if (typeof navigator.onLine === 'boolean' && !navigator.onLine) msg = 'You are offline. ' + msg;
     if (swVersion && cmpVer(swVersion, window.TL_VERSION) > 0) msg += ' Version ' + swVersion + ' has been downloaded — reload to finish updating.';
@@ -9917,8 +10058,8 @@ function registerSW(){
       });
       askSWVersion();
       renderStatus();
-    }).catch(function(){ swSupported = false; renderStatus(); });
-  } catch(e){ swSupported = false; }
+    }).catch(function(){ swSupported = false; swFailed = true; renderStatus(); });
+  } catch(e){ swSupported = false; swFailed = true; }
 }
 function askSWVersion(){
   try {
@@ -9967,7 +10108,7 @@ function hideUpdateToast(){
 }
 window.tlCheckForUpdates = function(){
   if (!swSupported || !swReg){
-    setStatus(swSupported ? 'Still registering — try again in a moment.' : 'Update checks need https and a browser with service-worker support. Reload the page to fetch the latest version.', 'warn');
+    setStatus(swSupported ? 'Still registering — try again in a moment.' : (swFailed ? SW_FAILED_MSG : 'Update checks need https and a browser with service-worker support. Reload the page to fetch the latest version.'), 'warn');
     return Promise.resolve(false);
   }
   setStatus('Checking for updates…');
