@@ -340,7 +340,7 @@ h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-w
 /* TABLES */
 .table-wrap{position:relative;overflow-x:auto;border-radius:var(--r12);border:1px solid var(--border2);margin:1.25rem 0}
 div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollable wrapper: the ring sits inside the box so the right-edge fade mask cannot clip it */
-.data-table th .th-unit{text-transform:none} /* unit symbols are case-sensitive: m, s, m/yd */
+.data-table th .th-unit, .form-group label .th-unit{text-transform:none} /* unit symbols are case-sensitive: m, s, m:ss.ss */
 .data-table{width:100%;border-collapse:collapse;font-size:0.84rem}.data-table th{background:var(--navy3);color:var(--cyan);font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--white2);vertical-align:top;line-height:1.6}.data-table tr:hover td{background:rgba(0,212,255,0.03)}.data-table td:first-child{color:var(--white);font-weight:500}
 .ptag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1px;color:var(--cyan);display:block;margin-bottom:3px}
 .log-stat-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px}
@@ -1855,7 +1855,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <button class="viz-btn active" id="vbtn-forces" aria-pressed="true" onclick="toggleForces3D(this)">Forces: On</button>
   </div>
-  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px"><span class="viz-hint-pointer"><span aria-hidden="true">🖱 </span>Drag to orbit · Click the lab, then scroll to zoom (or hold Ctrl/⌘, or use the zoom buttons) · </span><span class="viz-hint-touch">Drag to orbit · Pinch or the zoom buttons to zoom · </span>Tap a phase below to jump to it</p>
+  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px"><span class="viz-hint-pointer"><span aria-hidden="true">🖱 </span>Drag to orbit · Click the lab, then scroll to zoom (or hold Ctrl/⌘, or use the zoom buttons) · </span><span class="viz-hint-touch">Drag to orbit · Pinch or the zoom buttons to zoom · </span>Tap a phase on the strip under the swimmer to jump to it</p>
   <div id="human-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:4px;letter-spacing:0.3px"></div>
   <div class="force-legend">
     <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Drag</div>
@@ -1954,7 +1954,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="acc-body"><p>The pull follows a slight S-curve. Hand accelerates throughout — slowest at catch, fastest at exit. The hand must push all the way past the hip — thumb brushing the thigh.</p>
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Cue: "Slow in, fast out." The catch should feel controlled. The finish should feel like a snap.</div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>BODY ROTATION & HEAD POSITION</h4><span class="chevron">▾</span></div>
-    <div class="acc-body"><p>Shoulder roll: about 45–60° each side at distance pace, less (30–40°) in the 50/100 where turnover is higher; the hips roll roughly half as much. Head position: hairline at the surface, eyes at the pool floor. Even a 2-inch head lift forces the hips down.</p></div></div>
+    <div class="acc-body"><p>Shoulder roll: about 45–60° each side at distance pace, less (30–40°) in the 50/100 where turnover is higher; the hips roll roughly half as much. Head position: hairline at the surface, eyes at the pool floor. Even a 5 cm head lift forces the hips down.</p></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>6-BEAT KICK MECHANICS</h4><span class="chevron">▾</span></div>
     <div class="acc-body"><p>The kick supplies up to ~30% of propulsion in sprint freestyle (≈10–15% at distance pace). The kick originates at the hip — knee bends only 30–40° on the downbeat. Ankle plantarflexion is the biggest limiter for most swimmers.</p>
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Cue: "Kick from your hip pocket, not your knee."</div></div></div>
@@ -2002,7 +2002,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="t-starts">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>GRAB START & TRACK START MECHANICS</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Track start (one foot back) is now dominant at elite level; the grab start (both feet at the front edge, hands gripping the block) is the older individual start — a stronger but slower push, now rare in elite racing. Relay takeovers use a different start again: the step-through (swing) start, an arm swing from the back of the block timed to the incoming swimmer's touch. Reaction time target: &lt;0.65 seconds. Takeoff is near horizontal — the block height gives the flight.</p>
+    <div class="acc-body open"><p>Track start (one foot back) is now dominant at elite level; the grab start (both feet at the front edge, hands gripping the block) is the older individual start — a stronger but slower push, now rare in elite racing. Relay takeovers use a different start again: the step-through (swing) start, an arm swing from the back of the block timed to the incoming swimmer's touch. Reaction time target: under 0.65 s. Takeoff is near horizontal — the block height gives the flight.</p>
     <dl class="key-grid">
       <div class="key-point"><dt class="kp-label">Reaction time</dt><dd>Fast-elite: ~0.60–0.64 s; most swimmers are slower — chase clean, not just fast.</dd></div>
       <div class="key-point"><dt class="kp-label">Takeoff angle</dt><dd>Near horizontal — about 0–10° above the horizontal; the 0.5–0.75 m block height gives the flight.</dd></div>
@@ -2195,8 +2195,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel active" id="c-golf">
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>GOLF SCORE CALCULATOR</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label>50 m Split (seconds)</label><input class="form-input" id="golf-split" enterkeyhint="done" type="number" step="any" placeholder="e.g. 32" min="20.9" max="120"></div>
-        <div class="form-group" style="margin-bottom:1rem"><label>Stroke Count (per 50 m — each arm in free/back, one per cycle in fly/breast)</label><input class="form-input" id="golf-strokes" enterkeyhint="done" type="number" placeholder="e.g. 28" min="8" max="80"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>50 <span class="th-unit">m</span> Split <span class="th-unit">(seconds)</span></label><input class="form-input" id="golf-split" enterkeyhint="done" type="number" step="any" placeholder="e.g. 32" min="20.9" max="120"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Stroke Count <span class="th-unit">(per 50 m — each arm in free/back, one per cycle in fly/breast)</span></label><input class="form-input" id="golf-strokes" enterkeyhint="done" type="number" placeholder="e.g. 28" min="8" max="80"></div>
         <button class="calc-btn" onclick="calcGolf()">Calculate <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="golf-notice" role="alert" hidden></p>
         <div class="calc-result" id="golf-result" aria-live="polite" aria-atomic="true"><div class="big" id="golf-score">—</div><div class="sub">Golf Score</div><p style="margin-top:1rem;font-size:0.84rem;color:var(--white2);line-height:1.7" id="golf-rating"></p></div>
@@ -2218,8 +2218,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>RACE SPLIT GENERATOR</h4>
         <div class="form-group" style="margin-bottom:1rem"><label>Race Distance</label><select class="form-select" id="split-dist"><option value="100">100 m</option><option value="200" selected>200 m</option><option value="400">400 m</option><option value="800">800 m</option><option value="1500">1500 m</option></select></div>
-        <div class="form-group" style="margin-bottom:1rem"><label>Target Time (m:ss.ss)</label><input class="form-input" id="split-time" enterkeyhint="done" placeholder="e.g. 1:55.00"></div>
-        <div class="form-group" style="margin-bottom:1rem"><label>Race Strategy</label><select class="form-select" id="split-strategy"><option value="elite" selected>Elite pattern (recommended)</option><option value="even">Even Splits</option><option value="neg">Negative Split</option><option value="pos">Positive Split</option><option value="surge">Surge Middle</option></select></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Target Time <span class="th-unit">(m:ss.ss)</span></label><input class="form-input" id="split-time" enterkeyhint="done" placeholder="e.g. 1:55.00"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Race Strategy</label><select class="form-select" id="split-strategy"><option value="elite" selected>Elite pattern (recommended)</option><option value="even">Even splits</option><option value="neg">Negative split</option><option value="pos">Positive split</option><option value="surge">Surge middle</option></select></div>
         <button class="calc-btn" onclick="calcSplits()">Generate Splits <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="split-notice" role="alert" hidden></p>
       </div>
@@ -2229,7 +2229,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="c-pace">
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>TRAINING PACE ZONES</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label>Best 100 m Freestyle (m:ss)</label><input class="form-input" id="pace-100" enterkeyhint="done" placeholder="e.g. 0:55.5 or 1:02.0"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Best 100 <span class="th-unit">m</span> Freestyle <span class="th-unit">(m:ss)</span></label><input class="form-input" id="pace-100" enterkeyhint="done" placeholder="e.g. 0:55.5 or 1:02.0"></div>
         <button class="calc-btn" onclick="calcPaceZones()">Calculate Zones <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="pace-notice" role="alert" hidden></p>
       </div>
@@ -2241,7 +2241,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="c-convert">
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>POOL FORMAT CONVERTER</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label>Time (m:ss.ss)</label><input class="form-input" id="conv-time" enterkeyhint="done" placeholder="e.g. 1:52.44"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Time <span class="th-unit">(m:ss.ss)</span></label><input class="form-input" id="conv-time" enterkeyhint="done" placeholder="e.g. 1:52.44"></div>
         <div class="form-group" style="margin-bottom:1rem"><label>From Pool Format</label><select class="form-select" id="conv-from"><option value="scy">SCY (25 yards)</option><option value="scm">SCM (25 meters)</option><option value="lcm" selected>LCM (50 meters)</option></select></div>
         <button class="calc-btn" onclick="convertTime()">Convert <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="conv-notice" role="alert" hidden></p>
@@ -2320,10 +2320,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="gen-row">
       <div class="form-group"><label>Date</label><input class="form-input" id="log-date" type="date"></div>
       <div class="form-group"><label>Session Type</label><select class="form-select" id="log-type"><option value="AM Pool">AM Pool</option><option value="PM Pool">PM Pool</option><option value="Dryland">Dryland</option><option value="Race">Race</option><option value="Time Trial">Time Trial</option></select></div>
-      <div class="form-group"><label>Distance (m or yd)</label><input class="form-input" id="log-distance" enterkeyhint="done" type="number" min="0" max="100000" step="1" placeholder="e.g. 4500 — use one unit"></div>
+      <div class="form-group"><label>Distance <span class="th-unit">(m or yd)</span></label><input class="form-input" id="log-distance" enterkeyhint="done" type="number" min="0" max="100000" step="1" placeholder="e.g. 4500 — use one unit"></div>
     </div>
     <div class="gen-row">
-      <div class="form-group"><label>Duration (min)</label><input class="form-input" id="log-duration" enterkeyhint="done" type="number" min="0" max="600" step="1" placeholder="e.g. 75"></div>
+      <div class="form-group"><label>Duration <span class="th-unit">(min)</span></label><input class="form-input" id="log-duration" enterkeyhint="done" type="number" min="0" max="600" step="1" placeholder="e.g. 75"></div>
       <div class="form-group"><label>Primary Zone</label><select class="form-select" id="log-zone"><option value="Z1 Recovery">Z1 Recovery</option><option value="Z2 AeT" selected>Z2 AeT</option><option value="Z3 Threshold">Z3 Threshold</option><option value="Z4 VO₂ max">Z4 VO₂ max</option><option value="Z5 Sprint">Z5 Sprint</option><option value="Mixed">Mixed</option></select></div>
       <div class="form-group"><label>Effort (1–10)</label><input class="form-input" id="log-effort" enterkeyhint="done" type="number" min="1" max="10" placeholder="7"></div>
     </div>
@@ -2677,7 +2677,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="divider"></div>
   <div class="section-eyebrow">Cuts & Motivational Times</div>
   <h2 class="section-title" style="font-size:2.2rem">FUTURES, JUNIORS <span>& NATIONAL CUTS</span></h2>
-  <div class="warn-box"><strong>Exact cut times aren't shown here on purpose.</strong> Futures, Speedo Junior Nationals, Toyota Nationals, and the B/BB/A/AA/AAA/AAAA Motivational Times are each a full table of times split by event, age group, gender, and course (SCY/LCM) — and they get revised. Rather than risk showing you a stale or wrong number for a swim that matters, this links straight to the official current standard.</div>
+  <div class="warn-box"><strong>Exact cut times aren't shown here on purpose.</strong> Futures, Speedo Junior Nationals, Toyota Nationals, and the B/BB/A/AA/AAA/AAAA Motivational Times are each a full table of times split by event, age group, gender, and course (SCY/LCM) — and they get revised. Rather than risk showing you a stale or wrong number for a swim that matters, every button below opens USA Swimming's time-standards page, where each current table is published.</div>
   <div class="grid-2">
     <div class="card">
       <div class="card-tag" style="color:var(--gold)">National (Zoned) Meet</div>
@@ -2866,12 +2866,12 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="tlt-card">
       <h2 class="tlt-card-title">CIRCUIT SETUP</h2>
       <div class="tlt-cfg">
-        <div class="form-group"><label for="tlt-int-work">Work (s)</label><input class="form-input" type="number" id="tlt-int-work" min="5" max="600" step="1" value="30" inputmode="numeric"></div>
-        <div class="form-group"><label for="tlt-int-rest">Rest (s)</label><input class="form-input" type="number" id="tlt-int-rest" min="0" max="600" step="1" value="15" inputmode="numeric"></div>
+        <div class="form-group"><label for="tlt-int-work">Work <span class="th-unit">(s)</span></label><input class="form-input" type="number" id="tlt-int-work" min="5" max="600" step="1" value="30" inputmode="numeric"></div>
+        <div class="form-group"><label for="tlt-int-rest">Rest <span class="th-unit">(s)</span></label><input class="form-input" type="number" id="tlt-int-rest" min="0" max="600" step="1" value="15" inputmode="numeric"></div>
         <div class="form-group"><label for="tlt-int-rounds">Rounds per set</label><input class="form-input" type="number" id="tlt-int-rounds" min="1" max="50" step="1" value="8" inputmode="numeric"></div>
         <div class="form-group"><label for="tlt-int-sets">Sets</label><input class="form-input" type="number" id="tlt-int-sets" min="1" max="10" step="1" value="1" inputmode="numeric"></div>
-        <div class="form-group"><label for="tlt-int-setrest">Rest between sets (s)</label><input class="form-input" type="number" id="tlt-int-setrest" min="0" max="900" step="1" value="60" inputmode="numeric"></div>
-        <div class="form-group"><label for="tlt-int-lead">Lead-in (s)</label><input class="form-input" type="number" id="tlt-int-lead" min="0" max="60" step="1" value="10" inputmode="numeric"></div>
+        <div class="form-group"><label for="tlt-int-setrest">Rest between sets <span class="th-unit">(s)</span></label><input class="form-input" type="number" id="tlt-int-setrest" min="0" max="900" step="1" value="60" inputmode="numeric"></div>
+        <div class="form-group"><label for="tlt-int-lead">Lead-in <span class="th-unit">(s)</span></label><input class="form-input" type="number" id="tlt-int-lead" min="0" max="60" step="1" value="10" inputmode="numeric"></div>
       </div>
       <div class="tlt-int-summary" id="tlt-int-summary"></div>
       <h2 class="tlt-card-title" style="margin-top:1.5rem">PRESETS</h2>
@@ -2926,10 +2926,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="tlt-cfg two">
           <div class="form-group"><label for="tlt-so-reps">Reps</label><input class="form-input" type="number" id="tlt-so-reps" min="1" max="100" step="1" value="10" inputmode="numeric"></div>
           <div class="form-group"><label for="tlt-so-dist">Distance</label><input class="form-input" id="tlt-so-dist" value="100" maxlength="12" placeholder="100"></div>
-          <div class="form-group"><label for="tlt-so-int">Interval (m:ss)</label><input class="form-input" id="tlt-so-int" value="1:30" placeholder="1:30" maxlength="8"></div>
+          <div class="form-group"><label for="tlt-so-int">Interval <span class="th-unit">(m:ss)</span></label><input class="form-input" id="tlt-so-int" value="1:30" placeholder="1:30" maxlength="8"></div>
           <div class="form-group"><label for="tlt-so-start">First leave</label>
             <select class="form-select" id="tlt-so-start"><option value="0">Top (:00)</option><option value="15">:15</option><option value="30">Bottom (:30)</option><option value="45">:45</option></select></div>
-          <div class="form-group"><label for="tlt-so-pace">Hold pace (m:ss, optional)</label><input class="form-input" id="tlt-so-pace" placeholder="1:08" maxlength="8"></div>
+          <div class="form-group"><label for="tlt-so-pace">Hold pace <span class="th-unit">(m:ss, optional)</span></label><input class="form-input" id="tlt-so-pace" placeholder="1:08" maxlength="8"></div>
         </div>
         <button type="button" class="calc-btn" onclick="tlt_sendoff()">Leave times <span aria-hidden="true">→</span></button>
         <div class="tlt-status" id="tlt-so-status" role="status" aria-live="polite"></div>
@@ -2952,7 +2952,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button type="button" class="tlt-btn ghost" id="tlt-sp-reset" onclick="tlt_spReset()">Reset</button>
         <button type="button" class="tlt-btn ghost" id="tlt-sp-copy" onclick="tlt_copy('sp')">Copy</button>
       </div>
-      <div class="tlt-sp-opts"><div class="form-group"><label for="tlt-sp-dist">Split distance (m or yd) — for pace per 100</label><input class="form-input" type="number" id="tlt-sp-dist" min="0" max="1500" step="1" value="50" inputmode="numeric"></div></div>
+      <div class="tlt-sp-opts"><div class="form-group"><label for="tlt-sp-dist">Split distance <span class="th-unit">(m or yd)</span> — for pace per 100</label><input class="form-input" type="number" id="tlt-sp-dist" min="0" max="1500" step="1" value="50" inputmode="numeric"></div></div>
       <div class="tlt-status" id="tlt-sp-status" role="status" aria-live="polite"></div>
       <p class="tlt-hint"><span class="tl-kbd-only" id="tlt-sp-keys">With the split taker focused, Space starts, then records a split on each press. </span>Stop records the final split. Times come from the device's high-resolution clock, so a hidden screen does not drift them.</p>
       <div class="table-wrap tlt-hidden" id="tlt-sp-wrap"><table class="data-table tlt-num-table" aria-label="Recorded splits"><thead><tr><th scope="col">#</th><th scope="col">Cumulative</th><th scope="col">Split</th><th scope="col">Δ prev</th><th scope="col">Per 100</th><th scope="col">Note</th></tr></thead><tbody id="tlt-sp-body"></tbody></table></div>
@@ -3025,7 +3025,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="acc-body">
         <p>Riegel's original endurance equation (1981) reports a swimming exponent close to <strong>1.03</strong> — but that fit covered events lasting roughly 3.5 minutes and longer, which in the pool means 400 m and up. Record ratios show the exponent is much steeper at the sprint end: the start is a fixed-time bonus and the 50 is almost purely anaerobic, so a 100 costs about 2.2× a 50, not 2×. The table below lists the typical exponent for each step on the event ladder, the plausible spread between speed-type and endurance-type swimmers, and the multiplier that step implies.</p>
         <div id="pl-exp-table"></div>
-        <p>Multi-step predictions chain these segment by segment (100 → 200 → 400). Confidence drops with every step: one doubling is a reasonable estimate, two is a rough one, three or more says little. Typical values are the mean of the men's and women's long-course world-record ratios for each step (World Aquatics records as of September 2026); the plausible band is roughly ±0.04 around it. * IM 100 → 200 uses the 25 m-pool records, since there is no 50 m-pool 100 IM.</p>
+        <p>Multi-step predictions chain these segment by segment (100 → 200 → 400). Confidence drops with every step: one doubling is a reasonable estimate, two is a rough one, three or more says little. Typical values are the mean of the men's and women's long-course world-record ratios for each step (World Aquatics records as of September 2026); the plausible band is roughly ±0.04 around it.</p>
       </div>
     </div>
   </div>
@@ -3046,8 +3046,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="form-group" style="margin-top:1rem"><label for="pl-sp-strategy">Strategy</label>
           <select class="form-select" id="pl-sp-strategy"><option value="elite">Elite pattern for this event</option><option value="even">Even splits</option><option value="neg">Negative split</option><option value="pos">Positive split (controlled fade)</option></select></div>
         <div class="pl-two" style="margin-top:0.85rem">
-          <div class="form-group"><label for="pl-sp-fade">Second half vs first (%)</label><input class="form-input" id="pl-sp-fade" type="number" step="0.5" min="-15" max="15" value="0" aria-describedby="pl-sp-fade-help"></div>
-          <div class="form-group"><label for="pl-sp-bonus">Start bonus (s)</label><input class="form-input" id="pl-sp-bonus" type="number" step="0.1" min="0" max="3" value="1.4" aria-describedby="pl-sp-bonus-help"></div>
+          <div class="form-group"><label for="pl-sp-fade">Second half vs first <span class="th-unit">(%)</span></label><input class="form-input" id="pl-sp-fade" type="number" step="0.5" min="-15" max="15" value="0" aria-describedby="pl-sp-fade-help"></div>
+          <div class="form-group"><label for="pl-sp-bonus">Start bonus <span class="th-unit">(s)</span></label><input class="form-input" id="pl-sp-bonus" type="number" step="0.1" min="0" max="3" value="1.4" aria-describedby="pl-sp-bonus-help"></div>
         </div>
         <p class="pl-hint" id="pl-sp-fade-help" style="margin-top:0.5rem">Positive = second half slower (fade). Negative = negative split. Applies to swum lengths; the dive is handled by the start bonus.</p>
         <p class="pl-hint" id="pl-sp-bonus-help">How much faster the opening length is than a mid-race length at equal effort, because it starts from the blocks. Typical: 1.2–1.8 s in a 50 m pool, 0.7–1.2 s in a 25 m/yd pool.</p>
@@ -3218,7 +3218,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="calc-panel"><h4>SWOLF — ONE LENGTH</h4>
           <div class="form-group an-fg"><label for="an-sw-pool">Pool length</label>
             <select class="form-select" id="an-sw-pool"><option value="25m">25 m (short course meters)</option><option value="50m">50 m (long course)</option><option value="25yd">25 yd (short course yards)</option></select></div>
-          <div class="form-group an-fg"><label for="an-sw-time">Time for one length (seconds)</label>
+          <div class="form-group an-fg"><label for="an-sw-time">Time for one length <span class="th-unit">(seconds)</span></label>
             <input class="form-input" id="an-sw-time" inputmode="decimal" autocomplete="off" placeholder="e.g. 17.8" maxlength="8"></div>
           <div class="form-group an-fg"><label for="an-sw-strokes">Stroke count for that length</label>
             <input class="form-input" id="an-sw-strokes" type="number" inputmode="numeric" min="3" max="80" step="1" placeholder="e.g. 16"></div>
@@ -3254,9 +3254,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
           </div>
           <div class="form-group an-fg"><label for="an-sr-dist">Distance swum</label>
             <input class="form-input" id="an-sr-dist" type="number" inputmode="decimal" min="5" max="1500" step="any" placeholder="e.g. 50"></div>
-          <div class="form-group an-fg"><label for="an-sr-time">Time for that distance (m:ss.ss or seconds)</label>
+          <div class="form-group an-fg"><label for="an-sr-time">Time for that distance <span class="th-unit">(m:ss.ss or seconds)</span></label>
             <input class="form-input" id="an-sr-time" autocomplete="off" placeholder="e.g. 31.4 or 1:04.2" maxlength="10"></div>
-          <div class="form-group an-fg"><label for="an-sr-count" id="an-sr-count-lbl">Stroke count (each arm)</label>
+          <div class="form-group an-fg"><label for="an-sr-count" id="an-sr-count-lbl">Stroke count <span class="th-unit">(each arm)</span></label>
             <input class="form-input" id="an-sr-count" type="number" inputmode="numeric" min="2" max="2000" step="1" placeholder="e.g. 36"></div>
           <button class="calc-btn" type="button" onclick="tl_an_calcStroke()">Calculate <span aria-hidden="true">→</span></button>
           <p class="an-err" id="an-sr-err" role="status" aria-live="polite"></p>
@@ -3284,9 +3284,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="calc-panel"><h4>CRITICAL SWIM SPEED (400 / 200)</h4>
           <div class="form-group an-fg"><label for="an-css-unit">Pool unit</label>
             <select class="form-select" id="an-css-unit"><option value="m">Meters</option><option value="yd">Yards</option></select></div>
-          <div class="form-group an-fg"><label for="an-css-400">400 time trial (m:ss.ss)</label>
+          <div class="form-group an-fg"><label for="an-css-400">400 time trial <span class="th-unit">(m:ss.ss)</span></label>
             <input class="form-input" id="an-css-400" autocomplete="off" placeholder="e.g. 4:38.5" maxlength="10"></div>
-          <div class="form-group an-fg"><label for="an-css-200">200 time trial (m:ss.ss)</label>
+          <div class="form-group an-fg"><label for="an-css-200">200 time trial <span class="th-unit">(m:ss.ss)</span></label>
             <input class="form-input" id="an-css-200" autocomplete="off" placeholder="e.g. 2:12.8" maxlength="10"></div>
           <button class="calc-btn" type="button" onclick="tl_an_calcCSS()">Calculate CSS <span aria-hidden="true">→</span></button>
           <p class="an-err" id="an-css-err" role="status" aria-live="polite"></p>
@@ -3310,7 +3310,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       </div>
     </div>
   </div>
-  <p class="an-hint an-foot">Informational only, not coaching or medical advice. Physiological and load-management references are population findings from the sources named on this page (Craig et al. 1985; Wakayoshi et al. 1992, 1993; Mujika &amp; Padilla 2000; Dekerle et al. 2005; Seiler 2010; Gabbett 2016; Hellard et al. 2019; Impellizzeri et al. 2020; Staunton, Ruiz-Navarro &amp; Born 2025), not measurements of you.</p>
+  <p class="an-hint an-foot">Informational only — not coaching or medical advice. Physiological and load-management references are population findings from the sources named on this page (Craig et al. 1985; Wakayoshi et al. 1992, 1993; Mujika &amp; Padilla 2000; Dekerle et al. 2005; Seiler 2010; Gabbett 2016; Hellard et al. 2019; Impellizzeri et al. 2020; Staunton, Ruiz-Navarro &amp; Born 2025), not measurements of you.</p>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p><p>Analytics run on your device — log data never leaves it</p></div></footer>
 </div>
@@ -3807,7 +3807,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
       <input id="forgot-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doForgotPassword()"></div>
     <button id="forgot-btn" onclick="doForgotPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SEND RESET LINK <span aria-hidden="true">→</span></button>
     <p id="forgot-msg" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.78rem;letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
-    <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Back to login</button></p>
+    <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Back to log in</button></p>
   </div>
   <!-- NEW PASSWORD (opened by the emailed recovery link) -->
   <div id="screen-newpass" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
@@ -6445,11 +6445,11 @@ function calcGolf(){
   const score=Math.round(split+strokes); // rated on the whole number the swimmer sees (31.6+28 shows "60" and must read as the 60–66 band), so the result never sits in a different band from the guide table
   document.getElementById('golf-score').textContent=String(score);
   const r=document.getElementById('golf-rating');
-  const rating=score<60?['🌟','World-class efficiency. Elite national/international level.']
-    :score<67?['✅','High performance. Senior national standard.']
-    :score<75?['💪','Competitive. Strong age-group / senior club level.']
-    :score<85?['📈','Developing. Significant improvement available.']
-    :['🔧','Beginner level. Major DPS gains available immediately.'];
+  const rating=score<60?['🌟','World class / national elite.']
+    :score<67?['✅','High performance / senior national.']
+    :score<75?['💪','Competitive age-group / senior club.']
+    :score<85?['📈','Developing — significant improvement available.']
+    :['🔧','Beginner — major gains available.'];
   r.textContent=''; const glyph=document.createElement('span'); glyph.setAttribute('aria-hidden','true'); glyph.textContent=rating[0]+' '; r.appendChild(glyph); r.appendChild(document.createTextNode(rating[1]));
   document.getElementById('golf-result').classList.add('show');
 }
@@ -6660,7 +6660,7 @@ function saveName(){
   document.getElementById('profile-name-display').textContent=n||'Swimmer';
 }
 function clearAllPRs(){
-  if(!confirm('Clear all PRs?')) return;
+  if(!confirm('Clear all PRs from this browser? This cannot be undone — export a backup first if you want to keep them.')) return;
   Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>lsRemove('pr_'+e.replace(/ /g,'_'))));
   Object.keys(PR_EVENTS).forEach(s=>buildPRGrid(s));
 }
@@ -6833,7 +6833,7 @@ function saveLogEntry(){
     // The field and its inline message can be a screen above the Save button on a phone: bring them into view when off-screen.
     const r=el.getBoundingClientRect(); if(r.top<80||r.bottom>window.innerHeight-60){ try{ el.scrollIntoView({block:'center',behavior:tlReducedMotion()?'auto':'smooth'}); }catch(e){} } };
   if(!parseLogDate(date)){ fail('Please select a date.','log-date'); return; }
-  if(date>logTodayISO(1)){ fail('That date is in the future — log a session once it has happened (today or tomorrow at the latest).','log-date'); return; }
+  if(date>logTodayISO(1)){ fail('That date is too far ahead — sessions can be dated today, earlier, or (for a session you are about to swim) tomorrow at the latest.','log-date'); return; }
   const raw=id=>String(document.getElementById(id).value||'').trim();
   const distRaw=raw('log-distance'), durRaw=raw('log-duration'), effRaw=raw('log-effort');
   const dist=distRaw===''?0:Number(distRaw), dur=durRaw===''?0:Number(durRaw), effort=effRaw===''?0:Number(effRaw);
@@ -7008,7 +7008,7 @@ function undoLogDelete(){
   focusLogAfterChange(at);
   const u=document.getElementById('log-undo'); if(u) u.hidden=true;
 }
-function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog(); clearLogUndo(); setLogStatus('All sessions cleared.'); focusLogAfterChange(0);}
+function clearLog(){if(!confirm('Clear all sessions from this browser? This cannot be undone — export a backup from My PRs first if you want to keep them.'))return; lsRemove('swimiq_log'); renderLog(); clearLogUndo(); setLogStatus('All sessions cleared.'); focusLogAfterChange(0);}
 function focusLogAfterChange(at){
   const rest=document.querySelectorAll('#log-entries .log-del');
   let target=rest.length?rest[Math.max(0,Math.min(at<0?0:at,rest.length-1))]:document.getElementById('log-history-heading');
@@ -8363,7 +8363,7 @@ function renderExpTable(){
       rows += '<tr><td>' + esc(STROKE_NAMES[s]) + '</td><td class="num">' + a + ' → ' + b + srcNote + '</td><td class="num typ">' + e[1].toFixed(3) + '</td><td class="num">' + e[0].toFixed(2) + '–' + e[2].toFixed(2) + '</td><td class="num">×' + Math.pow(ratio, e[1]).toFixed(3) + '</td><td class="num">×' + Math.pow(ratio, e[0]).toFixed(2) + '–' + Math.pow(ratio, e[2]).toFixed(2) + '</td></tr>';
     });
   });
-  el.innerHTML = '<div class="table-wrap"><table class="data-table"><caption class="sr-only">Exponent by stroke and distance step</caption><thead><tr><th scope="col">Stroke</th><th scope="col">Step</th><th scope="col">Typical b</th><th scope="col">Plausible b</th><th scope="col">Time multiplier</th><th scope="col">Multiplier range</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+  el.innerHTML = '<div class="table-wrap"><table class="data-table"><caption class="sr-only">Exponent by stroke and distance step</caption><thead><tr><th scope="col">Stroke</th><th scope="col">Step</th><th scope="col">Typical <span class="th-unit"><i>b</i></span></th><th scope="col">Plausible <span class="th-unit"><i>b</i></span></th><th scope="col">Time multiplier</th><th scope="col">Multiplier range</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
     '<p class="pl-fine" style="margin-top:0.5rem"><span aria-hidden="true">* </span>100 → 200 IM is derived from the 25 m-pool records — there is no 50 m-pool 100 IM.</p>';
 }
 
@@ -8570,8 +8570,8 @@ function renderCompare(r){
   }
   var pat = r.pattern, tol = pat.tol, maxPct = Math.max.apply(null, pat.segs.concat(r.segPct)) * 1.08;
   var bars = pat.segs.map(function(e, i){
-    var mine = r.segPct[i], diff = mine - e;
-    return '<div class="pl-bar-row"><div class="pl-bar-lbl">' + esc(r.segNames[i]) + '</div><div class="pl-bar-track"><div class="pl-bar-fill" style="width:' + (mine / maxPct * 100).toFixed(1) + '%"></div><div class="pl-bar-ref" style="left:' + (e / maxPct * 100).toFixed(1) + '%" aria-hidden="true"></div></div><div class="pl-bar-val">' + pct(mine, 1) + '% <span>vs ' + pct(e, 1) + '±' + tol + '</span> (' + (diff >= 0 ? '+' : '') + pct(diff, 1) + ')</div></div>';
+    var mine = r.segPct[i], diff = Math.round((mine - e) * 10) / 10;   // round first, then sign: a zero delta carries no sign
+    return '<div class="pl-bar-row"><div class="pl-bar-lbl">' + esc(r.segNames[i]) + '</div><div class="pl-bar-track"><div class="pl-bar-fill" style="width:' + (mine / maxPct * 100).toFixed(1) + '%"></div><div class="pl-bar-ref" style="left:' + (e / maxPct * 100).toFixed(1) + '%" aria-hidden="true"></div></div><div class="pl-bar-val">' + pct(mine, 1) + '% <span>vs ' + pct(e, 1) + '±' + tol + '</span> (' + (diff > 0 ? '+' : (diff < 0 ? '−' : '')) + pct(Math.abs(diff), 1) + ')</div></div>';
   }).join('');
   var first = r.segPct[0] - pat.segs[0], last = r.segPct[r.segPct.length - 1] - pat.segs[pat.segs.length - 1];
   var verdict;
@@ -8690,7 +8690,7 @@ var CHECKPOINTS = [
   { d:7, title:'Final week', desc:'Volume at its lowest — sprinters down 60–70%, distance swimmers 40–50%, with the aerobic rhythm kept. Gear check: two pairs of goggles, spare cap, race suit tried on. Nothing new from here.' },
   { d:3, title:'Fuel up', desc:'Carbohydrate intake up to 8–10 g/kg on the day before racing (start two days out for a multi-day meet), hydrate steadily, no new foods.', link:'#nutrition', linkText:'Race-day nutrition', pageTab:'n-race' },
   { d:2, title:'Travel and logistics', desc:'Heat sheets, warm-up windows, session times, transport and check-in. Pack the night before you leave.' },
-  { d:1, title:'Day before', desc:'20–30 min easy plus 4–6 × 25 at race pace (distance: 30–40 min easy with a few builds). Early night. Lay out your gear.', link:'#taper', linkText:'Taper protocol' },
+  { d:1, title:'Day before', desc:'20–30 min easy plus 4–6×25 at race pace (distance: 30–40 min easy with a few builds). Early night. Lay out your gear.', link:'#taper', linkText:'Taper protocol' },
   { d:0, title:'Race day', desc:'Pre-meet meal about 3 h out, warm-up from T−75 min, box breathing behind the blocks, two focus cues at most.', link:'#race', linkText:'Meet-day timeline' }
 ];
 function readMeet(){
@@ -8754,7 +8754,8 @@ function renderMeet(){
   var cls = days < 0 ? ' past' : (days === 0 ? ' today' : '');
   var big = days < 0 ? String(-days) : String(days);
   var lbl = days < 0 ? (days === -1 ? 'day ago' : 'days ago') : (days === 0 ? 'race day' : (days === 1 ? 'day to go' : 'days to go'));
-  var weeks = days > 13 ? Math.floor(days / 7) + ' wk ' + (days % 7) + ' d' : '';
+  var wk = Math.floor(days / 7), wd = days % 7;
+  var weeks = days > 13 ? wk + (wk === 1 ? ' week' : ' weeks') + (wd ? ' ' + wd + (wd === 1 ? ' day' : ' days') : '') : '';
   var second = '';
   if (other) {
     var d2 = other.days, gap = daysUntil(other.date, parseISODate(first.date));
@@ -8774,7 +8775,7 @@ function renderCheckpoints(m, days){
   if (days < 0) return '';
   var items = CHECKPOINTS.map(function(c){
     var state = days > c.d ? 'upcoming' : (days === c.d ? 'today' : 'done');
-    var tag = state === 'today' ? '<span class="pl-tag good">Today</span>' : (state === 'done' ? '<span class="pl-tag dim">Done</span>' : '<span class="pl-tag info">In ' + (days - c.d) + ' d</span>');
+    var tag = state === 'today' ? '<span class="pl-tag good">Today</span>' : (state === 'done' ? '<span class="pl-tag dim">Done</span>' : '<span class="pl-tag info">In ' + (days - c.d) + (days - c.d === 1 ? ' day' : ' days') + '</span>');
     var link = c.link ? ' <a href="' + esc(c.link) + '"' + (c.tab ? ' data-tab="' + esc(c.tab) + '"' : '') + (c.pageTab ? ' data-page-tab="' + esc(c.pageTab) + '"' : '') + '>' + esc(c.linkText) + ' <span aria-hidden="true">→</span></a>' : '';
     return '<li class="' + state + '"><div class="pl-cp-when">' + (c.d === 0 ? 'Race day' : c.d + (c.d === 1 ? ' day out' : ' days out')) + ' · ' + esc(fmtDateShort(addDays(m.date, -c.d))) + ' ' + tag + '</div><div class="pl-cp-title">' + esc(c.title) + '</div><div class="pl-cp-desc">' + esc(c.desc) + link + '</div></li>';
   }).join('');
@@ -9225,7 +9226,7 @@ function zoneReading(z){
   if (z.classified < 60) {
     parts.push('Only ' + fmtInt(z.classified) + ' classified pool minutes so far — the split needs a few more sessions before it says anything.');
   } else {
-    var lowPct = Math.round(low * 100), highPct = Math.round(high * 100), thrPct = Math.max(0, 100 - lowPct - highPct);
+    var lowPct = Math.round(low * 100), highPct = Math.round(high * 100), thrPct = Math.round(thr * 100);   // each share rounded on its own, so equal minutes read as equal percentages
     parts.push('Of your classified pool minutes over the last four weeks, <strong>' + lowPct + '%</strong> were low intensity (Z1–Z2), <strong>' + thrPct + '%</strong> threshold (Z3) and <strong>' + highPct + '%</strong> high intensity (Z4–Z5).');
     // Reference patterns (README.md, "Maintainer notes"): general endurance sport ~80% of
     // sessions at low intensity (Seiler 2010); elite swimmers 86–90% of
@@ -9486,7 +9487,7 @@ function weekSummaryParts(i){
   return {
     title: 'Week of ' + anFmtDate(w.start) + (c.current ? ' · in progress' : ''),
     total: fmtInt(D.totals[i]), unit: D.measure === 'dist' ? 'm/yd' : 'min', rows: rows,
-    foot: w.sessions + ' session' + (w.sessions === 1 ? '' : 's') + (ef ? ' · avg effort ' + ef : '') + (D.rolls[i] != null ? ' · 4-wk avg ' + fmtInt(D.rolls[i]) : '')
+    foot: w.sessions + ' session' + (w.sessions === 1 ? '' : 's') + (ef ? ' · Avg effort ' + ef : '') + (D.rolls[i] != null ? ' · 4-wk avg ' + fmtInt(D.rolls[i]) : '')
   };
 }
 function showTooltip(i, py){
@@ -9644,7 +9645,7 @@ function buildSummaryText(m){
   var L = [];
   var name = typeof readSwimmerName === 'function' ? readSwimmerName() : (anLsGet('swimmer_name') || '');
   var w0 = m.thisWeek, w1 = m.lastWeek, a = m.avg4;
-  var ef = function(w){ return w.effortN ? ' · avg effort ' + fmtDec(w.effortSum / w.effortN, 1) : ''; };
+  var ef = function(w){ return w.effortN ? ' · Avg effort ' + fmtDec(w.effortSum / w.effortN, 1) : ''; };
   var byType = function(w){
     var parts = [];
     TYPE_SERIES.forEach(function(s){ var b = w.byType[s.key]; if (b) parts.push(s.label + ' ' + b.n + (b.dist > 0 ? ' / ' + fmtInt(b.dist) : '') + (b.dur > 0 ? ' / ' + fmtInt(b.dur) + ' min' : '')); });
@@ -9654,7 +9655,7 @@ function buildSummaryText(m){
     if (!w.entries.length) return ['  (none logged)'];
     return w.entries.slice().sort(function(x, y){ return x.date - y.date; }).map(function(e){
       return '  - ' + fmtDay(e.date) + ' · ' + e.type + (e.dist > 0 ? ' · ' + fmtInt(e.dist) : '') + (e.dur > 0 ? ' · ' + fmtInt(e.dur) + ' min' : '') +
-        (e.zone ? ' · ' + e.zone : '') + (e.effort > 0 ? ' · effort ' + e.effort + '/10' : '') + (e.mainset ? ' · ' + e.mainset : '');
+        (e.zone ? ' · ' + e.zone : '') + (e.effort > 0 ? ' · Effort ' + e.effort + '/10' : '') + (e.mainset ? ' · ' + e.mainset : '');
     });
   };
   L.push('TIDELYNE — WEEKLY TRAINING SUMMARY');
@@ -9823,7 +9824,7 @@ window.tl_an_calcStroke = function(){
   if (!r.ok) { anSetErr('an-sr-err', fields, r.err, { dist:'an-sr-dist', time:'an-sr-time', count:'an-sr-count' }[r.field]); if (res) res.classList.remove('show'); return; }
   anSetErr('an-sr-err', fields, '');
   var kv = an$('an-sr-kv'), note = an$('an-sr-note');
-  var item = function(v, unit, k){ return '<div class="an-kv-item"><span class="v">' + v + (unit ? '<small>' + unit + '</small>' : '') + '</span><span class="k">' + k + '</span></div>'; };
+  var item = function(v, unit, k){ return '<div class="an-kv-item"><span class="v">' + v + (unit ? '<small>&thinsp;' + unit + '</small>' : '') + '</span><span class="k">' + k + '</span></div>'; };
   if (kv) kv.innerHTML =
     item(fmtDec(r.speed, 2), r.unit + '/s', 'Speed' + (r.unit === 'yd' ? ' (' + fmtDec(r.mps, 2) + ' m/s)' : '')) +
     (r.perArm ? item(fmtDec(r.spm, 1), '/min', 'Stroke rate (arm strokes)') : '') +
@@ -9868,7 +9869,7 @@ window.tl_an_calcCSS = function(){
   var pace = an$('an-css-pace'), sub = an$('an-css-sub'), kv = an$('an-css-kv'), tbody = an$('an-css-table') ? an$('an-css-table').querySelector('tbody') : null, note = an$('an-css-note');
   if (pace) pace.textContent = fmtPace(r.pace100);
   if (sub) sub.textContent = 'CSS pace per 100 ' + r.unit;
-  var item = function(v, unit, k){ return '<div class="an-kv-item"><span class="v">' + v + (unit ? '<small>' + unit + '</small>' : '') + '</span><span class="k">' + k + '</span></div>'; };
+  var item = function(v, unit, k){ return '<div class="an-kv-item"><span class="v">' + v + (unit ? '<small>&thinsp;' + unit + '</small>' : '') + '</span><span class="k">' + k + '</span></div>'; };
   if (kv) kv.innerHTML =
     item(fmtDec(r.css, 3), r.unit + '/s', 'Critical swim speed' + (r.unit === 'yd' ? ' (' + fmtDec(r.cssM, 3) + ' m/s)' : '')) +
     item(fmtPace(r.pace400), '', '400 pace per 100') +
@@ -9911,7 +9912,7 @@ function anInit(){
   var strokeSel = an$('an-sr-stroke'), countLbl = an$('an-sr-count-lbl');
   if (strokeSel && countLbl) strokeSel.addEventListener('change', function(){
     var info = STROKE_INFO[strokeSel.value] || STROKE_INFO.fr;
-    countLbl.textContent = info.perArm ? 'Stroke count (each arm)' : 'Stroke count (cycles)';
+    countLbl.innerHTML = 'Stroke count <span class="th-unit">' + (info.perArm ? '(each arm)' : '(cycles)') + '</span>';
   });
   var prevLog = window.onLogChange;
   window.onLogChange = function(){
@@ -10390,7 +10391,7 @@ window.tl_an_debug = {
   }
   // Block titles are typed in caps for the Bebas headings; the palette lists them in Title Case beside the
   // Title Case page and tab rows (acronyms and alphanumerics such as IM, UW, EIB, 2K1 stay as written).
-  var KEEP_CAPS = /^(IM|UW|EIB|SWOLF|HR|RPE|ATP|CSS|DQ|SCY|SCM|LCM|PR|PRS|AI|3D|2K1|USA|NCAA|VO₂|VO2|AET|MAX|II|III|IV)$/;
+  var KEEP_CAPS = /^(IM|UW|EIB|SWOLF|HR|RPE|ATP|CSS|DQ|SCY|SCM|LCM|PR|PRS|AI|3D|2K1|USA|NCAA|VO₂|VO2|AET|MAX|II|III|IV|BB|AA|AAA|AAAA)$/;   // BB…AAAA: USA Swimming motivational tiers
   var SMALL_WORDS = /^(a|an|and|the|of|to|for|on|in|at|from|with|by|or|vs|per)$/;
   function titleCaseCaps(s){
     var core = s.replace(/\([^)]*\)/g, '').trim();   // "SPRINT TAPER (7–14 days)" is shouting even with a lower-case parenthetical
@@ -10398,8 +10399,9 @@ window.tl_an_debug = {
     return s.replace(/[A-Z0-9][A-Z0-9'’₂]*/g, function(w, i){
       if (/^\d+(ST|ND|RD|TH)$/.test(w)) return w.toLowerCase();   // 5TH → 5th
       if (KEEP_CAPS.test(w) || /^\d/.test(w)) return w;
-      var lower = w.toLowerCase(), lead = s.slice(0, i);
-      if (SMALL_WORDS.test(lower) && lead && !/[—–:(]\s*$/.test(lead)) return lower;
+      var lower = w.toLowerCase(), lead = s.slice(0, i), rest = s.slice(i + w.length);
+      if (/^(MIN|SEC|H|S|M|KM|KG|ML)$/.test(w) && /\(\s*[\d.,–-]+\s*$/.test(lead)) return lower;   // "(10 MIN)" → "(10 min)": a unit after a number
+      if (SMALL_WORDS.test(lower) && lead && !/[—–:(]\s*$/.test(lead) && /\S/.test(rest)) return lower;   // the last word of a title stays capitalised
       return w.charAt(0) + lower.slice(1);
     });
   }

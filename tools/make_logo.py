@@ -5,7 +5,7 @@ Tidelyne logo generator
 Regenerates every brand file from one place, so the mark can never drift
 between the favicon, the app icon and the share image.
 
-    python3 make_logo.py
+    python3 tools/make_logo.py      # from the repo root: files are written into the current directory
 
 Outputs:
     logo-mark.svg        the mark alone (scalable, used as favicon.svg)
