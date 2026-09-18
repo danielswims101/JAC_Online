@@ -69,6 +69,9 @@ Where the reference numbers in `index.html` come from (the inline comments point
   ~4 mmol/L lactate (about 40–44% below 2 mmol/L).
 - **Duplicate-id check**: a release check greps `index.html` for repeated `id="…"`; it also
   matches `data-id="…"`, which is why the video facades carry `data-video` instead.
+- **Route-title length check**: every `PAGE_TITLES` entry plus the ` — Tidelyne` suffix must stay
+  ≤ 60 characters (snippets and tab strips truncate longer titles and the brand is what falls off):
+  `node -e "const s=require('fs').readFileSync('index.html','utf8');const m=s.match(/const PAGE_TITLES=\{[\s\S]*?\n\};/)[0];const T=new Function(m+'return PAGE_TITLES;')();const bad=Object.entries(T).filter(([k,t])=>(t+' — Tidelyne').length>60);console.log(bad.length?bad:'titles OK');process.exit(bad.length?1:0)"`
 
 ## Notice
 

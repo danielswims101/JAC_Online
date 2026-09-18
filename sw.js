@@ -274,12 +274,25 @@ function fontCssStaleWhileRevalidate(event, req){
     });
   }).catch(function(){ return fetch(req); });
 }
+// The app and the legal pages / 404 request different stylesheets (the app's names DM Mono and the DM Sans
+// italics, the legal one does not), so the keep-list is the union of EVERY cached stylesheet plus the fresh
+// one — a legal-page visit must not evict the files only the app uses. The fresh CSS was put into the cache
+// before this runs, so a file a new font version retires is still dropped once no cached stylesheet names it.
 function sweepFontFiles(cache, css){
   const keep = {};
-  (String(css).match(/https:\/\/fonts\.gstatic\.com\/[^)'"\s]+/g) || []).forEach(function(u){ keep[u] = 1; });
+  function noteFiles(text){
+    (String(text).match(/https:\/\/fonts\.gstatic\.com\/[^)'"\s]+/g) || []).forEach(function(u){ keep[u] = 1; });
+  }
+  noteFiles(css);
   return cache.keys().then(function(reqs){
-    return Promise.all(reqs.filter(function(r){ return r.url.indexOf(FONTS_FILE_ORIGIN) === 0 && !keep[r.url]; })
-      .map(function(r){ return cache.delete(r); }));
+    const sheets = reqs.filter(function(r){ return r.url.indexOf(FONTS_CSS_ORIGIN) === 0; });
+    return Promise.all(sheets.map(function(r){
+      return cache.match(r, { ignoreVary: true }).then(function(res){ return res ? res.text() : ''; }).catch(function(){ return ''; });
+    })).then(function(texts){
+      texts.forEach(noteFiles);
+      return Promise.all(reqs.filter(function(r){ return r.url.indexOf(FONTS_FILE_ORIGIN) === 0 && !keep[r.url]; })
+        .map(function(r){ return cache.delete(r); }));
+    });
   });
 }
 
