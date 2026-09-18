@@ -86,11 +86,21 @@ const PRECACHE = [
 
 // ─── INSTALL: precache the core shell, one file at a time so a single
 // missing asset can never block the whole install. ──────────────────────
+// cache:'no-cache' always revalidates (freshness is the same as 'reload') but lets the host answer 304 for
+// the bytes the browser fetched seconds ago — index.html for this very page, viz-human.js from the idle
+// warm — so a first visit or a version bump transfers only the files that actually changed (~400 KB otherwise).
+// A Data Saver user gets the 3D module on demand instead (index.html never warms it for them either).
+function precacheList(){
+  try {
+    if (self.navigator && self.navigator.connection && self.navigator.connection.saveData) return PRECACHE.filter(function(u){ return u !== './viz-human.js'; });
+  } catch(e){}
+  return PRECACHE;
+}
 self.addEventListener('install', function(event){
   event.waitUntil(
     caches.open(CACHE).then(function(cache){
-      return Promise.all(PRECACHE.map(function(url){
-        return fetch(new Request(url, { cache: 'reload' })).then(function(res){
+      return Promise.all(precacheList().map(function(url){
+        return fetch(new Request(url, { cache: 'no-cache' })).then(function(res){
           if (res && res.ok) return cache.put(url, res);
         }).catch(function(){ /* skipped — fetched on demand later */ });
       }));
