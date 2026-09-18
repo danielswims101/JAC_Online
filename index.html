@@ -240,7 +240,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.985);border-bott
 @media(min-width:769px){.nav-right>button{min-height:30px;display:inline-flex;align-items:center;justify-content:center}}
 .nav-ai-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:6px 10px;font-family:var(--fm);font-size:0.65rem;letter-spacing:1px;font-weight:600;text-transform:uppercase;transition:background 0.2s;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:4px} /* gap: the star span is a flex item, so the trailing space of the text node would collapse */
 .nav-ai-btn:hover{background:var(--cyan2)}
-.nav-key-btn{background:var(--navy3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--white3);font-size:0.8rem;cursor:pointer;transition:all 0.2s;flex-shrink:0}
+.nav-key-btn{background:var(--navy3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--white3);font-size:0.8rem;cursor:pointer;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;flex-shrink:0}
 .nav-key-btn:hover{color:var(--cyan);border-color:var(--cyan)}
 .page{display:none}.page.active{display:block}.page:focus{outline:none}
 .noscript-note{position:fixed;left:0;right:0;bottom:0;z-index:9000;margin:0;background:var(--navy2);border-top:1px solid var(--border);color:var(--white);font-size:0.85rem;line-height:1.5;padding:0.7rem 1rem;text-align:center}
@@ -255,9 +255,9 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.985);border-bott
 .hero h1 .l1{display:block;color:var(--white)}.hero h1 .l2{display:block;color:var(--cyan);text-shadow:0 0 80px rgba(0,212,255,0.5)}.hero h1 .l3{display:block;color:var(--white)}
 .hero-desc{font-size:1.05rem;color:var(--white2);max-width:580px;margin:0 auto 2.5rem;line-height:1.85;font-weight:300;position:relative}
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;position:relative}
-.btn-hero{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:600;transition:all 0.25s;text-transform:uppercase;cursor:pointer;display:inline-block;text-align:center;line-height:normal;text-decoration:none}
+.btn-hero{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:600;transition:background-color .25s,color .25s,border-color .25s,box-shadow .25s,transform .25s;text-transform:uppercase;cursor:pointer;display:inline-block;text-align:center;line-height:normal;text-decoration:none}
 .btn-hero:hover{background:var(--cyan2);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,212,255,0.35)}
-.btn-hero-ghost{background:transparent;color:var(--cyan);border:1.5px solid rgba(0,212,255,0.4);border-radius:var(--r8);padding:13px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:500;transition:all 0.25s;text-transform:uppercase;cursor:pointer;display:inline-block;text-align:center;line-height:normal;text-decoration:none}
+.btn-hero-ghost{background:transparent;color:var(--cyan);border:1.5px solid rgba(0,212,255,0.4);border-radius:var(--r8);padding:13px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:500;transition:background-color .25s,color .25s,border-color .25s,box-shadow .25s,transform .25s;text-transform:uppercase;cursor:pointer;display:inline-block;text-align:center;line-height:normal;text-decoration:none}
 .btn-hero-ghost:hover{background:var(--cyan-dim);transform:translateY(-3px);border-color:var(--cyan)}
 .hero-stats{display:flex;gap:3rem;justify-content:center;flex-wrap:wrap;position:relative}
 .hstat{text-align:center}.hstat-val{font-family:var(--fh);font-size:2.6rem;color:var(--cyan);display:block;line-height:1;letter-spacing:1px}.hstat-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--white3);text-transform:uppercase;margin-top:5px;display:block}
@@ -269,6 +269,7 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .section-title span{color:var(--cyan)}
 .section-intro{font-size:0.95rem;color:var(--white2);max-width:660px;line-height:1.85;font-weight:300;margin-bottom:2.5rem}
 .form-notice{color:var(--red);font-size:0.82rem;line-height:1.55;margin-top:0.75rem}.form-notice.is-ok{color:var(--green)}.form-notice[hidden]{display:none}
+.form-field-msg{margin-top:0} /* the copy of a notice placed under its field (tlNotice, data-field-msg): the form-group's gap is the spacing */
 .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:3.5rem 0}
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:1.5rem}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1.5rem}
@@ -344,7 +345,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
    steps), so the current choice reads on a monochrome display or with reduced colour vision (WCAG 1.4.1 / 1.4.11). */
 .phase-step.active{color:var(--cyan);box-shadow:inset 0 -3px 0 var(--cyan)}
 .viz-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem}
-.viz-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:7px 14px;min-height:34px;display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1.2;font-family:var(--fm);font-size:0.65rem;letter-spacing:0.8px;cursor:pointer;transition:all 0.2s;text-transform:uppercase}
+.viz-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:7px 14px;min-height:34px;display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1.2;font-family:var(--fm);font-size:0.65rem;letter-spacing:0.8px;cursor:pointer;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase}
 .viz-btn.active{background:var(--cyan-dim);color:var(--cyan);border-color:var(--cyan);box-shadow:inset 0 0 0 1px var(--cyan)}
 .viz-btn:disabled{opacity:0.45;cursor:not-allowed} /* parked while the 3D engine is unavailable */
 /* Hover is a lighter cue than the filled "selected" look so the current choice in each toggle row stays unambiguous */
@@ -374,24 +375,24 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,212,255,0.5)}60%{opacity:0.8;box-shadow:0 0 0 9px transparent}}
 .ai-header-text h3{font-family:var(--fh);font-size:1.3rem;letter-spacing:1.5px}.ai-header-text p{font-size:0.71rem;color:var(--white3);font-weight:300}
 .ai-mode-btns{display:flex;gap:5px;flex-wrap:wrap}
-.ai-mode-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:5px 11px;font-family:var(--fm);font-size:0.63rem;letter-spacing:0.8px;transition:all 0.2s;text-transform:uppercase;cursor:pointer}
+.ai-mode-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:5px 11px;font-family:var(--fm);font-size:0.63rem;letter-spacing:0.8px;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}
 .ai-mode-btn.active{background:var(--cyan-dim);color:var(--cyan);border-color:var(--cyan);box-shadow:inset 0 0 0 1px var(--cyan)}
 @media(hover:hover){.ai-mode-btn:hover:not(.active){color:var(--white);border-color:rgba(0,212,255,0.3)}}
 .ai-messages{height:calc(100dvh - 400px);min-height:340px;max-height:1100px;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;scroll-behavior:smooth}
 /* Keep the composer in view: the chat card is capped to the viewport below the page title and the message pane
-   gives way first (the card sits 136px down on desktop, ~150px on phones). Very short viewports keep the flowing layout. */
+   gives way first (the card sits ~162px down on desktop, ~176px on phones, eyebrow included). Very short viewports keep the flowing layout. */
 @media(min-height:600px){
-  .ai-wrapper{display:flex;flex-direction:column;max-height:calc(100dvh - 148px)}
+  .ai-wrapper{display:flex;flex-direction:column;max-height:calc(100dvh - 174px)}
   .ai-messages{flex:1 1 auto;min-height:180px}
   .ai-header,.quick-prompts,.ai-input-row{flex-shrink:0}
 }
-@media(min-height:600px) and (max-width:480px){.ai-wrapper{max-height:calc(100dvh - 172px)}}
+@media(min-height:600px) and (max-width:480px){.ai-wrapper{max-height:calc(100dvh - 198px)}}
 .ai-messages::-webkit-scrollbar{width:4px}.ai-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .msg{display:flex;gap:10px;align-items:flex-start;animation:fadeUp 0.3s ease}.msg.user{flex-direction:row-reverse}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:700;flex-shrink:0;font-family:var(--fm)}
 .msg-avatar.ai-av{background:var(--cyan-dim);border:1px solid rgba(0,212,255,0.3);color:var(--cyan)}.msg-avatar.user-av{background:var(--gold-dim);border:1px solid rgba(245,166,35,0.3);color:var(--gold)}
-.msg-bubble{max-width:80%;background:var(--card3);border-radius:14px;padding:0.85rem 1.1rem;font-size:0.88rem;color:var(--white2);line-height:1.8;font-weight:300;border:1px solid var(--border2)}
+.msg-bubble{max-width:80%;min-width:0;overflow-wrap:anywhere;background:var(--card3);border-radius:14px;padding:0.85rem 1.1rem;font-size:0.88rem;color:var(--white2);line-height:1.8;font-weight:300;border:1px solid var(--border2)} /* a pasted URL wraps inside the bubble instead of scrolling the chat sideways */
 .msg-bubble.user-b{background:rgba(0,212,255,0.07);border-color:rgba(0,212,255,0.15);color:var(--white)}
 /* streaming cursor */
 .msg-bubble.streaming::after{content:'▋';color:var(--cyan);animation:blink 0.8s step-end infinite}
@@ -408,10 +409,10 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
   .quick-prompts::-webkit-scrollbar{display:none}
   .qp{flex:0 0 auto;white-space:nowrap}
 }
-.qp{background:var(--navy3);border:1px solid var(--border2);border-radius:20px;padding:5px 13px;font-size:0.71rem;color:var(--white3);cursor:pointer;transition:all 0.2s;font-family:var(--fm);letter-spacing:0.3px}.qp:hover{color:var(--cyan);border-color:rgba(0,212,255,0.4);background:var(--cyan-dim)}
+.qp{background:var(--navy3);border:1px solid var(--border2);border-radius:20px;padding:5px 13px;font-size:0.71rem;color:var(--white3);cursor:pointer;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;font-family:var(--fm);letter-spacing:0.3px}.qp:hover{color:var(--cyan);border-color:rgba(0,212,255,0.4);background:var(--cyan-dim)}
 .ai-input-row{border-top:1px solid var(--border);padding:1rem 1.25rem;display:flex;gap:10px;align-items:stretch}
-.ai-input{flex:1;background:var(--navy3);border:1px solid var(--border-input);border-radius:var(--r8);padding:11px 14px;color:var(--white);font-size:0.88rem;outline:none;transition:border-color 0.2s}.ai-input::placeholder{color:var(--white4)}.ai-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
-.ai-send{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px 22px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.ai-send:hover:not(:disabled){background:var(--cyan2);box-shadow:0 4px 18px rgba(0,212,255,0.3)}.ai-send:disabled{opacity:0.4;cursor:not-allowed}
+.ai-input{flex:1;min-width:0;background:var(--navy3);border:1px solid var(--border-input);border-radius:var(--r8);padding:11px 14px;color:var(--white);font-size:0.88rem;outline:none;transition:border-color 0.2s}.ai-input::placeholder{color:var(--white4)}.ai-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
+.ai-send{flex-shrink:0;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px 22px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}.ai-send:hover:not(:disabled){background:var(--cyan2);box-shadow:0 4px 18px rgba(0,212,255,0.3)}.ai-send:disabled{opacity:0.4;cursor:not-allowed}
 .ai-send.ai-stop{background:var(--navy3);color:var(--white);border:1px solid var(--border-input)}.ai-send.ai-stop:hover{background:var(--navy3);border-color:var(--red);color:var(--red);box-shadow:none}
 /* WORKOUT GENERATOR */
 .gen-form{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2rem}
@@ -419,6 +420,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .gen-output{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;display:none}.gen-output.show{display:block}
 .workout-phase{margin-bottom:1.75rem}.workout-phase h2{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;color:var(--cyan);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border2)}
 .workout-set{background:var(--navy3);border-radius:var(--r8);padding:0.85rem 1rem;margin-bottom:0.5rem;border:1px solid var(--border2);font-size:0.85rem;color:var(--white2);line-height:1.75}
+.workout-set,.gen-output p,#viz-content{overflow-wrap:anywhere}
 .loading-state{display:flex;align-items:center;gap:12px;color:var(--white3);padding:2.5rem 0;font-size:0.88rem}
 /* FORM ELEMENTS */
 .form-group{display:flex;flex-direction:column;gap:6px;min-width:0}.form-group label{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}
@@ -433,7 +435,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .calc-panel{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.75rem;min-width:0}.calc-panel h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem}
 .calc-result{background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:1.25rem;margin-top:1.25rem;text-align:center;display:none}.calc-result.show{display:block}
 .calc-result .big{font-family:var(--fh);font-size:3rem;color:var(--cyan);letter-spacing:2px;line-height:1}.calc-result .sub{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px}
-.calc-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:all 0.2s;text-transform:uppercase;width:100%;margin-top:0.5rem;cursor:pointer}.calc-btn:hover{background:var(--cyan2)}
+.calc-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;width:100%;margin-top:0.5rem;cursor:pointer}.calc-btn:hover{background:var(--cyan2)}
 /* ZONE BARS */
 .zone-bars{display:flex;flex-direction:column;gap:12px;margin-top:1.5rem}
 .zone-row{display:flex;align-items:center;gap:14px}.zone-name{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--white3);text-transform:uppercase;min-width:95px;text-align:right}
@@ -456,8 +458,8 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .log-entry{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;margin-bottom:0.75rem;display:flex;gap:1rem;align-items:flex-start;transition:border-color 0.2s}.log-entry:hover{border-color:var(--border)}
 .log-del{background:none;border:0;color:var(--white4);cursor:pointer;font-size:1.1rem;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin:-8px -10px -8px 0;border-radius:var(--r8);transition:color 0.2s}.log-del:hover,.log-del:focus-visible{color:var(--red)}
 .log-date{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--cyan);text-transform:uppercase;min-width:70px;flex-shrink:0}
-.log-list{list-style:none;margin:0;padding:0}.log-content{flex:1}.log-title{font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:0.25rem;line-height:1.3}.log-meta{font-size:0.8rem;color:var(--white3);font-family:var(--fm)}.log-notes{font-size:0.83rem;color:var(--white2);margin-top:0.5rem;line-height:1.6}
-.log-del{background:none;border:none;color:var(--white4);cursor:pointer;font-size:1.1rem;padding:4px;border-radius:var(--r8);transition:color 0.2s}.log-del:hover,.log-del:focus-visible{color:var(--red)}
+.log-list{list-style:none;margin:0;padding:0}.log-content{flex:1;min-width:0}.log-title{font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:0.25rem;line-height:1.3}.log-meta{font-size:0.8rem;color:var(--white3);font-family:var(--fm)}.log-notes{font-size:0.83rem;color:var(--white2);margin-top:0.5rem;line-height:1.6}
+.log-title,.log-meta,.log-notes,.log-date{overflow-wrap:anywhere} /* a URL or long token in a note must wrap inside the card, never push the ✕ off-screen */
 /* NUTRITION */
 .nutr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem}
 .nutr-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.4rem;transition:border-color 0.3s}.nutr-card:hover{border-color:var(--border)}
@@ -492,8 +494,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 /* REVEAL ANIMATION */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}.reveal.visible{opacity:1;transform:none}
 /* MISC BUTTONS */
-.btn-sm{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:8px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;font-weight:600;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.btn-sm:hover{background:var(--cyan2)}
-.btn-ghost-sm{background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.35);border-radius:6px;padding:7px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.btn-ghost-sm:hover{background:var(--cyan-dim)}
+.btn-sm{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:8px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;font-weight:600;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}.btn-sm:hover{background:var(--cyan2)}
+.btn-ghost-sm{background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.35);border-radius:6px;padding:7px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}.btn-ghost-sm:hover{background:var(--cyan-dim)}
 /* Same 30px box whether the control is a <button>, an <a> (which would inherit the body line-height) or carries an emoji glyph */
 .btn-sm,.btn-ghost-sm{line-height:1.2;min-height:30px}
 .tl-actions{display:flex;gap:10px;flex-wrap:wrap}
@@ -697,6 +699,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-timers .tlt-int-phase{font-family:var(--fh);font-size:clamp(1.6rem,7vw,2.4rem);letter-spacing:3px;color:var(--white2)}
 #page-timers .tlt-int-round{font-family:var(--fm);font-size:0.72rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase}
 #page-timers .tlt-count{font-family:var(--fh);font-size:clamp(6rem,34vw,13rem);line-height:0.9;letter-spacing:2px;color:var(--white);font-variant-numeric:tabular-nums;margin:0.5rem 0}
+#page-timers .tlt-count.long{font-size:clamp(3.5rem,19vw,8rem)} /* idle preview of a ≥1 h circuit (h:mm:ss) — the 34vw digits only fit five characters */
 #page-timers .tlt-int-next{font-family:var(--fm);font-size:0.78rem;color:var(--white2);margin-bottom:1rem;min-height:1.3em;line-height:1.5}
 #page-timers .tlt-bar{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;overflow:hidden;height:14px;margin-bottom:6px}
 #page-timers .tlt-bar.tot{height:6px;margin-bottom:10px}
@@ -814,6 +817,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-err:empty{display:none;margin:0}
 #page-planner .pl-err.ok{color:var(--green)}
 #page-planner .pl-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:0.85rem}
+#page-planner .pl-actions .calc-btn~.btn-ghost-sm{min-height:38px} /* Meet Countdown: Clear matches the 38px Save meets beside it (48px on touch below) */
 #page-planner .pl-status{font-family:var(--fm);font-size:0.68rem;color:var(--green);letter-spacing:0.3px}
 #page-planner .pl-fine{font-size:0.76rem;color:var(--white3);line-height:1.65;margin-top:1.5rem}
 #page-planner .pl-fine a,#page-planner .info-box a{color:var(--cyan)}
@@ -944,6 +948,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* ─── responsive ─── */
 @media(max-width:768px){
   #page-planner .pl-quick .btn-ghost-sm,#page-planner .pl-to-splits,#page-planner .pl-actions .btn-ghost-sm,#page-planner .pl-actions .btn-sm{min-height:44px}
+  #page-planner .pl-actions .calc-btn~.btn-ghost-sm{min-height:48px}
   #page-planner .pl-bar-row{grid-template-columns:80px 1fr 110px;gap:8px}
 }
 @media(max-width:700px){
@@ -1110,6 +1115,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #page-analytics .an-why{grid-column:1}
   #page-analytics .an-tag{justify-self:start}
 }
+@media(max-width:899px){
+  #page-analytics .calc-wrapper{grid-template-columns:1fr} /* two 350px columns at 768 squeezed the elite reference table into a 292px scroller beside 1,300px-tall panels */
+}
 @media(max-width:480px){
   #page-analytics .an-period,#page-analytics .an-insight{padding:1.1rem 1rem} /* one phone card rhythm with .card / .content-block */
   #page-analytics .an-periods{grid-template-columns:1fr}
@@ -1123,6 +1131,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #page-analytics .an-seg-btn{flex:1}
   #page-analytics .an-zone-bar{height:30px}
   #page-analytics .an-tooltip{max-width:200px}
+}
+@media(max-width:360px){ /* "Stack by · Session type · Zone" needs 256px: the label takes its own row instead of clipping the Zone pill */
+  #page-analytics .an-seg{flex-wrap:wrap}
+  #page-analytics .an-seg-lbl{flex-basis:100%;padding:7px 12px 5px}
+  #page-analytics .an-seg-btn{border-top:1px solid var(--border2)}
+  #page-analytics .an-seg-btn:first-of-type{border-left:0}
 }
 @media print{
   #page-analytics .an-tooltip,#page-analytics .an-toolbar,#page-analytics .an-chart-controls{display:none!important}
@@ -1196,7 +1210,7 @@ html.tl-pal-lock{overflow:hidden}
 .tl-pal-mark{background:none;color:var(--cyan);font-weight:600}
 .tl-pal-kindtag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;color:var(--white4);flex-shrink:0}
 .tl-pal-opt[aria-selected="true"] .tl-pal-kindtag{color:var(--white3)}
-.tl-pal-empty{padding:18px 14px 6px;font-size:0.88rem;color:var(--white2);line-height:1.7;font-weight:300}
+.tl-pal-empty{padding:18px 14px 6px;font-size:0.88rem;color:var(--white2);line-height:1.7;font-weight:300;overflow-wrap:anywhere}
 /* Footer hints */
 .tl-pal-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid var(--border2);background:var(--card2);font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:0.5px;color:var(--white3)}
 .tl-pal-foot kbd{display:inline-block;font-family:var(--fm);font-size:var(--fs-micro);color:var(--white2);background:var(--navy3);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin-right:4px;line-height:1.6}
@@ -1350,7 +1364,7 @@ html.tl-pal-lock{overflow:hidden}
   #page-updates .tl-upd-items li{flex-wrap:wrap;gap:4px 12px}
   #page-updates .tl-upd-tag{flex:0 0 auto;padding:2px 8px;margin-top:0}
   #page-updates .tl-upd-items li>a,#page-updates .tl-upd-items li>span:not(.tl-upd-tag){flex:1 1 100%}
-  .tl-upd-toast{left:16px;right:16px;transform:none;max-width:none;flex-wrap:wrap;animation:none}
+  .tl-upd-toast{left:16px;right:16px;transform:none;max-width:none;flex-wrap:wrap;justify-content:flex-end;animation:none}
   .tl-upd-toast-msg{flex:1 1 100%}
 }
 @media print{
@@ -1862,7 +1876,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
             <option value="beginner">Beginner — Simple overview</option>
             <option value="intermediate" selected>Intermediate — Key checkpoints</option>
             <option value="advanced">Advanced — Biomechanical detail</option>
-            <option value="coach">Coach Level — Full technical analysis</option>
+            <option value="coach">Coach — Full technical analysis</option>
           </select>
         </div>
         <button class="btn-sm" id="viz-gen-btn" onclick="generateVisualization()" style="padding:12px">Generate Analysis <span aria-hidden="true">✦</span></button>
@@ -2290,15 +2304,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" enterkeyhint="done" maxlength="200" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 24–28"></div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Notes</label><textarea class="form-textarea" id="log-notes" maxlength="1000" placeholder="Technique focus, energy levels, what went well…"></textarea></div>
     <button class="btn-sm" id="log-save-btn" onclick="saveLogEntry()">Save Session</button>
-    <p class="form-notice" id="log-notice" role="alert" hidden></p>
+    <p class="form-notice" id="log-notice" role="alert" data-field-msg hidden></p>
   </div>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
-    <h2 id="log-history-heading" style="font-family:var(--fh);font-weight:400;font-size:1.5rem;letter-spacing:1px">SESSION HISTORY</h2>
-    <button class="btn-ghost-sm" onclick="clearLog()">Clear All</button>
-  </div>
-  <div id="log-entries"></div>
-  <p id="log-status" class="sr-only" role="status" aria-live="polite"></p>
-  <div id="log-stats" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;display:none">
+  <div id="log-stats" style="margin-bottom:1.5rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;display:none">
     <h2 style="font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:1rem;color:var(--cyan)">30-DAY SUMMARY</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem">
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-sessions" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Sessions</div></div>
@@ -2307,6 +2315,12 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-avg-effort" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">—</div><div class="log-stat-lbl">Avg Effort</div></div>
     </div>
   </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
+    <h2 id="log-history-heading" style="font-family:var(--fh);font-weight:400;font-size:1.5rem;letter-spacing:1px">SESSION HISTORY</h2>
+    <button class="btn-ghost-sm" onclick="clearLog()">Clear All</button>
+  </div>
+  <div id="log-entries"></div>
+  <p id="log-status" class="sr-only" role="status" aria-live="polite"></p>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
 </div>
@@ -2667,6 +2681,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <!-- AI COACH PAGE -->
 <div class="page" id="page-ai">
 <div class="section-wrap narrow ai-title-wrap">
+  <div class="section-eyebrow">Coaching On Demand</div>
   <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
     <h1 class="section-title" style="font-size:2.2rem;margin-bottom:0.5rem">AI SWIM <span>COACH</span></h1>
     <span style="font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase">Streaming · Free account</span>
@@ -2956,7 +2971,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
           <input class="form-input" id="pl-pd-time" enterkeyhint="done" maxlength="10" placeholder="e.g. 52.30 or 1:52.30" autocomplete="off" aria-describedby="pl-pd-src pl-pd-err"></div>
         <div class="pl-hint" id="pl-pd-src" aria-live="polite"></div>
         <div class="form-group" style="margin:1rem 0"><label for="pl-pd-profile">Speed–endurance profile</label>
-          <select class="form-select" id="pl-pd-profile"><option value="typical">Typical (record-derived exponents)</option><option value="fitted" disabled>My fitted exponent (fit one below first)</option></select></div>
+          <select class="form-select" id="pl-pd-profile"><option value="typical">Typical (record-derived)</option><option value="fitted" disabled>Fitted (fit one below first)</option></select></div>
         <button type="button" class="calc-btn" id="pl-pd-run">Predict <span aria-hidden="true">→</span></button>
         <div class="pl-err" id="pl-pd-err" role="status"></div>
       </div>
@@ -3369,7 +3384,13 @@ function updateNavAuth() {
   var loggedIn = !!currentUser;
   if (loginBtn) loginBtn.style.display = loggedIn ? 'none' : 'inline-block';
   if (logoutBtn) logoutBtn.style.display = loggedIn ? 'inline-block' : 'none';
-  if (nameEl) nameEl.textContent = loggedIn ? (currentProfile ? currentProfile.username : (currentUser.email || 'Swimmer')) : '';
+  if (nameEl) {
+    const name = loggedIn ? (currentProfile ? currentProfile.username : (currentUser.email || 'Swimmer')) : '';
+    nameEl.textContent = name;
+    // The desktop nav ellipsises the name at 120px: the full value stays readable on hover and to assistive tech.
+    if (name) { nameEl.title = name; nameEl.setAttribute('aria-label', 'Signed in as ' + name); }
+    else { nameEl.removeAttribute('title'); nameEl.removeAttribute('aria-label'); }
+  }
 }
 var _authReturnFocus = null;
 var _authHideTimer = 0; // closeAuthGate's pending display:none — cancelled by a quick re-open
@@ -3910,9 +3931,18 @@ function setPageTitle(name){
   // Every tab/bookmark/history entry names the app; Home already carries it.
   document.title = !t ? 'Tidelyne' : (t.indexOf('Tidelyne') >= 0 ? t : t + ' — Tidelyne');
 }
+// A horizontal strip that scrolls (phone tab bars, the 3D lab's phase bar) is scrolled so the item
+// sits in view — centred, on the strip itself (never scrollIntoView, which would also move the page).
+// No-op while the strip fits, so desktop layouts are untouched.
+function tlRevealInStrip(strip,item){
+  if(!strip||!item||strip.scrollWidth<=strip.clientWidth+2) return;
+  const left=Math.max(0,item.offsetLeft-(strip.clientWidth-item.offsetWidth)/2);
+  try{ strip.scrollTo({left:left,behavior:tlReducedMotion()?'auto':'smooth'}); }catch(e){ strip.scrollLeft=left; }
+}
 function switchTab(btn,id){
   btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');b.setAttribute('tabindex','-1');});
   btn.classList.add('active'); btn.setAttribute('aria-selected','true'); btn.setAttribute('tabindex','0');
+  tlRevealInStrip(btn.parentElement,btn); // a tab chosen from the palette, a deep link or the arrow keys must not be left off-screen
   const panel=document.getElementById(id); if(!panel)return;
   panel.parentElement.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   panel.classList.add('active');
@@ -4004,10 +4034,24 @@ function enhanceA11y(){
     } else if(el.getAttribute('role')==='region'&&el.getAttribute('tabindex')==='0'){ el.removeAttribute('tabindex'); el.removeAttribute('role'); el.removeAttribute('aria-label'); }
   };
   const syncAllFades=()=>fadeStrips.forEach(syncFade);
-  fadeStrips.forEach(el=>{ el.addEventListener('scroll',()=>syncFade(el),{passive:true}); syncFade(el); });
+  const ro=(typeof ResizeObserver==='function')?new ResizeObserver(syncAllFades):null;
+  const registerFade=el=>{ if(el.__tlFade) return; el.__tlFade=1; fadeStrips.push(el); el.addEventListener('scroll',()=>syncFade(el),{passive:true}); if(ro) ro.observe(el); syncFade(el); };
+  fadeStrips.splice(0).forEach(registerFade);
   window.addEventListener('resize',syncAllFades);
   window.addEventListener('hashchange',()=>setTimeout(syncAllFades,80));
-  if(typeof ResizeObserver==='function'){ const ro=new ResizeObserver(syncAllFades); fadeStrips.forEach(el=>ro.observe(el)); }
+  // Result tables and strips written later by innerHTML (calculator splits/zones/conversion, the planner's
+  // predictor, exponent, split and elite tables) get the same fade and keyboard region: a MutationObserver on
+  // <main> registers any new .table-wrap/strip as it lands, and drops the ones that were replaced.
+  const FADE_SEL='.ai-mode-btns,.quick-prompts,.viz-phase-bar,.table-wrap';
+  if(typeof MutationObserver==='function'){
+    const root=document.getElementById('main')||document.body;
+    new MutationObserver(muts=>{
+      let added=false;
+      muts.forEach(m=>{ m.addedNodes.forEach(n=>{ if(n.nodeType!==1) return; if(n.matches(FADE_SEL)) { registerFade(n); added=true; } n.querySelectorAll(FADE_SEL).forEach(el=>{ registerFade(el); added=true; }); }); });
+      if(added) for(let i=fadeStrips.length-1;i>=0;i--){ if(!fadeStrips[i].isConnected){ if(ro) ro.unobserve(fadeStrips[i]); fadeStrips.splice(i,1); } }
+    }).observe(root,{childList:true,subtree:true});
+  }
+  window.tlSyncFade=el=>{ if(el) registerFade(el); else syncAllFades(); };
   // Tables: header cells get scope, and a table with no caption is named after
   // its tab or the nearest preceding heading so table navigation announces it.
   document.querySelectorAll('table').forEach(t=>{
@@ -4194,7 +4238,12 @@ function initViz3D() {
   scene.fog = new THREE.FogExp2(0x0a4a6e, 0.075);
   scene.background = new THREE.Color(0x0a4a6e);
   camera = new THREE.PerspectiveCamera(42, container.clientWidth/container.clientHeight, 0.1, 100);
-  camera.position.set(2.6, 0.25, 3.2); // BELOW the waterline — never across it
+  // Default framing: 3.2 m from the orbit target (0, 0.5, 0), in line with the presets (2-3.6 m). The old
+  // 4.1 m left the swimmer ~35% of a desktop canvas behind the near lane rope. On a near-square phone
+  // canvas the swimmer's stroke cycle already spans ~65% of the width, so the distance is scaled back up
+  // (×1.3 at aspect 1.04 ≈ the old 4.1 m) — any closer and the hands leave the frame mid-stroke.
+  camera.position.set(2.0, 0.2, 2.45); // BELOW the waterline — never across it
+  { const k = Math.max(1, Math.min(1.3, 1.35 / camera.aspect)); if (k > 1) { const t = new THREE.Vector3(0, 0.5, 0); camera.position.sub(t).multiplyScalar(k).add(t); } }
   // WebGL can be unavailable (old device, disabled GPU, headless browser).
   // Without this guard the throw would kill ALL page JavaScript.
   try {
@@ -5208,6 +5257,9 @@ function phaseIdxFromClock3D() {
 }
 function updatePhaseBar3D(idx) {
   document.querySelectorAll('.phase-step').forEach((el,i) => { el.classList.toggle('active', i===idx); el.setAttribute('aria-pressed', i===idx ? 'true' : 'false'); });
+  // Phones: the bar is a scrolling strip, so follow the animation — the highlighted step must stay in view.
+  const bar = document.getElementById('viz-phase-bar');
+  if (bar && bar.children[idx]) tlRevealInStrip(bar, bar.children[idx]);
 }
 // Info-panel sync — PERF-CONSCIOUS: the physics row is built ONCE; after
 // that only number spans update via textContent, throttled to 10Hz. Phase
@@ -5940,7 +5992,7 @@ function createStreamBubble(){
   // white-space:pre-wrap lets us stream with textContent (safe + cheap) and
   // still show line breaks — no per-token innerHTML/escape/<br> rebuild.
   // aria-live="off" + aria-busy while streaming: the log announces the reply once, when it is complete
-  div.innerHTML='<div class="msg-avatar ai-av">AI</div><div class="msg-bubble streaming" id="stream-bubble-active" aria-live="off" aria-busy="true" style="white-space:pre-wrap;word-break:break-word"></div>';
+  div.innerHTML='<div class="msg-avatar ai-av">AI</div><div class="msg-bubble streaming" id="stream-bubble-active" aria-live="off" aria-busy="true" style="white-space:pre-wrap"></div>';
   msgs.appendChild(div);
   msgs.scrollTop=msgs.scrollHeight;
   return document.getElementById('stream-bubble-active');
@@ -6145,9 +6197,9 @@ function formatWorkout(text){
   let html='', inSec=false;
   for(const line of lines){
     const t=escapeHTML(line.trim());
-    if(!t){if(inSec){html+='</div>';inSec=false;}continue;}
+    if(!t){if(inSec){html+='</div></div>';inSec=false;}continue;}
     if(/^(WARM-UP|PRE-MAIN|MAIN SET|COOL-DOWN|TOTAL|COACH NOTES)/i.test(t)){
-      if(inSec) html+='</div>';
+      if(inSec) html+='</div></div>'; // close the set list AND the phase: sections are siblings, never nested
       html+='<div class="workout-phase"><h2>'+t+'</h2><div>'; // h2: the page's only other heading is its h1
       inSec=true;
     } else if(inSec){
@@ -6478,8 +6530,14 @@ function tlNotice(id,msg,kind,field){
   el.hidden=!msg;
   const prev=_tlNoticeFields[id];
   if(prev){ prev.removeAttribute('aria-invalid'); if(prev.getAttribute('aria-describedby')===id) prev.removeAttribute('aria-describedby'); delete _tlNoticeFields[id]; }
+  const pm=document.getElementById(id+'-field'); if(pm) pm.remove();
   const f=field?(typeof field==='string'?document.getElementById(field):field):null;
-  if(f&&msg&&kind!=='ok'){ f.setAttribute('aria-invalid','true'); f.setAttribute('aria-describedby',id); _tlNoticeFields[id]=f; }
+  if(f&&msg&&kind!=='ok'){
+    f.setAttribute('aria-invalid','true'); f.setAttribute('aria-describedby',id); _tlNoticeFields[id]=f;
+    // A long form (notice marked data-field-msg) repeats the sentence right under the field, so the red
+    // border is explained where the eye is; aria-hidden because the field already reads the notice.
+    if(el.hasAttribute('data-field-msg')){ const m=document.createElement('p'); m.className='form-notice form-field-msg'; m.id=id+'-field'; m.setAttribute('aria-hidden','true'); m.textContent=msg; f.insertAdjacentElement('afterend',m); }
+  }
 }
 // One shared sr-only polite region for one-shot announcements ("Workout
 // ready.", "Analysis complete.", AI errors). Streamed text itself is written
@@ -6670,7 +6728,10 @@ function saveLogEntry(){
   tlNotice('log-notice','');   // also clears aria-invalid/aria-describedby from the previously flagged field
   // Inline validation: the HTML min/max attributes are advisory only. The offending field goes through
   // tlNotice so it gets aria-invalid + aria-describedby=log-notice and the message is read with the field.
-  const fail=(msg,id)=>{ tlNotice('log-notice',msg,null,id); const el=document.getElementById(id); if(el){ try{ el.focus({preventScroll:true}); }catch(e){} } };
+  const fail=(msg,id)=>{ tlNotice('log-notice',msg,null,id); const el=document.getElementById(id); if(!el) return;
+    try{ el.focus({preventScroll:true}); }catch(e){}
+    // The field and its inline message can be a screen above the Save button on a phone: bring them into view when off-screen.
+    const r=el.getBoundingClientRect(); if(r.top<80||r.bottom>window.innerHeight-60){ try{ el.scrollIntoView({block:'center',behavior:tlReducedMotion()?'auto':'smooth'}); }catch(e){} } };
   if(!parseLogDate(date)){ fail('Please select a date.','log-date'); return; }
   if(date>logTodayISO(1)){ fail('That date is in the future — log a session once it has happened (today or tomorrow at the latest).','log-date'); return; }
   const raw=id=>String(document.getElementById(id).value||'').trim();
@@ -6712,19 +6773,8 @@ function fmtLogDate(iso){
   if(isNaN(d.getTime())||d.getMonth()!==+m[2]-1||d.getDate()!==+m[3]) return String(iso); // e.g. 2026-02-30 stays as stored rather than rolling to Mar 2
   try{ return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'}); }catch(e){ return String(iso); }
 }
-function renderLog(){
-  if(typeof window.onLogChange==='function'){ try{ window.onLogChange(); }catch(e){ console.error(e); } }
-  const entries=sortLogEntries(readLog());
-  const container=document.getElementById('log-entries');
-  const statsEl=document.getElementById('log-stats');
-  if(!container)return;
-  if(!entries.length){
-    container.innerHTML='<p style="color:var(--white3);font-size:0.88rem;text-align:center;padding:2rem">No sessions logged yet.</p>';
-    if(statsEl) statsEl.style.display='none'; return;
-  }
-  // Every stored field is coerced or escaped: a crafted backup must render as text, never as markup.
-  // A real list with a heading per session: screen readers hear "list, N items" and can jump between sessions.
-  container.innerHTML='<ul class="log-list" aria-label="Logged sessions">'+entries.map(e=>{
+// Every stored field is coerced or escaped: a crafted backup must render as text, never as markup.
+function logEntryHTML(e){
     const dist=Number(e.dist)||0, dur=Number(e.dur)||0, effort=Number(e.effort)||0, id=Number(e.id)||0;
     const isoDate=/^\d{4}-\d{2}-\d{2}$/.test(String(e.date||'')), shownDate=fmtLogDate(e.date);
     return `
@@ -6737,7 +6787,44 @@ function renderLog(){
         ${e.notes?`<div class="log-notes">${escapeHTML(e.notes)}</div>`:''}
       </div>
       <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(shownDate)} ${escapeHTML(e.type)}" title="Delete session"><span aria-hidden="true">✕</span></button>
-    </li>`;}).join('')+'</ul>';
+    </li>`;
+}
+// The history is paged: a two-year daily log is 600 cards (≈100 k px on a phone), so the newest LOG_PAGE
+// render and a full-width "Show more" appends the next slice. _logShown is how many are on screen and
+// survives re-renders (a save or delete keeps the expanded view); an empty log resets it.
+const LOG_PAGE=50; let _logShown=LOG_PAGE;
+function logMoreHTML(total,shown){
+  const left=total-shown; if(left<=0) return '';
+  return '<button type="button" class="btn-ghost-sm" id="log-more" style="width:100%;margin-top:0.5rem" onclick="showMoreLog()" aria-describedby="log-shown-count">Show '+Math.min(LOG_PAGE,left)+' more</button><p id="log-shown-count" style="font-family:var(--fm);font-size:0.68rem;letter-spacing:1px;color:var(--white3);text-align:center;margin-top:0.6rem">Showing '+shown+' of '+total+' sessions</p>';
+}
+function showMoreLog(){
+  const entries=sortLogEntries(readLog()), list=document.querySelector('#log-entries .log-list'), container=document.getElementById('log-entries');
+  if(!list||!container) return;
+  const from=list.children.length, next=entries.slice(from,from+LOG_PAGE);
+  _logShown=from+next.length;
+  list.insertAdjacentHTML('beforeend',next.map(logEntryHTML).join(''));
+  container.querySelectorAll('#log-more,#log-shown-count').forEach(n=>n.remove());
+  container.insertAdjacentHTML('beforeend',logMoreHTML(entries.length,_logShown));
+  setLogStatus('Showing '+_logShown+' of '+entries.length+' sessions.');
+  // Focus follows the content: the first newly revealed session (its heading), else the button that was pressed is gone, so the heading of the list.
+  const first=list.children[from];
+  const t=first?first.querySelector('.log-title'):document.getElementById('log-history-heading');
+  if(t){ if(!t.hasAttribute('tabindex')) t.setAttribute('tabindex','-1'); try{ t.focus({preventScroll:true}); }catch(e){} }
+}
+function renderLog(){
+  if(typeof window.onLogChange==='function'){ try{ window.onLogChange(); }catch(e){ console.error(e); } }
+  const entries=sortLogEntries(readLog());
+  const container=document.getElementById('log-entries');
+  const statsEl=document.getElementById('log-stats');
+  if(!container)return;
+  if(!entries.length){
+    container.innerHTML='<p style="color:var(--white3);font-size:0.88rem;text-align:center;padding:2rem">No sessions logged yet.</p>';
+    _logShown=LOG_PAGE;
+    if(statsEl) statsEl.style.display='none'; return;
+  }
+  // A real list with a heading per session: screen readers hear "list, N items" and can jump between sessions.
+  const shown=Math.min(entries.length,Math.max(LOG_PAGE,_logShown));
+  container.innerHTML='<ul class="log-list" aria-label="Logged sessions">'+entries.slice(0,shown).map(logEntryHTML).join('')+'</ul>'+logMoreHTML(entries.length,shown);
   const now=new Date(), thirtyAgo=new Date(now-30*24*60*60*1000), todayISO=logTodayISO(0);
   // The form accepts tomorrow (a session logged the night before): a future date is not "last 30 days",
   // and Analytics leaves it out too — the two pages must agree on whether anything has been swum.
@@ -7055,7 +7142,7 @@ function tpRender(){
   if(b) b.setAttribute('aria-pressed',TP.mode==='cpm'?'true':'false');
   var ac=$('tlt-accent'); if(ac&&String(ac.value)!==String(TP.accent)) ac.value=String(TP.accent);
   // "breathe every 3" is only true with one beep per arm stroke; in cycles/min a beat is a whole cycle.
-  var o3=ac?ac.querySelector('option[value="3"]'):null; if(o3) o3.textContent=(TP.mode==='spm')?'3 beats — breathe every 3':'3 beats (3 cycles = 6 arm strokes in free and back)';
+  var o3=ac?ac.querySelector('option[value="3"]'):null; if(o3) o3.textContent=(TP.mode==='spm')?'3 beats — breathe every 3':'3 beats (6 arm strokes)'; // the strokes-per-cycle note is in #tlt-tempo-equiv; a phone select shows ≈255px
   var ci=$('tlt-countin'); if(ci) ci.checked=!!TP.countIn;
 }
 function tpSet(bpm){
@@ -7235,6 +7322,8 @@ function itTick(){
 }
 function itLoopStart(){ if(!IT.raf) IT.raf=raf(itFrame); if(!IT.tick) IT.tick=setInterval(itTick,250); }
 function itLoopStop(){ if(IT.raf){ caf(IT.raf); IT.raf=0; } if(IT.tick){ clearInterval(IT.tick); IT.tick=0; } }
+// The big counter fits five characters ("15:00") at 34vw; the idle preview of a long circuit is h:mm:ss, so drop to the smaller size when the text is longer.
+function itSetCount(txt){ var el=$('tlt-int-count'); if(!el) return; if(el.textContent!==txt) el.textContent=txt; el.classList.toggle('long',txt.length>5); }
 function itSetPhase(phase,paused){ var d=$('tlt-int-display'); if(d){ d.setAttribute('data-phase',phase); d.setAttribute('data-paused',paused?'true':'false'); } }
 function itButtons(){
   var t=$('tlt-int-toggle'), sk=$('tlt-int-skip');
@@ -7251,7 +7340,7 @@ function itPreview(c){
   var line=c.rounds+' × '+c.work+' s work / '+c.rest+' s rest'+(c.sets>1?' · '+c.sets+' sets, '+c.setRest+' s between':'')+(c.lead?' · '+c.lead+' s lead-in':'')+' — '+fmtMS(work)+' of work, '+fmtMS(cc.total)+' total.';
   setText('tlt-int-summary',line);
   if(IT.status==='idle'){
-    setText('tlt-int-count',fmtMS(cc.total)); setText('tlt-int-round','—');
+    itSetCount(fmtMS(cc.total)); setText('tlt-int-round','—');
     setText('tlt-int-next','Press Start: '+line);
     setText('tlt-int-times','Elapsed 0:00 · Remaining '+fmtMS(cc.total)+' · Total '+fmtMS(cc.total));
     var sb=$('tlt-int-segbar'); if(sb) sb.style.width='0%'; var tb=$('tlt-int-totbar'); if(tb) tb.style.width='0%';
@@ -7270,7 +7359,7 @@ function itRender(el,idx){
   var seg=IT.sched[idx], segStart=IT.cum[idx], rem=segStart+seg.dur-el;
   itSetPhase(seg.phase,IT.status==='paused');
   setText('tlt-int-phase',PHASE_LABEL[seg.phase]+(IT.status==='paused'?' · PAUSED':''));
-  setText('tlt-int-count',fmtCount(rem));
+  itSetCount(fmtCount(rem));
   setText('tlt-int-round',itRoundText(seg));
   setText('tlt-int-next',itNextText(idx));
   var sb=$('tlt-int-segbar'); if(sb) sb.style.width=(100*Math.min(1,Math.max(0,(el-segStart)/seg.dur))).toFixed(1)+'%';
@@ -7328,7 +7417,7 @@ function itFinish(){
   IT.status='done'; itLoopStop(); wlDrop('interval');
   var dk='s'+IT.sched.length; if(!IT.scheduled[dk]&&AU.ctx){ IT.scheduled[dk]=1; TONES.done(AU.ctx.currentTime); }
   auIdleSoon(); itSetPhase('done',false);
-  setText('tlt-int-phase','DONE'); setText('tlt-int-count','0'); setText('tlt-int-round','');
+  setText('tlt-int-phase','DONE'); itSetCount('0'); setText('tlt-int-round','');
   var c=IT.cfg, work=c.work*c.rounds*c.sets;
   setText('tlt-int-next','Completed '+c.rounds+' round'+(c.rounds>1?'s':'')+(c.sets>1?' × '+c.sets+' sets':'')+' — '+fmtMS(work)+' of work in '+fmtMS(IT.total)+'.');
   var sb=$('tlt-int-segbar'); if(sb) sb.style.width='100%'; var tb=$('tlt-int-totbar'); if(tb) tb.style.width='100%';
@@ -7970,9 +8059,9 @@ function refreshProfileOption(){
   var stroke = (pl$('pl-pd-stroke') || {}).value;
   if (f && f.stroke === stroke) {
     opt.disabled = false;
-    opt.textContent = 'My fitted exponent (' + STROKE_ABBR[stroke] + ' ' + f.d1 + '/' + f.d2 + ', Δ ' + fmtExpDelta(f.delta) + ')';
+    opt.textContent = 'Fitted (' + STROKE_ABBR[stroke] + ' ' + f.d1 + '/' + f.d2 + ', Δ ' + fmtExpDelta(f.delta) + ')'; // short enough for a phone select (≈255px of text room)
   } else {
-    opt.disabled = true; opt.textContent = f ? 'My fitted exponent (fitted for ' + STROKE_NAMES[f.stroke] + ' — fit this stroke to use it)' : 'My fitted exponent (fit one below first)';
+    opt.disabled = true; opt.textContent = f ? 'Fitted (for ' + STROKE_NAMES[f.stroke] + ' — fit this stroke to use it)' : 'Fitted (fit one below first)';
     if (sel.value === 'fitted') sel.value = 'typical';
   }
 }
@@ -8066,7 +8155,7 @@ function runFit(){
   if (out) out.innerHTML = '<div class="pl-fit-result"><div class="pl-fit-b">' + bFit.toFixed(3) + '</div><div class="pl-fit-sub">Your exponent · typical ' + bTyp.toFixed(3) + ' · Δ ' + fmtExpDelta(delta) + '</div>' +
     '<div class="pl-fit-text"><span class="pl-tag ' + (prof.key === 'balanced' ? 'good' : 'mid') + '">' + prof.label + '</span> ' + esc(prof.text.charAt(0).toUpperCase() + prof.text.slice(1)) + '.' +
     (clamped ? ' The shift is capped at ±' + EXP_DELTA_MAX.toFixed(2) + ' when applied — a gap this large usually means one of the two swims is stale or from a different course.' : '') +
-    (saved ? ' Saved — choose "My fitted exponent" in the predictor to apply it.' : ' Could not save the profile (storage full or blocked); it will still apply for this visit.') + '</div></div>';
+    (saved ? ' Saved — choose "Fitted" as the speed–endurance profile in the predictor to apply it.' : ' Could not save the profile (storage full or blocked); it will still apply for this visit.') + '</div></div>';
   refreshProfileOption();
   var sel = pl$('pl-pd-profile'); if (sel && sel.options[1] && !sel.options[1].disabled) sel.value = 'fitted';
 }
@@ -9154,10 +9243,14 @@ function renderTable(){
   var thead = table.querySelector('thead'), tbody = table.querySelector('tbody');
   if (!thead || !tbody) return;
   var unit = D.measure === 'dist' ? 'm/yd' : 'min';
-  thead.innerHTML = '<tr><th scope="col">Week of</th>' + D.series.map(function(s){ return '<th scope="col">' + anEsc(s.label) + ' (<span class="th-unit">' + unit + '</span>)</th>'; }).join('') +
+  // Only the series that occur in the 12-week window get a column: a single-type log used to print
+  // five columns of "—" and a 1,238px table for one column of data. Total / 4-wk avg / Sessions stay.
+  var keep = D.series.map(function(s, j){ return D.stacks.some(function(row){ return row[j] > 0; }); });
+  var series = D.series.filter(function(s, j){ return keep[j]; });
+  thead.innerHTML = '<tr><th scope="col">Week of</th>' + series.map(function(s){ return '<th scope="col">' + anEsc(s.label) + ' (<span class="th-unit">' + unit + '</span>)</th>'; }).join('') +
     '<th scope="col">Total (<span class="th-unit">' + unit + '</span>)</th><th scope="col">4-wk avg</th><th scope="col">Sessions</th></tr>';
   tbody.innerHTML = data.map(function(c, i){
-    var cells = D.stacks[i].map(function(v){ return '<td>' + (v > 0 ? fmtInt(v) : '—') + '</td>'; }).join('');
+    var cells = D.stacks[i].filter(function(v, j){ return keep[j]; }).map(function(v){ return '<td>' + (v > 0 ? fmtInt(v) : '—') + '</td>'; }).join('');
     return '<tr' + (c.current ? ' class="now"' : '') + '><th scope="row">' + anFmtDate(c.week.start, { day:'numeric', month:'short', year:'numeric' }) + (c.current ? ' (in progress)' : '') + '</th>' +
       cells + '<td>' + fmtInt(D.totals[i]) + '</td><td>' + (D.rolls[i] != null ? fmtInt(D.rolls[i]) : '—') + '</td><td>' + c.week.sessions + '</td></tr>';
   }).join('');
@@ -10318,7 +10411,8 @@ window.tl_an_debug = {
     var scored = search(index, raw, recent);
     if (!scored.length){
       var fallback = $('page-ai') ? [{ label: 'No matches', items: [{ item: askItem(raw) }] }] : [];
-      renderGroups(fallback, 'Nothing matches "' + raw + '". Try a stroke, a set, a page name, or a drill.');
+      var shown = raw.length > 40 ? raw.slice(0, 39) + '…' : raw; // the echo is a reminder, not a transcript: a long token is cut, not scrolled
+      renderGroups(fallback, 'Nothing matches "' + shown + '". Try a stroke, a set, a page name, or a drill.');
       return;
     }
     renderGroups(groupResults(scored, labelFor), '');
