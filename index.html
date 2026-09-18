@@ -458,7 +458,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .log-entry{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;margin-bottom:0.75rem;display:flex;gap:1rem;align-items:flex-start;transition:border-color 0.2s}.log-entry:hover{border-color:var(--border)}
 .log-del{background:none;border:0;color:var(--white4);cursor:pointer;font-size:1.1rem;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin:-8px -10px -8px 0;border-radius:var(--r8);transition:color 0.2s}.log-del:hover,.log-del:focus-visible{color:var(--red)}
 .log-date{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--cyan);text-transform:uppercase;min-width:70px;flex-shrink:0}
-.log-list{list-style:none;margin:0;padding:0}.log-content{flex:1;min-width:0}.log-title{font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:0.25rem;line-height:1.3}.log-meta{font-size:0.8rem;color:var(--white3);font-family:var(--fm)}.log-notes{font-size:0.83rem;color:var(--white2);margin-top:0.5rem;line-height:1.6}
+.log-list{list-style:none;margin:0;padding:0}.log-more{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0.25rem 0 0.75rem}.log-more-count{font-family:var(--fm);font-size:0.72rem;letter-spacing:0.5px;color:var(--white3);margin-right:auto}.log-content{flex:1;min-width:0;overflow-wrap:anywhere}.log-title{font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:0.25rem;line-height:1.3}.log-meta{font-size:0.8rem;color:var(--white3);font-family:var(--fm)}.log-notes{font-size:0.83rem;color:var(--white2);margin-top:0.5rem;line-height:1.6}
 .log-title,.log-meta,.log-notes,.log-date{overflow-wrap:anywhere} /* a URL or long token in a note must wrap inside the card, never push the ✕ off-screen */
 /* NUTRITION */
 .nutr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem}
@@ -2746,7 +2746,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button type="button" class="btn-ghost-sm" id="tlt-vol-test">Test beep</button>
     <span id="tlt-sound-status" role="status" aria-live="polite"></span>
   </div>
-  <p class="tlt-note">On iPhone, browser audio follows the ring/silent switch — if you hear nothing, switch to ring and raise the volume. The tempo trainer pauses itself if the screen is hidden (press Resume). The interval timer keeps counting in the background, but many browsers mute its beeps until you return, so keep the screen on for sound.</p>
+  <p class="tlt-note">On iPhone, browser audio follows the ring/silent switch — if you hear nothing, switch to ring and raise the volume. The tempo trainer pauses itself if the screen is hidden (press Resume). The interval timer keeps counting while the screen or tab is hidden, but many browsers mute its beeps until you return, so keep the screen on for sound. Opening another Tidelyne page pauses both — the split taker keeps timing.</p>
 
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'tlt-tab-tempo');tlt_onTab('tempo')">Tempo Trainer</button>
@@ -3497,6 +3497,8 @@ function showAuthError(screenPrefix, message, field) {
   var targets = field === null ? [] : (typeof field === 'string' ? [document.getElementById(field)].filter(Boolean)
     : Array.prototype.slice.call(document.querySelectorAll('#screen-' + screenPrefix + ' input:not([type="checkbox"])')));
   targets.forEach(function(i){ i.setAttribute('aria-invalid', 'true'); i.setAttribute('aria-describedby', el.id); });
+  // One named field: put focus on it so keyboard and screen-reader users land on what needs fixing.
+  if (typeof field === 'string' && targets[0]) { try { targets[0].focus({ preventScroll: true }); } catch (e) { try { targets[0].focus(); } catch (e2) {} } }
 }
 // True for a plain Enter only — not an IME candidate confirm (isComposing), not Shift/Alt/Ctrl/Cmd+Enter.
 function tlPlainEnter(e) {
@@ -3822,13 +3824,15 @@ function activatePage(name,opts){
     }
   }
   if(!document.getElementById('page-'+name)){ // guard unknown/empty
-    // An in-page anchor (the skip link's #main) must move focus, not bounce
-    // a keyboard user to Home: focus it and put the current view's hash back.
+    // An in-page anchor (the skip link's #main, or an id inside the view that is showing) must move
+    // focus, not bounce a keyboard user to Home: focus it and put the current view's hash back.
+    // Any other id (the parked drawer, the palette, a hidden page or field) is an unknown hash below —
+    // focusing hidden UI lands nowhere useful and would rewrite the address bar for nothing.
     const anchor=name?document.getElementById(name):null, cur=document.querySelector('.page.active');
-    if(anchor&&cur&&cur.id.indexOf('page-')===0){
+    if(anchor&&cur&&cur.id.indexOf('page-')===0&&(name==='main'||anchor.closest('.page.active')===cur)){
       try{ history.replaceState(null,'',location.pathname+location.search+'#'+cur.id.slice(5)); }catch(e){}
       if(!anchor.hasAttribute('tabindex')) anchor.setAttribute('tabindex','-1');
-      try{ anchor.focus({preventScroll:true}); }catch(e){ anchor.focus(); }
+      try{ anchor.focus({preventScroll:name==='main'}); }catch(e){ anchor.focus(); }
       return;
     }
     // Unknown hash: show Home and clean the address bar so bookmarks and Back reflect the view —
@@ -6341,6 +6345,8 @@ function formatVizOutput(text){
 function parseTime(str){
   if(!str) return null;
   str=String(str).trim();
+  // Most non-US keyboards put "," on the decimal key: a trailing ",dd" is the decimal separator ("52,30", "1:52,30").
+  str=str.replace(/,(\d{1,3})$/,'.$1');
   // Phone number keypads have no ":" — accept the two-dot form "1.52.30" as "1:52.30".
   // (A single dot, "1.52", is still a typo below: no swim time is 1.52 s.)
   str=str.replace(/^(\d{1,2})\.(\d{2})\.(\d{1,3})$/,'$1:$2.$3');
@@ -6365,7 +6371,7 @@ function formatTime(secs){
   const h=Math.floor(cs/360000), m=Math.floor((cs%360000)/6000);
   const s=((cs%6000)/100).toFixed(2).padStart(5,'0');
   if(h>0) return h+':'+String(m).padStart(2,'0')+':'+s; // 1:00:00.00, not 60:00.00
-  return m>0?m+':'+s:s+'s';
+  return m>0?m+':'+s:(cs<1000?s.replace(/^0/,''):s)+'s'; // seconds are padded only after a colon: 9.01s, not 09.01s
 }
 // A failed run never leaves the previous result on screen under the error:
 // the result block goes back to its placeholder (or loses .show) before the
@@ -6387,7 +6393,7 @@ function calcGolf(){
   if(split<GOLF_LIMITS.split[0]||split>GOLF_LIMITS.split[1]){calcFail('golf-notice','50 m split should be between '+GOLF_LIMITS.split[0]+' and '+GOLF_LIMITS.split[1]+' seconds.','golf-split','golf-result');return;}
   if(strokes<GOLF_LIMITS.strokes[0]||strokes>GOLF_LIMITS.strokes[1]){calcFail('golf-notice','Stroke count should be between '+GOLF_LIMITS.strokes[0]+' and '+GOLF_LIMITS.strokes[1]+' per 50 m.','golf-strokes','golf-result');return;}
   tlNotice('golf-notice','');
-  const score=Math.round(split+strokes); // rated on the integer shown, so the result never sits in a different band from the guide table
+  const score=Math.round(split+strokes); // rated on the whole number the swimmer sees (31.6+28 shows "60" and must read as the 60–66 band), so the result never sits in a different band from the guide table
   document.getElementById('golf-score').textContent=String(score);
   const r=document.getElementById('golf-rating');
   const rating=score<60?['🌟','World-class efficiency. Elite national/international level.']
@@ -6574,13 +6580,21 @@ function savePR(key,value,el,normalize){
     delete prErrTimers[key];
     const out=normalize?prFmt(t):v;
     if(normalize&&el&&el.value!==out) el.value=out;
-    lsSet(key,out);
+    // A full quota or a blocked store must not look like a save: flag the field and say so.
+    if(!lsSet(key,out)){ prHint('Could not save this PR — your device storage may be full or blocked.'); if(el) el.setAttribute('aria-invalid','true'); }
   };
   if(normalize) commit(); else prErrTimers[key]=setTimeout(commit,800);
 }
 function saveName(){
   const n=String(document.getElementById('profile-name').value||'').trim().slice(0,30); // Import trims and caps the same way
-  if(n) lsSet('swimmer_name',n); else lsRemove('swimmer_name'); // spaces alone are no name — show "Swimmer", store nothing
+  let ok=true;
+  if(n) ok=lsSet('swimmer_name',n); else lsRemove('swimmer_name'); // spaces alone are no name — show "Swimmer", store nothing
+  const nt=document.getElementById('profile-notice');
+  if(!ok){ // the header keeps the last name that was really stored, so nothing looks saved that is not
+    if(!nt||nt.hidden||!/Could not save your name/.test(nt.textContent)) tlNotice('profile-notice','Could not save your name — your device storage may be full or blocked.',null,'profile-name');
+    return;
+  }
+  if(nt&&!nt.hidden&&/Could not save your name/.test(nt.textContent)) tlNotice('profile-notice','');
   document.getElementById('profile-name-display').textContent=n||'Swimmer';
 }
 function clearAllPRs(){
@@ -6685,6 +6699,14 @@ function logTodayISO(offsetDays){
 function sortLogEntries(list){
   return list.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||(Number(b.id)||0)-(Number(a.id)||0));
 }
+// One rule for what a session's fields may hold, shared by Import and readLog: the numbers are whole and
+// within the form's limits, effort is 1–10 or unknown (0), the text fields are capped at the form's maxlength.
+function coerceLogFields(e){
+  const num=(v,max)=>{ const n=Math.round(Number(v)); return (isFinite(n)&&n>0)?Math.min(n,max):0; };
+  const eff=Math.round(Number(e.effort));
+  return { type:String(e.type||'').slice(0,40), dist:num(e.dist,LOG_MAX_DIST), dur:num(e.dur,LOG_MAX_DUR), zone:String(e.zone||'').slice(0,40),
+    effort:(eff>=1&&eff<=10)?eff:0, mainset:String(e.mainset||'').slice(0,200), notes:String(e.notes||'').slice(0,1000) };
+}
 function readLog(){
   try{
     const v=JSON.parse(localStorage.getItem('swimiq_log')||'[]');
@@ -6699,6 +6721,12 @@ function readLog(){
       // (a backup merged from two devices) would vanish together on one tap.
       if(!(isFinite(n)&&n>0)||seen.has(n)){ e.id=seq++; dirty=true; } else if(e.id!==n){ e.id=n; dirty=true; }
       seen.add(e.id);
+      // A hand-edited or stale entry (no type, "Effort 99/10", a billion minutes) is brought back within the
+      // form's rules once and stored that way, so the list, the summary and Analytics never show garbage.
+      // The date is kept as stored — an unreadable one is shown as text, never silently dropped.
+      const f=coerceLogFields(e), date=String(e.date==null?'':e.date).slice(0,10);
+      if(e.date!==date){ e.date=date; dirty=true; }
+      Object.keys(f).forEach(k=>{ if(e[k]!==f[k]){ e[k]=f[k]; dirty=true; } });
       return e;
     });
     if(dirty||out.length!==v.length) lsSet('swimiq_log',JSON.stringify(out));
@@ -6709,21 +6737,23 @@ function readLog(){
 // fields, cap the text fields and assign ids where missing.
 function sanitizeLogEntries(list){
   const out=[]; let seq=Date.now(), latest=logTodayISO(1); const seen=new Set();
-  const num=(v,max)=>{ const n=Math.round(Number(v)); return (isFinite(n)&&n>0)?Math.min(n,max):0; };
   (Array.isArray(list)?list:[]).forEach(e=>{
     if(!e||typeof e!=='object'||Array.isArray(e)) return;
     const date=String(e.date||'').slice(0,10);
     if(!parseLogDate(date)||date>latest) return; // a real calendar day, no later than tomorrow
-    let id=Number(e.id); const eff=Math.round(Number(e.effort));
+    let id=Number(e.id);
     if(!(isFinite(id)&&id>0)||seen.has(id)) id=seq++; // unique ids — a duplicate would be deleted with its twin
     seen.add(id);
-    out.push({ id, date, type:String(e.type||'').slice(0,40),
-      dist:num(e.dist,LOG_MAX_DIST), dur:num(e.dur,LOG_MAX_DUR), zone:String(e.zone||'').slice(0,40),
-      effort:(eff>=1&&eff<=10)?eff:0, mainset:String(e.mainset||'').slice(0,200), notes:String(e.notes||'').slice(0,1000) });
+    out.push(Object.assign({ id, date }, coerceLogFields(e)));
   });
   return out.slice(0,LOG_MAX);
 }
+// A double-tap, a bounced touch or a held Enter fires Save twice: the second call arrives with the fields
+// already cleared and would log a blank duplicate. Ignore a repeat within 600 ms, and refuse an all-blank
+// session that matches the one just saved (same date/type/zone) for a few seconds after that save.
+let _lastLogSaveAt=0;
 function saveLogEntry(){
+  if(Date.now()-_lastLogSaveAt<600) return;
   const date=document.getElementById('log-date').value;
   tlNotice('log-notice','');   // also clears aria-invalid/aria-describedby from the previously flagged field
   // Inline validation: the HTML min/max attributes are advisory only. The offending field goes through
@@ -6751,9 +6781,16 @@ function saveLogEntry(){
     mainset:document.getElementById('log-mainset').value,
     notes:document.getElementById('log-notes').value
   };
-  const entries=sortLogEntries([entry].concat(readLog())); // newest save first on an equal date (stable sort)
+  const prev=readLog();
+  const blank=!entry.dist&&!entry.dur&&!entry.effort&&!String(entry.mainset).trim()&&!String(entry.notes).trim();
+  if(blank&&_lastLogSaveAt&&Date.now()-_lastLogSaveAt<15000){
+    const last=prev.reduce((a,e)=>(!a||Number(e.id)>Number(a.id))?e:a,null);
+    if(last&&last.date===entry.date&&last.type===entry.type&&last.zone===entry.zone){ tlNotice('log-notice','Looks like this session was just saved.'); return; }
+  }
+  const entries=sortLogEntries([entry].concat(prev)); // newest save first on an equal date (stable sort)
   entries.splice(LOG_MAX);
   if(!lsSet('swimiq_log',JSON.stringify(entries))){ tlNotice('log-notice','Could not save the session — your device storage may be full or blocked.'); return; }
+  _lastLogSaveAt=Date.now();
   tlNotice('log-notice','Session saved — '+entries.length+' logged.','ok');
   ['log-distance','log-duration','log-effort','log-mainset','log-notes'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
@@ -6773,40 +6810,46 @@ function fmtLogDate(iso){
   if(isNaN(d.getTime())||d.getMonth()!==+m[2]-1||d.getDate()!==+m[3]) return String(iso); // e.g. 2026-02-30 stays as stored rather than rolling to Mar 2
   try{ return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'}); }catch(e){ return String(iso); }
 }
-// Every stored field is coerced or escaped: a crafted backup must render as text, never as markup.
+// Every stored field is coerced or escaped: a crafted backup must render as text, never as markup. A partial entry
+// (an older backup, a hand-edited one) shows "Session" / "Unknown date" rather than an empty heading or "undefined";
+// blank distance, duration, zone and effort are simply left off the meta line.
 function logEntryHTML(e){
-    const dist=Number(e.dist)||0, dur=Number(e.dur)||0, effort=Number(e.effort)||0, id=Number(e.id)||0;
-    const isoDate=/^\d{4}-\d{2}-\d{2}$/.test(String(e.date||'')), shownDate=fmtLogDate(e.date);
+    const f=coerceLogFields(e), id=Number(e.id)||0, type=f.type.trim()||'Session';
+    const isoDate=/^\d{4}-\d{2}-\d{2}$/.test(String(e.date||'')), shownDate=String(fmtLogDate(e.date)||'').trim()||'Unknown date';
+    const meta=[f.dist>0?f.dist.toLocaleString()+' m/yd':'', f.dur>0?f.dur+' min':'', f.zone.trim(), f.effort>0?'Effort '+f.effort+'/10':''].filter(Boolean);
     return `
     <li class="log-entry">
-      <div class="log-date">${isoDate?`<time datetime="${escapeHTML(e.date)}">${escapeHTML(shownDate)}</time>`:escapeHTML(e.date)}</div>
+      <div class="log-date">${isoDate?`<time datetime="${escapeHTML(e.date)}">${escapeHTML(shownDate)}</time>`:escapeHTML(shownDate)}</div>
       <div class="log-content">
-        <h3 class="log-title">${escapeHTML(e.type)}<span class="sr-only"> — ${escapeHTML(shownDate)}</span></h3>
-        <div class="log-meta">${[dist>0?dist.toLocaleString()+' m/yd':'',dur>0?dur+' min':'',escapeHTML(e.zone),effort>0?'Effort '+effort+'/10':''].filter(Boolean).join(' · ')}</div>
-        ${e.mainset?`<div class="log-notes" style="color:var(--cyan)">${escapeHTML(e.mainset)}</div>`:''}
-        ${e.notes?`<div class="log-notes">${escapeHTML(e.notes)}</div>`:''}
+        <h3 class="log-title">${escapeHTML(type)}<span class="sr-only"> — ${escapeHTML(shownDate)}</span></h3>
+        <div class="log-meta">${escapeHTML(meta.join(' · '))}</div>
+        ${f.mainset?`<div class="log-notes" style="color:var(--cyan)">${escapeHTML(f.mainset)}</div>`:''}
+        ${f.notes?`<div class="log-notes">${escapeHTML(f.notes)}</div>`:''}
       </div>
-      <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(shownDate)} ${escapeHTML(e.type)}" title="Delete session"><span aria-hidden="true">✕</span></button>
+      <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(shownDate)} ${escapeHTML(type)}" title="Delete session"><span aria-hidden="true">✕</span></button>
     </li>`;
 }
-// The history is paged: a two-year daily log is 600 cards (≈100 k px on a phone), so the newest LOG_PAGE
-// render and a full-width "Show more" appends the next slice. _logShown is how many are on screen and
-// survives re-renders (a save or delete keeps the expanded view); an empty log resets it.
+// The history is paged: a two-year daily log is 600 cards (≈100 k px on a phone) and the 2,000-session cap is
+// 22,000 nodes rebuilt on every save, delete and undo. The newest LOG_PAGE render; "Show more" appends the next
+// slice in place and "Show all" reveals the rest. _logShown is how many are on screen and survives re-renders
+// (a save or delete keeps the expanded view); an empty log resets it.
 const LOG_PAGE=50; let _logShown=LOG_PAGE;
 function logMoreHTML(total,shown){
   const left=total-shown; if(left<=0) return '';
-  return '<button type="button" class="btn-ghost-sm" id="log-more" style="width:100%;margin-top:0.5rem" onclick="showMoreLog()" aria-describedby="log-shown-count">Show '+Math.min(LOG_PAGE,left)+' more</button><p id="log-shown-count" style="font-family:var(--fm);font-size:0.68rem;letter-spacing:1px;color:var(--white3);text-align:center;margin-top:0.6rem">Showing '+shown+' of '+total+' sessions</p>';
+  return '<div class="log-more"><span class="log-more-count" id="log-shown-count">Showing '+shown.toLocaleString()+' of '+total.toLocaleString()+' sessions</span>'+
+    '<button type="button" class="btn-ghost-sm" data-log-more="'+LOG_PAGE+'" aria-describedby="log-shown-count">Show '+Math.min(LOG_PAGE,left)+' more</button>'+
+    (left>LOG_PAGE?'<button type="button" class="btn-ghost-sm" data-log-more="all" aria-describedby="log-shown-count">Show all '+total.toLocaleString()+'</button>':'')+'</div>';
 }
-function showMoreLog(){
+function showMoreLog(step){
   const entries=sortLogEntries(readLog()), list=document.querySelector('#log-entries .log-list'), container=document.getElementById('log-entries');
   if(!list||!container) return;
-  const from=list.children.length, next=entries.slice(from,from+LOG_PAGE);
+  const from=list.children.length, next=entries.slice(from,step==='all'?entries.length:from+LOG_PAGE);
   _logShown=from+next.length;
   list.insertAdjacentHTML('beforeend',next.map(logEntryHTML).join(''));
-  container.querySelectorAll('#log-more,#log-shown-count').forEach(n=>n.remove());
+  container.querySelectorAll('.log-more').forEach(n=>n.remove());
   container.insertAdjacentHTML('beforeend',logMoreHTML(entries.length,_logShown));
-  setLogStatus('Showing '+_logShown+' of '+entries.length+' sessions.');
-  // Focus follows the content: the first newly revealed session (its heading), else the button that was pressed is gone, so the heading of the list.
+  setLogStatus('Showing '+_logShown.toLocaleString()+' of '+entries.length.toLocaleString()+' sessions.');
+  // Focus follows the content: the first newly revealed session (its heading); if nothing was added, the list heading.
   const first=list.children[from];
   const t=first?first.querySelector('.log-title'):document.getElementById('log-history-heading');
   if(t){ if(!t.hasAttribute('tabindex')) t.setAttribute('tabindex','-1'); try{ t.focus({preventScroll:true}); }catch(e){} }
@@ -6908,10 +6951,22 @@ function setLogDateToday(){
   el.setAttribute('max',logTodayISO(1));
 }
 setLogDateToday();
-window.onShow_log=function(){ setLogDateToday(); };
+// Re-read storage whenever the page is shown: the installed app and a browser tab (or two tabs) share the
+// log, and a session saved in one must be there — and deletable — in the other without a reload.
+window.onShow_log=function(){ setLogDateToday(); renderLog(); };
 document.addEventListener('visibilitychange',function(){ if(!document.hidden) setLogDateToday(); });
-// Delete buttons are delegated (no inline onclick built from stored ids).
-(function(){ const c=document.getElementById('log-entries'); if(c) c.addEventListener('click',function(ev){ const b=ev.target&&ev.target.closest?ev.target.closest('[data-del-id]'):null; if(b) deleteLogEntry(Number(b.getAttribute('data-del-id'))); }); })();
+window.addEventListener('storage',function(e){
+  const k=e&&e.key;
+  if(k===null||k==='swimiq_log'){ try{ renderLog(); }catch(err){ console.error(err); } }
+  if(k===null||k==='swimmer_name'||(typeof k==='string'&&k.indexOf('pr_')===0)){ try{ initProfile(); }catch(err){ console.error(err); } }
+});
+// Delete and "Show more" buttons are delegated (no inline onclick built from stored ids).
+(function(){ const c=document.getElementById('log-entries'); if(!c) return; c.addEventListener('click',function(ev){
+  const t=ev.target&&ev.target.closest?ev.target:null; if(!t) return;
+  const b=t.closest('[data-del-id]'); if(b){ deleteLogEntry(Number(b.getAttribute('data-del-id'))); return; }
+  const m=t.closest('[data-log-more]'); if(!m) return;
+  showMoreLog(m.getAttribute('data-log-more'));
+}); })();
 try{ renderLog(); }catch(e){ console.error('renderLog failed',e); }
 // ─── ELITE RACE STROKE-RATE REFERENCE ────────────────────────────────────
 // ONE source for the Timers preset table and the Analytics elite-freestyle
@@ -7020,14 +7075,17 @@ function clockReading(pos){
   var w=Math.floor(r), d=Math.round((r-w)*10);
   return ':'+(w<10?'0':'')+w+(d?('.'+d):'');
 }
-// "1:30", "90", "1:07.5" → seconds (null if invalid). Uses the site's
-// parseTime first; plain integers ≥ 60 are accepted as seconds on top of it.
+// "1:30", "90", "1:07.5" → seconds (null if invalid). Uses the site's parseTime
+// (plain "90" is read as seconds there too). The local regex is only a stand-in
+// for a missing parseTime — it must not re-admit what parseTime refused by
+// design ("1.30" is a m:ss typo, "5" is no send-off).
 function parseMSS(str){
   if(str==null) return null; str=String(str).trim(); if(!str) return null;
-  if(typeof window.parseTime==='function'){ var v=window.parseTime(str); if(typeof v==='number'&&isFinite(v)&&v>0) return v; }
+  if(typeof window.parseTime==='function'){ var v=window.parseTime(str); return (typeof v==='number'&&isFinite(v)&&v>0)?v:null; }
+  str=str.replace(/,(\d{1,3})$/,'.$1');
   var m=str.match(/^(?:(\d{1,2}):)?(\d{1,4}(?:\.\d{1,2})?)$/); if(!m) return null;
   var mins=m[1]?parseInt(m[1],10):0, secs=parseFloat(m[2]); if(m[1]&&secs>=60) return null;
-  var t=mins*60+secs; return (isFinite(t)&&t>0&&t<3600)?t:null;
+  var t=mins*60+secs; return (isFinite(t)&&t>=10&&t<3600)?t:null;
 }
 function gcd(a,b){ a=Math.abs(Math.round(a)); b=Math.abs(Math.round(b)); while(b){ var t=a%b; a=b; b=t; } return a||1; }
 
@@ -7106,7 +7164,7 @@ window.tlt_onTab=function(name){
 
 /* ═══════════════════════ TEMPO TRAINER ═══════════════════════════════ */
 var TP_MIN=20, TP_MAX=200;
-var TP={status:'idle',mode:'spm',bpm:60,accent:0,countIn:true,beat:0,next:0,timer:0,raf:0,queue:[],taps:[],pulseT:0};
+var TP={status:'idle',mode:'spm',bpm:60,accent:0,countIn:true,beat:0,next:0,timer:0,raf:0,queue:[],taps:[],pulseT:0,countEnd:0}; // countEnd: audio time the 3-2-1 count-in ends (0 = none pending)
 function tpSave(){ storeSet('tl_tempo',{mode:TP.mode,bpm:TP.bpm,accent:TP.accent,countIn:TP.countIn,vol:Math.round(AU.vol*100)},'tlt-tempo-status'); }
 function tpLoad(){
   var o=storeGet('tl_tempo'); if(!o) return;
@@ -7149,8 +7207,9 @@ function tpSet(bpm){
   var was=TP.bpm; TP.bpm=Math.round(clamp(bpm,TP_MIN,TP_MAX)); tpRender(); tpSave();
   // The live status announced the tempo at Start; a nudge, the slider or the
   // arrow keys must not leave it saying 60 while 65 is beeping.
-  if(TP.status==='running'&&TP.bpm!==was) setStatus('tlt-tempo-status',tpRunningMsg());
+  if(TP.status==='running'&&TP.bpm!==was) setStatus('tlt-tempo-status',(tpCountingIn()?'3-2-1, then ':'')+tpRunningMsg());
 }
+function tpCountingIn(){ return TP.status==='running'&&TP.countEnd>0&&auNow()<TP.countEnd-0.005; }
 function tpRunningMsg(){ return TP.bpm+' '+(TP.mode==='spm'?'strokes':'cycles')+'/min'+(TP.accent?', accent every '+TP.accent:'')+'.'; }
 window.tlt_nudge=function(d){ tpSet(TP.bpm+Number(d||0)); };
 window.tlt_setMode=function(m){
@@ -7204,6 +7263,9 @@ function tpFrame(){
 function tpSchedule(){
   TP.timer=0; if(TP.status!=='running'||!AU.ctx) return;
   var now=AU.ctx.currentTime;
+  // The Start line said "3-2-1, then …": once the count-in has sounded, the status says what is beeping.
+  // (Here on the scheduler, not the frame loop, so it also happens with the screen off.)
+  if(TP.countEnd>0&&now>=TP.countEnd-0.005){ TP.countEnd=0; setStatus('tlt-tempo-status',tpRunningMsg()); }
   if(TP.next<now-0.05) TP.next=now+0.02;
   while(TP.next<now+0.15){
     var acc=TP.accent>0&&(TP.beat%TP.accent)===0;
@@ -7233,12 +7295,13 @@ function tpStart(){
   var t0=ctx.currentTime+0.1;
   if(TP.countIn){ for(var i=0;i<3;i++){ TONES.count(t0+i); TP.queue.push({t:t0+i,kind:'count',n:3-i}); } TP.next=t0+3; }
   else TP.next=t0;
+  TP.countEnd=TP.countIn?TP.next:0;
   tpSchedule(); tpLoopStart(); wlHold('tempo'); tpButtons();
   setStatus('tlt-tempo-status',(TP.countIn?'3-2-1, then ':'')+tpRunningMsg());
 }
 function tpPause(msg){
   if(TP.status!=='running') return;
-  TP.status='paused'; if(TP.timer){ clearTimeout(TP.timer); TP.timer=0; }
+  TP.status='paused'; if(TP.timer){ clearTimeout(TP.timer); TP.timer=0; } TP.countEnd=0;
   tpLoopStop(); TP.queue=[]; tpPulseReset(); wlDrop('tempo'); auIdleCheck(); tpButtons();
   setStatus('tlt-tempo-status',msg||'Paused.');
 }
@@ -7250,7 +7313,7 @@ function tpResume(){
 window.tlt_tempoToggle=function(){ if(TP.status==='running') tpPause(); else if(TP.status==='paused') tpResume(); else tpStart(); };
 window.tlt_tempoStop=function(){
   var was=TP.status; if(TP.timer){ clearTimeout(TP.timer); TP.timer=0; }
-  tpLoopStop(); TP.queue=[]; TP.beat=0; TP.status='idle'; tpPulseReset(); wlDrop('tempo'); auIdleCheck(); tpButtons();
+  tpLoopStop(); TP.queue=[]; TP.beat=0; TP.status='idle'; TP.countEnd=0; tpPulseReset(); wlDrop('tempo'); auIdleCheck(); tpButtons();
   if(was!=='idle') setStatus('tlt-tempo-status','Stopped.');
 };
 window.tlt_loadPreset=function(btn){
@@ -7402,11 +7465,11 @@ function itStart(){
   storeSet('tl_interval',c,'tlt-int-status'); wlHold('interval'); itLoopStart(); itButtons();
   setStatus('tlt-int-status',AU.ctx?'':'No sound on this browser — watch the colors.');
 }
-function itPause(){
+function itPause(msg){
   if(IT.status!=='running') return;
   IT.status='paused'; IT.pausedAt=nowMs(); itLoopStop(); wlDrop('interval'); auIdleCheck(); itButtons();
   var el=itElapsed(), idx=itSegAt(IT.cum,IT.total,el); if(idx<IT.sched.length) itRender(el,idx);
-  setStatus('tlt-int-status','Paused at '+fmtMS(Math.floor(el))+'.');
+  setStatus('tlt-int-status','Paused at '+fmtMS(Math.floor(el))+(msg?' — '+msg:'.'));
 }
 function itResume(){
   if(IT.status!=='paused') return;
@@ -7544,11 +7607,12 @@ function soFail(msg){
 window.tlt_sendoff=function(){
   var repsEl=$('tlt-so-reps'), intEl=$('tlt-so-int'), stEl=$('tlt-so-start'), paceEl=$('tlt-so-pace'), distEl=$('tlt-so-dist');
   var reps=Math.round(clamp(repsEl?repsEl.value:10,1,100)); if(repsEl) repsEl.value=String(reps);
-  var interval=parseMSS(intEl?intEl.value:''), startSec=Number(stEl?stEl.value:0)||0;
+  var intRaw=intEl?String(intEl.value).trim():'', interval=parseMSS(intRaw), startSec=Number(stEl?stEl.value:0)||0;
   var paceRaw=paceEl?String(paceEl.value).trim():'', pace=paceRaw?parseMSS(paceRaw):0;
   var dist=distEl?String(distEl.value).trim().slice(0,12):'';
-  if(!interval){ soFail('Enter the interval as m:ss, for example 1:30.'); return; }
-  if(paceRaw&&!pace){ soFail('Enter the pace as m:ss, for example 1:08, or leave it blank.'); return; }
+  var dotHint=function(raw){ return /^\d{1,2}[.,]\d{1,2}$/.test(raw)?' — did you mean '+raw.replace(/[.,]/,':')+'?':''; }; // "1.30" typed on a phone keypad
+  if(!interval){ soFail(dotHint(intRaw)?'Enter the interval as m:ss'+dotHint(intRaw):'Enter the interval as m:ss, for example 1:30.'); return; }
+  if(paceRaw&&!pace){ soFail(dotHint(paceRaw)?'Enter the pace as m:ss'+dotHint(paceRaw):'Enter the pace as m:ss, for example 1:08, or leave it blank.'); return; }
   var rows=soCompute(reps,interval,startSec,pace||0), body=$('tlt-so-body'), wrap=$('tlt-so-wrap');
   if(!rows.length){ soFail('Nothing to list — check reps and interval.'); return; }
   if(body){
@@ -7631,7 +7695,13 @@ function spStart(){
   SP.status='running'; SP.t0=nowMs(); SP.splits=[]; wlHold('split'); spMainBtn(true);
   setText('tlt-sp-sub','Running — tap for each split'); setStatus('tlt-sp-status',''); spRender(); spLoopStart();
 }
-function spSplit(){ SP.splits.push((nowMs()-SP.t0)/1000); spRender(); }
+// A bounced or double-registered tap (wet fingers) must not record a 0.00 s lap that becomes "fastest":
+// no lap is under 0.3 s, so a split that soon after the last one is the same tap.
+function spSplit(){
+  var el=(nowMs()-SP.t0)/1000, last=SP.splits.length?SP.splits[SP.splits.length-1]:0;
+  if(el-last<0.3) return;
+  SP.splits.push(el); spRender();
+}
 window.tlt_spMain=function(){ if(SP.status==='running') spSplit(); else spStart(); };
 window.tlt_spStop=function(){
   if(SP.status!=='running') return;
@@ -7678,7 +7748,7 @@ function onKey(e){
 /* ─── page lifecycle ──────────────────────────────────────────────────── */
 function stopAll(){
   if(TP.status==='running') tpPause('Paused — you left the Timers page. Press Resume to continue.');
-  if(IT.status==='running') itPause();
+  if(IT.status==='running') itPause('you left the Timers page. Press Resume to continue.');
   // The split taker reads the clock (nowMs()-SP.t0), so it keeps timing while the swimmer is on another
   // page: only its frame loop and wake lock stop here, and onShow_timers picks it back up. Stopping it
   // (as before) froze the time and ended the set with no warning.
@@ -8137,17 +8207,19 @@ function runFit(){
   var stroke = (pl$('pl-pd-stroke') || {}).value || 'fr';
   var a = (pl$('pl-fit-a') || {}).value, b = (pl$('pl-fit-b') || {}).value, out = pl$('pl-fit-out');
   var ta = parseT((pl$('pl-fit-ta') || {}).value), tb = parseT((pl$('pl-fit-tb') || {}).value);
-  if (!a || !b || a === b) { setErr('pl-fit-err', 'Pick two different events in the same stroke.'); return; }
-  if (!ta || !tb) { setErr('pl-fit-err', 'Enter both times as ss.ss or m:ss.ss.'); return; }
+  // An error must not leave the previous exponent card (and its "Saved" line) under the message.
+  var fail = function(msg){ setErr('pl-fit-err', msg); if (out) out.innerHTML = ''; };
+  if (!a || !b || a === b) { fail('Pick two different events in the same stroke.'); return; }
+  if (!ta || !tb) { fail('Enter both times as ss.ss or m:ss.ss.'); return; }
   var d1 = evDist(a), d2 = evDist(b);
-  var sane = sanityPace(d1, ta) || sanityPace(d2, tb); if (sane) { setErr('pl-fit-err', sane); return; }
-  if ((d1 < d2 && ta >= tb) || (d1 > d2 && tb >= ta)) { setErr('pl-fit-err', 'The longer event must have the longer time.'); return; }
+  var sane = sanityPace(d1, ta) || sanityPace(d2, tb); if (sane) { fail(sane); return; }
+  if ((d1 < d2 && ta >= tb) || (d1 > d2 && tb >= ta)) { fail('The longer event must have the longer time.'); return; }
   var bFit = fitExponent(d1, ta, d2, tb), bTyp = typicalExponent(stroke, d1, d2);
-  if (bFit === null || bTyp === null) { setErr('pl-fit-err', 'Could not fit those two events.'); return; }
+  if (bFit === null || bTyp === null) { fail('Could not fit those two events.'); return; }
   // b < 1 means a faster average pace over the longer distance; b > 1.4 is
   // beyond any plausible record ratio. Neither is a real profile — reject it.
-  if (bFit < 1.0) { setErr('pl-fit-err', 'Your longer swim is faster per 100 than your shorter one — check the times or the course.'); return; }
-  if (bFit > 1.4) { setErr('pl-fit-err', 'That pair implies more drop-off than any plausible profile — check the times or the course.'); return; }
+  if (bFit < 1.0) { fail('Your longer swim is faster per 100 than your shorter one — check the times or the course.'); return; }
+  if (bFit > 1.4) { fail('That pair implies more drop-off than any plausible profile — check the times or the course.'); return; }
   setErr('pl-fit-err', '');
   var delta = bFit - bTyp, prof = profileOf(delta);
   var clamped = Math.abs(delta) > EXP_DELTA_MAX;
@@ -8332,13 +8404,18 @@ function useGoalOrPR(){
 }
 function runSplits(){
   var out = pl$('pl-sp-out'), cmp = pl$('pl-sp-compare'), copy = pl$('pl-sp-copy'); if (!out) return;
+  // Raw strings first: +'' is 0, which would quietly plan four identical 50s with no dive bonus (and remember the zeros).
+  var fadeRaw = String((pl$('pl-sp-fade') || {}).value || '').trim(), bonusRaw = String((pl$('pl-sp-bonus') || {}).value || '').trim();
   var o = { course:(pl$('pl-sp-course') || {}).value, stroke:(pl$('pl-sp-stroke') || {}).value, dist:+((pl$('pl-sp-dist') || {}).value),
-    goal:parseT((pl$('pl-sp-goal') || {}).value), strategy:(pl$('pl-sp-strategy') || {}).value, fade:+((pl$('pl-sp-fade') || {}).value), bonus:+((pl$('pl-sp-bonus') || {}).value) };
+    goal:parseT((pl$('pl-sp-goal') || {}).value), strategy:(pl$('pl-sp-strategy') || {}).value, fade:fadeRaw === '' ? NaN : +fadeRaw, bonus:bonusRaw === '' ? NaN : +bonusRaw };
   // An error must not leave the previous plan (table, comparison, Copy button) on screen.
   var fail = function(msg){ setErr('pl-sp-err', msg); out.innerHTML = 'Choose an event, enter a goal time, and generate.'; if (copy) copy.hidden = true; if (cmp) cmp.innerHTML = ''; plSetText('pl-sp-status', ''); lastSplit = null; };
   if (!o.goal) { fail('Enter a valid goal time — ss.ss or m:ss.ss.'); return; }
   var sane = sanityPace(o.dist, o.goal); if (sane) { fail(sane); return; }
+  if (bonusRaw === '') { fail('Enter the start bonus in seconds (0 to 3) — the ' + (o.course in START_BONUS ? o.course : 'LCM') + ' default is ' + START_BONUS[o.course in START_BONUS ? o.course : 'LCM'].toFixed(1) + ' s.'); return; }
   if (!(o.bonus >= 0 && o.bonus <= 3)) { fail('Start bonus must be between 0 and 3 seconds.'); return; }
+  if (fadeRaw === '' && (o.strategy === 'neg' || o.strategy === 'pos')) { fail('Enter the second-half difference as a percentage (−15 to 15) — 0 means even halves.'); return; }
+  if (fadeRaw === '') o.fade = 0; // the field is disabled and unused for the other strategies
   if (!(o.fade >= -15 && o.fade <= 15)) { fail('Second half vs first must be between −15% and +15%.'); return; }
   var r = buildSplits(o);
   if (r.error) { fail(r.error); return; }
@@ -9939,7 +10016,16 @@ window.tl_an_debug = {
   // Quick actions. Each is included only when its destination exists on the
   // page (other bundles may or may not be integrated) or its function is defined.
   var QUICK_ACTIONS = [
-    { text: 'Start tempo trainer', page: 'timers', keys: ['tempo', 'metronome', 'stroke rate', 'timer', 'beep'] },
+    { text: 'Start tempo trainer', page: 'timers', keys: ['tempo', 'metronome', 'stroke rate', 'timer', 'beep'],
+      // A verb, so it does what it says: open the Tempo tab and start the trainer (the Enter/click that
+      // chose the row is the user gesture Web Audio needs); already running → just land on its button.
+      after: function(){
+        var tb = document.querySelector('#page-timers .tab-btn[onclick*="tlt-tab-tempo"]');
+        if (tb && !tb.classList.contains('active')) tb.click();
+        var st = $('tlt-tempo-start');
+        if (st && !st.classList.contains('pause') && typeof window.tlt_tempoToggle === 'function') window.tlt_tempoToggle();
+        focusField('tlt-tempo-start');
+      } },
     { text: 'Log a session', page: 'log', keys: ['training log', 'record', 'add entry', 'new session'],
       after: function(){ focusField('log-date'); } },
     { text: 'Export backup', fnName: 'exportBackup', keys: ['download', 'json', 'save my data', 'prs', 'backup'] },
@@ -10399,8 +10485,10 @@ window.tl_an_debug = {
     var index = ensureIndex(), recent = readRecent(), labelFor = pageLabel;
     if (!raw){
       var rec = recent.map(findByKey).filter(function(it){ return it && available(it); }).map(function(it){ return { item: it, pos: null, snip: null }; });
-      var acts = index.filter(function(it){ return it.kind === 'action' && available(it); }).map(function(it){ return { item: it }; });
-      var pgs = index.filter(function(it){ return it.kind === 'page'; }).map(function(it){ return { item: it }; });
+      // A row already listed under Recent is not repeated below it (↓ would walk the same action twice).
+      var seen = {}; rec.forEach(function(r){ seen[r.item.key] = 1; });
+      var acts = index.filter(function(it){ return it.kind === 'action' && !seen[it.key] && available(it); }).map(function(it){ return { item: it }; });
+      var pgs = index.filter(function(it){ return it.kind === 'page' && !seen[it.key]; }).map(function(it){ return { item: it }; });
       renderGroups([
         { label: 'Recent', items: rec },
         { label: 'Actions', items: acts },
