@@ -68,6 +68,18 @@ footer{max-width:760px;margin:3rem auto 0;padding-top:1.5rem;border-top:1px soli
 /* The footer links and the back link are the only navigation on these pages: 40px tap targets without changing the visual rhythm */
 footer p{margin-bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:0 6px}
 footer a{display:inline-block;padding:10px 4px;margin:-6px 0}
+/* Print: black ink on white paper — with background graphics off (the browser default) the dark-theme colours are 1.1–1.8:1 on white, so the one thing people do with a legal page (print or save it as a PDF) came out unreadable */
+@media print{
+  html{color-scheme:light}
+  body{background:#fff!important;color:#000!important;padding:0;line-height:1.6}
+  h1,h2,th,td:first-child,strong,.box strong{color:#000!important}
+  .updated{color:#333!important}
+  a{color:#000;text-decoration:underline}
+  nav,footer{display:none}
+  .box{background:#fff!important;border-color:#bbb;border-left-color:#000;break-inside:avoid}
+  th,td,tr{border-color:#bbb}
+  h2{break-after:avoid}
+}
 </style>
 </head>
 <body>

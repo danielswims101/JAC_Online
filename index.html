@@ -259,10 +259,11 @@ html{scroll-behavior:smooth;scroll-padding-top:72px} /* programmatic scrolls and
 #tlt-tempo-card,#viz-output,.tab-panel{scroll-margin-top:72px}
 body{background:var(--navy);color:var(--white);font-family:var(--fb);min-height:100vh;overflow-x:hidden;line-height:1.6;padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)} /* viewport-fit=cover: the installed app runs edge-to-edge, so in-flow content clears the notch (landscape) and the home indicator; fixed chrome below pads itself */
 ::selection{background:rgba(0,212,255,0.25)}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--navy2)}::-webkit-scrollbar-thumb{background:var(--cyan2);border-radius:3px}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--navy2)}::-webkit-scrollbar-thumb{background:var(--cyan2);border-radius:3px} /* height too: a horizontal bar under a scrolling table otherwise keeps the 18px UA thickness with the full-width cyan thumb and reads as a progress meter */
+@supports not selector(::-webkit-scrollbar){html{scrollbar-width:thin;scrollbar-color:var(--cyan2) var(--navy2)}} /* Firefox: the standard properties (inherited); Chromium/WebKit keep the pseudo-element rule above, which these properties would otherwise override */
 a{color:var(--cyan);text-decoration:none}
 /* Inline prose links carry an underline, not colour alone (WCAG 1.4.1). Zero-specificity :where() so nav, footer and button-styled links keep their own rules. */
-:where(main p,main li,main td,main dd,.info-box,.warn-box,.pl-hint,.pl-fine,.tlt-note,.an-hint) a:not(:where(.btn-sm,.btn-ghost-sm,.card-link,.an-link-btn,.tl-linkbtn)){text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+:where(main p,main li,main td,main dd,.info-box,.warn-box,.pl-hint,.pl-fine,.tlt-note,.an-hint,.pl-phase-detail,.pl-countdown-empty,.msg-bubble) a:not(:where(.btn-sm,.btn-ghost-sm,.card-link,.an-link-btn,.tl-linkbtn)){text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
 main footer a{text-decoration:none}
 button{cursor:pointer;font-family:var(--fb)}
 input,textarea,select{font-family:var(--fb)}
@@ -366,6 +367,8 @@ h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-w
 .success-box{background:var(--green-dim);border:1px solid rgba(0,229,153,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.success-box strong{color:var(--green)}
 /* TABLES */
 .table-wrap{position:relative;overflow-x:auto;border-radius:var(--r12);border:1px solid var(--border2);margin:1.25rem 0}
+.data-table .tl-nowrap{white-space:nowrap;font-variant-numeric:tabular-nums} /* time cells in the calculator tables never break '1:23.70–' / '1:33.00' across lines */
+.tl-zones th,.tl-zones td{padding:9px 8px}.tl-zone-name{display:block;white-space:nowrap}.tl-zone-note{display:block;color:var(--white3);font-size:0.76rem;font-weight:400;line-height:1.5;margin-top:2px}
 div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollable wrapper: the ring sits inside the box so the right-edge fade mask cannot clip it */
 .data-table th .th-unit, .form-group label .th-unit, .metric-card .lbl .th-unit{text-transform:none} /* unit symbols are case-sensitive: m, s, m:ss.ss */
 .data-table th .th-unit i{font-style:normal} /* a variable name in the monospace header: no DM Mono italic face is requested, so the oblique would be synthesised */
@@ -463,6 +466,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .msg-bubble strong{color:var(--white);font-weight:600}.msg-bubble .msg-h{display:block;margin:0.7em 0 0.25em;letter-spacing:0.2px}.msg-bubble .msg-h:first-child{margin-top:0}
 .msg-bubble code{font-family:var(--fm);font-size:0.86em;background:rgba(255,255,255,0.07);border-radius:4px;padding:1px 5px}
 .msg-bubble hr{border:0;border-top:1px solid var(--border2);margin:0.7em 0}
+.msg-bubble .table-wrap{margin:0.6em 0}.msg-bubble .table-wrap:last-child{margin-bottom:0}.msg-bubble .data-table td,.msg-bubble .data-table th{padding:5px 8px;font-size:0.8rem;white-space:nowrap}.msg-bubble .data-table th{letter-spacing:1px}
 /* streaming cursor */
 .msg-bubble.streaming::after{content:'▋';color:var(--cyan);animation:blink 0.8s step-end infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -506,6 +510,7 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 /* CALCULATOR */
 .calc-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 @media(max-width:700px){.calc-wrapper{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:899px){#c-pace .calc-wrapper{grid-template-columns:minmax(0,1fr)}} /* the zone table needs ~340px: two 296px panels at 768 would scroll it sideways */
 .calc-panel{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.75rem;min-width:0}.calc-panel h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem}
 .calc-result{background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:1.25rem;margin-top:1.25rem;text-align:center;display:none}.calc-result.show{display:block}
 .calc-result .big{font-family:var(--fh);font-size:3rem;color:var(--cyan);letter-spacing:2px;line-height:1}.calc-result .sub{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px}
@@ -546,7 +551,7 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 .content-block{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;margin-bottom:1.25rem}.content-block h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1rem;color:var(--white)}.content-block p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.85rem}.content-block p:last-child{margin-bottom:0}
 /* Reading measure: a tab whose only content is one block set 14px prose 1118px wide (~180 characters a line) on the 1240px pages; the card keeps its width so tabs do not jump, the text column does not (≈690px, the same measure as .section-intro) */
 .content-block>p,.content-block>ul,#page-timers .tlt-card>p{max-width:690px}#page-planner .pl-fine,#page-timers .tlt-note{max-width:72ch}
-.content-block ul{list-style:none}.content-block ul li{font-size:0.85rem;color:var(--white2);padding:7px 0;border-bottom:1px solid var(--border2);display:flex;gap:10px;align-items:flex-start;line-height:1.6}.content-block ul li:before{content:'→';color:var(--cyan);flex-shrink:0;font-size:0.75rem;margin-top:2px}.content-block ul li:last-child{border-bottom:none}
+.content-block ul{list-style:none}.content-block ul li{font-size:0.85rem;color:var(--white2);padding:7px 0 7px 22px;border-bottom:1px solid var(--border2);position:relative;line-height:1.6}.content-block ul li:before{content:'→';color:var(--cyan);font-size:0.75rem;position:absolute;left:0;top:9px}.content-block ul li:last-child{border-bottom:none} /* block, not flex: a leading <strong> label or a mid-sentence link must flow inline with the sentence, not become its own narrow column (22px = the old 12px arrow + 10px gap) */
 /* FOOTER */
 footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2rem}
 .footer-inner{max-width:1176px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2rem;margin-bottom:2rem}
@@ -566,6 +571,9 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .footer-bottom .footer-links>*::before{content:"";position:absolute;left:-7.5px;top:50%;width:3px;height:3px;margin-top:-1.5px;border-radius:50%;background:var(--white4)}
 /* "Install app" in the footer links (shown by the What's New module only while the browser holds an install prompt, or on iOS Safari outside the installed app) */
 .footer-bottom .footer-install{background:none;border:0;margin:0;padding:10px 4px;font:inherit;font-size:0.7rem;color:var(--white3);cursor:pointer;transition:color 0.2s}.footer-bottom .footer-install:hover{color:var(--cyan)}
+/* Sub-page disclaimer sentences ("Informational only — …") read as body text, not as the wordmark's 9.9px tracked uppercase micro-label (dryland's 36 words ran 1,176px wide at 1600 and six uppercase lines on a phone) */
+.footer-bottom .footer-note{font-family:var(--fb);font-size:0.75rem;line-height:1.6;letter-spacing:0.2px;text-transform:none;color:var(--white3);max-width:62ch;margin-right:auto}
+@media(max-width:768px){.footer-bottom .footer-note{flex:1 1 100%;max-width:none}}
 /* Sub-page footers carry one brand line and the legal links, so they do not need the home footer's 160px of padding */
 .page:not(#page-home) footer{padding:1.25rem 2rem}
 .page:not(#page-home) .footer-bottom{padding-top:0;border-top:0}
@@ -659,6 +667,9 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .qp{flex:0 0 auto;white-space:nowrap}
   #viz3d-container{height:min(520px,calc(100vh - 90px));height:min(520px,calc(100dvh - 90px))}
 }
+/* Display headings balance their lines (no one-word orphan line: 'UNDULATION — THE WAVE FROM CHEST TO / FEET', 'Account privacy and a safer AI / coach');
+   progressive enhancement — Chrome 114+, Safari 17.5+, Firefox 121+, ignored elsewhere; the hero's block-per-line spans are unaffected */
+h1,h2,h3,h4,.acc-btn,.tl-upd-rel-title,.pl-cp-title{text-wrap:balance}
 /* ACCESSIBILITY */
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.qp:focus-visible,[role="button"]:focus-visible,[role="link"]:focus-visible,[tabindex]:not(.page):focus-visible,#viz3d-container:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 /* Inside overflow:hidden/auto parents (accordion, canvas wrap, the .tabs and .ai-mode-btns scroll strips, the chat log) an outside ring is clipped — draw it inset */
@@ -1026,7 +1037,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-meet-date{font-family:var(--fm);font-size:0.72rem;color:var(--white2);margin-top:5px;letter-spacing:0.3px}
 #page-planner .pl-meet-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:0.75rem}
 #page-planner .pl-phase{margin-top:0.9rem;padding:0.85rem 1rem;background:rgba(4,13,24,0.45);border:1px solid var(--border2);border-radius:var(--r8)}
-#page-planner .pl-phase-name{font-family:var(--fm);font-size:0.66rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
+#page-planner .pl-phase-name{font-family:var(--fm);font-size:0.66rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;text-wrap:balance}
 #page-planner .pl-phase-detail{font-size:0.84rem;color:var(--white2);line-height:1.65;margin-top:4px}
 #page-planner .pl-phase-detail a{color:var(--cyan)}
 #page-planner .pl-second{margin-top:0.9rem;font-size:0.82rem;color:var(--white2);line-height:1.6;border-top:1px solid var(--border2);padding-top:0.75rem}
@@ -1044,6 +1055,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-timeline li.done .pl-cp-title,#page-planner .pl-timeline li.done .pl-cp-desc{opacity:0.6}
 #page-planner .pl-cp-when{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 #page-planner .pl-cp-when .pl-tag{font-size:var(--fs-micro);padding:2px 6px}
+@media(max-width:480px){#page-planner .pl-cp-when{display:block}#page-planner .pl-cp-when .pl-tag{display:block;width:max-content;margin-top:4px}} /* the status pill fitted beside some dates and wrapped under others (rows 22 / 46 / 22 px); on phones it always takes the second line */
 #page-planner .pl-cp-title{font-family:var(--fh);font-size:1.1rem;letter-spacing:1px;margin:3px 0 2px;line-height:1.15}
 #page-planner .pl-cp-desc{font-size:0.83rem;color:var(--white2);line-height:1.65}
 #page-planner .pl-cp-desc a{color:var(--cyan)}
@@ -1125,7 +1137,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-seg-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;padding:0 10px 0 12px;white-space:nowrap}
 #page-analytics .an-seg-btn{background:transparent;border:none;border-left:1px solid var(--border2);color:var(--white3);font-family:var(--fm);font-size:0.65rem;letter-spacing:0.8px;text-transform:uppercase;padding:9px 13px;cursor:pointer;transition:background 0.2s,color 0.2s;white-space:nowrap;min-height:36px}
 #page-analytics .an-seg-btn:hover{color:var(--white)}
-#page-analytics .an-seg-btn[aria-pressed="true"]{background:var(--cyan-dim);color:var(--cyan);font-weight:500;box-shadow:inset 0 0 0 2px var(--cyan)}
+#page-analytics .an-seg-btn[aria-pressed="true"]{background:rgba(0,212,255,0.18);color:var(--cyan);font-weight:500;box-shadow:none} /* a filled pill reads as "on"; the former 2px inset cyan ring looked like the keyboard focus ring and its square corners were clipped by the group's rounded ends */
+#page-analytics .an-seg-btn:focus-visible{outline-offset:-3px} /* the group is overflow:hidden, so the ring is drawn inset (as for the tabs) */
 #page-analytics .an-table-btn{margin-left:auto;min-height:38px} /* same height as the segmented pills beside it (36px buttons + border) */
 #page-analytics .an-chart-wrap{position:relative;width:100%;height:300px}
 #page-analytics .an-chart-canvas{display:block;width:100%;height:100%;touch-action:pan-y;border-radius:8px;cursor:crosshair}
@@ -1270,6 +1283,7 @@ iframe.yt-lite-player{display:block;width:100%;aspect-ratio:16/9;border:0;backgr
 html.tl-offline .yt-lite::after{content:"Offline — videos need a connection";position:absolute;left:50%;bottom:10px;transform:translateX(-50%);max-width:calc(100% - 20px);padding:5px 12px;border-radius:999px;background:rgba(4,13,24,.85);color:var(--white2);font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;pointer-events:none}
 html.tl-offline .ai-input-row::before{content:"You are offline — the coach needs a connection";flex:0 0 100%;color:var(--white3);font-family:var(--fm);font-size:0.66rem;letter-spacing:1px;text-transform:uppercase}
 html.tl-offline .ai-input-row{flex-wrap:wrap}
+html.tl-offline .ai-send{opacity:.45;cursor:not-allowed}html.tl-offline .ai-input{opacity:.7} /* the composer agrees with its offline note: Send reads as unavailable (aria-disabled, set by the online/offline sync); the text stays editable for when the connection returns */
 /* ── palette ── */
 /* ============================================================
    COMMAND PALETTE / GLOBAL SEARCH  (bundle: palette)
@@ -1368,7 +1382,7 @@ html.tl-pal-lock{overflow:hidden}
 #page-updates .tl-upd-app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.85rem}
 #page-updates .tl-upd-stat{background:var(--navy3);border:1px solid var(--border2);border-radius:var(--r8);padding:0.9rem 0.6rem;text-align:center}
 #page-updates .tl-upd-stat-val{display:block;font-family:var(--fh);font-size:clamp(1.4rem,3.2vw,1.9rem);letter-spacing:1px;color:var(--cyan);line-height:1;white-space:nowrap}
-#page-updates .tl-upd-stat-lbl{display:block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:6px}
+#page-updates .tl-upd-stat-lbl{display:block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:6px;white-space:nowrap} /* one line each ('Current version' wrapped in a 140px tile and made the 2×2 grid's rows 91 / 75 px) */
 #page-updates .tl-upd-offline-note{font-size:0.8rem;color:var(--white3);line-height:1.7;margin-top:0.9rem}
 #page-updates .tl-upd-offline-note:empty{display:none}
 #page-updates .tl-upd-offline-note strong{color:var(--white2);font-weight:500}
@@ -1490,7 +1504,7 @@ nav #nav-updates{position:relative}
 nav .nav-caret{display:inline-block;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);opacity:0.75;transition:transform 0.2s}
 nav .nav-group-btn[aria-expanded="true"] .nav-caret{transform:translateY(1px) rotate(225deg)}
 /* Dropdown panel */
-nav .nav-menu{list-style:none;margin:0;padding:6px;position:absolute;top:100%;left:0;min-width:240px;background:rgba(8,21,38,0.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:var(--r12);box-shadow:0 18px 40px rgba(0,0,0,0.45);display:none;z-index:6}
+nav .nav-menu{list-style:none;margin:0;padding:6px;position:absolute;top:100%;left:0;width:310px;min-width:0;background:rgba(8,21,38,0.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:var(--r12);box-shadow:0 18px 40px rgba(0,0,0,0.45);display:none;z-index:6} /* one width for all four menus (auto-width opened them at 256 / 308 / 242 / 263 px); 310 fits the widest Tools item */
 nav .nav-menu.flip{left:auto;right:0}
 nav .nav-group-btn[aria-expanded="true"]+.nav-menu{display:block;animation:tlNavMenuIn 0.16s ease}
 @keyframes tlNavMenuIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
@@ -1567,7 +1581,7 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-group-btn:hover,nav .nav-group-btn[aria-expanded="true"],nav .nav-group-btn.active{color:var(--cyan);border-bottom-color:transparent}
   nav .nav-group-btn .nav-caret{transform:translateY(-1px) rotate(45deg)}
   nav .nav-group-btn[aria-expanded="true"] .nav-caret{transform:translateY(2px) rotate(225deg)}
-  nav .nav-menu{position:static;display:none;grid-template-columns:1fr 1fr;gap:6px;min-width:0;padding:2px 0 6px;background:none;border:0;border-radius:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+  nav .nav-menu{position:static;display:none;grid-template-columns:1fr 1fr;gap:6px;width:auto;min-width:0;padding:2px 0 6px;background:none;border:0;border-radius:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
   nav .nav-menu>li:last-child:nth-child(odd){grid-column:1/-1}
   nav .nav-menu.flip{left:auto;right:auto}
   nav .nav-group-btn[aria-expanded="true"]+.nav-menu{display:grid;animation:none}
@@ -1606,6 +1620,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
    margin:auto on the card keeps it centred whenever it fits. */
 #access-gate{align-items:flex-start;justify-content:center;padding:2rem;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .auth-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1);padding:2.75rem 2.25rem}
+.auth-card .auth-why{font-size:0.85rem;color:var(--white3);line-height:1.6;margin:-0.75rem 0 1.25rem} /* why a gated action opened the dialog (openAuthGate(screen, why)) */
 .auth-card .form-group{margin-bottom:0.9rem;text-align:left}.auth-card .form-group.auth-fg-last{margin-bottom:1rem}
 .auth-btn{width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:500;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem}
 #screen-signup .auth-btn{margin-bottom:0.6rem} /* the legal line sits right under it */
@@ -1674,6 +1689,11 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   .gen-form,.gen-output,.imggen-wrap,.calc-panel,.tl-panel{padding:1.1rem 1rem}
   /* Action rows: buttons share the width two-up (was 2+1+1 at four different widths); the form's primary CTA spans the panel like .calc-btn */
   .tl-actions>button{flex:1 1 calc(50% - 5px)}
+  #log-fields{grid-template-columns:1fr 1fr;gap:0.85rem 10px} /* the six short log fields pair up (Date|Type, Distance|Duration, Zone|Effort): the form ran 674px from Date to Save one field per row */
+  @media(max-width:340px){
+    .tl-actions>button{flex-basis:100%} /* 320px: three of four half-width labels wrapped to two lines beside a one-line 'Clear all PRs' — one column instead */
+    .form-select{padding-left:10px;padding-right:26px;background-position:right 8px center} /* 212px of value room (was 200): the longest option labels above were trimmed to fit */
+  }
   #gen-btn,#log-save-btn{width:100%}
   /* Phone reading surfaces: 16px side padding instead of 28px, so body text and key-point tiles get a 301px column instead of 277px */
   .acc-body,.card,.card-lg,.content-block,#viz-info-panel,.nutr-card,.dl-card,.video-info{padding:1.1rem 1rem}
@@ -1713,6 +1733,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   .data-table.tl-stack td::before{content:attr(data-label);display:block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;color:var(--white3);line-height:1.4;margin-bottom:2px}
   .data-table.tl-stack td:first-child{font-size:0.95rem;line-height:1.4;padding-bottom:8px}
   .data-table.tl-stack td:first-child::before{display:none}
+  /* Pace-zone cards: the two pace cells share a line (name / 100 m + 50 m / notes) so five zones stay under one screen */
+  .data-table.tl-zones tr{display:grid;grid-template-columns:1fr 1fr;column-gap:12px}
+  .data-table.tl-zones td:first-child{grid-column:1/-1}
+  .data-table.tl-zones td:nth-child(n+2){padding-bottom:0}
   /* Where the browser supports alt text on generated content, the printed labels are decorative for assistive tech —
      the column header comes from the real <th> — so cells are not read as "Details Details …" (R6-A11Y-01) */
   @supports (content:"a" / "b"){
@@ -1722,6 +1746,34 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     #season-meet-table td:nth-child(4)::before{content:"Status: " / ""}
   }
 }
+/* Landscape phones (667–900 px wide, ≤500 px tall) sit above the phone breakpoint, so they got the desktop hero, palette,
+   sign-in card and pace clock — none of which fit a 375 px-tall screen. Placed after the base rules it overrides. */
+@media(max-height:500px) and (orientation:landscape){
+  /* Home hero: 112 px top padding + a 169 px headline left only the eyebrow on the first screen; now headline, copy and the first CTA fit one screen */
+  .hero{padding:2rem 1.5rem;min-height:auto}
+  .hero h1{font-size:clamp(2.2rem,8.5vh,3.2rem);margin-bottom:0.9rem}
+  .hero-eyebrow{margin-bottom:0.6rem}
+  .hero-desc{font-size:0.95rem;max-width:620px;margin-bottom:1.1rem;line-height:1.55}
+  .hero-btns{gap:8px;margin-bottom:1.75rem}
+  .btn-hero,.btn-hero-ghost{padding:12px 20px} /* the three CTAs stay on one row at 667 px (they measured 619 px in a 619 px container and wrapped 2+1) */
+  .hero-particles{display:none}
+  /* Command palette: the dialog takes the height (the keyboard-hint footer is hidden on touch below) */
+  .tl-pal{padding:2vh 1rem}
+  .tl-pal-dialog{max-height:96vh;max-height:96dvh}
+  /* Sign-in card: without the 48 px logo and the two-line 32 px heading the two fields and the button fit above the fold */
+  #access-gate{padding:1rem}
+  #access-gate .auth-card{padding:1.25rem 1.5rem}
+  #access-gate .auth-card>img{display:none!important}
+  #access-gate .auth-card h2{font-size:1.4rem!important;margin-bottom:0.9rem!important}
+  #access-gate .auth-card h2 br{display:none}
+  /* Pace clock: digits and face side by side, each sized to the viewport height, so the coach sees both at once */
+  #page-timers .tlt-pc-grid{grid-template-columns:1fr 1fr;gap:1rem}
+  #page-timers .tlt-pc-sec{font-size:clamp(3rem,22vh,6rem)}
+  #page-timers .tlt-pc-analog svg{width:min(300px,44vh)}
+  #page-timers .tlt-sp-time,#page-timers .tlt-big{font-size:clamp(3rem,22vh,6rem)}
+}
+/* Touch devices never see the palette's keyboard hints (arrow keys, ⌘K) — on a landscape phone the two-row footer left a 130 px result list */
+@media(hover:none) and (pointer:coarse){.tl-pal-foot{display:none}}
 /* Reduced motion — the one block for the whole stylesheet (the JS side is tlReducedMotion(): the WebGL stroke loop
    starts paused, view tweens and smooth scrolls are skipped). Kept last so nothing above can re-enable a transition. */
 @media (prefers-reduced-motion: reduce){
@@ -2044,10 +2096,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         </div>
         <div class="form-group"><label>Detail Level</label>
           <select class="form-select" id="viz-detail">
-            <option value="beginner">Beginner — Simple overview</option>
-            <option value="intermediate" selected>Intermediate — Key checkpoints</option>
-            <option value="advanced">Advanced — Biomechanical detail</option>
-            <option value="coach">Coach — Full technical analysis</option>
+            <option value="beginner">Beginner — Overview</option>
+            <option value="intermediate" selected>Intermediate — Key cues</option>
+            <option value="advanced">Advanced — Biomechanics</option>
+            <option value="coach">Coach — Full analysis</option>
           </select>
         </div>
         <button class="btn-sm btn-primary" id="viz-gen-btn" onclick="generateVisualization()">Generate Analysis <span aria-hidden="true">✦</span></button>
@@ -2266,7 +2318,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </tbody></table></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not coaching advice. Adapt every set to your own level and your coach's program.</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p class="footer-note">Informational only — not coaching advice. Adapt every set to your own level and your coach's program.</p></div></footer>
 </div>
 <!-- DRYLAND PAGE -->
 <div class="page" id="page-dryland">
@@ -2287,7 +2339,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <li><span class="reps">2 min</span>Ankle Plantarflexion Loading</li><li><span class="reps">2 min</span>Thoracic Rotation</li><li><span class="reps">3 min</span>Shoulder CARs</li><li><span class="reps">1 min</span>Hip 90/90 Switches</li></ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — lifts and loads should be taught and supervised by a qualified strength coach; growth-age swimmers learn technique before adding load. Skip any exercise you have not been coached on.</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p class="footer-note">Informational only — lifts and loads should be taught and supervised by a qualified strength coach; growth-age swimmers learn technique before adding load. Skip any exercise you have not been coached on.</p></div></footer>
 </div>
 <!-- WORKOUT GENERATOR PAGE -->
 <div class="page" id="page-workouts">
@@ -2303,7 +2355,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <div class="gen-row">
       <div class="form-group"><label>Athlete Level</label><select class="form-select" id="gen-level"><option value="age-group">Age Group / Club</option><option value="senior" selected>Senior / Competitive</option><option value="elite">Elite / National Level</option><option value="masters">Masters</option></select></div>
-      <div class="form-group"><label>Equipment</label><select class="form-select" id="gen-equip"><option value="all">All (Snorkel, Fins, Paddles, Band)</option><option value="basic">Basic (Fins + Paddles)</option><option value="fins">Fins Only</option><option value="none">No Equipment</option></select></div>
+      <div class="form-group"><label>Equipment</label><select class="form-select" id="gen-equip"><option value="all">Snorkel, Fins, Paddles, Band</option><option value="basic">Basic (Fins + Paddles)</option><option value="fins">Fins Only</option><option value="none">No Equipment</option></select></div>
       <div class="form-group"><label>Meso Phase</label><select class="form-select" id="gen-meso"><option value="meso1-early">Meso I — Weeks 1–2</option><option value="meso1-late">Meso I — Weeks 3–4</option><option value="meso2-early">Meso II — Weeks 5–6</option><option value="meso2-late">Meso II — Weeks 7–8</option><option value="taper">Taper / Pre-Meet</option></select></div>
     </div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Additional Notes (optional)</label>
@@ -2324,7 +2376,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not coaching advice. AI-generated sessions can be wrong; adapt every set to your own level and your coach's program.</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p class="footer-note">Informational only — not coaching advice. AI-generated sessions can be wrong; adapt every set to your own level and your coach's program.</p></div></footer>
 </div>
 <!-- CALCULATOR PAGE -->
 <div class="page" id="page-calculator">
@@ -2364,7 +2416,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="calc-panel"><h4>RACE SPLIT GENERATOR</h4>
         <div class="form-group" style="margin-bottom:1rem"><label>Race Distance</label><select class="form-select" id="split-dist"><option value="100">100 m</option><option value="200" selected>200 m</option><option value="400">400 m</option><option value="800">800 m</option><option value="1500">1500 m</option></select></div>
         <div class="form-group" style="margin-bottom:1rem"><label>Target Time <span class="th-unit">(m:ss.ss)</span></label><input class="form-input" id="split-time" enterkeyhint="done" placeholder="e.g. 1:55.00"></div>
-        <div class="form-group" style="margin-bottom:1rem"><label>Race Strategy</label><select class="form-select" id="split-strategy"><option value="elite" selected>Elite pattern (recommended)</option><option value="even">Even splits</option><option value="neg">Negative split</option><option value="pos">Positive split</option><option value="surge">Surge middle</option></select></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Race Strategy</label><select class="form-select" id="split-strategy"><option value="elite" selected>Elite pattern (advised)</option><option value="even">Even splits</option><option value="neg">Negative split</option><option value="pos">Positive split</option><option value="surge">Surge middle</option></select></div>
         <button class="calc-btn" onclick="calcSplits()">Generate Splits <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="split-notice" role="alert" hidden></p>
       </div>
@@ -2463,12 +2515,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <p class="section-intro">All log data is saved locally in your browser — it never leaves your device. Your most recent 2,000 sessions are kept; export a backup from My PRs to archive more.</p>
   <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:1.5rem">
     <h2 class="sub-title" style="margin-bottom:1.25rem">LOG A SESSION</h2>
-    <div class="gen-row">
+    <div class="gen-row" id="log-fields">
       <div class="form-group"><label>Date</label><input class="form-input" id="log-date" type="date"></div>
       <div class="form-group"><label>Session Type</label><select class="form-select" id="log-type"><option value="AM Pool">AM Pool</option><option value="PM Pool">PM Pool</option><option value="Dryland">Dryland</option><option value="Race">Race</option><option value="Time Trial">Time Trial</option></select></div>
       <div class="form-group"><label>Distance <span class="th-unit">(m or yd)</span></label><input class="form-input" id="log-distance" enterkeyhint="done" type="number" min="0" max="100000" step="1" placeholder="e.g. 4500 — use one unit"></div>
-    </div>
-    <div class="gen-row">
       <div class="form-group"><label>Duration <span class="th-unit">(min)</span></label><input class="form-input" id="log-duration" enterkeyhint="done" type="number" min="0" max="600" step="1" placeholder="e.g. 75"></div>
       <div class="form-group"><label>Primary Zone</label><select class="form-select" id="log-zone"><option value="Z1 Recovery">Z1 Recovery</option><option value="Z2 AeT" selected>Z2 AeT</option><option value="Z3 Threshold">Z3 Threshold</option><option value="Z4 VO₂ max">Z4 VO₂ max</option><option value="Z5 Sprint">Z5 Sprint</option><option value="Mixed">Mixed</option></select></div>
       <div class="form-group"><label>Effort (1–10)</label><input class="form-input" id="log-effort" enterkeyhint="done" type="number" min="1" max="10" placeholder="7"></div>
@@ -2537,7 +2587,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="content-block"><h4>DAILY HYDRATION</h4><ul><li>Baseline: 35–45 ml per kg bodyweight per day</li><li>Add 400–600 ml per hour of training</li><li>Urine target: pale yellow</li><li>Electrolytes recommended on 90+ min sessions</li></ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not medical or dietetic advice</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p class="footer-note">Informational only — not medical or dietetic advice</p></div></footer>
 </div>
 <!-- RACE PAGE -->
 <div class="page" id="page-race">
@@ -2636,7 +2686,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not medical advice</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p class="footer-note">Informational only — not medical advice</p></div></footer>
 </div>
 <!-- MENTAL PAGE -->
 <div class="page" id="page-mental">
@@ -2682,7 +2732,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not psychological or medical advice</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p class="footer-note">Informational only — not psychological or medical advice</p></div></footer>
 </div>
 <!-- INJURY PAGE -->
 <div class="page" id="page-injury">
@@ -2796,7 +2846,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </ul></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not medical advice. See a physician for symptoms.</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p class="footer-note">Informational only — not medical advice. See a physician for symptoms.</p></div></footer>
 </div>
 <!-- SEASON & CUTS PAGE — time-aware: knows today's date, current season, meet calendar -->
 <div class="page" id="page-season">
@@ -3111,7 +3161,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <p>On iPhone, browser audio follows the ring/silent switch — if you hear nothing, switch to ring and raise the volume. The tempo trainer pauses itself if the screen is hidden (press Resume). The interval timer keeps counting while the screen or tab is hidden, but many browsers mute its beeps until you return, so keep the screen on for sound. Opening another Tidelyne page pauses both — the split taker keeps timing.</p>
   </details>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not coaching or medical advice</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p class="footer-note">Informational only — not coaching or medical advice</p></div></footer>
 </div>
 <!-- RACE PLANNER PAGE — goal times, race predictor, split planner, meet countdown -->
 <div class="page" id="page-planner">
@@ -3194,7 +3244,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         </div>
         <div class="pl-actions" style="margin-top:0.6rem"><button type="button" class="btn-ghost-sm" id="pl-sp-usegoal">Use my goal or PR</button><span class="pl-hint" id="pl-sp-goalsrc" aria-live="polite"></span></div>
         <div class="form-group" style="margin-top:1rem"><label for="pl-sp-strategy">Strategy</label>
-          <select class="form-select" id="pl-sp-strategy"><option value="elite">Elite pattern for this event</option><option value="even">Even splits</option><option value="neg">Negative split</option><option value="pos">Positive split (controlled fade)</option></select></div>
+          <select class="form-select" id="pl-sp-strategy"><option value="elite">Elite pattern for this event</option><option value="even">Even splits</option><option value="neg">Negative split</option><option value="pos">Positive split (fade)</option></select></div>
         <div class="pl-two" style="margin-top:0.85rem">
           <div class="form-group"><label for="pl-sp-fade">Second half vs first <span class="th-unit">(%)</span></label><input class="form-input" id="pl-sp-fade" type="number" step="0.5" min="-15" max="15" value="0" aria-describedby="pl-sp-fade-help"></div>
           <div class="form-group"><label for="pl-sp-bonus">Start bonus <span class="th-unit">(s)</span></label><input class="form-input" id="pl-sp-bonus" type="number" step="0.1" min="0" max="3" value="1.4" aria-describedby="pl-sp-bonus-help"></div>
@@ -3241,7 +3291,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <p class="pl-fine">Taper windows follow the <a href="#taper">Taper page</a> (sprint 14–21 days, distance 7–14 days). Checkpoint content is drawn from the Taper, Nutrition, Race Strategy and Mental pages so the countdown never contradicts them. Informational only — not coaching or medical advice.</p>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not coaching or medical advice</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p class="footer-note">Informational only — not coaching or medical advice</p></div></footer>
 </div>
 <!-- ANALYTICS PAGE — computed on-device from the Training Log (readLog) -->
 <div class="page" id="page-analytics">
@@ -3473,7 +3523,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <div class="tl-upd-app" id="tl-upd-app">
     <div class="tl-upd-app-grid">
-      <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-ver">—</span><span class="tl-upd-stat-lbl">Current version</span></div>
+      <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-ver">—</span><span class="tl-upd-stat-lbl">Version</span></div>
       <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-date">—</span><span class="tl-upd-stat-lbl">Released</span></div>
       <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-offline">—</span><span class="tl-upd-stat-lbl">Works offline</span></div>
       <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-mode">—</span><span class="tl-upd-stat-lbl">Running as</span></div>
@@ -3584,18 +3634,20 @@ function authUnavailable() {
 }
 var AUTH_NOLIB_MSG = 'The sign-in service could not be loaded (your network may block cdn.jsdelivr.net). Everything except accounts and the AI features still works.';
 var _authNoLib = false; // the overlay is open without supabase-js: its buttons are disabled and every screen carries AUTH_NOLIB_MSG
-function openAuthGate(screen) {
+// why (optional): one sentence shown on the card under the heading when a gated action opened the dialog
+// ('The workout generator needs a free account.'), so the sign-in card is not a dead end with no visible reason.
+function openAuthGate(screen, why) {
   if (!sb) {
     loadSupabase(); initSupabaseAuth();
     if (!sb && sbScriptState === 'loading') { // library still downloading: open as soon as it lands
-      _sbScriptWaiters.push(function(){ openAuthGate(screen); });
+      _sbScriptWaiters.push(function(){ openAuthGate(screen, why); });
       return true;
     }
     if (!sb) markLoginUnavailable(); // blocked / offline: the nav button says so, and the overlay below opens anyway to explain (never a native alert)
   }
   _authNoLib = !sb; // blocked or failed: the overlay markup needs no library, so explain there (no native alert)
   var g = document.getElementById('access-gate');
-  if (!g) { document.addEventListener('DOMContentLoaded', function(){ openAuthGate(screen); }, { once: true }); return true; } // overlay markup not parsed yet
+  if (!g) { document.addEventListener('DOMContentLoaded', function(){ openAuthGate(screen, why); }, { once: true }); return true; } // overlay markup not parsed yet
   if (_authHideTimer) { clearTimeout(_authHideTimer); _authHideTimer = 0; }
   _authReturnFocus = document.activeElement; // restore focus here on close
   g.classList.remove('closing');
@@ -3605,6 +3657,7 @@ function openAuthGate(screen) {
   g.style.opacity = '1';
   setAuthInert(true); // aria-modal alone is not enforced everywhere: the page behind really is inert while the dialog shows
   showAuthScreen(_authNoLib ? 'login' : (screen || 'login'));
+  setAuthWhy(why);
   // Move focus into the dialog and trap Tab within it.
   setTimeout(function(){
     var visible = g.querySelector('[id^="screen-"]:not([style*="display:none"]):not([style*="display: none"])') || g;
@@ -3641,6 +3694,13 @@ function _authTrap(e){
   else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
 }
 document.addEventListener('keydown', _authTrap);
+// The reason line on the log-in and sign-up cards (both carry a .auth-why); the dialog is described by it while it shows
+function setAuthWhy(why) {
+  var text = why ? String(why) : '';
+  document.querySelectorAll('#access-gate .auth-why').forEach(function(p){ p.textContent = text; p.hidden = !text; });
+  var gate = document.getElementById('access-gate');
+  if (gate) { if (text) gate.setAttribute('aria-describedby', 'auth-why-login'); else gate.removeAttribute('aria-describedby'); }
+}
 function showAuthScreen(name) {
   ['screen-login','screen-signup','screen-forgot','screen-newpass'].forEach(function(id){
     var el = document.getElementById(id);
@@ -3941,6 +4001,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <img src="logo-mark.svg" alt="" width="48" height="48" style="border-radius:11px;margin:0 auto 1rem;display:block">
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne</div>
     <h2 id="auth-h-login" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;line-height:1;margin-bottom:1.5rem">LOG IN TO <br><span style="color:var(--cyan)">YOUR ACCOUNT</span></h2>
+    <p class="auth-why" id="auth-why-login" hidden></p>
     <div class="form-group"><label>Email</label>
       <input id="login-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doLogin()"></div>
     <div class="form-group auth-fg-last"><label>Password</label>
@@ -3957,6 +4018,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <img src="logo-mark.svg" alt="" width="48" height="48" style="border-radius:11px;margin:0 auto 1rem;display:block">
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne — Free Account</div>
     <h2 id="auth-h-signup" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;line-height:1;margin-bottom:1.5rem">CREATE YOUR <br><span style="color:var(--cyan)">ACCOUNT</span></h2>
+    <p class="auth-why" id="auth-why-signup" hidden></p>
     <div class="form-group"><label>Choose a Username</label>
       <input id="signup-username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
     <div class="form-group"><label>Email</label>
@@ -4402,6 +4464,21 @@ function enhanceA11y(){
   }); }
 }
 document.addEventListener('DOMContentLoaded', enhanceA11y);
+// Numeric ranges never break after their en dash ("VOLUME DOWN 40–" / "50%", "10–" / "20 cm"): browsers allow a line break
+// after U+2013, so a WORD JOINER (U+2060, invisible, zero-width) goes after every dash that sits between two digits.
+// tlJoinRanges is for strings about to be rendered; tlNoBreakRanges walks the text nodes of rendered prose (idempotent).
+function tlJoinRanges(s){ return String(s).replace(/(\d)–(\d)/g, '$1–\u2060$2'); }
+function tlNoBreakRanges(root){
+  if (!root || !document.createTreeWalker) return;
+  var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: function(n){
+    var p = n.parentNode, t = p && p.tagName;
+    if (!t || t === 'SCRIPT' || t === 'STYLE' || t === 'TEXTAREA' || t === 'OPTION' || p.isContentEditable) return NodeFilter.FILTER_REJECT;
+    return /\d–\d/.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+  } });
+  var nodes = [], n; while ((n = w.nextNode())) nodes.push(n);
+  nodes.forEach(function(x){ x.nodeValue = tlJoinRanges(x.nodeValue); });
+}
+document.addEventListener('DOMContentLoaded', function(){ tlNoBreakRanges(document.querySelector('main') || document.body); });
 // Links that open a new tab say so (screen-reader text + a small glyph unless
 // the label already ends in an arrow). Idempotent, so re-run after renders.
 function markNewTabLinks(root){
@@ -6065,6 +6142,7 @@ function setAIStreaming(on){
   tlSetBusy(btn,!!on);
   if(stop) stop.hidden=!on;
   if(!on) _aiChatGuard=null;
+  if(!on&&typeof window.tlSyncOffline==='function') window.tlSyncOffline(); // offline while the stream ran: Send goes back to its unavailable state
 }
 async function generateMotion(){
   const inp=document.getElementById('motion-prompt');
@@ -6075,7 +6153,7 @@ async function generateMotion(){
   if(!desc){ statusEl.textContent='Describe a movement first — e.g. "breaststroke pullout off the wall".'; return; }
   if(!currentUser){
     if(authUnavailable()){ statusEl.textContent=AUTH_DOWN_MSG; return; }
-    statusEl.textContent='AI 3D reconstruction needs a free account — log in or sign up to continue.'; openAuthGate('login'); return;
+    statusEl.textContent='AI 3D reconstruction needs a free account — log in or sign up to continue.'; openAuthGate('login', 'AI 3D reconstruction needs a free account.'); return;
   }
   ensureViz3DReady();
   tlSetBusy(btn,true);
@@ -6298,7 +6376,7 @@ async function sendToAI(){
     const gateMsg=down?'The AI coach needs a free account, and '+AUTH_DOWN_MSG.charAt(0).toLowerCase()+AUTH_DOWN_MSG.slice(1)
       :'The AI coach needs a free account — log in or sign up to continue.';
     if(lastAIBubbleText()!==gateMsg) addMsg(gateMsg,'ai');
-    if(!down) openAuthGate('login');
+    if(!down) openAuthGate('login', 'The AI coach needs a free account.');
     return;
   }
   const btn=document.getElementById('ai-send-btn');
@@ -6417,16 +6495,27 @@ function tlChatFormat(text){
   let html='', list=null, para=[];
   const closeList=()=>{ if(list){ html+='</'+list+'>'; list=null; } };
   const flushPara=()=>{ if(para.length){ html+='<p>'+para.join('<br>')+'</p>'; para=[]; } };
-  lines.forEach(raw=>{
-    const line=raw.trim(); let m;
-    if(!line){ flushPara(); closeList(); return; }
-    if(/^([-*_])\1{2,}$/.test(line)){ flushPara(); closeList(); html+='<hr>'; return; }
-    if((m=/^#{1,4}\s+(.+?)\s*#*$/.exec(line))){ flushPara(); closeList(); html+='<strong class="msg-h">'+inline(m[1])+'</strong>'; return; }
-    if((m=/^[-*•]\s+(.+)$/.exec(line))){ flushPara(); if(list!=='ul'){ closeList(); list='ul'; html+='<ul>'; } html+='<li>'+inline(m[1])+'</li>'; return; }
-    if((m=/^\d{1,3}[.)]\s+(.+)$/.exec(line))){ flushPara(); if(list!=='ol'){ closeList(); list='ol'; html+='<ol>'; } html+='<li>'+inline(m[1])+'</li>'; return; }
-    if(list){ html=html.slice(0,-5)+'<br>'+inline(line)+'</li>'; return; } // wrapped list item continues the item
+  // Pipe tables ("| Rep | Time |" over a "|---|---|" separator — the model's split plans and set tables) become a real table; every cell goes through inline() (escaped)
+  const cells=l=>l.replace(/^\|/,'').replace(/\|$/,'').split('|').map(c=>c.trim());
+  const isSep=l=>/^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?$/.test(l)&&l.indexOf('-')>=0;
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i].trim(); let m;
+    if(!line){ flushPara(); closeList(); continue; }
+    if(line.indexOf('|')>=0&&i+1<lines.length&&isSep(lines[i+1].trim())&&!/^([-*_])\1{2,}$/.test(line)){
+      flushPara(); closeList();
+      const head=cells(line), rows=[]; i++;
+      while(i+1<lines.length&&lines[i+1].indexOf('|')>=0&&lines[i+1].trim()){ i++; rows.push(cells(lines[i].trim())); }
+      html+='<div class="table-wrap"><table class="data-table"><thead><tr>'+head.map(c=>'<th scope="col">'+inline(c)+'</th>').join('')+'</tr></thead><tbody>'+
+        rows.map(r=>'<tr>'+head.map((_,ci)=>'<td>'+inline(r[ci]||'')+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+      continue;
+    }
+    if(/^([-*_])\1{2,}$/.test(line)){ flushPara(); closeList(); html+='<hr>'; continue; }
+    if((m=/^#{1,4}\s+(.+?)\s*#*$/.exec(line))){ flushPara(); closeList(); html+='<strong class="msg-h">'+inline(m[1])+'</strong>'; continue; }
+    if((m=/^[-*•]\s+(.+)$/.exec(line))){ flushPara(); if(list!=='ul'){ closeList(); list='ul'; html+='<ul>'; } html+='<li>'+inline(m[1])+'</li>'; continue; }
+    if((m=/^\d{1,3}[.)]\s+(.+)$/.exec(line))){ flushPara(); if(list!=='ol'){ closeList(); list='ol'; html+='<ol>'; } html+='<li>'+inline(m[1])+'</li>'; continue; }
+    if(list){ html=html.slice(0,-5)+'<br>'+inline(line)+'</li>'; continue; } // wrapped list item continues the item
     para.push(inline(line));
-  });
+  }
   flushPara(); closeList();
   return html;
 }
@@ -6497,7 +6586,7 @@ async function generateWorkout(){
     const gateMsg='The workout generator needs a free account — log in or sign up to continue.';
     if(out&&res){ out.classList.add('show'); res.innerHTML='<p style="color:var(--white3)">'+gateMsg+'</p>'; }
     tlAnnounce(gateMsg);
-    openAuthGate('login'); return;
+    openAuthGate('login', gateMsg.replace(/ — log in or sign up to continue\.$/, '.')); return;
   }
   tlNotice('gen-notice','');
   const genBtn=document.getElementById('gen-btn');
@@ -6662,7 +6751,7 @@ async function generateVisualization(){
     const res=document.getElementById('viz-result');
     if(res) res.innerHTML='<div class="imggen-placeholder"><span class="icon" aria-hidden="true">🔬</span><p style="font-size:0.88rem;line-height:1.75">'+gateMsg+'</p></div>';
     tlAnnounce(gateMsg);
-    openAuthGate('login'); return;
+    openAuthGate('login', gateMsg.replace(/ — log in or sign up to continue\.$/, '.')); return;
   }
   const vgBtn=document.getElementById('viz-gen-btn');
   if(tlIsBusy(vgBtn)) return;
@@ -6865,7 +6954,7 @@ function calcSplits(){
   tlNotice('split-notice','');
   let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">Race splits</caption><thead><tr><th scope="col">Distance</th><th scope="col">50 <span class="th-unit">m</span> Split</th><th scope="col">Cumulative</th></tr></thead><tbody>';
   let cum=0;
-  splits.forEach((s,i)=>{cum+=s; html+=`<tr><td>${(i+1)*50} m</td><td>${formatTime(s)}</td><td>${formatTime(cum)}</td></tr>`;});
+  splits.forEach((s,i)=>{cum+=s; html+=`<tr><td class="tl-nowrap">${(i+1)*50} m</td><td class="tl-nowrap">${formatTime(s)}</td><td class="tl-nowrap">${formatTime(cum)}</td></tr>`;});
   html+=`</tbody></table></div><div class="info-box" style="margin-top:1rem">Target: <strong>${formatTime(totalSecs)}</strong> &nbsp;·&nbsp; Avg 50 m: <strong>${formatTime(avg)}</strong> &nbsp;·&nbsp; First 50 includes the dive (−${bonus.toFixed(1)} s) &nbsp;·&nbsp; Long-course pattern — use the <a href="#planner" onclick="showPageTab('planner','pl-splits');return false;">Race Planner</a> for short course</div>`;
   document.getElementById('split-result').innerHTML=html;
 }
@@ -6875,17 +6964,20 @@ function calcPaceZones(){
   if(!t){calcFail('pace-notice',/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100 m time as m:ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100 m time (ss.ss or m:ss.ss).','pace-100','pace-result');return;}
   if(t<40||t>240){calcFail('pace-notice','A 100 m time between 40 s and 4:00 is expected — check the value (use m:ss for minutes).','pace-100','pace-result');return;}
   tlNotice('pace-notice','');
-  const zones=[
-    {name:'Zone 1 — Recovery',pct:[1.35,1.50],color:'#00e599',desc:'HR <24 · <2 mmol'},
-    {name:'Zone 2 — AeT',pct:[1.22,1.35],color:'#00d4ff',desc:'HR 24–28 · 2–3 mmol'},
-    {name:'Zone 3 — Threshold',pct:[1.12,1.22],color:'#f5a623',desc:'HR 28–31 · 3–5 mmol'},
-    {name:'Zone 4 — VO₂ max',pct:[1.04,1.12],color:'#ff7043',desc:'HR 31–33 · 5–8 mmol'},
-    {name:'Zone 5 — Sprint',pct:[0.90,1.04],color:'#ff5252',desc:'Speed & lactate work · rest-dependent'}
+  const zones=[ // the Z1–Z5 names are the log's own zone labels
+    {name:'Z1 Recovery',pct:[1.35,1.50],color:'#00e599',desc:'HR <24 · <2 mmol'},
+    {name:'Z2 AeT',pct:[1.22,1.35],color:'#00d4ff',desc:'HR 24–28 · 2–3 mmol'},
+    {name:'Z3 Threshold',pct:[1.12,1.22],color:'#f5a623',desc:'HR 28–31 · 3–5 mmol'},
+    {name:'Z4 VO₂ max',pct:[1.04,1.12],color:'#ff7043',desc:'HR 31–33 · 5–8 mmol'},
+    {name:'Z5 Sprint',pct:[0.90,1.04],color:'#ff5252',desc:'Speed & lactate work · rest-dependent'}
   ];
-  let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">Training pace zones</caption><thead><tr><th scope="col">Zone</th><th scope="col">Per 100 <span class="th-unit">m</span></th><th scope="col">Per 50 <span class="th-unit">m</span></th><th scope="col">Notes</th></tr></thead><tbody>';
+  // Three columns — the zone (its note beneath the name), per 100, per 50 — with the time ranges never breaking at their dash:
+  // four columns in the 376px result panel wrapped every cell ('1:23.70–' / '1:33.00'). On phones (tl-stack) each zone is a
+  // card with the two paces side by side; the roles keep table semantics when the cells go display:block.
+  let html='<div class="table-wrap"><table class="data-table tl-stack tl-zones" role="table"><caption class="sr-only">Training pace zones</caption><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Zone</th><th scope="col" role="columnheader">Per 100 <span class="th-unit">m</span></th><th scope="col" role="columnheader">Per 50 <span class="th-unit">m</span></th></tr></thead><tbody role="rowgroup">';
   zones.forEach(z=>{
     const fast=t*z.pct[0], slow=t*z.pct[1];
-    html+=`<tr><td style="color:${z.color}">${z.name}</td><td>${formatTime(fast)}–${formatTime(slow)}</td><td>${formatTime(fast/2)}–${formatTime(slow/2)}</td><td style="color:var(--white3);font-size:0.76rem">${z.desc}</td></tr>`;
+    html+=`<tr role="row"><td role="cell" data-label="Zone"><span class="tl-zone-name" style="color:${z.color}">${z.name}</span><span class="tl-zone-note">${z.desc}</span></td><td role="cell" data-label="Per 100 m" class="tl-nowrap">${formatTime(fast)}–${formatTime(slow)}</td><td role="cell" data-label="Per 50 m" class="tl-nowrap">${formatTime(fast/2)}–${formatTime(slow/2)}</td></tr>`;
   });
   html+='</tbody></table></div><div class="info-box" style="margin-top:1rem">Bands are scaled from your best 100 — a rough guide, since the drop-off from a best time varies by swimmer. For a measured threshold pace, run the Critical Swim Speed test in Analytics.</div>';
   document.getElementById('pace-result').innerHTML=html;
@@ -9269,7 +9361,7 @@ function fillMeetForm(){
 // midnight tick, and an unchanged card must not flicker or re-read. Returns a one-line summary
 // ("Winter Juniors: 83 days to go") for the Save/Clear status line; '' when no meet is set.
 var lastMeetHtml = { card:null, cps:null };
-function setMeetHtml(el, key, html){ if (el && lastMeetHtml[key] !== html) { el.innerHTML = html; lastMeetHtml[key] = html; } }
+function setMeetHtml(el, key, html){ if (el && lastMeetHtml[key] !== html) { el.innerHTML = html; lastMeetHtml[key] = html; if (typeof tlNoBreakRanges === 'function') tlNoBreakRanges(el); } } // the phase name ('volume down 40–50%') and checkpoint text keep their ranges on one line
 function renderMeet(){
   var card = pl$('pl-mt-card'), cps = pl$('pl-mt-checkpoints'); if (!card) return '';
   var m = readMeet();
@@ -9867,6 +9959,12 @@ function drawChart(){
   var empty = maxV <= 0;
   var scale = niceScale(empty ? 1 : maxV, 5);
   var white = cssVar('--white', '#eef3f8'), white3 = cssVar('--white3', '#8ba5bd'), white4 = cssVar('--white4', '#7b95ad');
+  // Print palette (beforeprint sets state.printing, afterprint clears it): the dark-theme ink — --white3 axis text, the
+  // #eef3f8 rolling-average line, dots and current-week outline — was 1.1–2.6:1 on paper; the bar fills keep their colours
+  var printing = !!state.printing;
+  if (printing) { white = '#000'; white3 = '#333'; white4 = '#555'; }
+  var gridInk = printing ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.06)', hoverInk = printing ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.045)',
+      lineInk = printing ? 'rgba(0,0,0,0.85)' : 'rgba(238,243,248,0.85)', curInk = printing ? 'rgba(0,0,0,0.7)' : 'rgba(238,243,248,0.7)';
   var font = '10.5px "DM Mono", ui-monospace, Menlo, monospace';
   ctx.font = font;
 
@@ -9883,7 +9981,7 @@ function drawChart(){
   ctx.textBaseline = 'middle'; ctx.textAlign = 'right';
   ticks.forEach(function(t){
     var y = Math.round(yOf(t.v)) + 0.5;
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = gridInk; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(plotX, y); ctx.lineTo(plotX + plotW, y); ctx.stroke();
     ctx.fillStyle = white3; ctx.fillText(t.label, plotX - 6, y);
   });
@@ -9893,7 +9991,7 @@ function drawChart(){
 
   // active column highlight
   if (state.active >= 0 && state.active < n) {
-    ctx.fillStyle = 'rgba(255,255,255,0.045)';
+    ctx.fillStyle = hoverInk;
     ctx.fillRect(plotX + slot * state.active, plotY, slot, plotH);
   }
 
@@ -9911,7 +10009,7 @@ function drawChart(){
     }
     ctx.globalAlpha = 1;
     if (cur && cum > 0) {
-      ctx.setLineDash([3, 3]); ctx.strokeStyle = 'rgba(238,243,248,0.7)'; ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]); ctx.strokeStyle = curInk; ctx.lineWidth = 1;
       ctx.strokeRect(x + 0.5, Math.round(yOf(cum)) + 0.5, barW - 1, Math.round(yOf(0)) - Math.round(yOf(cum)) - 1);
       ctx.setLineDash([]);
     }
@@ -9925,7 +10023,7 @@ function drawChart(){
   var pts = [];
   D.rolls.forEach(function(r, idx){ if (r != null) pts.push({ x:plotX + slot * (idx + 0.5), y:yOf(r), idx:idx }); });
   if (pts.length >= 1 && !empty) {
-    ctx.strokeStyle = 'rgba(238,243,248,0.85)'; ctx.lineWidth = 1.5; ctx.lineJoin = 'round';
+    ctx.strokeStyle = lineInk; ctx.lineWidth = 1.5; ctx.lineJoin = 'round';
     if (pts.length >= 2) {
       ctx.beginPath();
       for (i = 0; i < pts.length - 1; i++) { if (i === 0) ctx.moveTo(pts[i].x, pts[i].y); else ctx.lineTo(pts[i].x, pts[i].y); }
@@ -10109,6 +10207,9 @@ function bindChart(){
   } else {
     window.addEventListener('resize', function(){ scheduleDraw(); fitZoneLabels(); });
   }
+  // Printed analytics: redraw the canvas in the print palette before the page is captured, back to the theme after
+  window.addEventListener('beforeprint', function(){ state.printing = true; drawChart(); });
+  window.addEventListener('afterprint', function(){ state.printing = false; drawChart(); });
 }
 function loadPrefs(){
   try { var p = JSON.parse(anLsGet(PREF_KEY) || '{}'); if (p.stack === 'zone' || p.stack === 'type') state.stack = p.stack; if (p.measure === 'dist' || p.measure === 'dur') state.measure = p.measure; } catch (e) {}
@@ -12082,7 +12183,15 @@ window.initUpdates = function(){
 // Global offline signal: html.tl-offline (CSS notes on the AI form and the video facades; the login
 // overlay and sendToAI read navigator.onLine directly). Set at load and on every online/offline event.
 (function(){
-  function sync(){ try { document.documentElement.classList.toggle('tl-offline', typeof navigator.onLine === 'boolean' && !navigator.onLine); } catch(e){} }
+  function sync(){
+    var off = typeof navigator.onLine === 'boolean' && !navigator.onLine;
+    try { document.documentElement.classList.toggle('tl-offline', off); } catch(e){}
+    // The coach composer's Send is marked unavailable while offline (dimmed by CSS; a tap still explains in the chat);
+    // a running stream owns the attribute until it ends (setAIStreaming re-syncs).
+    var send = document.getElementById('ai-send-btn');
+    if (send && send.getAttribute('aria-busy') !== 'true') { if (off) send.setAttribute('aria-disabled', 'true'); else send.removeAttribute('aria-disabled'); }
+  }
+  window.tlSyncOffline = sync;
   window.addEventListener('online', sync);
   window.addEventListener('offline', sync);
   sync();
