@@ -1734,7 +1734,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <li class="nav-group">
           <button type="button" class="nav-group-btn" id="tl-grp-tools" aria-expanded="false" aria-controls="tl-menu-tools">Tools<span class="nav-caret" aria-hidden="true"></span></button>
           <ul class="nav-menu" id="tl-menu-tools" aria-labelledby="tl-grp-tools">
-            <li><a href="#visualizer" id="nav-visualizer" aria-describedby="nav-visualizer-d">3D Viz<span class="nav-desc" id="nav-visualizer-d" aria-hidden="true">Interactive 3D stroke biomechanics</span></a></li>
+            <li><a href="#visualizer" id="nav-visualizer" aria-describedby="nav-visualizer-d">3D Visualizer<span class="nav-desc" id="nav-visualizer-d" aria-hidden="true">Interactive 3D stroke biomechanics</span></a></li>
             <li><a href="#workouts" id="nav-workouts" aria-describedby="nav-workouts-d">Generator<span class="nav-desc" id="nav-workouts-d" aria-hidden="true">Build a session by focus, stroke and phase</span></a></li>
             <li><a href="#calculator" id="nav-calculator" aria-describedby="nav-calculator-d">Calculator<span class="nav-desc" id="nav-calculator-d" aria-hidden="true">Golf Score, splits, pace zones, conversions</span></a></li>
             <li><a href="#zones" id="nav-zones" aria-describedby="nav-zones-d">Zones<span class="nav-desc" id="nav-zones-d" aria-hidden="true">Lactate and heart-rate ranges by zone</span></a></li>
@@ -1850,7 +1850,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="footer-col"><h4>Learn</h4><ul><li><a href="#technique">Technique Library</a></li><li><a href="#videos">Video Library</a></li><li><a href="#sets">Training Sets</a></li><li><a href="#dryland">Dryland</a></li><li><a href="#nutrition">Nutrition</a></li></ul></div>
     <div class="footer-col"><h4>Tools</h4><ul><li><a href="#visualizer">3D Visualizer</a></li><li><a href="#workouts">Workout Generator</a></li><li><a href="#calculator">Pace Calculator</a></li><li><a href="#zones">Training Zones</a></li><li><a href="#timers">Timers</a></li><li><a href="#planner">Race Planner</a></li></ul></div>
     <div class="footer-col"><h4>Track</h4><ul><li><a href="#profile">My PRs</a></li><li><a href="#log">Training Log</a></li><li><a href="#analytics">Training Analytics</a></li></ul></div>
-    <div class="footer-col"><h4>Compete</h4><ul><li><a href="#race">Race Strategy</a></li><li><a href="#taper">Taper Protocol</a></li><li><a href="#mental">Mental Performance</a></li><li><a href="#injury">Injury Prevention</a></li><li><a href="#season">Season Calendar</a></li></ul></div>
+    <div class="footer-col"><h4>Compete</h4><ul><li><a href="#race">Race Strategy</a></li><li><a href="#taper">Taper &amp; Recovery</a></li><li><a href="#mental">Mental Performance</a></li><li><a href="#injury">Injury Prevention</a></li><li><a href="#season">Season Calendar</a></li></ul></div>
   </div>
   <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p class="footer-links"><a href="#ai">AI Coach</a> · <a href="#updates">What's New</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a><span id="tl-footer-install-wrap" hidden> · <button type="button" class="footer-install" id="tl-footer-install" onclick="tlFooterInstall()">Install app</button></span></p><p>Educational information only — not medical advice</p></div>
 </footer>
@@ -1928,7 +1928,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <button class="viz-btn active" id="vbtn-forces" aria-pressed="true" onclick="toggleForces3D(this)">Forces: On</button>
   </div>
-  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px"><span class="viz-hint-pointer"><span aria-hidden="true">🖱 </span>Drag to orbit · Click the lab, then scroll to zoom (or hold Ctrl/⌘, or use the zoom buttons) · </span><span class="viz-hint-touch">Drag to orbit · Pinch or the zoom buttons to zoom · </span>Tap a phase on the strip under the swimmer to jump to it</p>
+  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px"><span class="viz-hint-pointer"><span aria-hidden="true">🖱 </span>Drag to orbit · Click the lab, then scroll to zoom (or hold Ctrl/⌘, or use the zoom buttons) · </span><span class="viz-hint-touch">Drag to orbit · Pinch or the zoom buttons to zoom · </span>Choose a phase on the strip under the swimmer to jump to it</p>
   <div id="human-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:4px;letter-spacing:0.3px"></div>
   <div class="force-legend">
     <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Drag</div>
@@ -2036,15 +2036,15 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="t-bk">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>BODY POSITION & DUCK DRILL</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Correct position: hips at the surface, ears slightly submerged, eyes up toward the ceiling with the chin neutral (look at the flags, not at your feet — a chin-tuck lifts the head, drops the hips and loads the neck). Even a small hip drop adds frontal area and the drag climbs with it — at race speed a few centimetres costs measurable time. The Duck drill is that position without the arms: backstroke kick with the arms at your sides, chin neutral and hips riding high, so the body sits on the surface the way a duck does — kick a length this way before adding the arms, then keep exactly the same head and hip position once you do.</p>
+    <div class="acc-body open"><p>Correct position: hips at the surface, ears slightly submerged, eyes up toward the ceiling with the chin neutral (look at the flags, not at your feet — a chin-tuck lifts the head, drops the hips and loads the neck). Even a small hip drop adds frontal area and the drag climbs with it — at race speed a few centimeters costs measurable time. The Duck drill is that position without the arms: backstroke kick with the arms at your sides, chin neutral and hips riding high, so the body sits on the surface the way a duck does — kick a length this way before adding the arms, then keep exactly the same head and hip position once you do.</p>
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Cue: "Squeeze a coin between your glutes, belly button to the ceiling."</div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>PINKY ENTRY & 2-2-2 DRILL</h4><span class="chevron">▾</span></div>
     <div class="acc-body"><p>Entry is pinky-first, hand rotated so the palm faces out — pinky down, thumb up. Arm enters directly above the shoulder. The 2-2-2 drill (2 right strokes, 2 left strokes, 2 full) isolates each side.</p></div></div>
   </div>
   <div class="tab-panel" id="t-br">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>2K1 SCULL — THE CORE DRILL</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>2k1 (two kicks, one stroke) is the foundational breaststroke drill. Doubling the kick slows tempo dramatically — forcing the swimmer to feel the glide, catch, and full out-scull before pulling.</p>
-    <div class="cue-box"><span aria-hidden="true">🎯 </span>Progression: Deep 2k1 scull → Shallow 2k1 scull → Flat rhythm → Full speed.</div></div></div>
+    <div class="acc-body open"><p>2K1 (two kicks, one stroke) is the foundational breaststroke drill. Doubling the kick slows tempo dramatically — forcing the swimmer to feel the glide, catch, and full out-scull before pulling.</p>
+    <div class="cue-box"><span aria-hidden="true">🎯 </span>Progression: Deep 2K1 scull → Shallow 2K1 scull → Flat rhythm → Full speed.</div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>BREASTSTROKE KICK — 60–70% OF PROPULSION</h4><span class="chevron">▾</span></div>
     <div class="acc-body"><p>Heels draw up narrow — not wide. Feet evert into "duck feet" before sweeping in a circular arc and finishing together in streamline.</p>
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Cue: "Heels narrow, toes wide, sweep out-around-together."</div></div></div>
@@ -2054,7 +2054,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="acc-body open"><p>Butterfly is wave-driven, not arm-driven. The movement: chest presses DOWN → hips rise → feet drive DOWN. Hip amplitude: about 10–20 cm — the wave grows toward the feet (toes 45–60 cm).</p>
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Cue: "Chest DOWN first — everything else follows."</div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>2-2-2 DRILL & ONE-ARM FLY</h4><span class="chevron">▾</span></div>
-    <div class="acc-body"><p>2-2-2 drill: 2 right-arm strokes, 2 left-arm strokes, 2 full butterfly strokes. Isolates each side's pull pattern and makes bilateral asymmetries obvious immediately.</p></div></div>
+    <div class="acc-body"><p>2-2-2 drill: 2 right-arm strokes, 2 left-arm strokes, 2 full butterfly strokes. Isolates each side's pull pattern and makes bilateral asymmetries obvious immediately.</p><p>One-arm fly: the full body wave and both kicks with one arm stroking and the other extended in front (breathe to the side or to the front), 25s on each arm — it isolates the kick timing against the pull and shows which side's catch collapses.</p></div></div>
   </div>
   <div class="tab-panel" id="t-uw">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>UNDERWATER DOLPHIN KICK — THE 5TH STROKE</h4><span class="chevron open">▾</span></div>
@@ -2069,7 +2069,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="t-turns">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>FREESTYLE FLIP TURN</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Elite push-off velocities reach ~2.5–3.0 m/s and decay through the glide (the 3D lab's dolphin runs at a study tempo of 96 kicks a minute and reads ~1.7 m/s; at the elite ~115 the same kick is nearer 2 m/s). Every 0.1 s lost at the wall costs far more metabolically to recover. Approach at full speed and never look for the wall. Start the somersault as your head crosses the T — its cross line is 2 m from the wall — so the last stroke and tuck bring you round about a body length out. Drive into tight streamline with ≥5 m UW dolphin kick off every wall.</p></div></div>
+    <div class="acc-body open"><p>Elite push-off velocities reach ~2.5–3.0 m/s and decay through the glide. Every 0.1 s lost at the wall costs far more metabolically to recover. Approach at full speed and never look for the wall. Start the somersault as your head crosses the T — its cross line is 2 m from the wall — so the last stroke and tuck bring you round about a body length out. Drive into tight streamline with ≥5 m UW dolphin kick off every wall. The 3D lab's underwater dolphin kick shows the streamline and the first kicks phase by phase.</p></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>BREASTSTROKE PULLOUT</h4><span class="chevron">▾</span></div>
     <div class="acc-body"><p>The breaststroke pullout is the fastest point in the stroke. Legal sequence: push off → streamline glide → one full underwater pull to the thighs (with one optional dolphin kick) → recover the arms → one breaststroke kick → breakout as the head surfaces. Begin the pull the moment you sense velocity starting to drop.</p></div></div>
   </div>
@@ -2152,9 +2152,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel active" id="s-aet">
     <div class="info-box">AeT sets are the backbone of Meso I and the majority of Meso II. <strong>Zones 1–2 together carry 80%+ of all training volume.</strong></div>
     <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Set</th><th scope="col" role="columnheader">Details</th><th scope="col" role="columnheader">Purpose & Notes</th></tr></thead><tbody role="rowgroup">
-      <tr role="row"><td role="cell" data-label="Set">20×50 FR @ :55</td><td role="cell" data-label="Details">Rd 1: steady aerobic (HR 25–27) · Rd 2: AeT ceiling (HR 28)<br>Benchmark check on Rd 2</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Aerobic Base Benchmark</span>Primary testing set. HR 25–27 Rd 1, AeT ceiling Rd 2.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">20×50 FR @ :55</td><td role="cell" data-label="Details">Rd 1: steady aerobic (HR 25–27) · Rd 2: AeT ceiling (HR 28)<br>Benchmark check on Rd 2</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Aerobic Base Benchmark</span>Primary testing set — the Rd 2 ceiling is the benchmark.</td></tr>
       <tr role="row"><td role="cell" data-label="Set">12×200 FR @ 3:00</td><td role="cell" data-label="Details">Reps 1–2: Cruise · 3–12: AeT<br>HR 24–28 · 2,400 m</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Volume Load</span>Flagship Meso II aerobic set.</td></tr>
-      <tr role="row"><td role="cell" data-label="Set">5×100 BK ×5 Rds @ 1:25</td><td role="cell" data-label="Details">60–90 s between rounds · 2,500 m<br>Rd 1 with the Duck drill (Technique › Backstroke)</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Stroke-Specific AeT</span>Backstroke aerobic maintenance.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">5 rounds: 5×100 BK @ 1:25</td><td role="cell" data-label="Details">60–90 s between rounds · 2,500 m<br>Rd 1 with the Duck drill (Technique › Backstroke)</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Stroke-Specific AeT</span>Backstroke aerobic maintenance.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-thresh">
@@ -2174,7 +2174,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="s-tech">
     <div class="info-box">Tech sets require <strong>maximum awareness over maximum effort.</strong></div>
     <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Set</th><th scope="col" role="columnheader">Details</th><th scope="col" role="columnheader">Purpose</th></tr></thead><tbody role="rowgroup">
-      <tr role="row"><td role="cell" data-label="Set">10×50 FR Paddles + snorkel</td><td role="cell" data-label="Details">Reps 1–5: descend to your best-average Golf Score · 6–10: hold it</td><td role="cell" data-label="Purpose"><span class="ptag">Golf Score Tech</span>Descend to your best average, then hold it.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">10×50 FR Paddles + snorkel</td><td role="cell" data-label="Details">Reps 1–5: descend to your best-average Golf Score · 6–10: hold it</td><td role="cell" data-label="Purpose"><span class="ptag">Golf Score Tech</span>Technique under a number: once you find your best average, hold it — a faster split bought with extra strokes does not lower the score.</td></tr>
       <tr role="row"><td role="cell" data-label="Set">UW 15 m IM Drill @ 1:00</td><td role="cell" data-label="Details">Race depth (0.5–0.6 m) · tight streamline · fly, back and free; a legal pullout on the breaststroke length · every session</td><td role="cell" data-label="Purpose"><span class="ptag">Underwater Dev</span>Single most consequential drill.</td></tr>
     </tbody></table></div>
   </div>
@@ -2194,7 +2194,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </tbody></table></div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not coaching advice. Adapt every set to your own level and your coach's programme.</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not coaching advice. Adapt every set to your own level and your coach's program.</p></div></footer>
 </div>
 <!-- DRYLAND PAGE -->
 <div class="page" id="page-dryland">
@@ -2212,7 +2212,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="dl-card"><div class="dl-day">Day 4 — Friday</div><h4>SHOULDER HEALTH</h4><ul>
       <li><span class="reps">3×15</span>Sidelying External Rotation</li><li><span class="reps">3×12</span>Y-T-W-L on Incline</li><li><span class="reps">3×30 s</span>Sleeper Stretch (for GIRD — limited internal rotation)</li><li><span class="reps">3×20</span>Ankle Circles + Toe Spreads</li></ul></div>
     <div class="dl-card"><div class="dl-day">Daily</div><h4>MOBILITY ROUTINE</h4><ul>
-      <li><span class="reps">5 min</span>Ankle Plantarflexion Loading</li><li><span class="reps">2 min</span>Thoracic Rotation</li><li><span class="reps">3 min</span>Shoulder CARs</li><li><span class="reps">2 min</span>Hip 90/90 Switches</li></ul></div>
+      <li><span class="reps">2 min</span>Ankle Plantarflexion Loading</li><li><span class="reps">2 min</span>Thoracic Rotation</li><li><span class="reps">3 min</span>Shoulder CARs</li><li><span class="reps">1 min</span>Hip 90/90 Switches</li></ul></div>
   </div>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — lifts and loads should be taught and supervised by a qualified strength coach; growth-age swimmers learn technique before adding load. Skip any exercise you have not been coached on.</p></div></footer>
@@ -2232,7 +2232,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="gen-row">
       <div class="form-group"><label>Athlete Level</label><select class="form-select" id="gen-level"><option value="age-group">Age Group / Club</option><option value="senior" selected>Senior / Competitive</option><option value="elite">Elite / National Level</option><option value="masters">Masters</option></select></div>
       <div class="form-group"><label>Equipment</label><select class="form-select" id="gen-equip"><option value="all">All (Snorkel, Fins, Paddles, Band)</option><option value="basic">Basic (Fins + Paddles)</option><option value="fins">Fins Only</option><option value="none">No Equipment</option></select></div>
-      <div class="form-group"><label>Meso Phase</label><select class="form-select" id="gen-meso"><option value="meso1-early">Meso I — Wks 1–2</option><option value="meso1-late">Meso I — Wks 3–4</option><option value="meso2-early">Meso II — Wks 5–6</option><option value="meso2-late">Meso II — Wks 7–8</option><option value="taper">Taper / Pre-Meet</option></select></div>
+      <div class="form-group"><label>Meso Phase</label><select class="form-select" id="gen-meso"><option value="meso1-early">Meso I — Weeks 1–2</option><option value="meso1-late">Meso I — Weeks 3–4</option><option value="meso2-early">Meso II — Weeks 5–6</option><option value="meso2-late">Meso II — Weeks 7–8</option><option value="taper">Taper / Pre-Meet</option></select></div>
     </div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Additional Notes (optional)</label>
       <input class="form-input" id="gen-notes" maxlength="300" placeholder="e.g. sore shoulders, include Golf Score sets, pre-meet sharpener…"></div>
@@ -2315,7 +2315,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>POOL FORMAT CONVERTER</h4>
         <div class="form-group" style="margin-bottom:1rem"><label>Time <span class="th-unit">(m:ss.ss)</span></label><input class="form-input" id="conv-time" enterkeyhint="done" placeholder="e.g. 1:52.44"></div>
-        <div class="form-group" style="margin-bottom:1rem"><label>From Pool Format</label><select class="form-select" id="conv-from"><option value="scy">SCY (25 yards)</option><option value="scm">SCM (25 meters)</option><option value="lcm" selected>LCM (50 meters)</option></select></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>From Pool Format</label><select class="form-select" id="conv-from"><option value="scy">SCY — 25 yd</option><option value="scm">SCM — 25 m</option><option value="lcm" selected>LCM — 50 m</option></select></div>
         <button class="calc-btn" onclick="convertTime()">Convert <span aria-hidden="true">→</span></button>
         <p class="form-notice" id="conv-notice" role="alert" hidden></p>
       </div>
@@ -2439,8 +2439,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="tab-btn" onclick="switchTab(this,'n-hydration')">Hydration</button>
   </div>
   <div class="tab-panel active" id="n-daily"><div class="nutr-grid">
-    <div class="nutr-card"><div class="nutr-time">Pre-AM Session (60–90 min before)</div><h4>MORNING FUEL</h4><ul><li>1–2 slices white toast + jam (fast carbs)</li><li>Banana or 200 ml orange juice</li><li>250 ml water on waking</li><li>Avoid high-fat, high-fiber</li></ul></div>
-    <div class="nutr-card"><div class="nutr-time">Recovery Window</div><h4>POST-SESSION</h4><ul><li>Within 30 min: ~1 g/kg carbs (60–80 g for most swimmers) + 20–30 g protein</li><li>Chocolate milk, Greek yogurt + banana</li><li>1–1.5 L water over next 2 hours</li></ul></div>
+    <div class="nutr-card"><div class="nutr-time">Pre-AM Session (60–90 min before)</div><h4>MORNING FUEL</h4><ul><li>1–2 slices white toast + jam (fast carbs)</li><li>Banana or 200 ml orange juice</li><li>250 ml water on waking</li><li>Avoid high-fat, high-fiber foods</li></ul></div>
+    <div class="nutr-card"><div class="nutr-time">Recovery Window</div><h4>POST-SESSION</h4><ul><li>Within 30 min: ~1 g/kg carbs (60–80 g for most swimmers) + 20–30 g protein</li><li>Chocolate milk, Greek yogurt + banana</li><li>1–1.5 L water over the next 2 hours</li></ul></div>
     <div class="nutr-card"><div class="nutr-time">Pre-PM Session (2–3 h before)</div><h4>AFTERNOON FUEL</h4><ul><li>80–100 g carbs, 30 g protein, low fat</li><li>Chicken + rice + vegetables</li><li>500 ml water in the 2 hours before</li></ul></div>
   </div>
   <div class="divider"></div>
@@ -2512,7 +2512,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="r-pacing">
-    <div class="content-block"><h4>PACING SCIENCE</h4><p><strong>100 m:</strong> the first 50 is normally faster than the second — by about 4% of the race time in free and back (≈2 s at 50 s, 2.7 s at 1:10) and about 6% in fly and breast (3–4 s) — the dive and the underwater do that for you, so the job is to minimize the fade, not to negative split. A freestyle second 50 more than ~10% slower than the first (the normal pattern is ~8%) means you went out too hard.</p>
+    <div class="content-block"><h4>PACING SCIENCE</h4><p><strong>100 m:</strong> the first 50 is normally faster than the second — by about 4% of the race time in free and back (≈2 s at 50 s, 2.8 s at 1:10) and about 6% in fly and breast (3–4 s) — the dive and the underwater do that for you, so the job is to minimize the fade, not to negative split. A freestyle second 50 more than ~10% slower than the first (the normal pattern is ~8%) means you went out too hard.</p>
     <p><strong>200 m:</strong> the second 100 is normally 2–3% (2–3 s) slower than the first in every elite final, so the target is to hold the third 50 at the pace of the second; butterfly and breaststroke 200s fade more — the second 100 is typically 5–6% slower in breaststroke and 8–10% slower in butterfly, so holding the third 50 is a stretch target there.</p>
     <p><strong>400 m and up:</strong> even 100s, with the lift coming at the end. The championship-final split patterns behind these targets are in the <a href="#planner" onclick="showPageTab('planner','pl-splits','pl-sp-ref');return false;">Race Planner's split reference</a>.</p></div>
   </div>
@@ -2604,8 +2604,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <li><strong style="color:var(--cyan)">T−15 min:</strong> 3 min box breathing</li>
       <li><strong style="color:var(--cyan)">T−12 min:</strong> Visualize first 50 m in real time</li>
       <li><strong style="color:var(--cyan)">T−8 min:</strong> Review 2 focus cues only</li>
-      <li><strong style="color:var(--cyan)">T−5 min:</strong> Physical activation — arm swings, fast squats</li>
-      <li><strong style="color:var(--cyan)">T−1 min:</strong> Behind the blocks. One breath. Step up on the long whistle and activate.</li>
+      <li><strong style="color:var(--cyan)">T−5 min:</strong> Physical activation behind the blocks — arm swings, fast squats</li>
+      <li><strong style="color:var(--cyan)">T−1 min:</strong> One breath. Step up on the long whistle and activate.</li>
     </ul></div>
   </div>
 </div>
@@ -2650,7 +2650,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <li>Butterfly's repeated hip-driven undulation without adequate mobility work</li>
       </ul></div>
       <div class="content-block"><h4>PREVENTION</h4><ul>
-        <li>90/90 hip switches daily — builds rotational range in both directions</li>
+        <li>90/90 hip switches: 1 min daily (in the <a href="#injury" onclick="showPageTab('injury','i-prevention');return false;">Prevention routine</a>; also in the Dryland mobility routine) — builds rotational range in both directions</li>
         <li>Glute medius activation: banded clamshells, monster walks, 3×/week</li>
         <li>Couch stretch for hip flexor length, 2 min per side daily</li>
         <li>Limit breaststroke whip-kick volume during growth spurts in younger swimmers</li>
@@ -2680,7 +2680,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <p>Neck pain in swimmers is almost always a head-position problem, not a neck-strength problem. Habitually lifting the head to breathe instead of rotating it within the body's bow wave puts repetitive strain on the cervical spine across thousands of strokes per week.</p>
       <ul>
         <li><strong>Freestyle:</strong> lifting the head to breathe instead of rotating with the body roll — fix the stroke before treating the symptom</li>
-        <li><strong>Backstroke:</strong> Duck drill imbalance or chronic chin-tuck looking at the feet — keep the neck neutral (Technique › Backstroke)</li>
+        <li><strong>Backstroke:</strong> a chronic chin-tuck (looking at the feet) or a lifted chin — keep the neck neutral, the Duck-drill position (Technique › Backstroke)</li>
         <li><strong>Breaststroke:</strong> lifting the chin to breathe instead of riding the body's natural lift from the pull</li>
         <li><strong>Prevention:</strong> daily neck CARs (controlled articular rotations), and film yourself breathing from above to check for head lift</li>
         <li><strong>Persistent neck pain unrelated to a recent technique change</strong> warrants a look from a physio rather than continued self-treatment</li>
@@ -2718,7 +2718,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="i-prevention">
     <div class="success-box"><strong>Load management is #1.</strong> Volume increases of no more than 10% per week.</div>
     <div class="content-block"><h4>DAILY PREVENTION ROUTINE (10 MIN)</h4><ul>
-      <li>Ankle plantarflexion loading: 2 min</li><li>Serratus punches: 2×15</li><li>External rotation: 1×15 each side</li>
+      <li>Ankle plantarflexion loading: 2 min (the same daily dose as the <a href="#dryland">Dryland mobility routine</a>)</li><li>Serratus punches: 2×15</li><li>External rotation: 1×15 each side</li>
       <li>Hip 90/90 switches: 1 min</li><li>Copenhagen plank: 3×20 s</li><li>Dead bug: 3×30 s</li>
     </ul></div>
   </div>
@@ -3153,7 +3153,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-name">Next meet name</label><input class="form-input" id="pl-mt-name" enterkeyhint="done" maxlength="60" placeholder="e.g. Winter Juniors" autocomplete="off"></div>
         <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-date">First day of the next meet</label><input class="form-input" id="pl-mt-date" type="date"></div>
         <div class="pl-two">
-          <div class="form-group"><label for="pl-mt-course">Course</label><select class="form-select" id="pl-mt-course"><option value="SCY">SCY</option><option value="SCM">SCM</option><option value="LCM">LCM</option></select></div>
+          <div class="form-group"><label for="pl-mt-course">Course</label><select class="form-select" id="pl-mt-course"><option value="SCY">SCY — 25 yd</option><option value="SCM">SCM — 25 m</option><option value="LCM">LCM — 50 m</option></select></div>
           <div class="form-group"><label for="pl-mt-taper">Taper type</label><select class="form-select" id="pl-mt-taper"><option value="sprint">Sprint (14–21 days)</option><option value="distance">Distance (7–14 days)</option></select></div>
         </div>
       </div>
@@ -3294,7 +3294,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="calc-wrapper">
         <div class="calc-panel"><h4>SWOLF — ONE LENGTH</h4>
           <div class="form-group an-fg"><label for="an-sw-pool">Pool length</label>
-            <select class="form-select" id="an-sw-pool"><option value="25m">25 m (short course meters)</option><option value="50m">50 m (long course)</option><option value="25yd">25 yd (short course yards)</option></select></div>
+            <select class="form-select" id="an-sw-pool"><option value="25m">SCM — 25 m</option><option value="50m">LCM — 50 m</option><option value="25yd">SCY — 25 yd</option></select></div>
           <div class="form-group an-fg"><label for="an-sw-time">Time for one length <span class="th-unit">(seconds)</span></label>
             <input class="form-input" id="an-sw-time" inputmode="decimal" autocomplete="off" placeholder="e.g. 17.8" maxlength="8"></div>
           <div class="form-group an-fg"><label for="an-sw-strokes">Stroke count for that length</label>
@@ -3402,7 +3402,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="tl-upd-app-grid">
       <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-ver">—</span><span class="tl-upd-stat-lbl">Current version</span></div>
       <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-date">—</span><span class="tl-upd-stat-lbl">Released</span></div>
-      <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-offline">—</span><span class="tl-upd-stat-lbl">Offline</span></div>
+      <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-offline">—</span><span class="tl-upd-stat-lbl">Works offline</span></div>
       <div class="tl-upd-stat"><span class="tl-upd-stat-val" id="tl-upd-mode">—</span><span class="tl-upd-stat-lbl">Running as</span></div>
     </div>
     <p class="tl-upd-offline-note" id="tl-upd-offline-note"></p>
@@ -5666,7 +5666,7 @@ function startViz3D() {
   if (vizLabActive()) animate3D();
 }
 // ─── WARM-UP — put the lab's two files (Three.js 148 KB + viz-human.js 331 KB) in the HTTP cache before the
-// first click. Intent shows up early: a pointer over "3D Viz" / the Tools group / the home CTAs, or simply an idle
+// first click. Intent shows up early: a pointer over "3D Visualizer" / the Tools group / the home CTAs, or simply an idle
 // home page on a fast connection. rel=prefetch is idle-priority and never blocks anything; `as="script"` makes the
 // CSP judge it under script-src (jsDelivr + self), and crossorigin matches the loader's anonymous request so the
 // cached response is the one the <script> reuses. Data-saver users are never warmed. Idempotent.
@@ -5992,14 +5992,14 @@ const SEASON_MEETS = [
   { name: 'Toyota National Championships',               start: '2027-06-08', end: '2027-06-12', course: 'LCM',        tag: 'Senior · Indianapolis · expected 2027 Worlds selection meet' },
   { name: 'World Aquatics Championships — Swimming',     start: '2027-07-10', end: '2027-07-18', course: 'LCM',        tag: 'International · Budapest' },
   { name: 'Pan American Games — Swimming',               start: '2027-07-26', end: '2027-07-30', course: 'LCM',        tag: 'International · Lima' },
-  { name: 'TYR Futures Championships',                   start: '2027-07-28', end: '2027-07-31', course: 'LCM',        tag: 'Zoned · multiple sites' },
+  { name: 'TYR Futures Championships',                   start: '2027-07-28', end: '2027-07-31', course: 'LCM',        tag: 'Zoned · host sites not yet published' },
   { name: 'Speedo Junior National Championships',        start: '2027-08-02', end: '2027-08-06', course: 'LCM',        tag: 'Junior · Huntsville, AL' }
 ];
 // Announcements still pending. Rendered as a short "Still to be announced"
 // list under the table so the page says so instead of guessing. `expected`
 // is free text; `url` must be https or the entry renders without a link.
 const SEASON_TBA = [
-  { name: 'TYR Futures Championships 2027', expected: 'host sites not yet published; dates are set (Jul 28–31, 2027)', url: 'https://www.usaswimming.org/events' }
+  // Futures 2027 sits in the table above with its 'host sites not yet published' tag; nothing is pending twice.
 ];
 // Season label derived from the data ("2026–27"), so the page copy never
 // goes stale when the array is swapped for the next season.
@@ -6333,7 +6333,7 @@ async function _generateWorkoutInner(){
   const level=document.getElementById('gen-level').value;
   const meso=document.getElementById('gen-meso').value;
   const notes=String(document.getElementById('gen-notes').value||'').trim().slice(0,300); // matches maxlength; nothing longer reaches the prompt
-  // The model gets the option labels the swimmer chose ("Basic (Fins + Paddles)", "Meso II — Wks 7–8"),
+  // The model gets the option labels the swimmer chose ("Basic (Fins + Paddles)", "Meso II — Weeks 7–8"),
   // not the raw option tokens ("basic", "meso2-late"); the values still drive the volume lookups below.
   const genLabel=id=>{const s=document.getElementById(id);const o=s&&s.options[s.selectedIndex];return o?o.text.trim():s.value;};
   const output=document.getElementById('gen-output');
@@ -6711,7 +6711,7 @@ function convertTime(){
   if(!t){calcFail('conv-notice','Enter a valid time.','conv-time','conv-result');return;}
   tlNotice('conv-notice','');
   const factors={scy:1.00,scm:1.11,lcm:1.14};
-  const labels={scy:'SCY — 25 yards',scm:'SCM — 25 meters',lcm:'LCM — 50 meters'};
+  const labels={scy:'SCY — 25 yd',scm:'SCM — 25 m',lcm:'LCM — 50 m'};   // same form as the menu above
   let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">Converted times by pool format</caption><thead><tr><th scope="col">Pool Format</th><th scope="col">Equivalent Time</th><th scope="col">Difference</th></tr></thead><tbody>';
   Object.keys(factors).forEach(to=>{
     const conv=t*(factors[to]/factors[from]);
@@ -10408,7 +10408,7 @@ window.tl_an_debug = {
   var KIND_PRIOR = { page: 6, action: 5, tab: 2, section: 0, video: 0, keypoint: -2 };
   var KIND_LABEL = { page: 'Page', action: 'Action', tab: 'Tab', section: 'Section', video: 'Video', keypoint: 'Key point' };
   // Extra search terms per page so the words swimmers actually type resolve
-  // to the right view even when the nav label is terse ("3D Viz", "Log").
+  // to the right view even when the nav label is terse ("Log", "Generator").
   var PAGE_ALIASES = {
     home: ['start', 'overview', 'platform'],
     technique: ['stroke', 'drills', 'freestyle', 'backstroke', 'breaststroke', 'butterfly', 'turns', 'starts', 'library'],
@@ -10680,7 +10680,7 @@ window.tl_an_debug = {
   }
   // Block titles are typed in caps for the Bebas headings; the palette lists them in Title Case beside the
   // Title Case page and tab rows (acronyms and alphanumerics such as IM, UW, EIB, 2K1 stay as written).
-  var KEEP_CAPS = /^(IM|UW|EIB|SWOLF|HR|RPE|ATP|CSS|DQ|SCY|SCM|LCM|PR|PRS|AI|3D|2K1|USA|NCAA|VO₂|VO2|AET|MAX|II|III|IV|BB|AA|AAA|AAAA)$/;   // BB…AAAA: USA Swimming motivational tiers
+  var KEEP_CAPS = /^(IM|UW|EIB|SWOLF|HR|RPE|ATP|CSS|DQ|SCY|SCM|LCM|PR|PRS|AI|3D|2K1|USA|NCAA|VO₂|VO2|AET|II|III|IV|BB|AA|AAA|AAAA)$/;   // BB…AAAA: USA Swimming motivational tiers
   var SMALL_WORDS = /^(a|an|and|the|of|to|for|on|in|at|from|with|by|or|vs|per)$/;
   function titleCaseCaps(s){
     var core = s.replace(/\([^)]*\)/g, '').trim();   // "SPRINT TAPER (7–14 days)" is shouting even with a lower-case parenthetical
@@ -11245,17 +11245,17 @@ const UPDATES = [
     items: [
       { tag: 'Fixed',    text: 'Copy and swimming science — 161 wording fixes and 110 accuracy corrections: pacing, zone, taper, nutrition, kick-rate and warm-up figures now agree on every page that quotes them, zone names and units are written one way site-wide, and the privacy, terms and disclaimer pages say exactly what the site stores and sends.', link: '#technique' },
       { tag: 'Improved', text: 'Layout and phones — 138 fixes: every page fits a 320 px screen with no sideways scroll, data tables stack into cards on phones, touch targets are brought up to 44 px, the sign-in dialog scrolls on short phones and the training log shows 50 sessions at a time.', link: '#sets' },
-      { tag: 'Improved', text: 'Accessibility — 106 fixes: real headings on every page, a full keyboard pattern on 13 tab strips and every accordion, labelled PR and planner fields, dialogs and the search palette that keep the page behind them inert, announced page changes and timer events, Windows High Contrast support and a header that survives 200% text.' },
+      { tag: 'Improved', text: 'Accessibility — 106 fixes: real headings on every page, a full keyboard pattern on 13 tab strips and every accordion, labeled PR and planner fields, dialogs and the search palette that keep the page behind them inert, announced page changes and timer events, Windows High Contrast support and a header that survives 200% text.' },
       { tag: 'Fixed',    text: 'Tools and calculators — 103 fixes to what the tools do and check: race splits always add up to the target and refuse sub-world-record plans, pace zones are contiguous, the Golf Score bands match a per-arm count, time fields accept 62.30 and 1.52.30, the log rejects impossible sessions and keeps an undo for every delete, and the backup carries your planner, timer and analytics settings.', link: '#calculator' },
       { tag: 'Fixed',    text: 'AI features and accounts — the coach gets a Stop button and a 20-second timeout and keeps a half-streamed answer, the password-reset link works, every error reads as a plain sentence, and the workout generator scales its volume to your level, session length and taper.', link: '#ai' },
-      { tag: 'Fixed',    text: '3D lab — 95 fixes: freestyle and backstroke run at 48 and 46 cycles a minute, the dolphin kick is shown at a 96-a-minute study tempo (elite is nearer 115), thrust and drag balance over every cycle with the velocity following them, the panel labels the phase on screen, the phase strip works from the keyboard, and the lab shows its build progress and retries a blocked download.', link: '#visualizer' },
+      { tag: 'Fixed',    text: '3D lab — 95 of those fixes: freestyle and backstroke run at 48 and 46 cycles a minute, the dolphin kick is shown at a 96-a-minute study tempo (elite is nearer 115), thrust and drag balance over every cycle with the velocity following them, the panel labels the phase on screen, the phase strip works from the keyboard, and the lab shows its build progress and retries a blocked download.', link: '#visualizer' },
       { tag: 'Improved', text: 'Speed and offline — 92 code fixes: a Content-Security-Policy on every page, pinned and integrity-checked libraries with the sign-in library loaded only when needed, fonts and the 3D engine cached for offline use, a service worker that falls back to the saved shell on a stalled network or a host outage, and a lab that renders only while it is on screen.' }
     ]
   },
   {
     version: '3.1.1', date: '2026-09-16',
     title: 'Technique pass: butterfly, breaststroke and underwater',
-    summary: 'Butterfly, breaststroke and the underwater dolphin kick in the 3D lab were re-authored from coaching references — body wave, kick timing, arm path and breath — and each now runs at its own realistic tempo.',
+    summary: 'Butterfly, breaststroke and the underwater dolphin kick in the 3D lab were re-authored from coaching references — body wave, kick timing, arm path and breath — and each now runs at its own tempo: race rate for butterfly and breaststroke, a slower study tempo for the dolphin kick.',
     items: [
       { tag: 'Improved', text: 'Butterfly — the chest presses and the hips lift through the cycle, two timed kicks, a high-elbow catch into the keyhole pull, straight arms clearing the water on the recovery, and a faster tempo (53 cycles a minute).', link: '#visualizer' },
       { tag: 'Improved', text: 'Breaststroke — the body rises about 30° into the breath and lunges forward into a long glide; the heels draw to the buttocks with the feet turned out, then whip round and squeeze together (43 cycles a minute).' },
