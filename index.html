@@ -3066,6 +3066,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <li><strong>Set the primary zone and effort (1–10)</strong> honestly. The zone menu defaults to Z2 AeT — change it when the main set was something else, or the distribution below will not mean much.</li>
     </ol>
     <p>Once a few weeks are in, this page shows week-over-week volume, streaks, your low-versus-high intensity split, and calm rule-based observations a coach can act on. The efficiency calculators further down work without any log data.</p>
+    <p id="an-empty-future" hidden></p>
     <a class="btn-sm an-link-btn" href="#log">Go to the Training Log</a>
   </div>
 
@@ -3510,6 +3511,7 @@ async function doSignup() {
     showAuthError('signup', 'You must confirm you are 13 or older to create an account.', 'signup-age');
     return;
   }
+  if (btn && btn.disabled) return; // Enter in a field bypasses the disabled button: one sign-up request at a time
   btn.disabled = true; btn.textContent = 'Creating account…';
   // Availability check via a yes/no database function — the profiles table
   // itself is no longer readable to anyone but its owner. The database also
@@ -3563,6 +3565,7 @@ async function doLogin() {
     showAuthError('login', 'Enter both email and password.');
     return;
   }
+  if (btn && btn.disabled) return; // Enter in a field bypasses the disabled button: one log-in request at a time
   btn.disabled = true; btn.textContent = 'Logging in…';
   var { data, error } = await sb.auth.signInWithPassword({ email: email, password: password });
   if (error) {
@@ -3608,6 +3611,7 @@ async function doSetNewPassword() {
   var btn = document.getElementById('newpass-btn');
   if (p1.length < 8) { showAuthError('newpass', 'Password must be at least 8 characters.', 'newpass-password'); return; }
   if (p1 !== p2) { showAuthError('newpass', 'The two passwords do not match.', 'newpass-confirm'); return; }
+  if (btn && btn.disabled) return; // Enter in a field bypasses the disabled button: one update at a time
   btn.disabled = true; btn.textContent = 'Saving…';
   var { data, error } = await sb.auth.updateUser({ password: p1 });
   btn.disabled = false; btn.textContent = 'SET NEW PASSWORD →';
@@ -3776,6 +3780,17 @@ function escapeHTML(s){
 // This makes every section keyboard-reachable, deep-linkable, Back-button
 // friendly, and gives each view its own crawlable title.
 function activatePage(name,opts){
+  // Routes are case-insensitive (phones capitalise the first letter of a typed link: #Zones, #TIMERS) and
+  // tolerate a stray query (#technique?x=1): normalise before the lookup and put the canonical hash in the
+  // address bar, so a shared link lands on the page it meant instead of Home with the hash erased.
+  const rawName=String(name||'');
+  if(rawName && !(typeof isAuthCallbackHash==='function' && isAuthCallbackHash(rawName))){
+    const norm=rawName.split('?')[0].toLowerCase();
+    if(norm!==rawName && document.getElementById('page-'+norm)){
+      name=norm;
+      if(location.hash.slice(1)===rawName){ try{ history.replaceState(null,'',location.pathname+location.search+'#'+norm); }catch(e){} }
+    }
+  }
   if(!document.getElementById('page-'+name)){ // guard unknown/empty
     // An in-page anchor (the skip link's #main) must move focus, not bounce
     // a keyboard user to Home: focus it and put the current view's hash back.
@@ -5524,6 +5539,7 @@ function aiStreamGuard(){
   return g;
 }
 let _aiChatGuard=null; // the coach chat's running stream (Stop button)
+let _chatGen=0; // bumped by Clear: a reply that outlives a Clear must not land in the fresh history or the detached bubble
 function stopAI(){ if(_aiChatGuard) _aiChatGuard.stop(); }
 function setAIStreaming(on){
   const btn=document.getElementById('ai-send-btn'), stop=document.getElementById('ai-stop-btn');
@@ -5800,9 +5816,11 @@ async function sendToAI(){
   // Create streaming bubble
   const streamBubble=createStreamBubble();
   const guard=aiStreamGuard(); _aiChatGuard=guard;
+  const gen=_chatGen; // Clear bumps this and aborts the stream; after every await, a stale gen means "abandon quietly"
   let fullText=''; // outside the try: a stream that breaks mid-answer keeps what arrived
   try{
     const { data: sessionData } = await sb.auth.getSession();
+    if(gen!==_chatGen){ guard.end(); return; }
     const accessToken = sessionData?.session?.access_token;
     if(!accessToken){ conversationHistory.pop(); finishStreamBubble(streamBubble, SESSION_EXPIRED_MSG); setAIStreaming(false); return; }
     const resp=await fetch(SUPABASE_URL + '/functions/v1/ask-ai',{
@@ -5818,9 +5836,11 @@ async function sendToAI(){
       }),
       signal:guard.signal
     });
+    if(gen!==_chatGen){ guard.end(); return; }
     if(!resp.ok){
       conversationHistory.pop(); // roll back the unanswered user turn (keeps the API from getting two user turns in a row and wedging the chat)
       const err=await resp.json().catch(()=>({}));
+      if(gen!==_chatGen){ guard.end(); return; }
       finishStreamBubble(streamBubble, aiServerText(err.error) || (resp.status===429 ? AI_LIMIT_MSG : `Error: HTTP ${resp.status}`));
       setAIStreaming(false); return;
     }
@@ -5829,6 +5849,7 @@ async function sendToAI(){
     let buffer='';
     while(true){
       const {done,value}=await reader.read();
+      if(gen!==_chatGen){ guard.end(); reader.cancel().catch(()=>{}); return; }
       if(done) break;
       guard.touch();
       buffer+=decoder.decode(value,{stream:true});
@@ -5853,6 +5874,7 @@ async function sendToAI(){
     else conversationHistory.pop(); // empty reply — drop the user turn so history stays valid
   }catch(e){
     guard.end();
+    if(gen!==_chatGen) return; // the chat was cleared mid-reply: nothing to keep, and the Send button already belongs to the new chat
     // A stream that broke, stalled or was stopped after tokens arrived keeps the partial
     // answer on screen and in history (the reader was mid-paragraph); with nothing
     // received, roll back the user turn so the history stays valid.
@@ -5935,6 +5957,9 @@ function usePrompt(el){
   inp.focus({preventScroll:true});
 }
 function clearChat(){
+  // Clear can be pressed mid-reply: retire that stream first, or its answer would land in the cleared
+  // history as a leading assistant turn and every later Send would be rejected (same root as R3-FUNCTION-01).
+  _chatGen++; stopAI(); setAIStreaming(false);
   conversationHistory=[];
   document.getElementById('ai-messages').innerHTML='<div class="msg"><div class="msg-avatar ai-av">AI</div><div class="msg-bubble">Chat cleared. What would you like to work on?</div></div>';
   document.querySelectorAll('.ai-mode-btn').forEach(b=>{ b.classList.remove('active'); if(b.hasAttribute('aria-pressed')) b.setAttribute('aria-pressed','false'); });
@@ -6330,9 +6355,7 @@ function calcSplits(){
   const strategy=document.getElementById('split-strategy').value;
   if(!totalSecs){calcFail('split-notice','Enter a valid target time.','split-time','split-result');return;}
   const n=dist/50, avg=totalSecs/n;
-  if(avg<19){calcFail('split-notice','That works out to under 19 seconds per 50 m — faster than any 50 m ever swum. Check the distance and time.','split-time','split-result');return;}
   if(avg>120){calcFail('split-notice','That works out to over 2 minutes per 50 m — check the distance and time.','split-time','split-result');return;}
-  tlNotice('split-notice','');
   // Splits come from the planner's buildSplits (one source of truth): the
   // negative/positive ramp is a ±2% half-difference scaled to the race, so a
   // 1500 no longer fans out into sprint-pace 50s, and the long-course dive
@@ -6352,6 +6375,11 @@ function calcSplits(){
     if(r.error){calcFail('split-notice',r.error,'split-time','split-result');return;}
     splits=r.lengths;
   }
+  // Plausibility floor on the plan's fastest 50 (the first one, dive included), not on the average:
+  // the 50 m freestyle world record is 20.91 s, so no 50 inside a longer race can be planned under it.
+  const fastest=Math.min.apply(null,splits);
+  if(fastest<20.91){calcFail('split-notice','The fastest 50 in this plan would be '+fastest.toFixed(2)+' s — under the 50 m freestyle world record of 20.91 s. Check the distance and time.','split-time','split-result');return;}
+  tlNotice('split-notice','');
   let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">Race splits</caption><thead><tr><th scope="col">Distance</th><th scope="col">50 <span class="th-unit">m</span> Split</th><th scope="col">Cumulative</th></tr></thead><tbody>';
   let cum=0;
   splits.forEach((s,i)=>{cum+=s; html+=`<tr><td>${(i+1)*50} m</td><td>${formatTime(s)}</td><td>${formatTime(cum)}</td></tr>`;});
@@ -6525,7 +6553,7 @@ function exportBackup(){
     const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
-    a.download='tidelyne-backup-'+new Date().toISOString().slice(0,10)+'.json';
+    a.download='tidelyne-backup-'+logTodayISO(0)+'.json'; // local date like every other date on the site (toISOString() is UTC: an evening export in the Americas was dated tomorrow)
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   }catch(e){ tlNotice('profile-notice','Could not create the backup file on this device.'); }
@@ -6714,8 +6742,10 @@ function renderLog(){
       </div>
       <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(shownDate)} ${escapeHTML(e.type)}" title="Delete session"><span aria-hidden="true">✕</span></button>
     </li>`;}).join('')+'</ul>';
-  const now=new Date(), thirtyAgo=new Date(now-30*24*60*60*1000);
-  const recent=entries.filter(e=>new Date(e.date)>=thirtyAgo);
+  const now=new Date(), thirtyAgo=new Date(now-30*24*60*60*1000), todayISO=logTodayISO(0);
+  // The form accepts tomorrow (a session logged the night before): a future date is not "last 30 days",
+  // and Analytics leaves it out too — the two pages must agree on whether anything has been swum.
+  const recent=entries.filter(e=>new Date(e.date)>=thirtyAgo&&String(e.date||'').slice(0,10)<=todayISO);
   if(statsEl&&recent.length>0){
     statsEl.style.display='block';
     const totDist=recent.reduce((a,e)=>a+(Number(e.dist)||0),0);
@@ -6730,8 +6760,10 @@ function renderLog(){
     statsEl.style.display='none'; // history exists but nothing in the window — never show a stale summary
   }
 }
-// One tap deletes with no confirm, so the deleted session can be put back for a few seconds.
-let _logUndo=null; // {entry, timer}
+// One tap deletes with no confirm, so the deleted sessions can be put back for a few seconds.
+// A stack, not a single slot: focus lands on the next ✕ after a delete, so a double Enter (or a
+// finger still where the ✕ was) removes two sessions — Undo must bring both back, not just the last.
+let _logUndo=[], _logUndoTimer=0; // pending deletes, oldest first; one timer for the whole stack
 function deleteLogEntry(id){
   const all=readLog(), gone=all.find(e=>e.id===id);
   if(!gone) return;
@@ -6741,33 +6773,36 @@ function deleteLogEntry(id){
   const at=dels.findIndex(b=>Number(b.getAttribute('data-del-id'))===id);
   if(!lsSet('swimiq_log',JSON.stringify(all.filter(e=>e.id!==id)))){ tlNotice('log-notice','Could not delete the session — your device storage may be blocked.'); return; }
   renderLog();
-  if(_logUndo&&_logUndo.timer) clearTimeout(_logUndo.timer);
-  _logUndo={entry:gone,timer:0};
+  clearTimeout(_logUndoTimer);
+  _logUndo.push(gone);
+  const k=_logUndo.length;
   const n=document.getElementById('log-notice');
   if(n){
-    tlNotice('log-notice','Session deleted — '+gone.date+(gone.type?' · '+gone.type:'')+'. ','ok');
-    const b=document.createElement('button'); b.type='button'; b.className='tl-linkbtn'; b.textContent='Undo';
+    tlNotice('log-notice',(k>1?k+' sessions deleted — latest ':'Session deleted — ')+gone.date+(gone.type?' · '+gone.type:'')+'. ','ok');
+    const b=document.createElement('button'); b.type='button'; b.className='tl-linkbtn'; b.textContent=k>1?'Undo all':'Undo';
     b.addEventListener('click',undoLogDelete); n.appendChild(b);
   }
-  setLogStatus('Session deleted. Undo is available for a few seconds.');
+  setLogStatus((k>1?k+' sessions deleted.':'Session deleted.')+' Undo is available for a few seconds.');
   focusLogAfterChange(at);
-  _logUndo.timer=setTimeout(()=>{
-    if(!_logUndo||_logUndo.entry!==gone) return;
-    _logUndo=null;
-    if(n&&/^Session deleted/.test(n.textContent)) tlNotice('log-notice','');
+  _logUndoTimer=setTimeout(()=>{
+    _logUndo=[];
+    if(n&&/^(\d+ sessions|Session) deleted — /.test(n.textContent)) tlNotice('log-notice','');
   },6000);
 }
 function undoLogDelete(){
-  if(!_logUndo) return;
-  const e=_logUndo.entry; clearTimeout(_logUndo.timer); _logUndo=null;
-  const entries=sortLogEntries([e].concat(readLog().filter(x=>x.id!==e.id))); entries.splice(LOG_MAX);
-  if(!lsSet('swimiq_log',JSON.stringify(entries))){ tlNotice('log-notice','Could not restore the session — your device storage may be full or blocked.'); return; }
+  if(!_logUndo.length) return;
+  const back=_logUndo; clearTimeout(_logUndoTimer); _logUndo=[];
+  const ids=new Set(back.map(e=>e.id));
+  const entries=sortLogEntries(back.concat(readLog().filter(x=>!ids.has(x.id)))); entries.splice(LOG_MAX);
+  if(!lsSet('swimiq_log',JSON.stringify(entries))){ tlNotice('log-notice','Could not restore the session'+(back.length>1?'s':'')+' — your device storage may be full or blocked.'); return; }
   renderLog();
-  tlNotice('log-notice','Session restored.','ok');
-  setLogStatus('Session restored.');
-  // The Undo button that had focus is gone with the notice: land on the restored session's delete button.
-  const back=Array.prototype.slice.call(document.querySelectorAll('#log-entries .log-del')).findIndex(b=>Number(b.getAttribute('data-del-id'))===e.id);
-  focusLogAfterChange(back);
+  const msg=back.length>1?back.length+' sessions restored.':'Session restored.';
+  tlNotice('log-notice',msg,'ok');
+  setLogStatus(msg);
+  // The Undo button that had focus is gone with the notice: land on the last-deleted session's delete button.
+  const last=back[back.length-1];
+  const at=Array.prototype.slice.call(document.querySelectorAll('#log-entries .log-del')).findIndex(b=>Number(b.getAttribute('data-del-id'))===last.id);
+  focusLogAfterChange(at);
 }
 function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog(); setLogStatus('All sessions cleared.'); focusLogAfterChange(0);}
 function focusLogAfterChange(at){
@@ -7125,7 +7160,7 @@ function tpPause(msg){
 function tpResume(){
   var ctx=auEnsure(); if(!ctx) return;
   TP.status='running'; TP.queue=[]; TP.next=ctx.currentTime+0.1;
-  tpSchedule(); tpLoopStart(); wlHold('tempo'); tpButtons(); setStatus('tlt-tempo-status','Running.');
+  tpSchedule(); tpLoopStart(); wlHold('tempo'); tpButtons(); setStatus('tlt-tempo-status','Resumed — '+tpRunningMsg()); // a nudge while paused changed the tempo: say what is beeping now
 }
 window.tlt_tempoToggle=function(){ if(TP.status==='running') tpPause(); else if(TP.status==='paused') tpResume(); else tpStart(); };
 window.tlt_tempoStop=function(){
@@ -7242,7 +7277,9 @@ function itRender(el,idx){
   setText('tlt-int-next',itNextText(idx));
   var sb=$('tlt-int-segbar'); if(sb) sb.style.width=(100*Math.min(1,Math.max(0,(el-segStart)/seg.dur))).toFixed(1)+'%';
   var tb=$('tlt-int-totbar'); if(tb) tb.style.width=(100*Math.min(1,Math.max(0,el/IT.total))).toFixed(1)+'%';
-  setText('tlt-int-times','Elapsed '+fmtMS(el)+' · Remaining '+fmtMS(IT.total-el)+' · Total '+fmtMS(IT.total));
+  // Elapsed floors and Remaining ceils (the big countdown ceils too): Elapsed + Remaining = Total and
+  // countdown + Elapsed = segment length at every instant — round() broke both for half of every second.
+  setText('tlt-int-times','Elapsed '+fmtMS(Math.floor(el))+' · Remaining '+fmtMS(Math.ceil(IT.total-el))+' · Total '+fmtMS(IT.total));
 }
 // Sample-accurate cues: every segment start (and the finish) plus the 3-2-1
 // ticks before each segment end are placed on the audio clock up to 350 ms
@@ -7282,7 +7319,7 @@ function itPause(){
   if(IT.status!=='running') return;
   IT.status='paused'; IT.pausedAt=nowMs(); itLoopStop(); wlDrop('interval'); auIdleCheck(); itButtons();
   var el=itElapsed(), idx=itSegAt(IT.cum,IT.total,el); if(idx<IT.sched.length) itRender(el,idx);
-  setStatus('tlt-int-status','Paused at '+fmtMS(el)+'.');
+  setStatus('tlt-int-status','Paused at '+fmtMS(Math.floor(el))+'.');
 }
 function itResume(){
   if(IT.status!=='paused') return;
@@ -7554,7 +7591,10 @@ function onKey(e){
 function stopAll(){
   if(TP.status==='running') tpPause('Paused — you left the Timers page. Press Resume to continue.');
   if(IT.status==='running') itPause();
-  if(SP.status==='running') window.tlt_spStop();
+  // The split taker reads the clock (nowMs()-SP.t0), so it keeps timing while the swimmer is on another
+  // page: only its frame loop and wake lock stop here, and onShow_timers picks it back up. Stopping it
+  // (as before) froze the time and ended the set with no warning.
+  if(SP.status==='running'){ spLoopStop(); wlDrop('split'); }
   pcLoopStop(); WL.reasons={}; wlRelease(); auClose();
 }
 function tabFromDom(){
@@ -7603,6 +7643,7 @@ window.onShow_timers=function(){
   ensureInit(); if(!inited) return;
   window.tlt_onTab(tabFromDom()); tpRender(); tpButtons();
   if(IT.status==='idle') itPreview(itReadCfg());
+  if(SP.status==='running'){ wlHold('split'); spLoopStop(); spFrame(); setText('tlt-sp-sub','Running — kept timing while you were away · tap for each split'); } // spFrame paints the current time at once and restarts the loop
   wlUpdate();
 };
 var _prevPageChange=window.onPageChange;
@@ -9560,6 +9601,11 @@ function render(){
   state.model = m;
   var has = m.past.length > 0;
   empty.hidden = has; body.hidden = !has;
+  var fut = an$('an-empty-future'), nFut = m.entries.length - m.past.length;
+  if (fut) { // sessions dated ahead (the log form accepts tomorrow) are real, just not analyzable yet
+    fut.hidden = has || nFut <= 0;
+    fut.textContent = nFut > 0 ? (nFut === 1 ? 'One session is dated in the future — it will appear here once that date arrives.' : nFut + ' sessions are dated in the future — they will appear here once those dates arrive.') : '';
+  }
   if (!has) { state.active = -1; hideTooltip(); return; }
   renderSummary(m); renderChart(); renderZones(m); renderInsights(m);
 }
