@@ -48,6 +48,26 @@ The logo and favicons are produced by the scripts in `tools/` (see `tools/make_l
 
 Personal data (swimmer name, PRs, training log, Race Planner goals and meets) is stored only in the visitor's browser via `localStorage`; the **Export Backup** button on the My PRs page downloads it as JSON so it can be restored on another device. See `privacy.html` for the full policy.
 
+## Maintainer notes
+
+Where the reference numbers in `index.html` come from (the inline comments point here):
+
+- **Season & meet calendar** (`SEASON_MEETS`): the published USA Swimming national events
+  calendar, https://www.usaswimming.org/events — re-verify each season and replace the
+  block as a whole (its header comment marks the bounds). The page links to the official
+  time standards and never invents cut times.
+- **Race-predictor exponents** (`EXP`, race planner): ratios between consecutive steps of
+  the men's and women's long-course world-record ladders (50 → 100 → 200 → …) per stroke;
+  the low/high brackets are about ±3% per doubling for speed- versus endurance-type swimmers.
+- **Race pacing patterns** (`PATTERNS`, race planner): each segment's share of total race
+  time in elite championship finals, dive included in the opening segment; `tol` is the
+  ± band seen across those finals.
+- **Intensity-distribution references** (analytics): Seiler (2010) for the ~80% low-intensity
+  share in endurance sport, and elite-swimmer distributions of 86–90% of volume at or below
+  ~4 mmol/L lactate (about 40–44% below 2 mmol/L).
+- **Duplicate-id check**: a release check greps `index.html` for repeated `id="…"`; it also
+  matches `data-id="…"`, which is why the video facades carry `data-video` instead.
+
 ## Notice
 
 This is a personal, all-rights-reserved project. See [`LICENSE`](LICENSE) and `terms.html`. Informational only — not medical, coaching, or dietetic advice.
@@ -66,8 +86,8 @@ number and **must move together** on every release:
    tell every open tab to offer a reload. If you forget this, visitors keep the old
    cached shell until the browser's 24-hour service-worker check catches up.
 3. **`site.webmanifest`** — only when icons or the start URL change.
-4. **`sitemap.xml`** — set the root `<lastmod>` to the release date (and a legal page's
-   `<lastmod>` whenever that page changes).
+4. **`sitemap.xml` — `<lastmod>`** of the home entry (and of any legal page you edited):
+   set it to the release date so crawlers see that the page changed.
 
 Then commit and push; GitHub Pages serves the new files, and the next visit (or the
 next background check, at most 24 h later) installs the update. Nothing needs a build.

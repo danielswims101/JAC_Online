@@ -5,11 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Page not found — Tidelyne</title>
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#040d18">
+<meta name="color-scheme" content="dark">
 <link rel="icon" type="image/svg+xml" href="/JAC_Online/logo-mark.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+html{color-scheme:dark}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#040d18;color:#b0c4d8;font-family:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem;line-height:1.7}
 .wrap{max-width:460px}
@@ -30,20 +33,22 @@ button.stay:hover,button.stay:focus-visible{border-color:#00d4ff;color:#00d4ff}
 <p class="small" id="redirect-note" role="status">Taking you home in 20 seconds. <button type="button" class="stay" id="stay-btn">Stay on this page</button></p>
 </main>
 <script>
-// GitHub Pages serves this file AT the missing URL, so a relative "./" would
-// resolve to the missing path's own folder (another 404 for nested URLs).
-// Derive the site root instead: the project path on github.io, "/" on a
-// custom domain. Update ROOT_SEGMENT if the repository is ever renamed.
-// The redirect waits 20 s and can be cancelled (WCAG 2.2.1).
+// GitHub Pages serves this file AT the missing URL, so relative links resolve
+// against that path (for /JAC_Online/foo/bar/ a './' link points back at the
+// 404 itself). Work out the site root once — the project folder on *.github.io,
+// the origin root anywhere else — and use it for the button, the icon and the
+// redirect. The redirect waits 20 s and can be cancelled (WCAG 2.2.1).
 (function(){
-  var ROOT_SEGMENT = '/JAC_Online/';
-  var root = location.pathname.indexOf(ROOT_SEGMENT) === 0 ? ROOT_SEGMENT : '/';
-  var link = document.getElementById('home-link'); if (link) link.href = root;
-  var icon = document.querySelector('link[rel="icon"]'); if (icon) icon.href = root + 'logo-mark.svg';
-  var redirectTimer = setTimeout(function(){ location.replace(root); }, 20000);
-  document.getElementById('stay-btn').addEventListener('click', function(){
+  var ROOT = /\.github\.io$/i.test(location.hostname) ? '/' + (location.pathname.split('/')[1] || '') + '/' : '/';
+  if (ROOT === '//') ROOT = '/';
+  var link = document.getElementById('home-link'); if (link) link.href = ROOT;
+  var icon = document.querySelector('link[rel="icon"]'); if (icon) icon.href = ROOT + 'logo-mark.svg';
+  var note = document.getElementById('redirect-note'), stay = document.getElementById('stay-btn');
+  if (location.pathname === ROOT) { if (note) note.textContent = ''; return; }
+  var redirectTimer = setTimeout(function(){ location.replace(ROOT); }, 20000);
+  if (stay) stay.addEventListener('click', function(){
     clearTimeout(redirectTimer);
-    document.getElementById('redirect-note').textContent = 'Redirect cancelled — use the button above whenever you are ready.';
+    if (note) note.textContent = 'Redirect cancelled — use the button above whenever you are ready.';
   });
 })();
 </script>

@@ -11,6 +11,7 @@
 <meta property="og:url" content="https://danielswims101.github.io/JAC_Online/">
 <link rel="canonical" href="https://danielswims101.github.io/JAC_Online/">
 <meta name="theme-color" content="#040d18">
+<meta name="color-scheme" content="dark">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tidelyne — Swimming Technique & Training Tools">
 <meta name="twitter:description" content="AI coaching, 3D biomechanics visualizer, technique library, workout generator and more for competitive swimmers.">
@@ -22,17 +23,25 @@
 <meta property="og:image" content="https://danielswims101.github.io/JAC_Online/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
 <meta property="og:image:alt" content="Tidelyne — 3D stroke lab for competitive swimmers">
 <meta property="og:site_name" content="Tidelyne">
+<meta property="og:locale" content="en_US">
 <meta name="twitter:image" content="https://danielswims101.github.io/JAC_Online/og.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition and mental performance."}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://danielswims101.github.io/JAC_Online/#org","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","logo":{"@type":"ImageObject","url":"https://danielswims101.github.io/JAC_Online/icon-512.png","width":512,"height":512}},{"@type":"WebSite","@id":"https://danielswims101.github.io/JAC_Online/#website","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition and mental performance.","inLanguage":"en","publisher":{"@id":"https://danielswims101.github.io/JAC_Online/#org"}},{"@type":"WebApplication","@id":"https://danielswims101.github.io/JAC_Online/#app","name":"Tidelyne","url":"https://danielswims101.github.io/JAC_Online/","description":"Training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, race strategy, nutrition and mental performance.","applicationCategory":"SportsApplication","operatingSystem":"Web","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://danielswims101.github.io/JAC_Online/og.png","inLanguage":"en","publisher":{"@id":"https://danielswims101.github.io/JAC_Online/#org"},"featureList":["AI swim coach","3D stroke visualizer","Technique library","Workout generator","Pace and race calculators","Training log and analytics","Race planner","Pool-deck timers"]}]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<link rel="preconnect" href="https://gzqovsffnziumfbmqdes.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://i.ytimg.com">
+<link rel="dns-prefetch" href="https://www.youtube-nocookie.com">
+<!-- Fonts CSS is preloaded and promoted to a stylesheet once it arrives, so first paint never waits on the cross-origin request (display=swap covers the font files). -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap"></noscript>
+<!-- supabase-js is pinned (not the floating @2 tag) so an upstream release cannot change the auth path unseen; integrity is that file's sha384 — bump version and hash together. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js" integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP" crossorigin="anonymous" defer></script>
 <script>
 // Minimal OrbitControls implementation compatible with THREE r128 (UMD global build).
 // Supports: left-drag orbit, scroll-wheel zoom, damping. No pan (not needed here).
@@ -155,6 +164,7 @@ THREE.OrbitControls = function (camera, domElement) {
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
+  color-scheme:dark;
   --navy:#040d18;--navy2:#081526;--navy3:#0c1e38;
   --cyan:#00d4ff;--cyan2:#00b0d8;--cyan-dim:rgba(0,212,255,0.1);
   --gold:#f5a623;--gold-dim:rgba(245,166,35,0.12);
@@ -181,8 +191,6 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .nav-brand span{color:var(--white)}
 .nav-brand{display:flex;align-items:center;gap:9px}
 .nav-mark{border-radius:6px;flex-shrink:0;display:block}
-.nav-scroll{flex:1;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-width:0}
-.nav-scroll::-webkit-scrollbar{display:none}
 .nav-links{display:flex;list-style:none;gap:0;width:max-content}
 .nav-links li a{display:block;padding:4px 8px;font-size:0.65rem;font-weight:500;letter-spacing:0.3px;color:var(--white3);text-decoration:none;text-transform:uppercase;transition:color 0.2s;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;line-height:48px}
 .nav-links li a:hover,.nav-links li a.active{color:var(--cyan);border-bottom-color:var(--cyan)}
@@ -193,6 +201,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .nav-key-btn{background:var(--navy3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--white3);font-size:0.8rem;cursor:pointer;transition:all 0.2s;flex-shrink:0}
 .nav-key-btn:hover{color:var(--cyan);border-color:var(--cyan)}
 .page{display:none}.page.active{display:block}.page:focus{outline:none}
+.noscript-note{position:fixed;left:0;right:0;bottom:0;z-index:9000;margin:0;background:var(--navy2);border-top:1px solid var(--border);color:var(--white);font-size:0.85rem;line-height:1.5;padding:0.7rem 1rem;text-align:center}
 /* HERO */
 .hero{position:relative;padding:7rem 2rem 5rem;text-align:center;overflow:hidden;min-height:85vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 120% 80% at 50% -5%,rgba(0,212,255,0.08) 0%,transparent 60%)}
@@ -213,13 +222,13 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 /* LAYOUT */
 .section-wrap{max-width:1240px;margin:0 auto;padding:5rem 2rem}.section-wrap.narrow{max-width:960px}
 .section-eyebrow{font-family:var(--fm);font-size:0.6rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.75rem;opacity:0.85}
-.section-title{font-family:var(--fh);font-weight:400;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:2px;line-height:0.92;margin-bottom:1rem}
+.section-title{font-family:var(--fh);font-weight:400;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:2px;line-height:0.92;margin-top:0;margin-bottom:1rem}
 .section-title span{color:var(--cyan)}
 .section-intro{font-size:0.95rem;color:var(--white2);max-width:660px;line-height:1.85;font-weight:300;margin-bottom:2.5rem}
+.form-notice{color:var(--red);font-size:0.82rem;line-height:1.55;margin-top:0.75rem}.form-notice.is-ok{color:var(--green)}.form-notice[hidden]{display:none}
 .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:3.5rem 0}
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
-.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem}
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;transition:border-color 0.3s,transform 0.25s,box-shadow 0.3s}
 .card:hover{border-color:var(--border)}
@@ -268,15 +277,12 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .video-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}.video-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 .video-info{padding:1.25rem}.video-info h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;margin-bottom:0.5rem}.video-info p{font-size:0.84rem;color:var(--white2);line-height:1.75;font-weight:300}.video-tag{font-family:var(--fm);font-size:0.58rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem;display:block}
 /* TECH IMAGE CARDS */
-.tech-img-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);overflow:hidden;transition:border-color 0.3s,transform 0.25s}.tech-img-card:hover{border-color:var(--border);transform:translateY(-3px)}
-.tech-img-wrap{position:relative;overflow:hidden;height:180px;background:var(--navy3);display:flex;align-items:center;justify-content:center}
-.tech-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(4,13,24,0.85) 0%,transparent 50%);display:flex;align-items:flex-end;padding:1rem}.tech-img-overlay span{font-family:var(--fh);font-size:1rem;letter-spacing:1px;color:var(--white)}
-.tech-img-body{padding:1.1rem}.tech-img-body p{font-size:0.85rem;color:var(--white2);line-height:1.75;font-weight:300}
 /* ============================================================
    3D VISUALIZER
    ============================================================ */
 .viz-canvas-wrap{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r16);overflow:hidden;position:relative}
 #viz3d-container{display:block;width:100%;height:520px;border-radius:var(--r16);overflow:hidden;cursor:grab}
+.viz-fallback{display:flex;align-items:center;justify-content:center;height:100%;padding:2rem;text-align:center;color:var(--white2);font-size:0.9rem;line-height:1.8}
 .viz-overlay-stats{position:absolute;top:12px;right:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px;pointer-events:none}
 .vos-item{background:rgba(4,13,24,0.85);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center;backdrop-filter:blur(8px)}
 .vos-val{font-family:var(--fm);font-size:1.1rem;color:var(--cyan);display:block;line-height:1;letter-spacing:0.5px}
@@ -369,6 +375,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .log-del{background:none;border:0;color:var(--white4);cursor:pointer;font-size:1.1rem;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin:-8px -10px -8px 0;border-radius:var(--r8);transition:color 0.2s}.log-del:hover,.log-del:focus-visible{color:var(--red)}
 .log-date{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--cyan);text-transform:uppercase;min-width:70px;flex-shrink:0}
 .log-content{flex:1}.log-title{font-family:var(--fh);font-size:1.1rem;letter-spacing:1px;margin-bottom:0.25rem}.log-meta{font-size:0.8rem;color:var(--white3);font-family:var(--fm)}.log-notes{font-size:0.83rem;color:var(--white2);margin-top:0.5rem;line-height:1.6}
+.log-del{background:none;border:none;color:var(--white4);cursor:pointer;font-size:1.1rem;padding:4px;border-radius:var(--r8);transition:color 0.2s}.log-del:hover,.log-del:focus-visible{color:var(--red)}
 /* NUTRITION */
 .nutr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem}
 .nutr-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.4rem;transition:border-color 0.3s}.nutr-card:hover{border-color:var(--border)}
@@ -468,9 +475,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media (prefers-reduced-motion: reduce){ .ai-dot{animation:none} }
 /* Print: hide the rest of the app chrome so a workout prints clean */
 @media print{
-  #update-banner,.tabs,.viz-canvas-wrap,.viz-overlay-stats,.force-legend,
-  .ai-mode-btns,.ai-header,#human-status,#motion-status,.nav-scroll,
-  .cmdk-hint,#mobile-nav{display:none!important}
+  #tl-upd-toast,.tl-upd-toast,#tl-palette,#nav-drawer,.nav-scrim,.tl-pal-navbtn,
+  .tabs,.viz-canvas-wrap,.viz-overlay-stats,.force-legend,
+  .ai-mode-btns,.ai-header,#human-status,#motion-status{display:none!important}
 }
 /* PRINT — clean workout printouts, no dark theme ink waste */
 @media print{
@@ -1155,7 +1162,7 @@ html.tl-pal-lock{overflow:hidden}
 #nav-updates{position:relative}
 #nav-updates .tl-upd-dot{position:absolute;top:13px;right:-1px;margin-left:0}
 
-/* ── Update toast (created by the What's New script, appended to <body>) ── */
+/* ── Update toast (created by the What's New module of the inline script, appended to <body>) ── */
 .tl-upd-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);background:var(--card2);border:1px solid var(--border);border-radius:var(--r12);padding:10px 10px 10px 18px;box-shadow:0 16px 40px rgba(0,0,0,0.45),0 0 40px rgba(0,212,255,0.08);animation:tlUpdIn 0.3s ease}
 @keyframes tlUpdIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
 .tl-upd-toast-msg{font-family:var(--fm);font-size:0.72rem;letter-spacing:0.3px;color:var(--white);line-height:1.5}
@@ -1219,7 +1226,7 @@ nav .nav-menu a:hover,nav .nav-menu a:focus-visible{background:var(--cyan-dim);c
 nav .nav-menu a.active{background:var(--cyan-dim);color:var(--cyan);box-shadow:inset 2px 0 0 var(--cyan);border-bottom-color:transparent}
 /* Right cluster: keep a long username from pushing the row off-screen (CSS only; markup untouched). */
 nav #current-username-display{max-width:120px;overflow:hidden;text-overflow:ellipsis}
-/* The nav script sets [hidden] on the search button until window.openPalette exists; the site's
+/* the nav module sets [hidden] on the search button until window.openPalette exists; the site's
    768px rule gives .nav-key-btn display:inline-flex, which would otherwise override [hidden]. */
 nav #nav-search-btn[hidden]{display:none}
 @media(max-width:999px){nav #current-username-display{display:none}}
@@ -1237,16 +1244,16 @@ nav #nav-search-btn[hidden]{display:none}
   /* Mirrors a badge appended inside #nav-updates (the link is out of sight in the closed drawer). */
   nav .nav-burger.has-badge::after{content:'';position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 2px var(--navy3)}
   /* top/left/width/height are explicit (not inset:0) because the nav's backdrop-filter can make it,
-     rather than the viewport, the containing block for fixed children; the nav script re-anchors on open. */
+     rather than the viewport, the containing block for fixed children; the nav module re-anchors on open. */
   nav .nav-scrim{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;background:rgba(4,13,24,0.62);opacity:0;pointer-events:none;transition:opacity 0.25s ease;z-index:4}
   nav .nav-scrim.open{opacity:1;pointer-events:auto}
   /* Three states, no visibility transition (a transitioned visibility only resolves when the
      animation timeline ticks, which made the Close button unfocusable for a frame):
        parked  — display:none. Fully closed. A translated-off-screen box still counts as scrollable
                  overflow of its containing block (it made the page 344px wider than the phone).
-       closing — translated off-screen while the slide-out runs; the nav script marks it inert meanwhile.
+       closing — translated off-screen while the slide-out runs; the nav module marks it inert meanwhile.
        open    — in place, focusable immediately.
-     The nav script un-parks and forces a reflow before adding .open, and parks after the slide-out. */
+     the nav module un-parks and forces a reflow before adding .open, and parks after the slide-out. */
   nav .nav-drawer{position:fixed;top:0;right:0;height:100vh;height:100dvh;width:min(360px,88vw);flex:none;display:flex;flex-direction:column;justify-content:flex-start;background:var(--navy2);border-left:1px solid var(--border);box-shadow:-24px 0 60px rgba(0,0,0,0.5);transform:translateX(102%);transition:transform 0.28s cubic-bezier(0.2,0.7,0.2,1);z-index:5;overflow:hidden}
   nav .nav-drawer.open{transform:none}
   nav .nav-drawer.parked{display:none}
@@ -1291,7 +1298,7 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-drawer,nav .nav-drawer.open,nav .nav-scrim,nav .nav-burger-bars span,nav .nav-caret{transition:none}
   nav .nav-group-btn[aria-expanded="true"]+.nav-menu{animation:none}
 }
-/* Body scroll lock while the drawer is open (the nav script also fixes the body for iOS). Keeps the
+/* Body scroll lock while the drawer is open (the nav module also fixes the body for iOS). Keeps the
    scrollbar gutter so desktop-width narrow windows do not shift when the page stops scrolling. */
 html.tl-nav-lock{overflow-y:scroll}
 html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
@@ -1351,6 +1358,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
+<noscript><style>#page-home{display:block}.reveal{opacity:1!important;transform:none!important}</style><p class="noscript-note">JavaScript is off in this browser, so Tidelyne's tools are unavailable and only the home page is shown.</p></noscript>
 <div class="noise"></div>
 <!-- NAV -->
 <nav aria-label="Primary">
@@ -1621,6 +1629,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
           </select>
         </div>
         <button class="btn-sm" id="viz-gen-btn" onclick="generateVisualization()" style="padding:12px">Generate Analysis ✦</button>
+        <p class="form-notice" id="viz-notice" role="alert" hidden></p>
       </div>
       <div class="imggen-result" id="viz-result">
         <div class="imggen-placeholder">
@@ -1911,6 +1920,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="form-group" style="margin-bottom:1rem"><label>50m Split (seconds)</label><input class="form-input" id="golf-split" type="number" placeholder="e.g. 32" min="20" max="120"></div>
         <div class="form-group" style="margin-bottom:1rem"><label>Stroke Count (per 50m)</label><input class="form-input" id="golf-strokes" type="number" placeholder="e.g. 28" min="10" max="60"></div>
         <button class="calc-btn" onclick="calcGolf()">Calculate →</button>
+        <p class="form-notice" id="golf-notice" role="alert" hidden></p>
         <div class="calc-result" id="golf-result"><div class="big" id="golf-score">—</div><div class="sub">Golf Score</div><p style="margin-top:1rem;font-size:0.84rem;color:var(--white2);line-height:1.7" id="golf-rating"></p></div>
       </div>
       <div class="calc-panel"><h4>SCORE GUIDE</h4>
@@ -1932,6 +1942,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="form-group" style="margin-bottom:1rem"><label>Target Time (m:ss.ss)</label><input class="form-input" id="split-time" placeholder="e.g. 1:55.00"></div>
         <div class="form-group" style="margin-bottom:1rem"><label>Race Strategy</label><select class="form-select" id="split-strategy"><option value="even">Even Splits</option><option value="neg" selected>Negative Split</option><option value="pos">Positive Split</option><option value="surge">Surge Middle</option></select></div>
         <button class="calc-btn" onclick="calcSplits()">Generate Splits →</button>
+        <p class="form-notice" id="split-notice" role="alert" hidden></p>
       </div>
       <div class="calc-panel"><h4>SPLIT TABLE</h4><div id="split-result" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Enter your target time above.</div></div>
     </div>
@@ -1940,6 +1951,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="calc-panel" style="max-width:560px"><h4>TRAINING PACE ZONES</h4>
       <div class="form-group" style="margin-bottom:1rem"><label>Best 100m Freestyle (m:ss)</label><input class="form-input" id="pace-100" placeholder="e.g. 0:55.5 or 1:02.0"></div>
       <button class="calc-btn" onclick="calcPaceZones()">Calculate Zones →</button>
+      <p class="form-notice" id="pace-notice" role="alert" hidden></p>
       <div id="pace-result" style="margin-top:1.5rem"></div>
       <p style="font-size:0.76rem;color:var(--white3);margin-top:1rem;line-height:1.6">Rough reference paces derived from your 100m time, not lab-tested lactate zones. Use them as a starting point and adjust to feel, heart rate, and how the set actually goes.</p>
     </div>
@@ -1950,6 +1962,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="form-group" style="margin-bottom:1rem"><label>Time (m:ss.ss)</label><input class="form-input" id="conv-time" placeholder="e.g. 1:52.44"></div>
         <div class="form-group" style="margin-bottom:1rem"><label>From Pool Format</label><select class="form-select" id="conv-from"><option value="scy">SCY (25 yards)</option><option value="scm">SCM (25 meters)</option><option value="lcm" selected>LCM (50 meters)</option></select></div>
         <button class="calc-btn" onclick="convertTime()">Convert →</button>
+        <p class="form-notice" id="conv-notice" role="alert" hidden></p>
       </div>
       <div class="calc-panel"><h4>CONVERSION RESULTS</h4><div id="conv-result" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Fill in the form above.</div>
       <div class="info-box" style="margin-top:1.5rem"><strong>Note:</strong> LCM is ~2–3% slower than SCM because of fewer turns. These are flat approximations for training reference — they are <strong>not</strong> the official USA Swimming conversion factors, which vary by event and distance. For anything that counts (cuts, entries, seeding), use the official conversion on <a href="https://www.usaswimming.org" target="_blank" rel="noopener">usaswimming.org</a>.</div></div>
@@ -2010,6 +2023,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="btn-ghost-sm" onclick="clearAllPRs()">Clear All PR<span style="text-transform:none">s</span></button>
     <button class="btn-sm" onclick="showPageTab('calculator','c-pace')">Calculate Pace Zones →</button>
   </div>
+  <p class="form-notice" id="profile-notice" role="status" hidden></p>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
 </div>
@@ -2033,8 +2047,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" maxlength="200" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 24-28"></div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Notes</label><textarea class="form-textarea" id="log-notes" maxlength="1000" placeholder="Technique focus, energy levels, what went well..."></textarea></div>
-    <div id="log-form-err" role="alert" style="display:none;color:var(--red);font-size:0.82rem;margin-bottom:0.75rem"></div>
     <button class="btn-sm" onclick="saveLogEntry()">Save Session</button>
+    <p class="form-notice" id="log-notice" role="alert" hidden></p>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
     <div style="font-family:var(--fh);font-size:1.5rem;letter-spacing:1px">SESSION HISTORY</div>
@@ -3590,13 +3604,18 @@ function markNewTabLinks(root){
     const sr=document.createElement('span'); sr.className='sr-only'; sr.textContent=' (opens in a new tab)'; a.appendChild(sr);
   });
 }
+// One observer for the life of the page: activatePage() calls this on every
+// route change, and observing an already-observed element is a no-op.
+let _revealObs=null;
 function initReveal(){
   const els=document.querySelectorAll('.reveal:not(.visible)');
   if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('visible'));return;}
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible'); obs.unobserve(e.target);}});
-  },{threshold:0.1});
-  els.forEach(el=>obs.observe(el));
+  if(!_revealObs){
+    _revealObs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible'); _revealObs.unobserve(e.target);}});
+    },{threshold:0.1});
+  }
+  els.forEach(el=>_revealObs.observe(el));
 }
 document.addEventListener('DOMContentLoaded',initReveal);
 // Hero particles
@@ -3686,7 +3705,7 @@ function initViz3D() {
   try {
     renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
   } catch (err) {
-    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:2rem;text-align:center;color:var(--white2);font-size:0.9rem;line-height:1.8">3D isn\'t supported on this device or browser.<br>Use the stroke demo videos above — they cover the same technique.</div>';
+    container.innerHTML = '<div class="viz-fallback">3D isn\'t supported on this device or browser.<br>Use the stroke demo videos above — they cover the same technique.</div>';
     return; // viz3DInitialized stays false; the render loop never starts
   }
   renderer.setSize(container.clientWidth, container.clientHeight);
@@ -4177,7 +4196,7 @@ function loadHumanScripts(done){
     _humanScriptQueue.splice(0).forEach(fn => fn());
   };
   const s = document.createElement('script');
-  s.src = HUMAN_SCRIPT + '?v=' + encodeURIComponent(window.TL_VERSION || '3.1.1');
+  s.src = HUMAN_SCRIPT + '?v=' + encodeURIComponent(window.TL_VERSION || '');
   s.async = false;
   s.onload = finish;
   // Offline, blocked or a broken deploy: the page keeps working with the built-in mannequin.
@@ -4292,7 +4311,7 @@ function buildHumanRig(sex, quality, sd){
     registerHumanCaustics(rig);
     const ms = Math.round(performance.now() - t0);
     const st = rig.stats || {};
-    console.info('Tidelyne: ' + sex + '/' + quality + ' swimmer built in ' + ms + ' ms — ' + st.triangles + ' triangles, ' + st.vertices + ' vertices');
+    if (window.TL_DEBUG || lsGet('tl_debug') === '1') console.info('Tidelyne: ' + sex + '/' + quality + ' swimmer built in ' + ms + ' ms — ' + st.triangles + ' triangles, ' + st.vertices + ' vertices');
     if (wanted()) {
       showHumanRig(rig, STROKES[currentStroke]);
       humanStatus('✓ ' + humanLabel(sex) + ' swimmer ready — ' + (st.triangles ? Math.round(st.triangles / 1000) + 'k triangles' : '') + (hiddenDuringBuild ? '.' : ', ' + ms + ' ms.'));
@@ -4816,52 +4835,10 @@ function ensureViz3DReady() {
   s.onerror = function(){
     threeLoading = false;
     const c = document.getElementById('viz3d-container');
-    if (c) c.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:2rem;text-align:center;color:var(--white2);font-size:0.9rem;line-height:1.8">The 3D engine could not load (your connection may be blocking the CDN).<br>The stroke demo videos above cover the same technique. Reopen this page to retry.</div>';
+    if (c) c.innerHTML = '<div class="viz-fallback">The 3D engine could not load (your connection may be blocking the CDN).<br>The stroke demo videos above cover the same technique. Reopen this page to retry.</div>';
   };
   document.head.appendChild(s);
 }
-// ─── AI-GENERATED STROKE DEMO CLIPS (drop-in slots) ──────────────────────
-// When your AI-generated clips are ready (full plan, prompts and encoding
-// specs in VIDEO_PLAN.md), upload them to a /media folder in your repo and
-// paste the paths below — e.g. male:'media/freestyle-m.mp4'. Each filled
-// stroke automatically replaces its YouTube embed with your own clip and a
-// Male/Female toggle. Empty slots keep the licensed YouTube demo.
-const DEMO_CLIPS = {
-  'vd-fr':  { label:'Freestyle',    male:'', female:'' },
-  'vd-bk':  { label:'Backstroke',   male:'', female:'' },
-  'vd-br':  { label:'Breaststroke', male:'', female:'' },
-  'vd-fly': { label:'Butterfly',    male:'', female:'' },
-  'vd-uw':  { label:'Underwater',   male:'', female:'' }
-};
-function initDemoClips(){
-  Object.keys(DEMO_CLIPS).forEach(id=>{
-    const cfg=DEMO_CLIPS[id];
-    if(!cfg.male && !cfg.female) return; // no clip yet -> keep YouTube fallback
-    const panel=document.getElementById(id);
-    if(!panel) return;
-    const first=cfg.male?'male':'female';
-    panel.innerHTML=`
-      <div class="video-card" style="max-width:640px">
-        <video id="clip-${id}" controls playsinline preload="metadata" loop style="width:100%;display:block;background:#000;aspect-ratio:16/9" src="${cfg[first]}"></video>
-        <div class="video-info">
-          <span class="video-tag">${cfg.label} · AI-generated coaching demo</span>
-          <div style="display:flex;gap:8px;margin-top:6px">
-            ${cfg.male?`<button class="viz-btn ${first==='male'?'active':''}" onclick="setClip('${id}','male',this)">Male</button>`:''}
-            ${cfg.female?`<button class="viz-btn ${first==='female'?'active':''}" onclick="setClip('${id}','female',this)">Female</button>`:''}
-          </div>
-        </div>
-      </div>`;
-  });
-}
-function setClip(id, sex, btn){
-  const v=document.getElementById('clip-'+id);
-  if(!v||!DEMO_CLIPS[id][sex]) return;
-  v.src=DEMO_CLIPS[id][sex];
-  v.play().catch(()=>{});
-  btn.parentElement.querySelectorAll('.viz-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-}
-document.addEventListener('DOMContentLoaded', initDemoClips);
 // A11y: give every video iframe a title (screen readers announce these),
 // derived from its own card heading so it never goes stale.
 document.addEventListener('DOMContentLoaded', function(){
@@ -5001,8 +4978,13 @@ async function generateMotion(){
   btn.disabled=false;
 }
 // ─── SEASON & MEET CALENDAR — time-aware (reads the real device date) ────
+// This block runs from the header line above to just before "// ─── AI COACH —
+// STREAMING". Replace it as a whole when the calendar changes: pasting a copy
+// anywhere else would redeclare SEASON_MEETS and break the whole script.
+//
 // Meet dates below reflect the published 2026-27 USA Swimming national events
-// calendar (verified 2026-09-13 against usaswimming.org). The page never invents
+// calendar (verified 2026-09-13 against usaswimming.org/events; see README.md,
+// "Maintainer notes"). The page never invents
 // specific cut times -- it links to the official standards instead. Always
 // confirm on usaswimming.org. Shape is unchanged: {name,start,end,course,tag}.
 const SEASON_MEETS = [
@@ -5352,7 +5334,7 @@ Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g.
     loading.style.display='none';
     if(!resp.ok){
       const err=await resp.json().catch(()=>({}));
-      result.innerHTML=`<p style="color:var(--red)">${err.error || (resp.status===429 ? AI_LIMIT_MSG : `Error: HTTP ${resp.status}`)}</p>`;
+      result.innerHTML=`<p style="color:var(--red)">${escapeHTML(err.error || (resp.status===429 ? AI_LIMIT_MSG : `Error: HTTP ${resp.status}`))}</p>`;
       return;
     }
     const reader=resp.body.getReader();
@@ -5432,7 +5414,8 @@ async function _generateVisualizationInner(){
   const custom=document.getElementById('viz-custom').value.trim();
   const detail=document.getElementById('viz-detail').value;
   const basePrompt=concept==='custom'?custom:(VIZ_CONCEPTS[concept]||'');
-  if(!basePrompt){alert('Please describe the technique concept.');return;}
+  if(!basePrompt){tlNotice('viz-notice','Please describe the technique concept.');document.getElementById('viz-custom').focus();return;}
+  tlNotice('viz-notice','');
   const detailMap={
     beginner:'Simple language, 3-4 key points, analogies, no jargon.',
     intermediate:'Key checkpoints and coaching cues, some technical detail, practical focus.',
@@ -5477,7 +5460,7 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
     resultDiv.innerHTML='<div style="padding:1.25rem;text-align:center"><div style="font-family:var(--fm);font-size:0.6rem;letter-spacing:3px;color:var(--green)">✓ STREAMING</div></div>';
     if(!resp.ok){
       const err=await resp.json().catch(()=>({}));
-      contentDiv.innerHTML=`<p style="color:var(--red)">${err.error || (resp.status===429 ? AI_LIMIT_MSG : 'API error')}</p>`;
+      contentDiv.innerHTML=`<p style="color:var(--red)">${escapeHTML(err.error || (resp.status===429 ? AI_LIMIT_MSG : 'API error'))}</p>`;
       return;
     }
     const reader=resp.body.getReader();
@@ -5550,9 +5533,10 @@ function formatTime(secs){
 function calcGolf(){
   const split=parseFloat(document.getElementById('golf-split').value);
   const strokes=parseFloat(document.getElementById('golf-strokes').value);
-  if(isNaN(split)||isNaN(strokes)){alert('Enter both values.');return;}
-  if(split<15||split>120){alert('50m split should be between 15 and 120 seconds.');return;}
-  if(strokes<5||strokes>60){alert('Stroke count should be between 5 and 60 per 50m.');return;}
+  if(isNaN(split)||isNaN(strokes)){tlNotice('golf-notice','Enter both values.');document.getElementById(isNaN(split)?'golf-split':'golf-strokes').focus();return;}
+  if(split<15||split>120){tlNotice('golf-notice','50m split should be between 15 and 120 seconds.');document.getElementById('golf-split').focus();return;}
+  if(strokes<5||strokes>60){tlNotice('golf-notice','Stroke count should be between 5 and 60 per 50m.');document.getElementById('golf-strokes').focus();return;}
+  tlNotice('golf-notice','');
   const score=split+strokes;
   document.getElementById('golf-score').textContent=score.toFixed(0);
   const r=document.getElementById('golf-rating');
@@ -5567,10 +5551,11 @@ function calcSplits(){
   const dist=parseInt(document.getElementById('split-dist').value);
   const totalSecs=parseTime(document.getElementById('split-time').value);
   const strategy=document.getElementById('split-strategy').value;
-  if(!totalSecs){alert('Enter a valid target time.');return;}
+  if(!totalSecs){tlNotice('split-notice','Enter a valid target time.');document.getElementById('split-time').focus();return;}
   const n=dist/50, avg=totalSecs/n;
-  if(avg<15){alert('That works out to under 15 seconds per 50m — faster than the world record. Check the distance and time.');return;}
-  if(avg>120){alert('That works out to over 2 minutes per 50m — check the distance and time.');return;}
+  if(avg<15){tlNotice('split-notice','That works out to under 15 seconds per 50m — faster than the world record. Check the distance and time.');document.getElementById('split-time').focus();return;}
+  if(avg>120){tlNotice('split-notice','That works out to over 2 minutes per 50m — check the distance and time.');document.getElementById('split-time').focus();return;}
+  tlNotice('split-notice','');
   // Offsets are zero-mean so every strategy sums exactly to the target.
   // Neg/pos ramp 4% of the average split from first to last 50 (a 200 @ 2:00
   // spreads 1.2 s; a 1500 no longer implies an 11 s differential).
@@ -5593,8 +5578,9 @@ function calcSplits(){
 function calcPaceZones(){
   const rawPace=String(document.getElementById('pace-100').value||'').trim();
   const t=parseTime(rawPace);
-  if(!t){alert(/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100m time as m:ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100m time (ss.ss or m:ss.ss).');return;}
-  if(t<35||t>240){alert('A 100m time between 35 s and 4:00 is expected — check the value (use m:ss for minutes).');return;}
+  if(!t){tlNotice('pace-notice',/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100m time as m:ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100m time (ss.ss or m:ss.ss).');document.getElementById('pace-100').focus();return;}
+  if(t<35||t>240){tlNotice('pace-notice','A 100m time between 35 s and 4:00 is expected — check the value (use m:ss for minutes).');document.getElementById('pace-100').focus();return;}
+  tlNotice('pace-notice','');
   const zones=[
     {name:'Zone 1 — Recovery',pct:[1.28,1.45],color:'#00e599',desc:'HR <23 · <1.5 mmol'},
     {name:'Zone 2 — AeT Base',pct:[1.10,1.22],color:'#00d4ff',desc:'HR 24–28 · 2–3 mmol'},
@@ -5613,7 +5599,8 @@ function calcPaceZones(){
 function convertTime(){
   const t=parseTime(document.getElementById('conv-time').value);
   const from=document.getElementById('conv-from').value;
-  if(!t){alert('Enter a valid time.');return;}
+  if(!t){tlNotice('conv-notice','Enter a valid time.');document.getElementById('conv-time').focus();return;}
+  tlNotice('conv-notice','');
   const factors={scy:1.00,scm:1.11,lcm:1.14};
   const labels={scy:'SCY — 25 yards',scm:'SCM — 25 meters',lcm:'LCM — 50 meters'};
   let html='<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Pool Format</th><th scope="col">Equivalent Time</th><th scope="col">Difference</th></tr></thead><tbody>';
@@ -5649,10 +5636,22 @@ function buildPRGrid(stroke){
 // "52.30" / "1:52.30" — the input form (no trailing s) for a stored PR.
 function prFmt(sec){ const cs=Math.round(sec*100), m=Math.floor(cs/6000), s=((cs%6000)/100).toFixed(2).padStart(5,'0'); return m>0?m+':'+s:s; }
 function prHint(msg){ const h=document.getElementById('pr-hint'); if(h) h.textContent=msg||''; }
-// Guarded localStorage writes: a full quota or a privacy-mode block must
-// never throw and break the page (reads are already guarded in readLog).
+// Guarded localStorage access: a full quota or a privacy-mode block must
+// never throw and break the page. The feature modules below reuse these
+// through window.lsGet / lsSet / lsRemove instead of carrying their own copies.
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
 function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
 function lsRemove(k){ try{ localStorage.removeItem(k); }catch(e){} }
+// Inline form notices instead of blocking alert(): writes into the form's
+// <p class="form-notice" role="alert">; kind 'ok' styles a success message.
+// Falls back to alert() only when a form has no notice element.
+function tlNotice(id,msg,kind){
+  const el=document.getElementById(id);
+  if(!el){ if(msg) alert(msg); return; }
+  el.textContent=msg||'';
+  el.classList.toggle('is-ok',kind==='ok');
+  el.hidden=!msg;
+}
 // Only a parseable time is stored (ss.ss or m:ss.ss); anything else is flagged
 // inline and left unsaved, so the planner and predictor never see "fast" or "1:75".
 // On change (blur) a valid value is normalised to the canonical form.
@@ -5697,7 +5696,7 @@ function exportBackup(){
     a.download='tidelyne-backup-'+new Date().toISOString().slice(0,10)+'.json';
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  }catch(e){ alert('Could not create the backup file on this device.'); }
+  }catch(e){ tlNotice('profile-notice','Could not create the backup file on this device.'); }
 }
 function importBackup(ev){
   const f=ev.target.files&&ev.target.files[0]; if(!f){return;}
@@ -5718,11 +5717,11 @@ function importBackup(ev){
       if(Array.isArray(d.log)){ const clean=sanitizeLogEntries(d.log); skipped+=Math.max(0,d.log.length-clean.length); lsSet('swimiq_log', JSON.stringify(clean)); nLog=clean.length; }
       if(d.tl&&typeof d.tl==='object') BACKUP_TL_KEYS.forEach(k=>{ const v=d.tl[k]; if(v&&typeof v==='object'&&!Array.isArray(v)&&lsSet(k, JSON.stringify(v))) nSet++; });
       initProfile(); if(typeof renderLog==='function') renderLog();
-      alert('Backup imported — '+nPR+' PR'+(nPR===1?'':'s')+', '+nLog+' session'+(nLog===1?'':'s')+(hasName?', your name':'')+(nSet?' and '+nSet+' saved setting'+(nSet===1?'':'s'):'')+' restored.'
+      tlNotice('profile-notice','Backup imported — '+nPR+' PR'+(nPR===1?'':'s')+', '+nLog+' session'+(nLog===1?'':'s')+(hasName?', your name':'')+(nSet?' and '+nSet+' saved setting'+(nSet===1?'':'s'):'')+' restored.'
         +(skipped?' '+skipped+' unreadable item'+(skipped===1?' was':'s were')+' skipped.':'')
-        +(nSet?' The page will reload so the timer and planner settings apply.':''));
-      if(nSet) location.reload();
-    }catch(e){ alert('That file is not a valid Tidelyne backup.'); }
+        +(nSet?' Reloading so the timer and planner settings apply…':''),'ok');
+      if(nSet) setTimeout(()=>location.reload(),1500);
+    }catch(e){ tlNotice('profile-notice','That file is not a valid Tidelyne backup.'); }
   };
   r.readAsText(f);
   ev.target.value=''; // allow re-importing the same file
@@ -5775,12 +5774,11 @@ function sanitizeLogEntries(list){
 }
 function saveLogEntry(){
   const date=document.getElementById('log-date').value;
-  const errEl=document.getElementById('log-form-err');
   const fields=['log-date','log-distance','log-duration','log-effort'];
   fields.forEach(id=>{ const el=document.getElementById(id); if(el) el.removeAttribute('aria-invalid'); });
-  if(errEl){ errEl.textContent=''; errEl.style.display='none'; }
+  tlNotice('log-notice','');
   // Inline validation: the HTML min/max attributes are advisory only.
-  const fail=(msg,id)=>{ if(errEl){ errEl.textContent=msg; errEl.style.display='block'; } else alert(msg); const el=document.getElementById(id); if(el){ el.setAttribute('aria-invalid','true'); try{ el.focus({preventScroll:true}); }catch(e){} } };
+  const fail=(msg,id)=>{ tlNotice('log-notice',msg); const el=document.getElementById(id); if(el){ el.setAttribute('aria-invalid','true'); try{ el.focus({preventScroll:true}); }catch(e){} } };
   if(!date||isNaN(new Date(date+'T00:00:00').getTime())){ fail('Please select a date.','log-date'); return; }
   const raw=id=>String(document.getElementById(id).value||'').trim();
   const distRaw=raw('log-distance'), durRaw=raw('log-duration'), effRaw=raw('log-effort');
@@ -5801,12 +5799,12 @@ function saveLogEntry(){
   };
   const entries=readLog();
   entries.unshift(entry); entries.splice(LOG_MAX);
-  if(!lsSet('swimiq_log',JSON.stringify(entries))){ alert('Could not save the session — your device storage may be full or blocked.'); return; }
+  if(!lsSet('swimiq_log',JSON.stringify(entries))){ tlNotice('log-notice','Could not save the session — your device storage may be full or blocked.'); return; }
+  tlNotice('log-notice','Session saved — '+entries.length+' logged.','ok');
   ['log-distance','log-duration','log-effort','log-mainset','log-notes'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
   });
   renderLog();
-  setLogStatus('Session saved — '+entries.length+' logged.');
 }
 // Screen-reader feedback for log actions (the list itself re-renders silently)
 function setLogStatus(msg){
@@ -6678,10 +6676,7 @@ var DAY_MS = 86400000;
 
 // ─── helpers ────────────────────────────────────────────────────────────
 function pl$(id){ return document.getElementById(id); }
-function esc(s){
-  if (typeof window.escapeHTML === 'function') return window.escapeHTML(s);
-  return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
-}
+function esc(s){ return window.escapeHTML(s); }   // the app script's escaper
 // Seconds or null. Site parseTime returns null on bad input; guard NaN too.
 function parseT(s){
   var v = null;
@@ -6705,7 +6700,7 @@ function fmtPlain(sec, suffix){
   if (s.length < 5) s = '0' + s;
   return m > 0 ? m + ':' + s : (suffix ? s + 's' : s);
 }
-function lsGet(k){ try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsGet(k){ return window.lsGet(k); }   // the app script's guarded reader (hoisted there, always present)
 function lsPut(k, v){
   if (typeof window.lsSet === 'function') return window.lsSet(k, v);
   try { localStorage.setItem(k, v); return true; } catch (e) { return false; }
@@ -6862,8 +6857,8 @@ function quickFill(ev, p){
 // Exponents per stroke and event-ladder step: [low, typical, high].
 // "typical" sits between the men's and women's long-course world-record
 // ratios for that step; low/high bracket the spread between speed-type and
-// endurance-type swimmers (about ±3% at one doubling), derived from the
-// men's and women's long-course world records current when this shipped.
+// endurance-type swimmers (about ±3% at one doubling). Derived from the men's
+// and women's long-course world-record ladders (README.md, "Maintainer notes").
 // ═══════════════════════════════════════════════════════════════════════
 var EXP = {
   fr:  { '50-100':[1.11,1.15,1.19], '100-200':[1.09,1.13,1.17], '200-400':[1.06,1.09,1.12], '400-800':[1.02,1.04,1.06], '800-1500':[1.01,1.03,1.05] },
@@ -7105,8 +7100,8 @@ var LENGTH = { SCY:25, SCM:25, LCM:50 };
 var UNIT = { SCY:'y', SCM:'m', LCM:'m' };
 var START_BONUS = { SCY:0.9, SCM:1.0, LCM:1.4 };
 // Share (%) of total race time per segment in elite championship finals.
-// Includes the dive in the opening segment. tol = ± band. Read from published
-// championship-final split analyses; the Split Planner caption explains the shape.
+// Includes the dive in the opening segment. tol = ± band. Sources: README.md,
+// "Maintainer notes"; the Split Planner caption explains the shape.
 var PATTERNS = {
   '100 FR':  { segs:[48.1, 51.9], tol:0.5 },
   '100 BK':  { segs:[48.3, 51.7], tol:0.5 },
@@ -7621,10 +7616,7 @@ var state = {
 
 // ─── generic helpers ──────────────────────────────────────────────────────
 function an$(id){ return (typeof document !== 'undefined') ? document.getElementById(id) : null; }
-function anEsc(s){
-  if (typeof window.escapeHTML === 'function') return window.escapeHTML(s);
-  return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
-}
+function anEsc(s){ return window.escapeHTML(s); }   // the app script's escaper
 function pad2(n){ return (n < 10 ? '0' : '') + n; }
 function ymd(d){ return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
 function localDate(str){
@@ -7666,7 +7658,7 @@ function parseSecs(str){
   }
   return (v != null && isFinite(v) && v > 0) ? v : null;
 }
-function anLsGet(k){ try { return localStorage.getItem(k); } catch (e) { return null; } }
+function anLsGet(k){ return window.lsGet(k); }   // the app script's guarded reader
 function anLsPut(k, v){ if (typeof window.lsSet === 'function') return window.lsSet(k, v); try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
 function isPageActive(){ var p = an$('page-' + PAGE); return !!(p && p.classList && p.classList.contains('active')); }
 function cssVar(name, fallback){
@@ -7941,7 +7933,7 @@ function zoneReading(z){
   } else {
     var lowPct = Math.round(low * 100), highPct = Math.round(high * 100), thrPct = Math.max(0, 100 - lowPct - highPct);
     parts.push('Of your classified pool minutes over the last four weeks, <strong>' + lowPct + '%</strong> were low intensity (Z1–Z2), <strong>' + thrPct + '%</strong> threshold (Z3) and <strong>' + highPct + '%</strong> high intensity (Z4–Z5).');
-    // Reference patterns: general endurance sport ~80% of
+    // Reference patterns (README.md, "Maintainer notes"): general endurance sport ~80% of
     // sessions at low intensity (Seiler 2010); elite swimmers 86–90% of
     // volume at or below ~4 mmol/L lactate, split ~40–44% below 2 mmol/L and
     // ~44–46% between 2 and 4 mmol/L (Hellard et al. 2019).
@@ -8621,11 +8613,11 @@ window.tl_an_debug = {
 })();
 // ─── VIDEOS ───
 /* ── Tidelyne · videos bundle · click-to-load YouTube facades ──────────────
-   apply_facades.py turns every YouTube <iframe> into a facade:
+   Every YouTube demo is authored as a click-to-load facade (no <iframe> until play):
      div.yt-lite[data-video=ID][data-params=…]
        > img  (lazy hqdefault.jpg thumbnail from i.ytimg.com)
        > button.yt-lite-play[aria-label="Play video: TITLE"]
-   (data-video rather than data-id: check_index.py's element-id scan also
+   (data-video rather than data-id: a naive duplicate-id scan for  i d = "  also
    matches data-id, and five demos are embedded on two pages; data-id is still
    honoured as a fallback. Keep the literal sequence  i d = "  out of this
    file's comments for the same reason.)
@@ -9397,6 +9389,7 @@ window.tl_an_debug = {
     var root = $('tl-palette'), inp = $('tl-pal-input');
     if (!root || !inp || authGateOpen()) return;
     if (state.open){ inp.focus(); inp.select(); return; }
+    if (typeof window.closeNavDrawer === 'function') window.closeNavDrawer();   // one body-scroll lock at a time: never stack the drawer's under the palette's
     state.opener = document.activeElement;
     ensureIndex();
     root.hidden = false;
@@ -9547,7 +9540,7 @@ window.tl_an_debug = {
 // tag: 'New' | 'Improved' | 'Fixed'.  link: a page hash such as '#videos' —
 // rendered as a link only when that page exists in the DOM, so a note can
 // never point at a page that has not shipped.  Keep the top entry's version
-// in sync with VERSION in sw.js (see README.md, "Releasing a new version").
+// in sync with VERSION in sw.js (README.md, "Releasing a new version").
 const UPDATES = [
   {
     version: '3.1.1', date: '2026-09-16',
@@ -9634,11 +9627,8 @@ window.TL_VERSION = UPDATES[0].version;
 window.TL_UPDATES = UPDATES;   // read-only reference (e.g. for the command palette)
 
 // ─── SMALL HELPERS (reuse the app's globals when present) ────────────────
-function esc(s){
-  if (typeof window.escapeHTML === 'function') return window.escapeHTML(s);
-  return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
-}
-function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function esc(s){ return window.escapeHTML(s); }   // the app script's escaper
+function lsGet(k){ return window.lsGet(k); }   // the app script's guarded reader (hoisted there, always present)
 function lsPut(k, v){
   if (typeof window.lsSet === 'function') return !!window.lsSet(k, v);
   try { localStorage.setItem(k, v); return true; } catch(e){ return false; }
