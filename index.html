@@ -2693,7 +2693,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="ai-messages" id="ai-messages" tabindex="0" aria-describedby="ai-messages-hint">
       <div class="msg">
         <div class="msg-avatar ai-av">AI</div>
-        <div class="msg-bubble">Welcome. I'm your AI swim coach — covering swimming science, meso-cycle programming, technique biomechanics, race strategy, nutrition, mental performance, and competitive physiology.<br><br>Ask me anything. I answer from general coaching knowledge, not from this site's pages — for Tidelyne's own zone numbers and taper windows, use the <a href="#zones">Zones</a> and <a href="#taper">Taper</a> pages. (AI answers can be wrong — always confirm health or injury questions with a coach or physician.)</div>
+        <div class="msg-bubble">Welcome. I'm your AI swim coach — swimming science, programming, technique, race strategy, nutrition and mental performance.<br><br>Ask me anything. I answer from general coaching knowledge, not this site's pages — for Tidelyne's own zone numbers and taper windows, see <a href="#zones">Zones</a> and <a href="#taper">Taper</a>. (AI answers can be wrong — confirm health or injury questions with a coach or physician.)</div>
       </div>
     </div>
     <div class="quick-prompts" role="group" aria-label="Suggested questions">
@@ -6731,7 +6731,7 @@ function renderLog(){
     <li class="log-entry">
       <div class="log-date">${isoDate?`<time datetime="${escapeHTML(e.date)}">${escapeHTML(shownDate)}</time>`:escapeHTML(e.date)}</div>
       <div class="log-content">
-        <h3 class="log-title">${escapeHTML(e.type)}<span class="sr-only"> — ${escapeHTML(e.date)}</span></h3>
+        <h3 class="log-title">${escapeHTML(e.type)}<span class="sr-only"> — ${escapeHTML(shownDate)}</span></h3>
         <div class="log-meta">${dist>0?dist.toLocaleString()+' m/yd · ':''}${dur>0?dur+' min · ':''}${escapeHTML(e.zone)} · ${effort>0?'Effort '+effort+'/10':'Effort —'}</div>
         ${e.mainset?`<div class="log-notes" style="color:var(--cyan)">${escapeHTML(e.mainset)}</div>`:''}
         ${e.notes?`<div class="log-notes">${escapeHTML(e.notes)}</div>`:''}
@@ -6774,7 +6774,7 @@ function deleteLogEntry(id){
   const k=_logUndo.length;
   const n=document.getElementById('log-notice');
   if(n){
-    tlNotice('log-notice',(k>1?k+' sessions deleted — latest ':'Session deleted — ')+gone.date+(gone.type?' · '+gone.type:'')+'. ','ok');
+    tlNotice('log-notice',(k>1?k+' sessions deleted — latest ':'Session deleted — ')+fmtLogDate(gone.date)+(gone.type?' · '+gone.type:'')+'. ','ok');
     const b=document.createElement('button'); b.type='button'; b.className='tl-linkbtn'; b.textContent=k>1?'Undo all':'Undo';
     b.addEventListener('click',undoLogDelete); n.appendChild(b);
   }
