@@ -7,13 +7,18 @@ Tidelyne PWA icon generator
 Outputs (into --out, default: the current directory):
     icon-512.png            purpose "any"      — the mark exactly as the favicon
                                                  draws it, at 512 px
-    icon-512-maskable.png   purpose "maskable" — the mark scaled to 80 % and
-                                                 centred on full-bleed brand navy
-                                                 (#040d18). The waves (62 % of the
-                                                 mark) sit inside the safe-zone
-                                                 circle; only the badge's own
-                                                 near-identical navy corners can
-                                                 be clipped by a circular mask
+    icon-512-maskable.png   purpose "maskable" — the badge colour painted
+                                                 full-bleed and ONLY the waves, at
+                                                 80 % of the mark's scale, in the
+                                                 middle: every glyph pixel sits
+                                                 inside the 40 % safe circle, so a
+                                                 circular or squircle launcher mask
+                                                 never clips anything (the badge
+                                                 plate's corners used to reach 0.49
+                                                 of the width from the centre)
+    apple-touch-180.png     iOS home screen   — full-bleed opaque square (iOS
+                                                 masks its own corners and paints
+                                                 transparent pixels black)
     favicon.ico             32 px + 16 px BMP entries for legacy clients, link
                                                  unfurlers and crawlers that request
                                                  /favicon.ico unconditionally
@@ -39,10 +44,16 @@ NAVY = (4, 13, 24)          # brand background (#040d18) — same as theme_color
 # ── Try the canonical source first ──────────────────────────────────────
 HERE = os.path.dirname(os.path.abspath(__file__))
 draw_mark = None
+draw_touch = None
 try:
     sys.path.insert(0, HERE)
     from make_logo import draw_mark as _dm   # noqa: E402
     draw_mark = _dm
+    try:
+        from make_logo import draw_touch as _dt   # noqa: E402
+        draw_touch = _dt
+    except Exception:
+        pass
     SOURCE = "tools/make_logo.py"
 except Exception:
     SOURCE = "embedded copy of make_logo.py geometry"
@@ -99,14 +110,30 @@ def make_ico(sizes=(32, 16)):
     return [draw_mark(s, bg=True) for s in sizes]
 
 
+NAVY2_PLATE = (8, 21, 38)   # the badge fill (#081526), painted edge to edge on the maskable / touch icons
+
+
 def make_maskable(size=512, safe=0.80):
-    """purpose "maskable": full-bleed navy, mark scaled to the 80 % safe zone."""
-    img = Image.new("RGBA", (size, size), NAVY + (255,))
+    """purpose "maskable": the badge colour full-bleed and only the glyph (the three waves) at
+    `safe` of the mark's scale, centred — so every glyph pixel is inside the safe-zone circle
+    (radius 40 % of the width) and no launcher mask can clip it."""
+    img = Image.new("RGB", (size, size), NAVY2_PLATE)
     inner = int(round(size * safe))
-    mark = draw_mark(inner, bg=True)
+    waves = draw_mark(inner, bg=False)
     off = (size - inner) // 2
-    img.paste(mark, (off, off), mark)
-    return img.convert("RGB")
+    img.paste(waves, (off, off), waves)
+    return img
+
+
+def make_touch(size=180):
+    """apple-touch-icon: full-bleed opaque square (iOS masks its own corners and paints
+    transparency black), the waves at the badge's own proportion."""
+    if draw_touch is not None:
+        return draw_touch(size)
+    img = Image.new("RGB", (size, size), NAVY2_PLATE)
+    waves = draw_mark(size, bg=False)
+    img.paste(waves, (0, 0), waves)
+    return img
 
 
 if __name__ == "__main__":
@@ -119,8 +146,10 @@ if __name__ == "__main__":
     m = os.path.join(args.out, "icon-%d-maskable.png" % args.size)
     make_any(args.size).save(a, "PNG", optimize=True)
     make_maskable(args.size).save(m, "PNG", optimize=True)
+    t = os.path.join(args.out, "apple-touch-180.png")
+    make_touch(180).save(t, "PNG", optimize=True)
     ico = os.path.join(args.out, "favicon.ico")
     frames = make_ico()
     frames[0].save(ico, format="ICO", sizes=[f.size for f in frames], append_images=frames[1:], bitmap_format="bmp")
-    print("Wrote:", a, m, ico)
+    print("Wrote:", a, m, t, ico)
     print("Mark source:", SOURCE)

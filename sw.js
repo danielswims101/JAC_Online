@@ -7,7 +7,9 @@
    tab is told {type:'TL_UPDATED'} so it can offer a reload.
 
    Strategy
-     navigations + *.html   network-first → cache → ./index.html
+     navigations + *.html   network-first → cache → ./index.html; with a cached
+                            copy the network gets SHELL_TIMEOUT_MS (lie-fi: a
+                            stalled connection must not hold the opening page)
      other same-origin GET  stale-while-revalidate
      three.min.js (CDN)     cache-first in a version-independent cache, so
                             the 3D lab works offline once it has been opened
@@ -20,6 +22,10 @@ const VERSION      = '3.1.1';
 const CACHE_PREFIX = 'tidelyne-v';
 const CACHE        = CACHE_PREFIX + VERSION;
 const INDEX        = './index.html';
+// A connection that is up but stalled ("lie-fi") would otherwise hold a navigation for the browser's own
+// request timeout although the shell is precached: after this long the cached copy is served and the network
+// answer, kept alive with waitUntil, still refreshes the cache for the next visit.
+const SHELL_TIMEOUT_MS = 3000;
 // The pinned, immutable Three.js build the 3D lab injects (index.html ensureViz3DReady, loaded with
 // crossorigin so the response is not opaque). It lives in its own cache that survives version sweeps:
 // its name must NOT start with CACHE_PREFIX ('tidelyne-v…'), or activate() would delete it.
@@ -126,21 +132,33 @@ self.addEventListener('fetch', function(event){
   if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
 
   const isPage = req.mode === 'navigate' || /\.html$/i.test(url.pathname) || url.pathname.charAt(url.pathname.length - 1) === '/';
-  if (isPage){ event.respondWith(networkFirst(req)); return; }
+  if (isPage){ event.respondWith(networkFirst(event, req)); return; }
   event.respondWith(staleWhileRevalidate(event, req));
 });
 
-function networkFirst(req){
+function networkFirst(event, req){
   const key = shellKey(req);
   return caches.open(CACHE).then(function(cache){
-    return fetch(req).then(function(res){
+    const network = fetch(req).then(function(res){
       // A real answer (including 404) is returned as-is; only good ones are cached.
       if (res && res.ok) cache.put(key, res.clone()).catch(function(){});
       return res;
-    }).catch(function(){
+    });
+    const fromCache = function(){
       return cache.match(key, { ignoreSearch: true }).then(function(hit){
         if (hit) return hit;
         return cache.match(INDEX).then(function(index){ return index || offlineResponse(); });
+      });
+    };
+    return cache.match(key, { ignoreSearch: true }).then(function(cached){
+      if (!cached) return network.catch(fromCache);           // nothing to fall back on: wait for the network as before
+      let timer = 0;
+      const timeout = new Promise(function(resolve){ timer = setTimeout(function(){ resolve(null); }, SHELL_TIMEOUT_MS); });
+      const settled = network.then(function(res){ clearTimeout(timer); return res; }, function(){ clearTimeout(timer); return null; });
+      return Promise.race([settled, timeout]).then(function(res){
+        if (res) return res;
+        try { event.waitUntil(network.catch(function(){})); } catch(e){}   // let the late answer still refresh the cache
+        return cached;
       });
     });
   });

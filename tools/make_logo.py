@@ -11,7 +11,7 @@ Outputs:
     logo-mark.svg        the mark alone (scalable, used as favicon.svg)
     favicon-32.png       browser tab
     favicon-192.png      Android / PWA
-    apple-touch-180.png  iOS home screen
+    apple-touch-180.png  iOS home screen (full-bleed opaque: iOS masks its own corners)
     og.png               1200x630 link preview
 
     logo-full.svg (mark + wordmark lockup) is opt-in — `python3 make_logo.py --full` —
@@ -103,6 +103,16 @@ def draw_mark(size, bg=True, supersample=4):
             d.ellipse([px - rr, py - rr, px + rr, py + rr], fill=col)
 
     return img.resize((size, size), Image.LANCZOS)
+
+
+def draw_touch(size=180):
+    """apple-touch-icon: iOS applies its own corner mask and composites transparent pixels
+    as BLACK, so the tile must be a full-bleed opaque square — the badge colour edge to
+    edge with the waves at the badge's own proportion, no rounded corners, no margin."""
+    img = Image.new("RGB", (size, size), NAVY2)
+    waves = draw_mark(size, bg=False)
+    img.paste(waves, (0, 0), waves)
+    return img
 
 
 def svg_wave_path(cx, cy, width, amp, steps=48):
@@ -197,8 +207,9 @@ if __name__ == "__main__":
     full = "--full" in sys.argv[1:]   # the lockup is unreferenced by the site; only write it on request
     if full:
         write_full_svg("logo-full.svg")
-    for px, name in ((32, "favicon-32.png"), (192, "favicon-192.png"), (180, "apple-touch-180.png")):
+    for px, name in ((32, "favicon-32.png"), (192, "favicon-192.png")):
         draw_mark(px).save(name, "PNG", optimize=True)
+    draw_touch(180).save("apple-touch-180.png", "PNG", optimize=True)
     make_og("og.png")
     print("Wrote: logo-mark.svg " + ("logo-full.svg " if full else "") + "favicon-32.png favicon-192.png "
           "apple-touch-180.png og.png")

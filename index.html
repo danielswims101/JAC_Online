@@ -20,7 +20,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tidelyne — Swimming Technique & Training Tools">
 <meta name="twitter:description" content="Free training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, pool-deck timers, race planner, training log and analytics — installable and works offline.">
-<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32">
 <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
@@ -39,7 +39,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://gzqovsffnziumfbmqdes.supabase.co" crossorigin>
 <link rel="dns-prefetch" href="https://i.ytimg.com">
 <link rel="dns-prefetch" href="https://www.youtube-nocookie.com">
@@ -49,7 +49,7 @@
 <!-- supabase-js is pinned (not the floating @2 tag) so an upstream release cannot change the auth path unseen; integrity is that file's sha384 — bump version and hash together.
      It loads async (not defer): a deferred script holds DOMContentLoaded, and with it the router's first paint of every page, until the CDN answers — the site must render with the
      library still in flight or blocked. onSupabaseScript() creates the client as soon as it lands (or on DOMContentLoaded, whichever is later); only sign-in and the AI features need it. -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js" integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP" crossorigin="anonymous" async id="supabase-js-script" onload="if(typeof onSupabaseScript==='function')onSupabaseScript('done')" onerror="if(typeof onSupabaseScript==='function')onSupabaseScript('failed');else window.__sbScriptFailed=true"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js" integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP" crossorigin="anonymous" async onload="if(typeof onSupabaseScript==='function')onSupabaseScript('done')" onerror="if(typeof onSupabaseScript==='function')onSupabaseScript('failed');else window.__sbScriptFailed=true"></script>
 <script>
 // Minimal OrbitControls implementation compatible with THREE r128 (UMD global build).
 // Supports: left-drag orbit, scroll-wheel zoom, damping. No pan (not needed here).
@@ -84,6 +84,9 @@ THREE.OrbitControls = function (camera, domElement) {
     if (!self.enabled) return;
     rotating = true;
     lastX = e.clientX; lastY = e.clientY;
+    // A click on the canvas focuses the lab (its container is the tabindex element) so the wheel zooms from now on.
+    var host = self.domElement.parentNode;
+    if (host && typeof host.focus === 'function' && document.activeElement !== host) { try { host.focus({ preventScroll: true }); } catch (err) { try { host.focus(); } catch (err2) {} } }
   }
   function onPointerMove(e) {
     if (!self.enabled || !rotating) return;
@@ -96,6 +99,12 @@ THREE.OrbitControls = function (camera, domElement) {
   function onPointerUp() { rotating = false; }
   function onWheel(e) {
     if (!self.enabled) return;
+    // The canvas covers up to half the viewport: a plain wheel over it must scroll the page. Zoom only once the
+    // lab has focus (a click or Tab lands it on the container) or with Ctrl/⌘ held (trackpad pinch arrives as
+    // ctrl+wheel). The touch path below has the same direction lock.
+    var host = self.domElement.parentNode, focus = document.activeElement;
+    var labFocused = !!focus && focus !== document.body && (focus === self.domElement || focus === host || (host && host.contains && host.contains(focus)));
+    if (!labFocused && !e.ctrlKey && !e.metaKey) return;
     e.preventDefault();
     if (e.deltaY < 0) scale *= Math.pow(0.95, self.zoomSpeed);
     else scale /= Math.pow(0.95, self.zoomSpeed);
@@ -399,6 +408,7 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .ai-input-row{border-top:1px solid var(--border);padding:1rem 1.25rem;display:flex;gap:10px;align-items:stretch}
 .ai-input{flex:1;background:var(--navy3);border:1px solid var(--border-input);border-radius:var(--r8);padding:11px 14px;color:var(--white);font-size:0.88rem;outline:none;transition:border-color 0.2s}.ai-input::placeholder{color:var(--white4)}.ai-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
 .ai-send{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px 22px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.ai-send:hover:not(:disabled){background:var(--cyan2);box-shadow:0 4px 18px rgba(0,212,255,0.3)}.ai-send:disabled{opacity:0.4;cursor:not-allowed}
+.ai-send.ai-stop{background:var(--navy3);color:var(--white);border:1px solid var(--border-input)}.ai-send.ai-stop:hover{background:var(--navy3);border-color:var(--red);color:var(--red);box-shadow:none}
 /* WORKOUT GENERATOR */
 .gen-form{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2rem}
 .gen-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:1rem;margin-bottom:1.25rem}.gen-row>*{min-width:0}
@@ -618,7 +628,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* id+class specificity already beats the site's ≤768px `.btn-ghost-sm{display:inline-flex}` rule */
 #page-timers .tlt-hidden{display:none}
 #page-timers .tlt-copytext{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
-#page-timers .tlt-vh{position:absolute;left:0;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 #page-timers .tlt-th-sub{display:block;font-size:0.6rem;letter-spacing:1px;color:var(--white3);margin-top:2px;text-transform:none}
 #page-timers .tlt-td-sub{display:block;font-size:0.7rem;color:var(--white3);font-weight:300;margin-top:2px}
 #page-timers .tlt-num-table td{font-family:var(--fm);font-size:0.8rem;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -1121,6 +1130,10 @@ iframe.yt-lite-player{display:block;width:100%;aspect-ratio:16/9;border:0;backgr
   .yt-lite:hover>img,.yt-lite:focus-within>img,.yt-lite:hover .yt-lite-play,.yt-lite-play:hover,.yt-lite-play:focus-visible,.yt-lite-play:active{transform:none}
 }
 @media print{.yt-lite-play{display:none}}
+/* Offline (html.tl-offline, set by the updates bundle): a video facade cannot start and the coach cannot answer — say so in place. */
+html.tl-offline .yt-lite::after{content:"Offline — videos need a connection";position:absolute;left:50%;bottom:10px;transform:translateX(-50%);max-width:calc(100% - 20px);padding:5px 12px;border-radius:999px;background:rgba(4,13,24,.85);color:var(--white2);font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;pointer-events:none}
+html.tl-offline .ai-input-row::before{content:"You are offline — the coach needs a connection";flex:0 0 100%;color:var(--white3);font-family:var(--fm);font-size:0.66rem;letter-spacing:1px;text-transform:uppercase}
+html.tl-offline .ai-input-row{flex-wrap:wrap}
 /* ── palette ── */
 /* ============================================================
    COMMAND PALETTE / GLOBAL SEARCH  (bundle: palette)
@@ -1177,7 +1190,7 @@ html.tl-pal-lock{overflow:hidden}
 /* Mobile: full-screen sheet, big input, tappable rows */
 @media(max-width:640px){
   .tl-pal{padding:0;align-items:stretch}
-  .tl-pal-dialog{width:100%;max-height:none;height:100vh;height:100dvh;border-radius:0;border:none;padding-top:env(safe-area-inset-top);animation:none}
+  .tl-pal-dialog{width:100%;max-height:none;height:100vh;height:100dvh;border-radius:0;border:none;animation:none}
   .tl-pal-head{padding:8px 8px 8px 14px}
   .tl-pal-input{font-size:1.12rem;padding:12px 0}
   .tl-pal-esc{display:none}
@@ -1186,7 +1199,7 @@ html.tl-pal-lock{overflow:hidden}
   .tl-pal-title{white-space:normal;font-size:1.02rem}
   .tl-pal-kindtag{display:none}
   .tl-pal-foot{display:none}
-  .tl-pal-list{padding:4px 6px calc(12px + env(safe-area-inset-bottom))}
+  .tl-pal-list{padding:4px 6px 12px}
 }
 @media(max-width:768px){
   .tl-pal-navhint{display:none}
@@ -1388,7 +1401,7 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-drawer-head{display:flex;align-items:center;justify-content:space-between;gap:8px;height:56px;padding:0 6px 0 16px;border-bottom:1px solid var(--border2);flex-shrink:0}
   nav .nav-drawer-title{font-family:var(--fh);font-size:1.25rem;letter-spacing:3px;color:var(--cyan)}
   nav .nav-drawer-close{width:44px;height:44px;min-height:44px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:1rem}
-  nav .nav-drawer-scroll{display:block;flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:10px 12px calc(24px + env(safe-area-inset-bottom,0px))}
+  nav .nav-drawer-scroll{display:block;flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:10px 12px 24px}
   nav .nav-drawer-search{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;margin:0 0 6px;padding:0 12px;background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);color:var(--white2);font-family:var(--fb);font-size:0.82rem;text-align:left;cursor:pointer}
   nav .nav-drawer-search[hidden]{display:none}
   nav .nav-drawer-search span{color:var(--cyan);font-size:1rem}
@@ -1714,7 +1727,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="section-eyebrow">Study It — 3D Biomechanics Lab</div>
   <p class="section-intro" style="margin-bottom:1.5rem">A realistic human swimmer, built in your browser from real athlete proportions and driven by elite stroke-phase timing. Slow it down, orbit any angle, isolate a phase or X-ray the skeleton — and see what video moves too fast to show.</p>
   <div class="viz-canvas-wrap" style="position:relative">
-    <div id="viz3d-container" role="application" tabindex="0" aria-label="Interactive 3D swimmer. Left and Right arrow keys step through the stroke phases; the stroke and phase buttons below do the same. Plus and Minus zoom in and out. Each phase is described in words in the panel underneath."></div>
+    <div id="viz3d-container" role="application" tabindex="0" aria-label="Interactive 3D swimmer. Left and Right arrow keys step through the stroke phases; the stroke and phase buttons below do the same. Plus and Minus zoom in and out; drag to orbit, and once the lab is focused the scroll wheel zooms too. Each phase is described in words in the panel underneath."></div>
     <div class="viz-overlay-stats">
       <div class="vos-item"><span class="vos-val" id="stat-drag">—</span><span class="vos-lbl">Drag (N)</span></div>
       <div class="vos-item"><span class="vos-val" id="stat-thrust">—</span><span class="vos-lbl">Thrust (N)</span></div>
@@ -1763,7 +1776,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <button class="viz-btn active" id="vbtn-forces" aria-pressed="true" onclick="toggleForces3D(this)">Forces: On</button>
   </div>
-  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px"><span class="viz-hint-pointer"><span aria-hidden="true">🖱 </span>Drag to orbit · Scroll or the zoom buttons to zoom · </span><span class="viz-hint-touch">Drag to orbit · Pinch or the zoom buttons to zoom · </span>Tap a phase below to jump to it</p>
+  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px"><span class="viz-hint-pointer"><span aria-hidden="true">🖱 </span>Drag to orbit · Click the lab, then scroll to zoom (or hold Ctrl/⌘, or use the zoom buttons) · </span><span class="viz-hint-touch">Drag to orbit · Pinch or the zoom buttons to zoom · </span>Tap a phase below to jump to it</p>
   <div id="human-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:4px;letter-spacing:0.3px"></div>
   <div class="force-legend">
     <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Drag</div>
@@ -2103,8 +2116,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel active" id="c-golf">
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>GOLF SCORE CALCULATOR</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label>50 m Split (seconds)</label><input class="form-input" id="golf-split" type="number" placeholder="e.g. 32" min="20" max="120"></div>
-        <div class="form-group" style="margin-bottom:1rem"><label>Stroke Count (per 50 m)</label><input class="form-input" id="golf-strokes" type="number" placeholder="e.g. 28" min="10" max="60"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>50 m Split (seconds)</label><input class="form-input" id="golf-split" enterkeyhint="done" type="number" placeholder="e.g. 32" min="20" max="120"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Stroke Count (per 50 m)</label><input class="form-input" id="golf-strokes" enterkeyhint="done" type="number" placeholder="e.g. 28" min="10" max="60"></div>
         <button class="calc-btn" onclick="calcGolf()">Calculate →</button>
         <p class="form-notice" id="golf-notice" role="alert" hidden></p>
         <div class="calc-result" id="golf-result" aria-live="polite" aria-atomic="true"><div class="big" id="golf-score">—</div><div class="sub">Golf Score</div><p style="margin-top:1rem;font-size:0.84rem;color:var(--white2);line-height:1.7" id="golf-rating"></p></div>
@@ -2125,7 +2138,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>RACE SPLIT GENERATOR</h4>
         <div class="form-group" style="margin-bottom:1rem"><label>Race Distance</label><select class="form-select" id="split-dist"><option value="100">100 m</option><option value="200" selected>200 m</option><option value="400">400 m</option><option value="800">800 m</option><option value="1500">1500 m</option></select></div>
-        <div class="form-group" style="margin-bottom:1rem"><label>Target Time (m:ss.ss)</label><input class="form-input" id="split-time" placeholder="e.g. 1:55.00"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Target Time (m:ss.ss)</label><input class="form-input" id="split-time" enterkeyhint="done" placeholder="e.g. 1:55.00"></div>
         <div class="form-group" style="margin-bottom:1rem"><label>Race Strategy</label><select class="form-select" id="split-strategy"><option value="even">Even Splits</option><option value="neg" selected>Negative Split</option><option value="pos">Positive Split</option><option value="surge">Surge Middle</option></select></div>
         <button class="calc-btn" onclick="calcSplits()">Generate Splits →</button>
         <p class="form-notice" id="split-notice" role="alert" hidden></p>
@@ -2135,7 +2148,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="c-pace">
     <div class="calc-panel" style="max-width:560px"><h4>TRAINING PACE ZONES</h4>
-      <div class="form-group" style="margin-bottom:1rem"><label>Best 100 m Freestyle (m:ss)</label><input class="form-input" id="pace-100" placeholder="e.g. 0:55.5 or 1:02.0"></div>
+      <div class="form-group" style="margin-bottom:1rem"><label>Best 100 m Freestyle (m:ss)</label><input class="form-input" id="pace-100" enterkeyhint="done" placeholder="e.g. 0:55.5 or 1:02.0"></div>
       <button class="calc-btn" onclick="calcPaceZones()">Calculate Zones →</button>
       <p class="form-notice" id="pace-notice" role="alert" hidden></p>
       <div id="pace-result" aria-live="polite" style="margin-top:1.5rem"></div>
@@ -2145,7 +2158,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="c-convert">
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>POOL FORMAT CONVERTER</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label>Time (m:ss.ss)</label><input class="form-input" id="conv-time" placeholder="e.g. 1:52.44"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label>Time (m:ss.ss)</label><input class="form-input" id="conv-time" enterkeyhint="done" placeholder="e.g. 1:52.44"></div>
         <div class="form-group" style="margin-bottom:1rem"><label>From Pool Format</label><select class="form-select" id="conv-from"><option value="scy">SCY (25 yards)</option><option value="scm">SCM (25 meters)</option><option value="lcm" selected>LCM (50 meters)</option></select></div>
         <button class="calc-btn" onclick="convertTime()">Convert →</button>
         <p class="form-notice" id="conv-notice" role="alert" hidden></p>
@@ -2187,7 +2200,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="section-eyebrow">Personal Records</div>
   <h1 class="section-title">MY <span>PRs</span></h1>
   <p class="section-intro">Tap any time field and type your personal record. All data saved locally in your browser — never sent anywhere.</p>
-  <span id="pr-format-hint" class="sr-only">Enter the time as minutes:seconds.hundredths, for example 1:02.45</span>
+  <span id="pr-format-hint" class="sr-only">Enter the time as minutes:seconds.hundredths, for example 1:02.45 (1.02.45 also works on a number keypad)</span>
   <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:2rem">
     <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
       <div style="width:58px;height:58px;border-radius:50%;background:var(--cyan-dim);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0">🏊</div>
@@ -2224,14 +2237,14 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="gen-row">
       <div class="form-group"><label>Date</label><input class="form-input" id="log-date" type="date"></div>
       <div class="form-group"><label>Session Type</label><select class="form-select" id="log-type"><option value="AM Pool">AM Pool</option><option value="PM Pool">PM Pool</option><option value="Dryland">Dryland</option><option value="Race">Race</option><option value="Time Trial">Time Trial</option></select></div>
-      <div class="form-group"><label>Distance (m or yd)</label><input class="form-input" id="log-distance" type="number" min="0" max="100000" step="1" placeholder="e.g. 4500 — use one unit"></div>
+      <div class="form-group"><label>Distance (m or yd)</label><input class="form-input" id="log-distance" enterkeyhint="done" type="number" min="0" max="100000" step="1" placeholder="e.g. 4500 — use one unit"></div>
     </div>
     <div class="gen-row">
-      <div class="form-group"><label>Duration (min)</label><input class="form-input" id="log-duration" type="number" min="0" max="600" step="1" placeholder="e.g. 75"></div>
+      <div class="form-group"><label>Duration (min)</label><input class="form-input" id="log-duration" enterkeyhint="done" type="number" min="0" max="600" step="1" placeholder="e.g. 75"></div>
       <div class="form-group"><label>Primary Zone</label><select class="form-select" id="log-zone"><option value="Z1 Recovery">Z1 Recovery</option><option value="Z2 AeT" selected>Z2 AeT</option><option value="Z3 Threshold">Z3 Threshold</option><option value="Z4 VO₂ max">Z4 VO₂ max</option><option value="Z5 Sprint">Z5 Sprint</option><option value="Mixed">Mixed</option></select></div>
-      <div class="form-group"><label>Effort (1–10)</label><input class="form-input" id="log-effort" type="number" min="1" max="10" placeholder="7"></div>
+      <div class="form-group"><label>Effort (1–10)</label><input class="form-input" id="log-effort" enterkeyhint="done" type="number" min="1" max="10" placeholder="7"></div>
     </div>
-    <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" maxlength="200" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 24–28"></div>
+    <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" enterkeyhint="done" maxlength="200" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 24–28"></div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Notes</label><textarea class="form-textarea" id="log-notes" maxlength="1000" placeholder="Technique focus, energy levels, what went well…"></textarea></div>
     <button class="btn-sm" id="log-save-btn" onclick="saveLogEntry()">Save Session</button>
     <p class="form-notice" id="log-notice" role="alert" hidden></p>
@@ -2649,8 +2662,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <span class="qp" onclick="usePrompt(this)">Explain threshold vs VO₂ max training</span>
     </div>
     <div class="ai-input-row">
-      <input class="ai-input" id="ai-input" placeholder="Ask the coach anything…" type="text" maxlength="600" aria-label="Ask the AI swim coach">
+      <input class="ai-input" id="ai-input" placeholder="Ask the coach anything…" type="text" maxlength="600" enterkeyhint="send" aria-label="Ask the AI swim coach">
       <button class="ai-send" id="ai-send-btn" onclick="sendToAI()">SEND</button>
+      <button class="ai-send ai-stop" id="ai-stop-btn" type="button" onclick="stopAI()" hidden aria-label="Stop the coach's reply">STOP</button>
     </div>
   </div>
 </div>
@@ -2892,7 +2906,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="form-group" style="margin-bottom:1rem"><label for="pl-pd-event">Known event</label>
           <select class="form-select" id="pl-pd-event"></select></div>
         <div class="form-group" style="margin-bottom:0.4rem"><label for="pl-pd-time">Time for that event</label>
-          <input class="form-input" id="pl-pd-time" inputmode="decimal" maxlength="10" placeholder="e.g. 52.30 or 1:52.30" autocomplete="off" aria-describedby="pl-pd-src pl-pd-err"></div>
+          <input class="form-input" id="pl-pd-time" enterkeyhint="done" maxlength="10" placeholder="e.g. 52.30 or 1:52.30" autocomplete="off" aria-describedby="pl-pd-src pl-pd-err"></div>
         <div class="pl-hint" id="pl-pd-src" aria-live="polite"></div>
         <div class="form-group" style="margin:1rem 0"><label for="pl-pd-profile">Speed–endurance profile</label>
           <select class="form-select" id="pl-pd-profile"><option value="typical">Typical (record-derived exponents)</option><option value="fitted" disabled>My fitted exponent (fit one below first)</option></select></div>
@@ -2903,11 +2917,11 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <p class="pl-panel-note">Two PRs in the same stroke give your personal exponent. It shifts every prediction toward your actual speed–endurance balance.</p>
         <div class="pl-two">
           <div class="form-group"><label for="pl-fit-a">Event A</label><select class="form-select" id="pl-fit-a"></select></div>
-          <div class="form-group"><label for="pl-fit-ta">Time A</label><input class="form-input" id="pl-fit-ta" inputmode="decimal" maxlength="10" placeholder="m:ss.ss" autocomplete="off"></div>
+          <div class="form-group"><label for="pl-fit-ta">Time A</label><input class="form-input" id="pl-fit-ta" enterkeyhint="done" maxlength="10" placeholder="m:ss.ss" autocomplete="off"></div>
         </div>
         <div class="pl-two" style="margin-top:0.85rem">
           <div class="form-group"><label for="pl-fit-b">Event B</label><select class="form-select" id="pl-fit-b"></select></div>
-          <div class="form-group"><label for="pl-fit-tb">Time B</label><input class="form-input" id="pl-fit-tb" inputmode="decimal" maxlength="10" placeholder="m:ss.ss" autocomplete="off"></div>
+          <div class="form-group"><label for="pl-fit-tb">Time B</label><input class="form-input" id="pl-fit-tb" enterkeyhint="done" maxlength="10" placeholder="m:ss.ss" autocomplete="off"></div>
         </div>
         <button type="button" class="calc-btn" id="pl-fit-run">Fit exponent →</button>
         <div class="pl-err" id="pl-fit-err" role="status"></div>
@@ -2934,7 +2948,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         </div>
         <div class="pl-two" style="margin-top:0.85rem">
           <div class="form-group"><label for="pl-sp-dist">Distance</label><select class="form-select" id="pl-sp-dist"></select></div>
-          <div class="form-group"><label for="pl-sp-goal">Goal time</label><input class="form-input" id="pl-sp-goal" inputmode="decimal" maxlength="10" placeholder="e.g. 1:52.30" autocomplete="off" aria-describedby="pl-sp-err"></div>
+          <div class="form-group"><label for="pl-sp-goal">Goal time</label><input class="form-input" id="pl-sp-goal" enterkeyhint="done" maxlength="10" placeholder="e.g. 1:52.30" autocomplete="off" aria-describedby="pl-sp-err"></div>
         </div>
         <div class="pl-actions" style="margin-top:0.6rem"><button type="button" class="btn-ghost-sm" id="pl-sp-usegoal">Use my goal or PR</button><span class="pl-hint" id="pl-sp-goalsrc" aria-live="polite"></span></div>
         <div class="form-group" style="margin-top:1rem"><label for="pl-sp-strategy">Strategy</label>
@@ -2967,7 +2981,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div id="pl-mt-card" aria-live="polite"></div>
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>NEXT MEET</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-name">Next meet name</label><input class="form-input" id="pl-mt-name" maxlength="60" placeholder="e.g. Winter Juniors" autocomplete="off"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-name">Next meet name</label><input class="form-input" id="pl-mt-name" enterkeyhint="done" maxlength="60" placeholder="e.g. Winter Juniors" autocomplete="off"></div>
         <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-date">First day of the next meet</label><input class="form-input" id="pl-mt-date" type="date"></div>
         <div class="pl-two">
           <div class="form-group"><label for="pl-mt-course">Course</label><select class="form-select" id="pl-mt-course"><option value="SCY">SCY</option><option value="SCM">SCM</option><option value="LCM">LCM</option></select></div>
@@ -2975,7 +2989,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         </div>
       </div>
       <div class="calc-panel"><h4>SECOND MEET (OPTIONAL)</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-name2">Second meet name</label><input class="form-input" id="pl-mt-name2" maxlength="60" placeholder="e.g. Sectionals" autocomplete="off"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-name2">Second meet name</label><input class="form-input" id="pl-mt-name2" enterkeyhint="done" maxlength="60" placeholder="e.g. Sectionals" autocomplete="off"></div>
         <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-date2">First day of the second meet</label><input class="form-input" id="pl-mt-date2" type="date"></div>
         <div class="pl-actions"><button type="button" class="calc-btn" id="pl-mt-save" style="width:auto;margin-top:0;padding:11px 22px">Save meets</button><button type="button" class="btn-ghost-sm" id="pl-mt-clear">Clear</button></div>
         <div class="pl-err" id="pl-mt-status" role="status" aria-live="polite"></div>
@@ -3148,7 +3162,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
           <div class="form-group an-fg"><label for="an-sr-dist">Distance swum</label>
             <input class="form-input" id="an-sr-dist" type="number" inputmode="decimal" min="5" max="1500" step="any" placeholder="e.g. 50"></div>
           <div class="form-group an-fg"><label for="an-sr-time">Time for that distance (m:ss.ss or seconds)</label>
-            <input class="form-input" id="an-sr-time" inputmode="decimal" autocomplete="off" placeholder="e.g. 31.4 or 1:04.2" maxlength="10"></div>
+            <input class="form-input" id="an-sr-time" autocomplete="off" placeholder="e.g. 31.4 or 1:04.2" maxlength="10"></div>
           <div class="form-group an-fg"><label for="an-sr-count" id="an-sr-count-lbl">Stroke count (each arm)</label>
             <input class="form-input" id="an-sr-count" type="number" inputmode="numeric" min="2" max="2000" step="1" placeholder="e.g. 36"></div>
           <button class="calc-btn" type="button" onclick="tl_an_calcStroke()">Calculate →</button>
@@ -3178,9 +3192,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
           <div class="form-group an-fg"><label for="an-css-unit">Pool unit</label>
             <select class="form-select" id="an-css-unit"><option value="m">Meters</option><option value="yd">Yards</option></select></div>
           <div class="form-group an-fg"><label for="an-css-400">400 time trial (m:ss.ss)</label>
-            <input class="form-input" id="an-css-400" inputmode="decimal" autocomplete="off" placeholder="e.g. 4:38.5" maxlength="10"></div>
+            <input class="form-input" id="an-css-400" autocomplete="off" placeholder="e.g. 4:38.5" maxlength="10"></div>
           <div class="form-group an-fg"><label for="an-css-200">200 time trial (m:ss.ss)</label>
-            <input class="form-input" id="an-css-200" inputmode="decimal" autocomplete="off" placeholder="e.g. 2:12.8" maxlength="10"></div>
+            <input class="form-input" id="an-css-200" autocomplete="off" placeholder="e.g. 2:12.8" maxlength="10"></div>
           <button class="calc-btn" type="button" onclick="tl_an_calcCSS()">Calculate CSS →</button>
           <p class="an-err" id="an-css-err" role="status" aria-live="polite"></p>
           <div class="calc-result" id="an-css-result" aria-live="polite">
@@ -3287,13 +3301,6 @@ function onSupabaseScript(state){
   if (sbScriptState === 'failed') markLoginUnavailable();
   _sbScriptWaiters.splice(0).forEach(function(fn){ try { fn(); } catch(e){} });
 }
-// Why sign-in cannot open right now (supabase-js blocked, or an offline return visit — the library is
-// cross-origin and not precached). Every auth entry point reports this inline (no blocking alert()).
-function authUnavailableMsg(){
-  return navigator.onLine === false
-    ? 'You are offline — sign-in and the AI features need a connection. All content is still available.'
-    : 'Account features are unavailable right now — the sign-in service could not load. All content is still accessible without an account.';
-}
 // The nav Log In button stays focusable (clicking re-announces the reason) but is annotated so it
 // no longer invites a dead end.
 function markLoginUnavailable(){
@@ -3325,23 +3332,8 @@ function authUnavailable() {
   if (!sb) initSupabaseAuth(); // creates the client synchronously when the library is already here
   return !sb && sbScriptState !== 'loading';
 }
-var _authToastT = 0;
-function authUnavailableNotice() {
-  if (!document.body) return;
-  var t = document.getElementById('tl-auth-toast');
-  if (t && t.parentNode) t.parentNode.removeChild(t);
-  t = document.createElement('div');
-  t.id = 'tl-auth-toast'; t.className = 'tl-upd-toast';
-  t.setAttribute('role', 'status'); t.setAttribute('aria-live', 'polite');
-  var m = document.createElement('span'); m.className = 'tl-upd-toast-msg'; m.textContent = AUTH_DOWN_MSG;
-  var x = document.createElement('button');
-  x.type = 'button'; x.className = 'tl-upd-toast-x'; x.textContent = '✕'; x.setAttribute('aria-label', 'Dismiss');
-  x.addEventListener('click', function(){ if (t.parentNode) t.parentNode.removeChild(t); });
-  t.appendChild(m); t.appendChild(x);
-  document.body.appendChild(t);
-  clearTimeout(_authToastT);
-  _authToastT = setTimeout(function(){ if (t.parentNode) t.parentNode.removeChild(t); }, 12000);
-}
+var AUTH_NOLIB_MSG = 'The sign-in service could not be loaded (your network may block cdn.jsdelivr.net). Everything except accounts and the AI coach still works.';
+var _authNoLib = false; // the overlay is open without supabase-js: its buttons are disabled and every screen carries AUTH_NOLIB_MSG
 function openAuthGate(screen) {
   if (!sb) {
     initSupabaseAuth();
@@ -3349,13 +3341,9 @@ function openAuthGate(screen) {
       _sbScriptWaiters.push(function(){ openAuthGate(screen); });
       return true;
     }
-    if (!sb) { // blocked / offline: announce inline instead of a blocking alert(); callers show their own notice
-      markLoginUnavailable();
-      authUnavailableNotice(); // dismissable toast for sighted users; the live region below for screen readers
-      if (typeof tlAnnounce === 'function') tlAnnounce(authUnavailableMsg());
-      return false;
-    }
+    if (!sb) markLoginUnavailable(); // blocked / offline: the nav button says so, and the overlay below opens anyway to explain (never a native alert)
   }
+  _authNoLib = !sb; // blocked or failed: the overlay markup needs no library, so explain there (no native alert)
   var g = document.getElementById('access-gate');
   if (!g) { document.addEventListener('DOMContentLoaded', function(){ openAuthGate(screen); }, { once: true }); return true; } // overlay markup not parsed yet
   if (_authHideTimer) { clearTimeout(_authHideTimer); _authHideTimer = 0; }
@@ -3366,7 +3354,7 @@ function openAuthGate(screen) {
   g.style.display = 'flex';
   g.style.opacity = '1';
   setAuthInert(true); // aria-modal alone is not enforced everywhere: the page behind really is inert while the dialog shows
-  showAuthScreen(screen || 'login');
+  showAuthScreen(_authNoLib ? 'login' : (screen || 'login'));
   // Move focus into the dialog and trap Tab within it.
   setTimeout(function(){
     var visible = g.querySelector('[id^="screen-"]:not([style*="display:none"]):not([style*="display: none"])') || g;
@@ -3413,6 +3401,8 @@ function showAuthScreen(name) {
     if (el) el.style.display = 'none';
   });
   document.querySelectorAll('#access-gate [aria-invalid]').forEach(function(i){ i.removeAttribute('aria-invalid'); i.removeAttribute('aria-describedby'); });
+  ['login-btn', 'signup-btn', 'forgot-btn', 'newpass-btn'].forEach(function(id){ var b = document.getElementById(id); if (b) b.disabled = _authNoLib; });
+  if (_authNoLib) showAuthError(name, AUTH_NOLIB_MSG);
   var gate = document.getElementById('access-gate'), shown = document.getElementById('screen-' + name);
   // Name the dialog after the screen it shows (Welcome back / Create your account / …), not a static "Account".
   if (gate && document.getElementById('auth-h-' + name)) { gate.setAttribute('aria-labelledby', 'auth-h-' + name); gate.removeAttribute('aria-label'); }
@@ -3447,8 +3437,10 @@ function tlPlainEnter(e) {
 // endpoint is unreachable, and terse API phrases for the common mistakes.
 // Translate the ones a swimmer will actually meet; pass anything else through.
 function authErrorText(error) {
+  // supabase-js reports an unreachable backend as AuthRetryableFetchError {message:'Failed to fetch', status:0}
+  // (a plain TypeError from rpc()): the browser's wording means nothing to a swimmer — say what it is.
   var m = (error && error.message) ? String(error.message) : '';
-  if (!navigator.onLine || /fetch|network|load failed/i.test(m)) return 'Could not reach the sign-in service — check your connection and try again.';
+  if (!navigator.onLine || (error && (error.status === 0 || error.name === 'AuthRetryableFetchError')) || /fetch|network|load failed/i.test(m)) return 'Could not reach the sign-in service — check your connection and try again.';
   if (/invalid login credentials/i.test(m)) return 'Email or password is incorrect.';
   if (/email not confirmed/i.test(m)) return 'Confirm your email first — check your inbox for the link.';
   return m || 'Something went wrong — please try again.';
@@ -3484,6 +3476,11 @@ async function doSignup() {
   // itself is no longer readable to anyone but its owner. The database also
   // enforces case-insensitive uniqueness, so a race can't create duplicates.
   var taken = await sb.rpc('username_taken', { candidate: username });
+  if (taken.error) { // the check itself failed (offline, blocked): say so instead of silently trying to sign up
+    showAuthError('signup', authErrorText(taken.error));
+    btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
+    return;
+  }
   if (taken.data === true) {
     showAuthError('signup', 'That username is already taken — pick another.', 'signup-username');
     btn.disabled = false; btn.textContent = 'CREATE ACCOUNT →';
@@ -3669,7 +3666,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne</div>
     <h2 id="auth-h-login" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">LOG IN TO<br><span style="color:var(--cyan)">YOUR ACCOUNT</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
-      <input id="login-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doLogin()"></div>
+      <input id="login-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doLogin()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Password</label>
       <input id="login-password" type="password" autocomplete="current-password" class="form-input" placeholder="••••••••" onkeydown="if(tlPlainEnter(event))doLogin()"></div>
     <button id="login-btn" onclick="doLogin()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">LOG IN →</button>
@@ -3685,9 +3682,9 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne — Free Account</div>
     <h2 id="auth-h-signup" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">CREATE YOUR <br><span style="color:var(--cyan)">ACCOUNT</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Choose a Username</label>
-      <input id="signup-username" type="text" autocomplete="username" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
+      <input id="signup-username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
-      <input id="signup-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
+      <input id="signup-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Choose a Password</label>
       <input id="signup-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
     <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:1rem;font-size:0.78rem;color:var(--white3);text-align:left;cursor:pointer;line-height:1.5">
@@ -3703,7 +3700,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🔑</div>
     <h2 id="auth-h-forgot" style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:1.25rem">RESET YOUR <br><span style="color:var(--cyan)">PASSWORD</span></h2>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Email</label>
-      <input id="forgot-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doForgotPassword()"></div>
+      <input id="forgot-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doForgotPassword()"></div>
     <button id="forgot-btn" onclick="doForgotPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SEND RESET LINK →</button>
     <p id="forgot-msg" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.78rem;letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Back to login</button></p>
@@ -3844,7 +3841,7 @@ const PAGE_TITLES={
 // Every route carries the brand (history, bookmarks, tab strips and share sheets show it); Home already does.
 function setPageTitle(name){
   const t = PAGE_TITLES[name];
-  // Every tab/bookmark/history entry names the app; home and What's New already carry it.
+  // Every tab/bookmark/history entry names the app; Home already carries it.
   document.title = !t ? 'Tidelyne' : (t.indexOf('Tidelyne') >= 0 ? t : t + ' — Tidelyne');
 }
 function switchTab(btn,id){
@@ -4135,6 +4132,9 @@ function initViz3D() {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
   renderer.setClearColor(0x040d18, 1);
+  // A retry after a failed CDN load: the "could not load" block fills the (overflow:hidden) container and
+  // would sit above the canvas, clipping it entirely — remove it first.
+  container.querySelectorAll('.viz-fallback').forEach(function(f){ f.remove(); });
   container.appendChild(renderer.domElement);
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 0.5, 0);
@@ -4626,9 +4626,23 @@ function loadHumanScripts(done){
   s.src = HUMAN_SCRIPT + '?v=' + encodeURIComponent(window.TL_VERSION || '');
   s.async = false;
   s.onload = finish;
-  // Offline, blocked or a broken deploy: the page keeps working with the built-in mannequin.
-  s.onerror = function(){ console.warn('Tidelyne: could not load ' + HUMAN_SCRIPT + ' — the built-in mannequin will be shown.'); finish(); };
+  // Offline, blocked or a broken deploy: the page keeps working with the built-in mannequin. The state goes back
+  // to 'idle' so the next lab visit (or coming back online) re-injects the module — one offline visit must not
+  // mean the mannequin for the whole session.
+  s.onerror = function(){ console.warn('Tidelyne: could not load ' + HUMAN_SCRIPT + ' — the built-in mannequin will be shown.'); finish(); humanScriptState = 'idle'; try { s.remove(); } catch(e){} };
   document.head.appendChild(s);
+}
+// The lab is built but viz-human.js failed to load earlier: fetch it again and swap the mannequin for the human.
+function retryHumanModules(){
+  if (humanScriptState !== 'idle' || humanFailed || !viz3DInitialized || humanModulesReady()) return;
+  loadHumanScripts(function(){
+    if (!humanModulesReady() || !viz3DInitialized) return;
+    initHumanLighting();
+    if (window.TL_HumanMaterials && scene.environment) { try { TL_HumanMaterials.tameEnvironment(scene, 0.25); } catch (e) {} }
+    applyStrokePatches();
+    rebuildSwimmer(currentStroke);
+    buildPhaseBar3D(currentStroke);
+  });
 }
 const SKIN_TONE_HEX = { light: 0xe8b99a, medium: 0xc9915f, deep: 0x6b3f22 };
 const humanRigCache = {};      // 'male|high' → rig, built ONCE and kept for the page's lifetime
@@ -5205,13 +5219,18 @@ function setSpeed3D(s, btn) {
 function resizeViz3D() {
   const container = document.getElementById('viz3d-container');
   if (!container || !renderer || !camera) return;
+  // Hidden page (display:none) measures 0, so the fallbacks would reallocate the WebGL buffer at 700x520xDPR on
+  // every window resize (every phone address-bar show/hide) while another page is read; ensureViz3DReady
+  // re-measures on the next lab visit.
+  if (!vizLabActive()) return;
   const w = container.clientWidth || 700;
   const h = container.clientHeight || 520;
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   renderer.setSize(w, h);
 }
-window.addEventListener('resize', resizeViz3D);
+let _vizResizeRaf = 0; // resize events are coalesced to one re-size per frame
+window.addEventListener('resize', function(){ if (_vizResizeRaf) return; _vizResizeRaf = requestAnimationFrame(function(){ _vizResizeRaf = 0; resizeViz3D(); }); });
 let lastTime3D = performance.now();
 let _axNegX, _axPosX, _axPosY, _netDir; // scratch axes, created in startViz3D
 let _vizPageEl = null;
@@ -5304,7 +5323,7 @@ function startViz3D() {
   if (vizLabActive()) animate3D();
 }
 function ensureViz3DReady() {
-  if (viz3DInitialized) { resizeViz3D(); return; }
+  if (viz3DInitialized) { resizeViz3D(); retryHumanModules(); return; }
   if (window.THREE) { loadHumanScripts(startViz3D); return; }
   if (threeLoading) return;
   threeLoading = true;
@@ -5356,6 +5375,9 @@ function vizLabRetry(){
   try { c.focus({ preventScroll: true }); } catch(e){}
   ensureViz3DReady();
 }
+// Connectivity came back while the lab is open: retry whichever download failed (Three.js or viz-human.js).
+// A showing fallback goes through vizLabRetry so the container gets its role, tabindex and label back.
+window.addEventListener('online', function(){ if (!vizLabActive()) return; if (document.getElementById('viz-retry-btn')) vizLabRetry(); else ensureViz3DReady(); });
 // A11y: give every video iframe a title (screen readers announce these),
 // derived from its own card heading so it never goes stale.
 document.addEventListener('DOMContentLoaded', function(){
@@ -5438,6 +5460,28 @@ function loadCustomMotion(motion, statusEl, prefix){
 const AI_LIMIT_MSG='You\'ve reached the limit of 20 AI messages per 5 hours. Take a break and come back soon.';
 const SESSION_EXPIRED_MSG='Your session expired — please log in again.';
 const AI_NETWORK_MSG='Connection error — check your network and try again.';
+// One guard per AI stream (coach, generator, visualizer analysis, 3D reconstruction): an AbortController whose
+// idle timer aborts after AI_IDLE_MS without a chunk (touch() resets it per chunk), so a half-open mobile
+// connection or a never-closing stream cannot wedge the button until reload; stop() is the user's Stop control.
+const AI_IDLE_MS=20000;
+const AI_TIMEOUT_MSG='The coach did not answer in time — try again.';
+function aiStreamGuard(){
+  const ac=new AbortController(); let timer=0;
+  const g={ signal:ac.signal, timedOut:false, stopped:false,
+    touch(){ clearTimeout(timer); timer=setTimeout(()=>{ g.timedOut=true; ac.abort(); },AI_IDLE_MS); },
+    stop(){ if(ac.signal.aborted) return; g.stopped=true; clearTimeout(timer); ac.abort(); },
+    end(){ clearTimeout(timer); } };
+  g.touch();
+  return g;
+}
+let _aiChatGuard=null; // the coach chat's running stream (Stop button)
+function stopAI(){ if(_aiChatGuard) _aiChatGuard.stop(); }
+function setAIStreaming(on){
+  const btn=document.getElementById('ai-send-btn'), stop=document.getElementById('ai-stop-btn');
+  if(btn) btn.disabled=!!on;
+  if(stop) stop.hidden=!on;
+  if(!on) _aiChatGuard=null;
+}
 async function generateMotion(){
   const inp=document.getElementById('motion-prompt');
   const statusEl=document.getElementById('motion-status');
@@ -5451,6 +5495,7 @@ async function generateMotion(){
   ensureViz3DReady();
   btn.disabled=true;
   statusEl.textContent='✦ Reconstructing — the AI is computing joint keyframes for "'+desc+'"…';
+  const guard=aiStreamGuard();
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken=sessionData?.session?.access_token;
@@ -5458,7 +5503,8 @@ async function generateMotion(){
     const resp=await fetch(SUPABASE_URL+'/functions/v1/ask-ai',{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+accessToken},
-      body:JSON.stringify({mode:'motion',messages:[{role:'user',content:desc}]})
+      body:JSON.stringify({mode:'motion',messages:[{role:'user',content:desc}]}),
+      signal:guard.signal
     });
     if(!resp.ok){
       // Say WHY first: a rate limit or an expired session is not "backend unavailable".
@@ -5478,6 +5524,7 @@ async function generateMotion(){
     while(true){
       const {done,value}=await reader.read();
       if(done) break;
+      guard.touch();
       buffer+=decoder.decode(value,{stream:true});
       const lines=buffer.split('\n'); buffer=lines.pop()||'';
       for(const line of lines){
@@ -5490,6 +5537,7 @@ async function generateMotion(){
         }catch(e){}
       }
     }
+    guard.end();
     // Strip markdown fences if the model added them, then extract the JSON
     fullText=fullText.replace(/```[a-zA-Z]*\n?/g,'');
     const jsonStart=fullText.indexOf('{'), jsonEnd=fullText.lastIndexOf('}');
@@ -5497,11 +5545,12 @@ async function generateMotion(){
     const motion=validateMotion(JSON.parse(fullText.slice(jsonStart,jsonEnd+1)));
     loadCustomMotion(motion, statusEl);
   }catch(e){
+    guard.end();
     const fb=tryFallbackMotion(desc);
-    // A rejected fetch (offline, DNS, blocked) is a connection problem, not a bad cue or a bad reply.
-    const noNet=(e instanceof TypeError)||!navigator.onLine;
-    if(fb){ loadCustomMotion(fb, statusEl, noNet?'⚠ No connection — built-in reconstruction: ':'⚠ AI response unusable — built-in reconstruction: '); }
-    else statusEl.textContent=noNet?'No connection — AI reconstruction needs to be online. The stroke buttons still work offline.'
+    // A rejected fetch (offline, DNS, blocked) is a connection problem, not a bad cue or a bad reply; an idle timeout is its own case.
+    const noNet=!guard.timedOut&&((e instanceof TypeError)||!navigator.onLine);
+    if(fb){ loadCustomMotion(fb, statusEl, guard.timedOut?'⚠ The AI did not answer in time — built-in reconstruction: ':noNet?'⚠ No connection — built-in reconstruction: ':'⚠ AI response unusable — built-in reconstruction: '); }
+    else statusEl.textContent=guard.timedOut?AI_TIMEOUT_MSG:noNet?'No connection — AI reconstruction needs to be online. The stroke buttons still work offline.'
       :'Couldn\'t build that motion. Try a simpler cue, e.g. "freestyle with breathing", or pick a built-in stroke.';
   }
   btn.disabled=false;
@@ -5684,7 +5733,12 @@ async function sendToAI(){
   }
   const btn=document.getElementById('ai-send-btn');
   if(btn.disabled) return; // a stream is already running
-  addMsg(msg,'user'); input.value=''; btn.disabled=true;
+  if(typeof navigator.onLine==='boolean' && !navigator.onLine){ // no point opening a stream: say so at once, keep the text
+    const offMsg='You are offline — the coach needs a connection.';
+    if(lastAIBubbleText()!==offMsg) addMsg(offMsg,'ai');
+    return;
+  }
+  addMsg(msg,'user'); input.value=''; setAIStreaming(true);
   conversationHistory.push({role:'user',content:msg});
   // Cap history — otherwise every message re-uploads the whole conversation.
   // The model API needs the first turn to be the user's: the cut lands on an
@@ -5696,11 +5750,12 @@ async function sendToAI(){
   }
   // Create streaming bubble
   const streamBubble=createStreamBubble();
+  const guard=aiStreamGuard(); _aiChatGuard=guard;
   let fullText=''; // outside the try: a stream that breaks mid-answer keeps what arrived
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
-    if(!accessToken){ conversationHistory.pop(); finishStreamBubble(streamBubble, SESSION_EXPIRED_MSG); btn.disabled=false; return; }
+    if(!accessToken){ conversationHistory.pop(); finishStreamBubble(streamBubble, SESSION_EXPIRED_MSG); setAIStreaming(false); return; }
     const resp=await fetch(SUPABASE_URL + '/functions/v1/ask-ai',{
       method:'POST',
       headers:{
@@ -5711,13 +5766,14 @@ async function sendToAI(){
       body:JSON.stringify({
         mode: currentMode,
         messages: conversationHistory
-      })
+      }),
+      signal:guard.signal
     });
     if(!resp.ok){
       conversationHistory.pop(); // roll back the unanswered user turn (keeps the API from getting two user turns in a row and wedging the chat)
       const err=await resp.json().catch(()=>({}));
       finishStreamBubble(streamBubble, err.error || (resp.status===429 ? AI_LIMIT_MSG : `Error: HTTP ${resp.status}`));
-      btn.disabled=false; return;
+      setAIStreaming(false); return;
     }
     const reader=resp.body.getReader();
     const decoder=new TextDecoder();
@@ -5725,6 +5781,7 @@ async function sendToAI(){
     while(true){
       const {done,value}=await reader.read();
       if(done) break;
+      guard.touch();
       buffer+=decoder.decode(value,{stream:true});
       const lines=buffer.split('\n');
       buffer=lines.pop()||''; // keep incomplete line
@@ -5741,22 +5798,25 @@ async function sendToAI(){
         }catch(e){}
       }
     }
+    guard.end();
     finishStreamBubble(streamBubble, fullText||'No response.');
     if(fullText) conversationHistory.push({role:'assistant',content:fullText});
     else conversationHistory.pop(); // empty reply — drop the user turn so history stays valid
   }catch(e){
-    // A stream that broke after tokens arrived keeps the partial answer on
-    // screen and in history (the reader was mid-paragraph); with nothing
+    guard.end();
+    // A stream that broke, stalled or was stopped after tokens arrived keeps the partial
+    // answer on screen and in history (the reader was mid-paragraph); with nothing
     // received, roll back the user turn so the history stays valid.
     if(fullText){
       conversationHistory.push({role:'assistant',content:fullText});
-      finishStreamBubble(streamBubble, fullText+'\n\n— Connection interrupted before the answer finished — check your network and ask again for the rest.');
+      finishStreamBubble(streamBubble, guard.stopped?fullText:fullText+'\n\n— '+(guard.timedOut?'The coach stopped answering before the reply finished':'Connection interrupted before the answer finished')+' — ask again for the rest.');
     } else {
-      conversationHistory.pop(); // roll back the user turn on network failure
-      finishStreamBubble(streamBubble, AI_NETWORK_MSG);
+      conversationHistory.pop(); // roll back the user turn on timeout / stop / network failure
+      finishStreamBubble(streamBubble, guard.timedOut?AI_TIMEOUT_MSG:(guard.stopped?'Stopped.':AI_NETWORK_MSG));
+      if(!input.value) input.value=msg; // the question is not lost — it is back in the box to retry
     }
   }
-  btn.disabled=false;
+  setAIStreaming(false);
 }
 function createStreamBubble(){
   const msgs=document.getElementById('ai-messages');
@@ -5911,6 +5971,7 @@ COOL-DOWN (Xm):
 TOTAL: Xm
 COACH NOTES:
 Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g. 24–28 = AeT). Volume target: ${volTargets}.`;
+  const guard=aiStreamGuard();
   let fullText=''; // outside the try: a stream that breaks mid-session keeps what arrived
   try{
     const { data: sessionData } = await sb.auth.getSession();
@@ -5926,7 +5987,8 @@ Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g.
       body:JSON.stringify({
         mode: 'workout',
         messages: [{role:'user',content:prompt}]
-      })
+      }),
+      signal:guard.signal
     });
     loading.style.display='none';
     if(!resp.ok){
@@ -5945,6 +6007,7 @@ Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g.
     while(true){
       const {done,value}=await reader.read();
       if(done) break;
+      guard.touch();
       buffer+=decoder.decode(value,{stream:true});
       const lines=buffer.split('\n');
       buffer=lines.pop()||'';
@@ -5961,21 +6024,24 @@ Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g.
         }catch(e){}
       }
     }
+    guard.end();
     // Format nicely after streaming
     result.innerHTML=formatWorkout(fullText);
     result.removeAttribute('aria-busy');
     actions.style.display='flex';
     tlAnnounce('Workout ready.');
   }catch(e){
+    guard.end();
     loading.style.display='none';
     result.removeAttribute('aria-busy');
     if(fullText){ // keep the sets that streamed in; say the session is cut short
-      result.innerHTML=formatWorkout(fullText)+`<p style="color:var(--red);margin-top:0.75rem">Connection interrupted before the session finished — check your network and generate again for the full workout.</p>`;
+      result.innerHTML=formatWorkout(fullText)+`<p style="color:var(--red);margin-top:0.75rem">${guard.timedOut?'The coach stopped answering before the session finished':'Connection interrupted before the session finished'} — check your network and generate again for the full workout.</p>`;
       actions.style.display='flex';
       tlAnnounce('Connection interrupted — the workout shown is incomplete.');
     } else {
-      result.innerHTML='<p style="color:var(--red)">'+AI_NETWORK_MSG+'</p>';
-      tlAnnounce(AI_NETWORK_MSG);
+      const failMsg=guard.timedOut?AI_TIMEOUT_MSG:AI_NETWORK_MSG;
+      result.innerHTML='<p style="color:var(--red)">'+escapeHTML(failMsg)+'</p>';
+      tlAnnounce(failMsg);
     }
   }
 }
@@ -6067,6 +6133,7 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
   contentDiv.setAttribute('aria-busy','true');
   tlAnnounce('Generating analysis…');
   const streamEl=document.getElementById('viz-stream');
+  const guard=aiStreamGuard();
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
@@ -6081,7 +6148,8 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
       body:JSON.stringify({
         mode: 'visualizer',
         messages: [{role:'user',content:prompt}]
-      })
+      }),
+      signal:guard.signal
     });
     resultDiv.innerHTML='<div style="padding:1.25rem;text-align:center"><div style="font-family:var(--fm);font-size:0.6rem;letter-spacing:3px;color:var(--green)">✓ STREAMING</div></div>';
     if(!resp.ok){
@@ -6098,6 +6166,7 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
     while(true){
       const {done,value}=await reader.read();
       if(done) break;
+      guard.touch();
       buffer+=decoder.decode(value,{stream:true});
       const lines=buffer.split('\n');
       buffer=lines.pop()||'';
@@ -6114,6 +6183,7 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
         }catch(e){}
       }
     }
+    guard.end();
     // Format after done
     contentDiv.innerHTML=formatVizOutput(fullText);
     contentDiv.removeAttribute('aria-busy');
@@ -6121,9 +6191,12 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
     tlAnnounce('Analysis complete.');
     outputDiv.scrollIntoView({behavior:tlReducedMotion()?'auto':'smooth',block:'start'}); // was reducedMotion(): private to the Timers block, so a finished analysis threw and showed the network error
   }catch(e){
+    guard.end();
     contentDiv.removeAttribute('aria-busy');
-    contentDiv.innerHTML='<p style="color:var(--red)">'+AI_NETWORK_MSG+'</p>';
-    tlAnnounce(AI_NETWORK_MSG);
+    const failMsg=guard.timedOut?AI_TIMEOUT_MSG:AI_NETWORK_MSG;
+    contentDiv.innerHTML='<p style="color:var(--red)">'+escapeHTML(failMsg)+'</p>';
+    resultDiv.innerHTML='';
+    tlAnnounce(failMsg);
   }
 }
 function formatVizOutput(text){
@@ -6143,6 +6216,9 @@ function formatVizOutput(text){
 function parseTime(str){
   if(!str) return null;
   str=String(str).trim();
+  // Phone number keypads have no ":" — accept the two-dot form "1.52.30" as "1:52.30".
+  // (A single dot, "1.52", is still a typo below: no swim time is 1.52 s.)
+  str=str.replace(/^(\d{1,2})\.(\d{2})\.(\d{1,3})$/,'$1:$2.$3');
   // Accept "ss(.ss)" — plain seconds as a scoreboard shows them, "62.30"
   // included — or "m:ss(.ss)" with the seconds under 60. Reject "1:23:45",
   // "1:75", "1e3", stray letters, and "1.55" typos that used to be silently
@@ -6298,7 +6374,7 @@ function buildPRGrid(stroke){
     const key='pr_'+event.replace(/ /g,'_');
     const saved=lsGet(key)||'';
     const item=document.createElement('div'); item.className='pr-item';
-    item.innerHTML=`<label class="pr-event" for="pr-in-${key}">${event}</label><input id="pr-in-${key}" class="pr-input" placeholder="—" maxlength="12" inputmode="decimal" autocomplete="off" aria-describedby="pr-format-hint" value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value,this)" onchange="savePR('${key}',this.value,this,true)">`;
+    item.innerHTML=`<label class="pr-event" for="pr-in-${key}">${event}</label><input id="pr-in-${key}" class="pr-input" placeholder="—" maxlength="12" autocomplete="off" aria-describedby="pr-format-hint" value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value,this)" onchange="savePR('${key}',this.value,this,true)">`;
     grid.appendChild(item);
   });
 }
@@ -6355,7 +6431,7 @@ function savePR(key,value,el,normalize){
   if(!v){ lsRemove(key); if(el) el.removeAttribute('aria-invalid'); prHint(''); return; }
   const t=parseTime(v);
   if(t===null){
-    const showErr=()=>{ delete prErrTimers[key]; if(el) el.setAttribute('aria-invalid','true'); prHint('Use ss.ss or m:ss.ss — e.g. 52.30 or 1:52.30'); };
+    const showErr=()=>{ delete prErrTimers[key]; if(el) el.setAttribute('aria-invalid','true'); prHint('Use ss.ss or m:ss.ss — e.g. 52.30 or 1:52.30 (1.52.30 also works)'); };
     if(normalize) showErr(); else prErrTimers[key]=setTimeout(showErr,800);
     return;
   }
@@ -7588,7 +7664,7 @@ function renderGoalCard(ev, goals){
   return '<div class="pl-goal-card' + (gs ? ' has-goal' : '') + (gs || pr ? '' : ' is-empty') + '" data-event="' + esc(ev) + '" role="group" aria-labelledby="' + id + '-ev">' +
     '<div class="pl-goal-head"><span class="pl-goal-event" id="' + id + '-ev">' + esc(ev) + '</span><span class="pl-goal-pr">' + prHtml + '</span></div>' +
     '<label class="pl-goal-label" for="' + id + '">Goal time<span class="sr-only"> for ' + esc(ev) + '</span></label>' +
-    '<input class="pl-goal-input" id="' + id + '" inputmode="decimal" maxlength="10" placeholder="m:ss.ss" autocomplete="off" value="' + esc(raw) + '" aria-describedby="' + id + '-err" data-event="' + esc(ev) + '">' +
+    '<input class="pl-goal-input" id="' + id + '" maxlength="10" placeholder="m:ss.ss" autocomplete="off" value="' + esc(raw) + '" aria-describedby="' + id + '-err" data-event="' + esc(ev) + '">' +
     '<div class="pl-err" id="' + id + '-err"></div>' + quick +
     '<dl class="pl-goal-stats"><div><dt>Gap</dt><dd class="' + st.gapClass + '" data-k="gap">' + esc(st.gapText) + '</dd></div>' +
     '<div><dt>Per 50</dt><dd data-k="p50">' + esc(st.per50) + '</dd></div><div><dt>Per 100</dt><dd data-k="p100">' + esc(st.per100) + '</dd></div></dl>' +
@@ -10900,6 +10976,14 @@ window.initUpdates = function(){
   if (document.readyState === 'complete') registerSW();
   else window.addEventListener('load', registerSW);
 };
+// Global offline signal: html.tl-offline (CSS notes on the AI form and the video facades; the login
+// overlay and sendToAI read navigator.onLine directly). Set at load and on every online/offline event.
+(function(){
+  function sync(){ try { document.documentElement.classList.toggle('tl-offline', typeof navigator.onLine === 'boolean' && !navigator.onLine); } catch(e){} }
+  window.addEventListener('online', sync);
+  window.addEventListener('offline', sync);
+  sync();
+})();
 window.onShow_updates = function(){
   window.initUpdates();          // idempotent; guarantees prevSeenAtLoad is captured first
   if (lsGet(SEEN_KEY) !== window.TL_VERSION){
