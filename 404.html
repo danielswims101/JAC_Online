@@ -37,7 +37,7 @@ button.stay:hover,button.stay:focus-visible{border-color:#00d4ff;color:#00d4ff}
 // against that path (for /JAC_Online/foo/bar/ a './' link points back at the
 // 404 itself). Work out the site root once — the project folder on *.github.io,
 // the origin root anywhere else — and use it for the button, the icon and the
-// redirect. The redirect waits 20 s and can be cancelled (WCAG 2.2.1).
+// redirect. The redirect waits 20 s and can be canceled (WCAG 2.2.1).
 (function(){
   var ROOT = /\.github\.io$/i.test(location.hostname) ? '/' + (location.pathname.split('/')[1] || '') + '/' : '/';
   if (ROOT === '//') ROOT = '/';
@@ -48,7 +48,7 @@ button.stay:hover,button.stay:focus-visible{border-color:#00d4ff;color:#00d4ff}
   var redirectTimer = setTimeout(function(){ location.replace(ROOT); }, 20000);
   if (stay) stay.addEventListener('click', function(){
     clearTimeout(redirectTimer);
-    if (note) note.textContent = 'Redirect cancelled — use the button above whenever you are ready.';
+    if (note) note.textContent = 'Redirect canceled — use the button above whenever you are ready.';
   });
 })();
 </script>
