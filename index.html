@@ -264,11 +264,13 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.985);border-bott
 /* LAYOUT */
 .section-wrap{max-width:1240px;margin:0 auto;padding:5rem 2rem}.section-wrap.narrow{max-width:960px}
 .section-eyebrow{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.75rem;opacity:0.85}
-h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* section titles promoted from <div> to real headings keep their look */
+h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* section titles promoted from <div> to real headings keep their look */
 .section-title{font-family:var(--fh);font-weight:400;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:2px;line-height:0.92;margin-top:0;margin-bottom:1rem}
 .section-title span{color:var(--cyan)}
 .section-intro{font-size:0.95rem;color:var(--white2);max-width:660px;line-height:1.85;font-weight:300;margin-bottom:2.5rem}
 .form-notice{color:var(--red);font-size:0.82rem;line-height:1.55;margin-top:0.75rem}.form-notice.is-ok{color:var(--green)}.form-notice[hidden]{display:none}
+/* Training-log delete notice + its Undo button: the button is a sibling of the role=alert, not part of its text */
+.log-notice-row{display:flex;flex-wrap:wrap;align-items:center;column-gap:2px}.log-notice-row #log-undo{margin-top:0}
 .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:3.5rem 0}
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:1.5rem}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1.5rem}
@@ -298,7 +300,7 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .accordion{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);margin-bottom:1rem;overflow:hidden;transition:border-color 0.2s}.accordion:hover{border-color:var(--border)}
 .acc-header{padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:1rem;transition:background 0.2s}.acc-header:hover{background:var(--card2)}
 .acc-header h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;line-height:1.2}
-.acc-header .acc-btn{background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:left;cursor:pointer;line-height:inherit}
+.acc-header .acc-btn{background:none;border:0;padding:0.6rem 0;margin:-0.6rem 0;display:block;width:100%;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:left;cursor:pointer;line-height:inherit} /* padding cancelled by the margin: the layout is unchanged, the button's own hit box grows from ~23 px to ~42 px (WCAG 2.5.8) */
 .acc-body{padding:1.75rem;border-top:1px solid var(--border2);display:none}.acc-body.open{display:block}
 .acc-body p{font-size:0.9rem;color:var(--white2);line-height:1.9;margin-bottom:1rem;font-weight:300}.acc-body p:last-child{margin-bottom:0}
 .chevron{transition:transform 0.25s;font-size:1rem;color:var(--cyan);flex-shrink:0}.chevron.open{transform:rotate(180deg)}
@@ -411,7 +413,9 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .qp{background:var(--navy3);border:1px solid var(--border2);border-radius:20px;padding:5px 13px;font-size:0.71rem;color:var(--white3);cursor:pointer;transition:all 0.2s;font-family:var(--fm);letter-spacing:0.3px}.qp:hover{color:var(--cyan);border-color:rgba(0,212,255,0.4);background:var(--cyan-dim)}
 .ai-input-row{border-top:1px solid var(--border);padding:1rem 1.25rem;display:flex;gap:10px;align-items:stretch}
 .ai-input{flex:1;background:var(--navy3);border:1px solid var(--border-input);border-radius:var(--r8);padding:11px 14px;color:var(--white);font-size:0.88rem;outline:none;transition:border-color 0.2s}.ai-input::placeholder{color:var(--white4)}.ai-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
-.ai-send{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px 22px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.ai-send:hover:not(:disabled){background:var(--cyan2);box-shadow:0 4px 18px rgba(0,212,255,0.3)}.ai-send:disabled{opacity:0.4;cursor:not-allowed}
+.ai-send{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px 22px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.ai-send:hover:not(:disabled):not([aria-busy="true"]){background:var(--cyan2);box-shadow:0 4px 18px rgba(0,212,255,0.3)}.ai-send:disabled{opacity:0.4;cursor:not-allowed}
+/* Action buttons mid-request (tlSetBusy): dimmed like :disabled but still focusable */
+button[aria-busy="true"]{opacity:0.45;cursor:progress}
 .ai-send.ai-stop{background:var(--navy3);color:var(--white);border:1px solid var(--border-input)}.ai-send.ai-stop:hover{background:var(--navy3);border-color:var(--red);color:var(--red);box-shadow:none}
 /* WORKOUT GENERATOR */
 .gen-form{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2rem}
@@ -879,12 +883,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-fit-sub{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px}
 #page-planner .pl-fit-text{font-size:0.84rem;color:var(--white2);line-height:1.7;margin-top:0.75rem}
 #page-planner .pl-interp{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.5rem;margin-top:1.25rem}
-#page-planner .pl-interp h4{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:0.75rem;color:var(--cyan)}
+#page-planner .pl-interp h5{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:0.75rem;color:var(--cyan)}
 #page-planner .pl-interp p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.75rem}
 #page-planner .pl-interp p:last-child{margin-bottom:0}
 #page-planner .pl-interp strong{color:var(--white);font-weight:500}
 #page-planner .pl-pred-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:0.5rem}
-#page-planner .pl-pred-head h4{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px}
+#page-planner .pl-pred-head h5{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px}
 
 /* ─── split planner ─── */
 #page-planner .pl-sp-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:0.75rem}
@@ -894,7 +898,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-halves div{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;padding:8px 10px;text-align:center}
 #page-planner .pl-halves .k{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;display:block}
 #page-planner .pl-halves .v{font-family:var(--fh);font-size:1.35rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1.1;margin-top:3px}
-#page-planner .pl-compare h4{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:0.25rem}
+#page-planner .pl-compare h5{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:0.25rem}
 #page-planner .pl-compare .pl-compare-sub{font-size:0.8rem;color:var(--white3);margin-bottom:0.75rem;line-height:1.6}
 #page-planner .pl-bars{display:flex;flex-direction:column;gap:8px;margin:0.75rem 0}
 #page-planner .pl-bar-row{display:grid;grid-template-columns:96px 1fr 132px;gap:10px;align-items:center}
@@ -927,7 +931,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-countdown-empty{font-size:0.9rem;color:var(--white2);line-height:1.8;font-weight:300}
 #page-planner .pl-countdown-empty strong{color:var(--cyan);font-weight:500}
 #page-planner .pl-cp-wrap{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.5rem}
-#page-planner .pl-cp-wrap h4{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:1rem}
+#page-planner .pl-cp-wrap h5{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:1rem}
 #page-planner .pl-timeline{list-style:none;margin:0 0 0 8px;padding:0;border-left:2px solid var(--border)}
 #page-planner .pl-timeline li{position:relative;padding:0 0 1.15rem 1.35rem}
 #page-planner .pl-timeline li:last-child{padding-bottom:0}
@@ -1266,7 +1270,7 @@ html.tl-pal-lock{overflow:hidden}
 #page-updates .tl-upd-offline-note strong{color:var(--white2);font-weight:500}
 #page-updates .tl-upd-install{display:flex;gap:1.25rem;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border2)}
 #page-updates .tl-upd-install-text{flex:1 1 300px;min-width:0}
-#page-updates .tl-upd-install h4{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:0.35rem}
+#page-updates .tl-upd-install h2{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:0.35rem}
 #page-updates .tl-upd-install p{font-size:0.86rem;color:var(--white2);line-height:1.75;font-weight:300;max-width:560px}
 #page-updates .tl-upd-install-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 #page-updates .tl-upd-status{font-family:var(--fm);font-size:0.7rem;letter-spacing:0.3px;color:var(--white3);margin-top:0.9rem;line-height:1.6}
@@ -1310,6 +1314,9 @@ html.tl-pal-lock{overflow:hidden}
 #page-updates .tl-upd-tag.fixed{color:var(--gold);background:var(--gold-dim);border-color:rgba(245,166,35,0.3)}
 #page-updates .tl-upd-counts{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white4);text-transform:uppercase;margin-top:0.9rem}
 #page-updates .tl-upd-more{display:inline-block;margin:0.25rem 0 0 1.75rem}
+/* Same specificity as `#page-updates [hidden]` above and declared later, so the
+   inline-block would win — re-assert the hidden state once all releases are shown. */
+#page-updates .tl-upd-more[hidden]{display:none}
 #page-updates .tl-upd-note{font-size:0.76rem;color:var(--white4);line-height:1.7;margin-top:2rem;max-width:620px}
 
 /* ── Unseen-release dot (nav link + any [data-tl-badge] element) ── */
@@ -1748,7 +1755,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="section-eyebrow">Stroke Technique Lab</div>
   <h1 class="section-title">STROKE <span>VISUALIZER</span></h1>
   <p class="section-intro">Watch real elite technique on video, then study the same movement joint-by-joint in the interactive 3D biomechanics lab below.</p>
-  <div class="section-eyebrow" style="margin-top:0">Watch It — Real Stroke Demos</div>
+  <h2 class="section-eyebrow" style="margin-top:0">Watch It — Real Stroke Demos</h2>
   <div class="tabs" style="margin-bottom:1.5rem">
     <button class="tab-btn active" onclick="switchTab(this,'vd-fr')"><span aria-hidden="true">🏊 </span>Freestyle</button>
     <button class="tab-btn" onclick="switchTab(this,'vd-bk')"><span aria-hidden="true">🔄 </span>Backstroke</button>
@@ -1762,7 +1769,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="vd-fly"><div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="o6Pnv10wyHk" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/o6Pnv10wyHk/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Butterfly · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Butterfly · Demo</span><p>Olympian Dylan Carter on mastering butterfly undulation.</p></div></div></div>
   <div class="tab-panel" id="vd-uw"><div class="video-card"><div class="video-embed"><div class="yt-lite" data-video="bjDfI0NMVY8" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/bjDfI0NMVY8/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Underwater · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Underwater · Demo</span><p>One of the fastest underwater dolphin kicks in the world, broken down.</p></div></div></div>
   <div class="divider"></div>
-  <div class="section-eyebrow">Study It — 3D Biomechanics Lab</div>
+  <h2 class="section-eyebrow">Study It — 3D Biomechanics Lab</h2>
   <p class="section-intro" style="margin-bottom:1.5rem">A realistic human swimmer, built in your browser from real athlete proportions and driven by elite stroke-phase timing. Slow it down, orbit any angle, isolate a phase or X-ray the skeleton — and see what video moves too fast to show.</p>
   <div class="viz-canvas-wrap" style="position:relative">
     <div id="viz3d-container" role="application" tabindex="0" aria-label="Interactive 3D swimmer" aria-describedby="viz3d-help"></div>
@@ -1783,7 +1790,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="viz-btn" aria-pressed="false" onclick="setStroke3D('dolphin',this)"><span aria-hidden="true">🌊 </span>Dolphin Kick</button>
   </div>
   <div class="viz-controls" style="margin-top:10px;align-items:stretch">
-    <input class="form-input" id="motion-prompt" maxlength="300" aria-label="Describe a swimming movement to reconstruct in 3D" placeholder='✦ Describe a movement, e.g. "flip turn"' style="flex:1;min-width:230px" onkeydown="if(event.key==='Enter')generateMotion()">
+    <input class="form-input" id="motion-prompt" maxlength="300" aria-label="Describe a swimming movement to reconstruct in 3D" placeholder='Describe a movement, e.g. "flip turn"' style="flex:1;min-width:230px" onkeydown="if(event.key==='Enter')generateMotion()">
     <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple-text);font-weight:600"><span aria-hidden="true">✦ </span>AI Reconstruct</button>
   </div>
   <div id="motion-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px">Try "breaststroke pullout off the wall" or "backstroke start" — the lab rebuilds it joint by joint.</div>
@@ -1826,7 +1833,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <p style="font-size:0.7rem;color:var(--white4);margin-top:0.5rem;font-family:var(--fm)">Force and velocity values are illustrative teaching approximations, not measured data.</p>
   <div id="viz-info-panel" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r12)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
-      <h2 id="viz-phase-name" style="font-family:var(--fh);font-weight:400;font-size:1.4rem;letter-spacing:1px;color:var(--cyan)">Select a stroke</h2>
+      <h3 id="viz-phase-name" style="font-family:var(--fh);font-weight:400;font-size:1.4rem;letter-spacing:1px;color:var(--cyan)">Select a stroke</h3>
       <div id="viz-stroke-name" style="font-family:var(--fm);font-size:0.65rem;letter-spacing:3px;color:var(--white3);text-transform:uppercase"></div>
     </div>
     <div id="viz-phase-text" style="font-size:0.9rem;color:var(--white2);line-height:1.8;font-weight:300">The lab renders a realistic 3D swimmer — anatomically proportioned, with wet skin, race swimwear, silicone cap and goggles, underwater in caustic light and depth haze — whose joints move on timing from elite stroke-phase research. Orbit freely, zoom in on a hand or a foot, or use the view buttons to inspect technique from any angle; switch between the male and female swimmer, X-ray the skeleton underneath, or describe any movement and the AI reconstructs it.</div>
@@ -2290,7 +2297,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" enterkeyhint="done" maxlength="200" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 24–28"></div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Notes</label><textarea class="form-textarea" id="log-notes" maxlength="1000" placeholder="Technique focus, energy levels, what went well…"></textarea></div>
     <button class="btn-sm" id="log-save-btn" onclick="saveLogEntry()">Save Session</button>
-    <p class="form-notice" id="log-notice" role="alert" hidden></p>
+    <div class="log-notice-row">
+      <p class="form-notice" id="log-notice" role="alert" hidden></p>
+      <p class="form-notice is-ok" id="log-undo" hidden><button type="button" class="tl-linkbtn" id="log-undo-btn" onclick="undoLogDelete()">Undo</button></p>
+    </div>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
     <h2 id="log-history-heading" style="font-family:var(--fh);font-weight:400;font-size:1.5rem;letter-spacing:1px">SESSION HISTORY</h2>
@@ -2615,6 +2625,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <h1 class="section-title">SEASON & <span>MEET CALENDAR</span></h1>
   <p class="section-intro">Reads today's date to tell you where you are in the swim season — short course or long course, and what's coming up on the national calendar.</p>
   <div id="season-now-card" class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:1.5rem">
+    <h2 class="sr-only">Where you are in the season</h2>
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1rem">
       <div>
         <div id="season-today" style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1px;color:var(--cyan)">—</div>
@@ -2624,7 +2635,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <p id="season-blurb" style="font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300">—</p>
   </div>
-  <div class="section-eyebrow" id="season-calendar-eyebrow" style="margin-top:0">National Meet Calendar</div>
+  <h2 class="section-eyebrow" id="season-calendar-eyebrow" style="margin-top:0">National Meet Calendar</h2>
   <div class="warn-box" id="season-archive-note" style="display:none"></div>
   <div class="table-wrap"><table class="data-table" id="season-meet-table" role="table" aria-labelledby="season-calendar-eyebrow"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Meet</th><th scope="col" role="columnheader">Dates</th><th scope="col" role="columnheader">Course</th><th scope="col" role="columnheader">Status</th></tr></thead><tbody role="rowgroup">
     <!-- filled by JS using real dates, with live countdown/status -->
@@ -2741,7 +2752,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <!-- ══════════════ TAB 1 · TEMPO TRAINER ══════════════ -->
   <div class="tab-panel active" id="tlt-tab-tempo">
-    <div class="tlt-card" id="tlt-tempo-card" tabindex="0" role="group" aria-label="Tempo trainer. Space starts or pauses; Up and Down arrows change the tempo.">
+    <div class="tlt-card" id="tlt-tempo-card" tabindex="0" role="group" aria-label="Tempo trainer" aria-describedby="tlt-tempo-keys">
       <div class="tlt-seg" role="group" aria-label="Tempo unit">
         <button type="button" id="tlt-mode-spm" aria-pressed="true" onclick="tlt_setMode('spm')">Strokes / min<small>one beep per arm stroke</small></button>
         <button type="button" id="tlt-mode-cpm" aria-pressed="false" onclick="tlt_setMode('cpm')">Cycles / min<small>one beep per full cycle</small></button>
@@ -2781,7 +2792,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button type="button" class="tlt-btn ghost" id="tlt-tempo-stop" onclick="tlt_tempoStop()"><span aria-hidden="true">■ </span>Stop</button>
       </div>
       <div class="tlt-status" id="tlt-tempo-status" role="status" aria-live="polite"></div>
-      <p class="tlt-hint"><span class="tl-kbd-only">Keys (with the trainer focused, or once it is running): Space start / pause · ↑ ↓ ±1 · Shift + ↑ ↓ ±5. </span>Your last setting is remembered on this device.</p>
+      <p class="tlt-hint"><span class="tl-kbd-only" id="tlt-tempo-keys">Keys (with the trainer focused, or once it is running): Space start / pause · ↑ ↓ ±1 · Shift + ↑ ↓ ±5. </span>Your last setting is remembered on this device.</p>
     </div>
 
     <div class="info-box"><strong>Strokes vs cycles.</strong> A stroke is one arm pull — every hand entry counts. A cycle is both arms, right and left. Wearable tempo trainers count arm strokes: 1.00 s per beep is a FINIS Mode 1 tempo of 1.00 and a Mode 3 rate of 60 strokes/min. Race analyses count cycles, so a 100 free swum at 50 cycles/min is a tempo of 0.60 s per arm stroke. In butterfly and breaststroke both arms move together, so one stroke is one cycle and the two units read the same.</div>
@@ -2799,7 +2810,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <!-- ══════════════ TAB 2 · INTERVAL / CIRCUIT TIMER ══════════════ -->
   <div class="tab-panel" id="tlt-tab-interval">
-    <div class="tlt-int-display" id="tlt-int-display" data-phase="idle" data-paused="false" tabindex="0" role="group" aria-label="Interval timer. Space starts or pauses.">
+    <div class="tlt-int-display" id="tlt-int-display" data-phase="idle" data-paused="false" tabindex="0" role="group" aria-label="Interval timer" aria-describedby="tlt-int-keys">
       <div class="tlt-int-top">
         <div class="tlt-int-phase" id="tlt-int-phase" aria-live="polite">READY</div>
         <div class="tlt-int-round" id="tlt-int-round">—</div>
@@ -2815,7 +2826,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button type="button" class="tlt-btn ghost" id="tlt-int-reset" onclick="tlt_intReset()">Reset</button>
       </div>
       <div class="tlt-status" id="tlt-int-status" role="status" aria-live="polite"></div>
-      <p class="tlt-hint"><span class="tl-kbd-only">Space bar starts and pauses once the timer is focused or running. </span>Short beeps at 3-2-1, a different tone at each change, a rising triple at the end. The screen stays awake while it runs, where the browser allows it.</p>
+      <p class="tlt-hint"><span class="tl-kbd-only" id="tlt-int-keys">Space bar starts and pauses once the timer is focused or running. </span>Short beeps at 3-2-1, a different tone at each change, a rising triple at the end. The screen stays awake while it runs, where the browser allows it.</p>
     </div>
 
     <div class="tlt-card">
@@ -2898,7 +2909,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
 
     <h2 class="section-eyebrow" style="margin-top:2rem">Split taker</h2>
-    <div class="tlt-card tlt-split" id="tlt-split-card" tabindex="0" role="group" aria-label="Split taker. Space starts, then records a split on each press.">
+    <div class="tlt-card tlt-split" id="tlt-split-card" tabindex="0" role="group" aria-label="Split taker" aria-describedby="tlt-sp-keys">
       <div class="tlt-sp-time" id="tlt-sp-time">0:00.0</div>
       <div class="tlt-sp-sub" id="tlt-sp-sub">Ready</div>
       <button type="button" class="tlt-sp-main" id="tlt-sp-main" onclick="tlt_spMain()">START</button>
@@ -2909,7 +2920,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       </div>
       <div class="tlt-sp-opts"><div class="form-group"><label for="tlt-sp-dist">Split distance (m or yd) — for pace per 100</label><input class="form-input" type="number" id="tlt-sp-dist" min="0" max="1500" step="1" value="50" inputmode="numeric"></div></div>
       <div class="tlt-status" id="tlt-sp-status" role="status" aria-live="polite"></div>
-      <p class="tlt-hint"><span class="tl-kbd-only">With the split taker focused, Space starts, then records a split on each press. </span>Stop records the final split. Times come from the device's high-resolution clock, so a hidden screen does not drift them.</p>
+      <p class="tlt-hint"><span class="tl-kbd-only" id="tlt-sp-keys">With the split taker focused, Space starts, then records a split on each press. </span>Stop records the final split. Times come from the device's high-resolution clock, so a hidden screen does not drift them.</p>
       <div class="table-wrap tlt-hidden" id="tlt-sp-wrap"><table class="data-table tlt-num-table" aria-label="Recorded splits"><thead><tr><th scope="col">#</th><th scope="col">Cumulative</th><th scope="col">Split</th><th scope="col">Δ prev</th><th scope="col">Per 100</th><th scope="col">Note</th></tr></thead><tbody id="tlt-sp-body"></tbody></table></div>
       <div class="tlt-sp-summary" id="tlt-sp-summary"></div>
       <textarea id="tlt-sp-text" class="tlt-copytext" aria-hidden="true" tabindex="-1" readonly></textarea>
@@ -3025,7 +3036,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <!-- ─── TAB 4: MEET COUNTDOWN ─────────────────────────────────────── -->
   <div class="tab-panel" id="pl-meet">
-    <div id="pl-mt-card" aria-live="polite"></div>
+    <div id="pl-mt-card"></div>
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>NEXT MEET</h4>
         <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-name">Next meet name</label><input class="form-input" id="pl-mt-name" enterkeyhint="done" maxlength="60" placeholder="e.g. Winter Juniors" autocomplete="off"></div>
@@ -3286,7 +3297,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <p class="tl-upd-offline-note" id="tl-upd-offline-note"></p>
     <div class="tl-upd-install" id="tl-upd-install">
       <div class="tl-upd-install-text">
-        <h4>INSTALL TIDELYNE</h4>
+        <h2>INSTALL TIDELYNE</h2>
         <p id="tl-upd-install-msg">Add Tidelyne to your home screen or desktop: full-screen, offline, one tap from the deck.</p>
       </div>
       <div class="tl-upd-install-actions">
@@ -3297,7 +3308,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="tl-upd-status" id="tl-upd-status" role="status" aria-live="polite"></div>
   </div>
 
-  <ol class="tl-upd-timeline" id="tl-upd-timeline" aria-label="Release history"></ol>
+  <h2 class="section-eyebrow" id="tl-upd-history-h">Release history</h2>
+  <ol class="tl-upd-timeline" id="tl-upd-timeline" aria-labelledby="tl-upd-history-h"></ol>
   <button class="btn-ghost-sm tl-upd-more" type="button" id="tl-upd-more" onclick="tlShowAllUpdates()" hidden>Show older releases</button>
 
   <p class="tl-upd-note">New versions download in the background; when one lands you get a small prompt to reload, never an interruption mid-set. Update checks run through your browser's service worker against this site only — nothing about you is sent anywhere. The one thing saved is the version you last read, so the nav dot knows when to appear.</p>
@@ -3520,20 +3532,20 @@ async function doSignup() {
     showAuthError('signup', 'You must confirm you are 13 or older to create an account.', 'signup-age');
     return;
   }
-  if (btn && btn.disabled) return; // Enter in a field bypasses the disabled button: one sign-up request at a time
-  btn.disabled = true; btn.textContent = 'Creating account…';
+  if (tlIsBusy(btn)) return; // Enter in a field bypasses the disabled button: one sign-up request at a time
+  tlSetBusy(btn, true); btn.textContent = 'Creating account…';
   // Availability check via a yes/no database function — the profiles table
   // itself is no longer readable to anyone but its owner. The database also
   // enforces case-insensitive uniqueness, so a race can't create duplicates.
   var taken = await sb.rpc('username_taken', { candidate: username });
   if (taken.error) { // the check itself failed (offline, blocked): say so instead of silently trying to sign up
     showAuthError('signup', authErrorText(taken.error));
-    btn.disabled = false; btn.innerHTML = 'CREATE ACCOUNT <span aria-hidden="true">→</span>';
+    tlSetBusy(btn, false); btn.innerHTML = 'CREATE ACCOUNT <span aria-hidden="true">→</span>';
     return;
   }
   if (taken.data === true) {
     showAuthError('signup', 'That username is already taken — pick another.', 'signup-username');
-    btn.disabled = false; btn.innerHTML = 'CREATE ACCOUNT <span aria-hidden="true">→</span>';
+    tlSetBusy(btn, false); btn.innerHTML = 'CREATE ACCOUNT <span aria-hidden="true">→</span>';
     return;
   }
   // The username travels as sign-up metadata; a database trigger creates the
@@ -3545,7 +3557,7 @@ async function doSignup() {
   });
   if (error) {
     showAuthError('signup', authErrorText(error));
-    btn.disabled = false; btn.innerHTML = 'CREATE ACCOUNT <span aria-hidden="true">→</span>';
+    tlSetBusy(btn, false); btn.innerHTML = 'CREATE ACCOUNT <span aria-hidden="true">→</span>';
     return;
   }
   // Owner notification (best-effort). The function verifies the account
@@ -3563,7 +3575,7 @@ async function doSignup() {
     showAuthError('login', 'Account created! Check your email to confirm, then log in.', null);
     document.getElementById('login-error').style.color = 'var(--green)';
   }
-  btn.disabled = false; btn.innerHTML = 'CREATE ACCOUNT <span aria-hidden="true">→</span>';
+  tlSetBusy(btn, false); btn.innerHTML = 'CREATE ACCOUNT <span aria-hidden="true">→</span>';
 }
 async function doLogin() {
   if (!sb) { showAuthError('login', AUTH_NOLIB_MSG); return; } // Enter in a field bypasses the disabled button
@@ -3574,16 +3586,16 @@ async function doLogin() {
     showAuthError('login', 'Enter both email and password.');
     return;
   }
-  if (btn && btn.disabled) return; // Enter in a field bypasses the disabled button: one log-in request at a time
-  btn.disabled = true; btn.textContent = 'Logging in…';
+  if (tlIsBusy(btn)) return; // Enter in a field bypasses the disabled button: one log-in request at a time
+  tlSetBusy(btn, true); btn.textContent = 'Logging in…';
   var { data, error } = await sb.auth.signInWithPassword({ email: email, password: password });
   if (error) {
     showAuthError('login', authErrorText(error));
-    btn.disabled = false; btn.innerHTML = 'LOG IN <span aria-hidden="true">→</span>';
+    tlSetBusy(btn, false); btn.innerHTML = 'LOG IN <span aria-hidden="true">→</span>';
     return;
   }
   await onAuthSuccess(data.user);
-  btn.disabled = false; btn.innerHTML = 'LOG IN <span aria-hidden="true">→</span>';
+  tlSetBusy(btn, false); btn.innerHTML = 'LOG IN <span aria-hidden="true">→</span>';
 }
 async function doForgotPassword() {
   if (!sb) { showAuthError('forgot', AUTH_NOLIB_MSG); return; } // Enter in a field bypasses the disabled button
@@ -3592,13 +3604,13 @@ async function doForgotPassword() {
   var btn = document.getElementById('forgot-btn');
   if (!email) { showAuthError('forgot', 'Enter your email first.', 'forgot-email'); return; }
   if (!email.includes('@')) { showAuthError('forgot', 'Enter a valid email address.', 'forgot-email'); return; } // same rule as sign-up
-  if (btn && btn.disabled) return; // a double tap must not send two reset emails
-  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+  if (tlIsBusy(btn)) return; // a double tap must not send two reset emails
+  if (btn) { tlSetBusy(btn, true); btn.textContent = 'Sending…'; }
   var error = null;
   try {
     error = (await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname })).error;
   } catch (e) { error = { message: 'Could not reach the sign-in service — check your connection and try again.' }; }
-  finally { if (btn) { btn.disabled = false; btn.innerHTML = 'SEND RESET LINK <span aria-hidden="true">→</span>'; } }
+  finally { if (btn) { tlSetBusy(btn, false); btn.innerHTML = 'SEND RESET LINK <span aria-hidden="true">→</span>'; } }
   document.querySelectorAll('#screen-forgot input[aria-invalid]').forEach(function(i){ i.removeAttribute('aria-invalid'); i.removeAttribute('aria-describedby'); });
   msg.style.display = 'block';
   msg.style.color = error ? 'var(--red)' : 'var(--green)';
@@ -3620,10 +3632,10 @@ async function doSetNewPassword() {
   var btn = document.getElementById('newpass-btn');
   if (p1.length < 8) { showAuthError('newpass', 'Password must be at least 8 characters.', 'newpass-password'); return; }
   if (p1 !== p2) { showAuthError('newpass', 'The two passwords do not match.', 'newpass-confirm'); return; }
-  if (btn && btn.disabled) return; // Enter in a field bypasses the disabled button: one update at a time
-  btn.disabled = true; btn.textContent = 'Saving…';
+  if (tlIsBusy(btn)) return; // Enter in a field bypasses the disabled button: one update at a time
+  tlSetBusy(btn, true); btn.textContent = 'Saving…';
   var { data, error } = await sb.auth.updateUser({ password: p1 });
-  btn.disabled = false; btn.innerHTML = 'SET NEW PASSWORD <span aria-hidden="true">→</span>';
+  tlSetBusy(btn, false); btn.innerHTML = 'SET NEW PASSWORD <span aria-hidden="true">→</span>';
   if (error) { showAuthError('newpass', authErrorText(error)); return; }
   _recoveryPending = false;
   try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
@@ -3928,6 +3940,25 @@ function toggleAcc(header){
 // Centralizes the keyboard/ARIA fixes so the markup stays lean: makes
 // accordions, tab strips, AI quick-prompts and clickable cards operable by
 // keyboard and understandable to assistive tech.
+// The rank map of a page is built once, from the headings present at load, and cached: a heading
+// rendered later (planner results, meet checkpoints, release history) is ranked against that map —
+// a tag the page did not have at load lands one level below the nearest smaller tag it did have —
+// so a feature page can call tlSyncHeadingLevels(page) after every render and the outline never
+// skips a level or drifts. Idempotent: attributes are recomputed, never compounded.
+const _tlHeadRanks=new WeakMap();
+function tlSyncHeadingLevels(pg){
+  if(!pg) return;
+  const hs=[...pg.querySelectorAll('h1,h2,h3,h4,h5,h6')].filter(h=>!h.closest('footer'));
+  let rank=_tlHeadRanks.get(pg);
+  if(!rank){ rank={}; [...new Set(hs.map(h=>+h.tagName[1]))].sort().forEach((l,i)=>rank[l]=i+1); _tlHeadRanks.set(pg,rank); }
+  hs.forEach(h=>{
+    const l=+h.tagName[1]; let r=rank[l];
+    if(!r){ r=1; for(let k=l-1;k>=1;k--){ if(rank[k]){ r=rank[k]+1; break; } } }
+    if(r!==l){ h.setAttribute('role','heading'); h.setAttribute('aria-level',String(r)); }
+    else if(h.hasAttribute('aria-level')){ h.removeAttribute('aria-level'); if(h.getAttribute('role')==='heading') h.removeAttribute('role'); }
+  });
+}
+window.tlSyncHeadingLevels=tlSyncHeadingLevels;
 function enhanceA11y(){
   // Accordions: a real <button> inside the heading (the title stays a heading,
   // Enter/Space come for free) wired to its body via aria-controls. Clicks on
@@ -4025,11 +4056,7 @@ function enhanceA11y(){
   // Heading outline: each view starts at its h1; the styled h3/h4 blocks below
   // it are exposed at the next level down (aria-level) so heading navigation
   // reads h1 > h2 > h3 with no skipped levels and no CSS churn.
-  document.querySelectorAll('.page').forEach(pg=>{
-    const hs=[...pg.querySelectorAll('h1,h2,h3,h4,h5,h6')].filter(h=>!h.closest('footer'));
-    const rank={}; [...new Set(hs.map(h=>+h.tagName[1]))].sort().forEach((l,i)=>rank[l]=i+1);
-    hs.forEach(h=>{ const r=rank[+h.tagName[1]]; if(r!==+h.tagName[1]){ h.setAttribute('role','heading'); h.setAttribute('aria-level',String(r)); } });
-  });
+  document.querySelectorAll('.page').forEach(tlSyncHeadingLevels);
   markNewTabLinks(document);
   document.querySelectorAll('.qp').forEach(qp=>{
     qp.setAttribute('role','button'); qp.setAttribute('tabindex','0');
@@ -4733,7 +4760,17 @@ let humanXray = false;
 let humanQuality = null;       // decided once: 'high' on desktop, 'medium' on phones/tablets
 let humanFailed = false;       // a build threw → mannequin for the rest of the session
 let strokesPatched = false;
-function humanStatus(msg){ const el=document.getElementById('human-status'); if(el && el.textContent !== msg) el.textContent = msg; }
+// #human-status is a polite live region. A build reports progress every ~40 ms, so the percentage
+// is painted into an aria-hidden span (sighted feedback only) while the live text carries just the
+// start and the finish — otherwise 15–40 "Building… N%" strings are queued for speech per build.
+function humanStatus(msg, pct){
+  const el=document.getElementById('human-status'); if(!el) return;
+  let t=el.querySelector('.hs-text'), p=el.querySelector('.hs-pct');
+  if(!t||!p){ el.textContent=''; t=document.createElement('span'); t.className='hs-text'; p=document.createElement('span'); p.className='hs-pct'; p.setAttribute('aria-hidden','true'); el.appendChild(t); el.appendChild(p); }
+  if(t.textContent!==msg) t.textContent=msg;
+  const ps=(pct==null)?'':' '+pct+'%';
+  if(p.textContent!==ps) p.textContent=ps;
+}
 function humanModulesReady(){ return !!(window.TL_Human && typeof TL_Human.buildHumanSwimmerAsync === 'function'); }
 function humanLabel(sex){ return sex === 'female' ? 'Female' : 'Male'; }
 function pickHumanQuality(){
@@ -4809,9 +4846,9 @@ function buildHumanRig(sex, quality, sd){
   humanInflight[key] = true;
   const t0 = performance.now();
   const wanted = () => (sex === humanSex && quality === pickHumanQuality());
-  const setBusy = on => { const b = document.getElementById('vbtn-model-' + sex); if (b) b.classList.toggle('viz-busy', on); };
+  const setBusy = on => { const b = document.getElementById('vbtn-model-' + sex); if (b) { b.classList.toggle('viz-busy', on); if (on) b.setAttribute('aria-busy', 'true'); else b.removeAttribute('aria-busy'); } };
   setBusy(true);
-  humanStatus('Building ' + humanLabel(sex).toLowerCase() + ' swimmer… 0%');
+  humanStatus('Building ' + humanLabel(sex).toLowerCase() + ' swimmer…', 0);
   let hiddenDuringBuild = !!document.hidden;   // a throttled background tab makes the wall time meaningless (round-1 review)
   let p;
   try {
@@ -4820,7 +4857,7 @@ function buildHumanRig(sex, quality, sd){
       causticsTex, envMap: (scene && scene.environment) || undefined
     }, function(prog, stage){
       if (document.hidden) hiddenDuringBuild = true;
-      if (wanted()) humanStatus('Building ' + humanLabel(sex).toLowerCase() + ' swimmer… ' + Math.round(prog * 100) + '%');
+      if (wanted()) humanStatus('Building ' + humanLabel(sex).toLowerCase() + ' swimmer…', Math.round(prog * 100)); // same live text, only the hidden % moves
     });
   } catch (e) { p = Promise.reject(e); }
   p.then(function(rig){
@@ -5624,7 +5661,7 @@ let _chatGen=0; // bumped by Clear: a reply that outlives a Clear must not land 
 function stopAI(){ if(_aiChatGuard) _aiChatGuard.stop(); }
 function setAIStreaming(on){
   const btn=document.getElementById('ai-send-btn'), stop=document.getElementById('ai-stop-btn');
-  if(btn) btn.disabled=!!on;
+  tlSetBusy(btn,!!on);
   if(stop) stop.hidden=!on;
   if(!on) _aiChatGuard=null;
 }
@@ -5638,14 +5675,15 @@ async function generateMotion(){
     if(authUnavailable()){ statusEl.textContent=AUTH_DOWN_MSG; return; }
     statusEl.textContent='AI 3D reconstruction needs a free account — log in or sign up to continue.'; openAuthGate('login'); return;
   }
+  if(tlIsBusy(btn)) return; // Enter in the prompt or a second tap while a reconstruction is running
   ensureViz3DReady();
-  btn.disabled=true;
-  statusEl.textContent='✦ Reconstructing — the AI is computing joint keyframes for "'+desc+'"…';
+  tlSetBusy(btn,true);
+  statusEl.textContent='Reconstructing — the AI is computing joint keyframes for "'+desc+'"…'; // no decorative glyph: #motion-status is read aloud
   const guard=aiStreamGuard();
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken=sessionData?.session?.access_token;
-    if(!accessToken){ statusEl.textContent=SESSION_EXPIRED_MSG; btn.disabled=false; return; }
+    if(!accessToken){ statusEl.textContent=SESSION_EXPIRED_MSG; tlSetBusy(btn,false); return; }
     const resp=await fetch(SUPABASE_URL+'/functions/v1/ask-ai',{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+accessToken},
@@ -5657,12 +5695,12 @@ async function generateMotion(){
       // The built-in reconstruction still loads for a known cue, with an honest prefix.
       const err=await resp.json().catch(()=>({}));
       const fb=tryFallbackMotion(desc);
-      if(resp.status===401||resp.status===403){ if(fb) loadCustomMotion(fb, statusEl, '⚠ Session expired — log in again. Built-in reconstruction: '); else statusEl.textContent='Session expired — please log in again.'; btn.disabled=false; return; }
-      if(resp.status===429){ const limitMsg=aiServerText(err.error)||AI_LIMIT_MSG; if(fb) loadCustomMotion(fb, statusEl, '⚠ '+limitMsg+' Built-in reconstruction: '); else statusEl.textContent=limitMsg; btn.disabled=false; return; }
-      if(fb){ loadCustomMotion(fb, statusEl, '⚠ AI backend unavailable — built-in reconstruction: '); btn.disabled=false; return; }
+      if(resp.status===401||resp.status===403){ if(fb) loadCustomMotion(fb, statusEl, '⚠ Session expired — log in again. Built-in reconstruction: '); else statusEl.textContent='Session expired — please log in again.'; tlSetBusy(btn,false); return; }
+      if(resp.status===429){ const limitMsg=aiServerText(err.error)||AI_LIMIT_MSG; if(fb) loadCustomMotion(fb, statusEl, '⚠ '+limitMsg+' Built-in reconstruction: '); else statusEl.textContent=limitMsg; tlSetBusy(btn,false); return; }
+      if(fb){ loadCustomMotion(fb, statusEl, '⚠ AI backend unavailable — built-in reconstruction: '); tlSetBusy(btn,false); return; }
       statusEl.textContent=err.error||(resp.status===404?'AI 3D reconstruction is temporarily unavailable — try a built-in stroke, or the stroke buttons.'
         :'Error: HTTP '+resp.status);
-      btn.disabled=false; return;
+      tlSetBusy(btn,false); return;
     }
     let fullText=await readAIStream(resp, guard);
     guard.end();
@@ -5681,7 +5719,7 @@ async function generateMotion(){
     else statusEl.textContent=guard.timedOut?AI_TIMEOUT_MSG:noNet?'No connection — AI reconstruction needs to be online. The stroke buttons still work offline.'
       :'Couldn\'t build that motion. Try a simpler cue, e.g. "freestyle with breathing", or pick a built-in stroke.';
   }
-  btn.disabled=false;
+  tlSetBusy(btn,false);
 }
 // ─── SEASON & MEET CALENDAR — time-aware (reads the real device date) ────
 // This block runs from the header line above to just before "// ─── AI COACH —
@@ -5860,7 +5898,7 @@ async function sendToAI(){
     return;
   }
   const btn=document.getElementById('ai-send-btn');
-  if(btn.disabled) return; // a stream is already running
+  if(tlIsBusy(btn)) return; // a stream is already running
   if(typeof navigator.onLine==='boolean' && !navigator.onLine){ // no point opening a stream: say so at once, keep the text
     const offMsg='You are offline — the coach needs a connection.';
     if(lastAIBubbleText()!==offMsg) addMsg(offMsg,'ai');
@@ -6030,9 +6068,9 @@ async function generateWorkout(){
   }
   tlNotice('gen-notice','');
   const genBtn=document.getElementById('gen-btn');
-  if(genBtn&&genBtn.disabled) return; // double-click = two streams + two rate-limit hits
-  if(genBtn) genBtn.disabled=true;
-  try{ await _generateWorkoutInner(); } finally { if(genBtn) genBtn.disabled=false; }
+  if(tlIsBusy(genBtn)) return; // double-click = two streams + two rate-limit hits
+  tlSetBusy(genBtn,true);
+  try{ await _generateWorkoutInner(); } finally { tlSetBusy(genBtn,false); }
 }
 async function _generateWorkoutInner(){
   const focus=document.getElementById('gen-focus').value;
@@ -6189,9 +6227,9 @@ async function generateVisualization(){
     openAuthGate('login'); return;
   }
   const vgBtn=document.getElementById('viz-gen-btn');
-  if(vgBtn&&vgBtn.disabled) return;
-  if(vgBtn) vgBtn.disabled=true;
-  try{ await _generateVisualizationInner(); } finally { if(vgBtn) vgBtn.disabled=false; }
+  if(tlIsBusy(vgBtn)) return;
+  tlSetBusy(vgBtn,true);
+  try{ await _generateVisualizationInner(); } finally { tlSetBusy(vgBtn,false); }
 }
 async function _generateVisualizationInner(){
   const concept=document.getElementById('viz-concept').value;
@@ -6432,7 +6470,7 @@ document.addEventListener('keydown',function(e){
   const type=(t.getAttribute('type')||'text').toLowerCase();
   if(type!=='text'&&type!=='number'&&type!=='date'&&type!=='search'&&type!=='tel') return;
   const panel=t.closest('.calc-panel, .gen-form, #page-log .tl-panel'); if(!panel) return;
-  const btn=panel.querySelector('.calc-btn, #gen-btn')||panel.querySelector('.btn-sm'); if(!btn||btn.disabled||btn.hidden) return;
+  const btn=panel.querySelector('.calc-btn, #gen-btn')||panel.querySelector('.btn-sm'); if(!btn||tlIsBusy(btn)||btn.hidden) return;
   e.preventDefault(); btn.click();
 });
 // ─── PR TRACKER ───────────────────────────────
@@ -6485,6 +6523,16 @@ function tlNotice(id,msg,kind,field){
 // ready.", "Analysis complete.", AI errors). Streamed text itself is written
 // into aria-live="off" children so screen readers are not re-fed the growing
 // answer on every frame. Cleared first so the same message can repeat.
+// Busy state for an action button WITHOUT the disabled attribute: disabling the control the
+// keyboard user just activated drops focus to <body> in Firefox/Safari and it never comes back.
+// aria-disabled + aria-busy keep the button focusable (read as "unavailable, busy") while the
+// handlers' own guards (tlIsBusy) refuse a second activation; [aria-busy] carries the dimmed look.
+function tlSetBusy(btn,on){
+  if(!btn) return;
+  if(on){ btn.setAttribute('aria-disabled','true'); btn.setAttribute('aria-busy','true'); }
+  else { btn.removeAttribute('aria-disabled'); btn.removeAttribute('aria-busy'); }
+}
+function tlIsBusy(btn){ return !!(btn&&(btn.disabled||btn.getAttribute('aria-busy')==='true')); }
 let _tlAnnT=0;
 function tlAnnounce(msg){
   const el=document.getElementById('tl-ai-status'); if(!el) return;
@@ -6588,6 +6636,7 @@ function importBackup(ev){
       if(hasName) lsSet('swimmer_name', d.name.trim().slice(0,30)); // an empty name in the file never blanks the saved one
       if(Array.isArray(d.log)){ const clean=sanitizeLogEntries(d.log); skipped+=Math.max(0,d.log.length-clean.length); lsSet('swimiq_log', JSON.stringify(clean)); nLog=clean.length; }
       if(d.tl&&typeof d.tl==='object') BACKUP_TL_KEYS.forEach(k=>{ const v=d.tl[k]; if(v&&typeof v==='object'&&!Array.isArray(v)&&lsSet(k, JSON.stringify(v))) nSet++; });
+      if(typeof clearLogUndo==='function') clearLogUndo();
       initProfile(); if(typeof renderLog==='function') renderLog();
       tlNotice('profile-notice','Backup imported — '+nPR+' PR'+(nPR===1?'':'s')+', '+nLog+' session'+(nLog===1?'':'s')+(hasName?', your name':'')+(nSet?' and '+nSet+' saved setting'+(nSet===1?'':'s'):'')+' restored.'
         +(skipped?' '+skipped+' unreadable item'+(skipped===1?' was':'s were')+' skipped.':'')
@@ -6668,6 +6717,7 @@ function sanitizeLogEntries(list){
 function saveLogEntry(){
   const date=document.getElementById('log-date').value;
   tlNotice('log-notice','');   // also clears aria-invalid/aria-describedby from the previously flagged field
+  clearLogUndo();              // a save ends the delete-undo window
   // Inline validation: the HTML min/max attributes are advisory only. The offending field goes through
   // tlNotice so it gets aria-invalid + aria-describedby=log-notice and the message is read with the field.
   const fail=(msg,id)=>{ tlNotice('log-notice',msg,null,id); const el=document.getElementById(id); if(el){ try{ el.focus({preventScroll:true}); }catch(e){} } };
@@ -6726,17 +6776,20 @@ function renderLog(){
   // A real list with a heading per session: screen readers hear "list, N items" and can jump between sessions.
   container.innerHTML='<ul class="log-list" aria-label="Logged sessions">'+entries.map(e=>{
     const dist=Number(e.dist)||0, dur=Number(e.dur)||0, effort=Number(e.effort)||0, id=Number(e.id)||0;
-    const isoDate=/^\d{4}-\d{2}-\d{2}$/.test(String(e.date||'')), shownDate=fmtLogDate(e.date);
+    // A hand-edited or partial backup can lack date/type/zone: never print "undefined", an empty
+    // heading or a nameless delete button — fall back to readable placeholders.
+    const type=String(e.type==null?'':e.type).trim()||'Session', zone=String(e.zone==null?'':e.zone).trim()||'—', rawDate=String(e.date==null?'':e.date).trim();
+    const isoDate=/^\d{4}-\d{2}-\d{2}$/.test(rawDate), shownDate=rawDate?fmtLogDate(rawDate):'Unknown date';
     return `
     <li class="log-entry">
-      <div class="log-date">${isoDate?`<time datetime="${escapeHTML(e.date)}">${escapeHTML(shownDate)}</time>`:escapeHTML(e.date)}</div>
+      <div class="log-date">${isoDate?`<time datetime="${escapeHTML(rawDate)}">${escapeHTML(shownDate)}</time>`:escapeHTML(shownDate)}</div>
       <div class="log-content">
-        <h3 class="log-title">${escapeHTML(e.type)}<span class="sr-only"> — ${escapeHTML(shownDate)}</span></h3>
-        <div class="log-meta">${dist>0?dist.toLocaleString()+' m/yd · ':''}${dur>0?dur+' min · ':''}${escapeHTML(e.zone)} · ${effort>0?'Effort '+effort+'/10':'Effort —'}</div>
+        <h3 class="log-title">${escapeHTML(type)}<span class="sr-only"> — ${escapeHTML(shownDate)}</span></h3>
+        <div class="log-meta">${dist>0?dist.toLocaleString()+' m/yd · ':''}${dur>0?dur+' min · ':''}${escapeHTML(zone)} · ${effort>0?'Effort '+effort+'/10':'Effort —'}</div>
         ${e.mainset?`<div class="log-notes" style="color:var(--cyan)">${escapeHTML(e.mainset)}</div>`:''}
         ${e.notes?`<div class="log-notes">${escapeHTML(e.notes)}</div>`:''}
       </div>
-      <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(shownDate)} ${escapeHTML(e.type)}" title="Delete session"><span aria-hidden="true">✕</span></button>
+      <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(shownDate)} ${escapeHTML(type)}" title="Delete session"><span aria-hidden="true">✕</span></button>
     </li>`;}).join('')+'</ul>';
   const now=new Date(), thirtyAgo=new Date(now-30*24*60*60*1000), todayISO=logTodayISO(0);
   // The form accepts tomorrow (a session logged the night before): a future date is not "last 30 days",
@@ -6756,10 +6809,12 @@ function renderLog(){
     statsEl.style.display='none'; // history exists but nothing in the window — never show a stale summary
   }
 }
-// One tap deletes with no confirm, so the deleted sessions can be put back for a few seconds.
+// One tap deletes with no confirm, so the deleted sessions can be put back with Undo. There is no
+// time limit (WCAG 2.2.1): the undo stays until the next save, Clear All or leaving the page.
 // A stack, not a single slot: focus lands on the next ✕ after a delete, so a double Enter (or a
 // finger still where the ✕ was) removes two sessions — Undo must bring both back, not just the last.
-let _logUndo=[], _logUndoTimer=0; // pending deletes, oldest first; one timer for the whole stack
+// The Undo button (#log-undo) is a sibling of the role=alert notice, so the alert reads as plain text.
+let _logUndo=[], _logUndoAt=0; // pending deletes, oldest first; list index the focus should return to
 function deleteLogEntry(id){
   const all=readLog(), gone=all.find(e=>e.id===id);
   if(!gone) return;
@@ -6769,25 +6824,26 @@ function deleteLogEntry(id){
   const at=dels.findIndex(b=>Number(b.getAttribute('data-del-id'))===id);
   if(!lsSet('swimiq_log',JSON.stringify(all.filter(e=>e.id!==id)))){ tlNotice('log-notice','Could not delete the session — your device storage may be blocked.'); return; }
   renderLog();
-  clearTimeout(_logUndoTimer);
-  _logUndo.push(gone);
+  _logUndo.push(gone); _logUndoAt=at;
   const k=_logUndo.length;
-  const n=document.getElementById('log-notice');
-  if(n){
-    tlNotice('log-notice',(k>1?k+' sessions deleted — latest ':'Session deleted — ')+fmtLogDate(gone.date)+(gone.type?' · '+gone.type:'')+'. ','ok');
-    const b=document.createElement('button'); b.type='button'; b.className='tl-linkbtn'; b.textContent=k>1?'Undo all':'Undo';
-    b.addEventListener('click',undoLogDelete); n.appendChild(b);
-  }
-  setLogStatus((k>1?k+' sessions deleted.':'Session deleted.')+' Undo is available for a few seconds.');
+  tlNotice('log-notice',(k>1?k+' sessions deleted — latest ':'Session deleted — ')+(gone.date?fmtLogDate(gone.date):'Unknown date')+(gone.type?' · '+gone.type:'')+'.','ok');
+  const u=document.getElementById('log-undo'), ub=document.getElementById('log-undo-btn');
+  if(ub) ub.textContent=k>1?'Undo all':'Undo';
+  if(u) u.hidden=false;
+  setLogStatus((k>1?k+' sessions deleted.':'Session deleted.')+' Undo is available until you save, clear, or leave this page.');
   focusLogAfterChange(at);
-  _logUndoTimer=setTimeout(()=>{
-    _logUndo=[];
-    if(n&&/^(\d+ sessions|Session) deleted — /.test(n.textContent)) tlNotice('log-notice','');
-  },6000);
+}
+// Drops the pending undo (next save, Clear All, backup import or leaving the page). If the Undo
+// button holds focus, focus is moved back into the list first so it never falls to <body>.
+function clearLogUndo(){
+  _logUndo=[];
+  const u=document.getElementById('log-undo'), n=document.getElementById('log-notice');
+  if(u&&!u.hidden){ if(u.contains(document.activeElement)) focusLogAfterChange(_logUndoAt); u.hidden=true; }
+  if(n&&/^(\d+ sessions|Session) deleted — /.test(n.textContent)) tlNotice('log-notice','');
 }
 function undoLogDelete(){
   if(!_logUndo.length) return;
-  const back=_logUndo; clearTimeout(_logUndoTimer); _logUndo=[];
+  const back=_logUndo; _logUndo=[];
   const ids=new Set(back.map(e=>e.id));
   const entries=sortLogEntries(back.concat(readLog().filter(x=>!ids.has(x.id)))); entries.splice(LOG_MAX);
   if(!lsSet('swimiq_log',JSON.stringify(entries))){ tlNotice('log-notice','Could not restore the session'+(back.length>1?'s':'')+' — your device storage may be full or blocked.'); return; }
@@ -6795,12 +6851,13 @@ function undoLogDelete(){
   const msg=back.length>1?back.length+' sessions restored.':'Session restored.';
   tlNotice('log-notice',msg,'ok');
   setLogStatus(msg);
-  // The Undo button that had focus is gone with the notice: land on the last-deleted session's delete button.
+  // The Undo button that had focus is about to be hidden: land on the last-deleted session's delete button first.
   const last=back[back.length-1];
   const at=Array.prototype.slice.call(document.querySelectorAll('#log-entries .log-del')).findIndex(b=>Number(b.getAttribute('data-del-id'))===last.id);
   focusLogAfterChange(at);
+  const u=document.getElementById('log-undo'); if(u) u.hidden=true;
 }
-function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog(); setLogStatus('All sessions cleared.'); focusLogAfterChange(0);}
+function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog(); clearLogUndo(); setLogStatus('All sessions cleared.'); focusLogAfterChange(0);}
 function focusLogAfterChange(at){
   const rest=document.querySelectorAll('#log-entries .log-del');
   let target=rest.length?rest[Math.max(0,Math.min(at<0?0:at,rest.length-1))]:document.getElementById('log-history-heading');
@@ -6822,6 +6879,8 @@ function setLogDateToday(){
 }
 setLogDateToday();
 window.onShow_log=function(){ setLogDateToday(); };
+// Leaving the page ends the delete-undo window, so a stale "deleted" notice never greets the return.
+(function(){ const prev=window.onPageChange; window.onPageChange=function(n){ if(typeof prev==='function'){ try{ prev(n); }catch(e){ console.error(e); } } if(n!=='log') clearLogUndo(); }; })();
 document.addEventListener('visibilitychange',function(){ if(!document.hidden) setLogDateToday(); });
 // Delete buttons are delegated (no inline onclick built from stored ids).
 (function(){ const c=document.getElementById('log-entries'); if(c) c.addEventListener('click',function(ev){ const b=ev.target&&ev.target.closest?ev.target.closest('[data-del-id]'):null; if(b) deleteLogEntry(Number(b.getAttribute('data-del-id'))); }); })();
@@ -7058,11 +7117,20 @@ function tpRender(){
   var o3=ac?ac.querySelector('option[value="3"]'):null; if(o3) o3.textContent=(TP.mode==='spm')?'3 beats — breathe every 3':'3 beats (3 cycles = 6 arm strokes in free and back)';
   var ci=$('tlt-countin'); if(ci) ci.checked=!!TP.countIn;
 }
-function tpSet(bpm){
+var _tpSayT=0;
+// quiet: the caller writes its own, fuller status line (mode switch, tap tempo, preset).
+function tpSet(bpm,quiet){
   var was=TP.bpm; TP.bpm=Math.round(clamp(bpm,TP_MIN,TP_MAX)); tpRender(); tpSave();
-  // The live status announced the tempo at Start; a nudge, the slider or the
-  // arrow keys must not leave it saying 60 while 65 is beeping.
-  if(TP.status==='running'&&TP.bpm!==was) setStatus('tlt-tempo-status',tpRunningMsg());
+  if(quiet) return;
+  // The big readout is a plain div, so the nudge buttons and arrow keys would be silent before
+  // Start; while running, the live status must not keep saying 60 while 65 is beeping. Debounced
+  // so a slider drag or a held key reads once, and a change refused at the range limit says why.
+  clearTimeout(_tpSayT);
+  _tpSayT=setTimeout(function(){
+    var m=tpRunningMsg().slice(0,-1), tail=TP.status==='running'?' — beeping now.':TP.status==='paused'?' — applies on Resume.':'.';
+    if(TP.bpm!==was) setStatus('tlt-tempo-status',m+tail);
+    else if(Number(bpm)!==was) setStatus('tlt-tempo-status',(TP.bpm>=TP_MAX?'Fastest setting — ':'Slowest setting — ')+m+tail);
+  },150);
 }
 function tpRunningMsg(){ return TP.bpm+' '+(TP.mode==='spm'?'strokes':'cycles')+'/min'+(TP.accent?', accent every '+TP.accent:'')+'.'; }
 window.tlt_nudge=function(d){ tpSet(TP.bpm+Number(d||0)); };
@@ -7074,7 +7142,7 @@ window.tlt_setMode=function(m){
   // be 66): switching straight back with no edit in between restores the exact
   // tempo the swimmer had, so a round trip never drifts.
   if(TP.undo&&TP.undo.mode===m&&TP.undo.at===TP.bpm) nb=TP.undo.bpm;
-  TP.mode=m; tpSet(nb);
+  TP.mode=m; tpSet(nb,true);
   TP.undo={mode:prev.mode,bpm:prev.bpm,at:TP.bpm};
   var clamped=TP.bpm!==Math.round(nb);
   setStatus('tlt-tempo-status',(m==='cpm'
@@ -7090,7 +7158,7 @@ window.tlt_tap=function(){
   var btn=$('tlt-tap');
   if(TP.taps.length<2){ if(btn) btn.textContent='Tap again…'; setStatus('tlt-tempo-status','Keep tapping — the tempo is the average of your last four taps.'); return; }
   var bpm=tapBpm(TP.taps); if(bpm==null) return;
-  tpSet(bpm); if(btn) btn.textContent='Tap ×'+TP.taps.length;
+  tpSet(bpm,true); if(btn) btn.textContent='Tap ×'+TP.taps.length;
   setStatus('tlt-tempo-status','Tap tempo: '+TP.bpm+' per minute from '+TP.taps.length+' taps.');
 };
 function tpLoopStart(){ if(!TP.raf) TP.raf=raf(tpFrame); }
@@ -7170,7 +7238,7 @@ window.tlt_loadPreset=function(btn){
   var tr=(btn&&btn.closest)?btn.closest('tr'):null; if(!tr) return;
   var lo=Number(tr.getAttribute('data-lo')), hi=Number(tr.getAttribute('data-hi')), name=tr.getAttribute('data-name')||'preset';
   if(!(lo>0&&hi>=lo)) return;
-  var mid=Math.round((lo+hi)/2); TP.mode='cpm'; tpSet(mid);
+  var mid=Math.round((lo+hi)/2); TP.mode='cpm'; tpSet(mid,true);
   setStatus('tlt-tempo-status','Loaded '+name+': '+mid+' cycles/min, the middle of the elite race range '+lo+'–'+hi+'. A race rate, not a training target.');
   var card=$('tlt-tempo-card'); if(card&&card.scrollIntoView){ try{ card.scrollIntoView({behavior:reducedMotion()?'auto':'smooth',block:'start'}); }catch(e){ card.scrollIntoView(); } }
   var st=$('tlt-tempo-start'); if(st&&st.focus){ try{ st.focus({preventScroll:true}); }catch(e){ st.focus(); } }
@@ -7244,7 +7312,13 @@ function itButtons(){
     else if(IT.status==='done'){ setBtn('tlt-int-toggle','↺','Run again'); t.classList.remove('pause'); }
     else{ setBtn('tlt-int-toggle','▶','Start'); t.classList.remove('pause'); }
   }
-  if(sk) sk.disabled=!(IT.status==='running'||IT.status==='paused');
+  if(sk){
+    var off=!(IT.status==='running'||IT.status==='paused');
+    // Skipping the last block completes the circuit while Skip has focus: hand focus to the toggle
+    // (now "Run again") first, or the disabled button drops it to <body>.
+    if(off&&!sk.disabled&&t&&document.activeElement===sk){ try{ t.focus({preventScroll:true}); }catch(e){ t.focus(); } }
+    sk.disabled=off;
+  }
 }
 function itPreview(c){
   var s=itBuildSchedule(c), cc=itCum(s), work=c.work*c.rounds*c.sets;
@@ -7540,9 +7614,14 @@ function spRender(){
 }
 function spStart(){
   SP.status='running'; SP.t0=nowMs(); SP.splits=[]; wlHold('split'); spMainBtn(true);
-  setText('tlt-sp-sub','Running — tap for each split'); setStatus('tlt-sp-status',''); spRender(); spLoopStart();
+  setText('tlt-sp-sub','Running — tap for each split'); setStatus('tlt-sp-status','Running — tap Split for each split.'); spRender(); spLoopStart();
 }
-function spSplit(){ SP.splits.push((nowMs()-SP.t0)/1000); spRender(); }
+// The table re-renders silently, so each split is spoken: "Split 3: 0:31.20 — total 1:34.80".
+function spSplit(){
+  var total=(nowMs()-SP.t0)/1000, n=SP.splits.length, lap=total-(n?SP.splits[n-1]:0);
+  SP.splits.push(total); spRender();
+  setStatus('tlt-sp-status','Split '+(n+1)+': '+fmtSW(lap,2)+' — total '+fmtSW(total,2));
+}
 window.tlt_spMain=function(){ if(SP.status==='running') spSplit(); else spStart(); };
 window.tlt_spStop=function(){
   if(SP.status!=='running') return;
@@ -7550,10 +7629,11 @@ window.tlt_spStop=function(){
   if(el-last>0.2) SP.splits.push(el);
   SP.status='stopped'; spLoopStop(); wlDrop('split'); spMainBtn(false);
   setText('tlt-sp-time',fmtSW(el,2)); setText('tlt-sp-sub','Stopped at '+fmtSW(el,2)+' — Start begins a new one'); spRender();
+  var n=SP.splits.length; setStatus('tlt-sp-status','Stopped at '+fmtSW(el,2)+(n?' — '+n+' split'+(n>1?'s':'')+' recorded':'')+'. Start begins a new one.');
 };
 window.tlt_spReset=function(){
   SP.status='idle'; SP.splits=[]; spLoopStop(); wlDrop('split'); spMainBtn(false);
-  setText('tlt-sp-time','0:00.0'); setText('tlt-sp-sub','Ready'); setStatus('tlt-sp-status',''); spRender();
+  setText('tlt-sp-time','0:00.0'); setText('tlt-sp-sub','Ready'); setStatus('tlt-sp-status','Reset — ready.'); spRender();
 };
 
 /* ─── copy to clipboard ───────────────────────────────────────────────── */
@@ -7587,9 +7667,12 @@ function onKey(e){
 }
 
 /* ─── page lifecycle ──────────────────────────────────────────────────── */
+// Pauses forced by leaving the page are written while #page-timers is display:none, so no screen
+// reader hears them; the flags let onShow_timers say so on the way back.
+var awayPaused={tempo:false,interval:false};
 function stopAll(){
-  if(TP.status==='running') tpPause('Paused — you left the Timers page. Press Resume to continue.');
-  if(IT.status==='running') itPause();
+  if(TP.status==='running'){ tpPause('Paused — you left the Timers page. Press Resume to continue.'); awayPaused.tempo=true; }
+  if(IT.status==='running'){ itPause(); awayPaused.interval=true; }
   // The split taker reads the clock (nowMs()-SP.t0), so it keeps timing while the swimmer is on another
   // page: only its frame loop and wake lock stop here, and onShow_timers picks it back up. Stopping it
   // (as before) froze the time and ended the set with no warning.
@@ -7644,6 +7727,11 @@ window.onShow_timers=function(){
   if(IT.status==='idle') itPreview(itReadCfg());
   if(SP.status==='running'){ wlHold('split'); spLoopStop(); spFrame(); setText('tlt-sp-sub','Running — kept timing while you were away · tap for each split'); } // spFrame paints the current time at once and restarts the loop
   wlUpdate();
+  // Say why it is silent: the pause status was written while the page was hidden. Delayed so the
+  // router's "Swim Timers page" announcement lands first (tlAnnounce replaces a pending message).
+  var backMsg=[]; if(awayPaused.tempo&&TP.status==='paused') backMsg.push('Tempo trainer'); if(awayPaused.interval&&IT.status==='paused') backMsg.push('Interval timer');
+  awayPaused.tempo=awayPaused.interval=false;
+  if(backMsg.length&&typeof window.tlAnnounce==='function') setTimeout(function(){ window.tlAnnounce(backMsg.join(' and ')+' paused while you were away — press Resume.'); },500);
 };
 var _prevPageChange=window.onPageChange;
 window.onPageChange=function(n){
@@ -7677,6 +7765,8 @@ var DAY_MS = 86400000;
 // ─── helpers ────────────────────────────────────────────────────────────
 function pl$(id){ return document.getElementById(id); }
 function esc(s){ return window.escapeHTML(s); }   // the app script's escaper
+// Result blocks render <h5> titles under the panels' <h4>: re-rank them so the outline reads 1 > 2 > 3.
+function plSyncHeadings(){ if (typeof window.tlSyncHeadingLevels === 'function') window.tlSyncHeadingLevels(pl$('page-' + PAGE_ID)); }
 // Seconds or null. Site parseTime returns null on bad input; guard NaN too.
 function parseT(s){
   var v = null;
@@ -7765,7 +7855,7 @@ function renderGoalCard(ev, goals){
     '<div class="pl-goal-head"><span class="pl-goal-event" id="' + id + '-ev">' + esc(ev) + '</span><span class="pl-goal-pr">' + prHtml + '</span></div>' +
     '<label class="pl-goal-label" for="' + id + '">Goal time<span class="sr-only"> for ' + esc(ev) + '</span></label>' +
     '<input class="pl-goal-input" id="' + id + '" maxlength="10" placeholder="m:ss.ss" autocomplete="off" value="' + esc(raw) + '" aria-describedby="' + id + '-err" data-event="' + esc(ev) + '">' +
-    '<div class="pl-err" id="' + id + '-err"></div>' + quick +
+    '<div class="pl-err" id="' + id + '-err" role="status" aria-live="polite"></div>' + quick +   // live like the other planner errors: the message appears 800 ms after typing, while focus is still in the field
     '<dl class="pl-goal-stats"><div><dt>Gap</dt><dd class="' + st.gapClass + '" data-k="gap">' + esc(st.gapText) + '</dd></div>' +
     '<div><dt>Per 50</dt><dd data-k="p50">' + esc(st.per50) + '</dd></div><div><dt>Per 100</dt><dd data-k="p100">' + esc(st.per100) + '</dd></div></dl>' +
     '<button type="button" class="btn-ghost-sm pl-to-splits" data-event="' + esc(ev) + '" aria-label="Plan splits for ' + esc(ev) + '"' + (gs || pr ? '' : ' disabled') + '>Plan splits <span aria-hidden="true">→</span></button></div>';
@@ -7774,10 +7864,13 @@ function renderGoals(){
   var wrap = pl$('pl-goal-groups'); if (!wrap) return;
   var goals = readGoals(), all = events();
   wrap.innerHTML = STROKE_ORDER.filter(function(s){ return all[s]; }).map(function(s){
-    return '<div class="pl-group"><h2 class="section-eyebrow">' + esc(STROKE_NAMES[s]) + '</h2><div class="pl-grid">' +
+    // <h4> like the panel titles on the other tabs: the page's native heading set is then the same
+    // whichever route it loaded on, and tlSyncHeadingLevels exposes both as level 2 (results at 3).
+    return '<div class="pl-group"><h4 class="section-eyebrow">' + esc(STROKE_NAMES[s]) + '</h4><div class="pl-grid">' +
       all[s].map(function(ev){ return renderGoalCard(ev, goals); }).join('') + '</div></div>';
   }).join('');
   renderGoalSummary();
+  plSyncHeadings();
 }
 function updateGoalCard(ev){
   var card = document.querySelector('#pl-goal-groups .pl-goal-card[data-event="' + ev.replace(/"/g, '') + '"]');
@@ -8006,11 +8099,12 @@ function runPredict(){
     rows += '<tr><td>' + esc(target) + '</td><td class="num best">' + esc(fmtT(p.best)) + '</td><td class="num typ">' + esc(fmtT(p.typical)) + '</td><td class="num cons">' + esc(fmtT(p.conservative)) + '</td><td class="num">' + prCell + '</td><td><span class="pl-tag ' + c.cls + '">' + c.label + '</span></td></tr>';
   });
   var profileNote = delta ? '<span class="pl-tag info">Fitted profile Δ ' + fmtExpDelta(delta) + '</span>' : '<span class="pl-tag dim">Typical profile</span>';
-  var html = '<div class="pl-pred-head"><h4>FROM ' + esc(ev) + ' ' + esc(fmtT(t)) + '</h4>' + profileNote + '</div>' +
+  var html = '<div class="pl-pred-head"><h5>FROM ' + esc(ev) + ' ' + esc(fmtT(t)) + '</h5>' + profileNote + '</div>' +
     '<div class="table-wrap" style="margin-top:0.5rem"><table class="data-table"><caption class="sr-only">Predicted times from ' + esc(ev) + '</caption><thead><tr><th scope="col">Event</th><th scope="col">Fastest plausible</th><th scope="col">Typical</th><th scope="col">Conservative</th><th scope="col">Your PR</th><th scope="col">Confidence</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
     '<p class="pl-hint" style="margin-top:0.5rem">Fastest plausible / conservative use the low and high exponent for every step. Confidence: High = one step on the event ladder, Medium = two, Low = three or more. Same course as the input time.</p>' +
     renderInterpretation(stroke, ev, d1, t, nearestUp, nearestDown, delta);
   out.innerHTML = html;
+  plSyncHeadings();
 }
 function sanityPace(dist, t){
   var per100 = t / (dist / 100);
@@ -8042,7 +8136,7 @@ function renderInterpretation(stroke, ev, d1, t, up, down, delta){
     if (down.pr) ps.push('Your actual ' + esc(down.ev) + ' PR is <strong>' + esc(fmtT(down.pr)) + '</strong> — ' + (down.pr < down.p.best ? 'faster than the range: the ' + esc(down.ev) + ' is the stronger event and the ' + esc(ev) + ' likely has room' : (down.pr > down.p.conservative ? 'slower than the range: raw speed and the start are the likely limiters' : 'inside the range')) + '.');
   }
   if (bTyp) ps.push('Model detail: this step uses a typical exponent of ' + bTyp.toFixed(3) + (delta ? ' shifted by your fitted Δ ' + fmtExpDelta(delta) : '') + ', so the time scales by (' + target.d + '/' + d1 + ')<sup>' + (bTyp + (delta || 0)).toFixed(3) + '</sup> = ×' + Math.pow(ratio, bTyp + (delta || 0)).toFixed(3) + '. It cannot see your stroke count, underwaters, or training age — treat it as a conversation starter with your coach, not a target.');
-  return '<div class="pl-interp"><h4>WHAT YOUR ' + esc(ev) + ' SAYS ABOUT YOUR ' + esc(target.ev) + '</h4>' + ps.map(function(p){ return '<p>' + p + '</p>'; }).join('') + '</div>';
+  return '<div class="pl-interp"><h5>WHAT YOUR ' + esc(ev) + ' SAYS ABOUT YOUR ' + esc(target.ev) + '</h5>' + ps.map(function(p){ return '<p>' + p + '</p>'; }).join('') + '</div>';
 }
 function runFit(){
   var stroke = (pl$('pl-pd-stroke') || {}).value || 'fr';
@@ -8077,11 +8171,13 @@ function renderExpTable(){
     var t = EXP[s]; if (!t) return;
     Object.keys(t).forEach(function(k){
       var parts = k.split('-'), a = +parts[0], b = +parts[1], e = t[k], ratio = b / a;
-      var srcNote = (s === 'im' && k === '100-200') ? ' <abbr title="Derived from the 25 m-pool records — there is no 50 m-pool 100 IM">*</abbr>' : '';
+      // The "*" is explained in a visible footnote under the table (a title tooltip alone is mouse-only); the sr-only text reads it in place.
+      var srcNote = (s === 'im' && k === '100-200') ? ' <span aria-hidden="true">*</span><span class="sr-only"> (see note: derived from the 25 m-pool records)</span>' : '';
       rows += '<tr><td>' + esc(STROKE_NAMES[s]) + '</td><td class="num">' + a + ' → ' + b + srcNote + '</td><td class="num typ">' + e[1].toFixed(3) + '</td><td class="num">' + e[0].toFixed(2) + '–' + e[2].toFixed(2) + '</td><td class="num">×' + Math.pow(ratio, e[1]).toFixed(3) + '</td><td class="num">×' + Math.pow(ratio, e[0]).toFixed(2) + '–' + Math.pow(ratio, e[2]).toFixed(2) + '</td></tr>';
     });
   });
-  el.innerHTML = '<div class="table-wrap"><table class="data-table"><caption class="sr-only">Exponent by stroke and distance step</caption><thead><tr><th scope="col">Stroke</th><th scope="col">Step</th><th scope="col">Typical b</th><th scope="col">Plausible b</th><th scope="col">Time multiplier</th><th scope="col">Multiplier range</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  el.innerHTML = '<div class="table-wrap"><table class="data-table"><caption class="sr-only">Exponent by stroke and distance step</caption><thead><tr><th scope="col">Stroke</th><th scope="col">Step</th><th scope="col">Typical b</th><th scope="col">Plausible b</th><th scope="col">Time multiplier</th><th scope="col">Multiplier range</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<p class="pl-fine" style="margin-top:0.5rem"><span aria-hidden="true">* </span>100 → 200 IM is derived from the 25 m-pool records — there is no 50 m-pool 100 IM.</p>';
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -8274,6 +8370,7 @@ function runSplits(){
   if (copy) copy.hidden = false;
   plSetText('pl-sp-status', '');
   if (cmp) cmp.innerHTML = renderCompare(r);
+  plSyncHeadings();
 }
 function renderCompare(r){
   if (!r.pattern || !r.segPct) {
@@ -8292,7 +8389,7 @@ function renderCompare(r){
   var closing = last > tol ? ' The final segment carries more than the reference — plan to hold form rather than count on a sprint that late.' : (last < -tol ? ' The final segment is lighter than the reference, which means a strong close — make sure the middle can support it.' : '');
   var raw = r.mode === 'elite' ? '' : ' Compared with the swum-length plan, the reference includes the dive in the opening segment, so a perfectly even swim still shows a faster first split.';
   var mapNote = (pat && r.patternKey && r.patternKey.split(' ')[0] !== String(r.dist)) ? ' Reference is the ' + esc(r.patternKey) + ' shape applied to ' + r.dist + ' ' + r.unit + '.' : '';
-  return '<div class="pl-compare content-block" style="margin-bottom:0"><h4>YOUR PLAN VS ELITE ' + esc(r.patternKey) + '</h4><div class="pl-compare-sub">Share of total time per segment. Cyan bar = your plan; gold dashed line = elite typical (±' + tol + ').' + mapNote + '</div><div class="pl-bars">' + bars + '</div><p class="pl-verdict">' + verdict + closing + raw + '</p></div>';
+  return '<div class="pl-compare content-block" style="margin-bottom:0"><h5>YOUR PLAN VS ELITE ' + esc(r.patternKey) + '</h5><div class="pl-compare-sub">Share of total time per segment. Cyan bar = your plan; gold dashed line = elite typical (±' + tol + ').' + mapNote + '</div><div class="pl-bars">' + bars + '</div><p class="pl-verdict">' + verdict + closing + raw + '</p></div>';
 }
 function splitsAsText(r){
   if (!r) return '';
@@ -8431,31 +8528,36 @@ function saveMeet(){
   if (date2 && !parseISODate(date2)) { setErr('pl-mt-status', 'The second meet date is not valid.'); return; }
   if (name2 && !date2) { setErr('pl-mt-status', 'Add a date for the second meet, or clear its name.'); return; }
   var ok = lsPut(KEY_MEET, JSON.stringify({ v:1, name:name, date:date, course:course, taper:taper, name2:name2, date2:date2 }));
-  setErr('pl-mt-status', ok ? 'Saved.' : 'Could not save — browser storage may be full or blocked.', ok);
-  renderMeet();
+  var summary = renderMeet();
+  setErr('pl-mt-status', ok ? 'Saved — ' + (summary || 'countdown updated.') : 'Could not save — browser storage may be full or blocked.', ok);
 }
 function clearMeet(){
   lsDel(KEY_MEET);
   ['pl-mt-name','pl-mt-date','pl-mt-name2','pl-mt-date2'].forEach(function(id){ var el = pl$(id); if (el) el.value = ''; });
-  setErr('pl-mt-status', 'Cleared.', true);
   renderMeet();
+  setErr('pl-mt-status', 'Cleared — no meet set.', true);
 }
 function fillMeetForm(){
   var m = readMeet();
   var set = function(id, v){ var el = pl$(id); if (el) el.value = v; };
   set('pl-mt-name', m.name); set('pl-mt-date', m.date); set('pl-mt-course', m.course); set('pl-mt-taper', m.taper); set('pl-mt-name2', m.name2); set('pl-mt-date2', m.date2);
 }
+// Writes only when the markup changed: renderMeet runs on every planner visit, tab return and
+// midnight tick, and an unchanged card must not flicker or re-read. Returns a one-line summary
+// ("Winter Juniors: 83 days to go") for the Save/Clear status line; '' when no meet is set.
+var lastMeetHtml = { card:null, cps:null };
+function setMeetHtml(el, key, html){ if (el && lastMeetHtml[key] !== html) { el.innerHTML = html; lastMeetHtml[key] = html; } }
 function renderMeet(){
-  var card = pl$('pl-mt-card'), cps = pl$('pl-mt-checkpoints'); if (!card) return;
+  var card = pl$('pl-mt-card'), cps = pl$('pl-mt-checkpoints'); if (!card) return '';
   var m = readMeet();
   if (!m.date) {
-    card.innerHTML = '<div class="pl-countdown empty"><div class="pl-countdown-empty"><strong>No meet set.</strong> Enter the name and first day of your next meet below. The countdown shows days remaining, which taper window you are in, and a checkpoint list from four weeks out to race day.</div></div>';
-    if (cps) cps.innerHTML = '';
-    return;
+    setMeetHtml(card, 'card', '<div class="pl-countdown empty"><div class="pl-countdown-empty"><strong>No meet set.</strong> Enter the name and first day of your next meet below. The countdown shows days remaining, which taper window you are in, and a checkpoint list from four weeks out to race day.</div></div>');
+    setMeetHtml(cps, 'cps', '');
+    return '';
   }
   // The headline is always the nearest upcoming meet (or the most recent past one); the other meet is a footnote.
   var list = meetList(m), first = list[0], other = list[1] || null;
-  if (!first) { card.innerHTML = ''; if (cps) cps.innerHTML = ''; return; }
+  if (!first) { setMeetHtml(card, 'card', ''); setMeetHtml(cps, 'cps', ''); return ''; }
   var days = first.days, tw = taperWindow(days, m.taper), name = first.name === 'Meet' || first.name === 'Second meet' ? 'Next meet' : first.name;
   var cls = days < 0 ? ' past' : (days === 0 ? ' today' : '');
   var big = days < 0 ? String(-days) : String(days);
@@ -8467,12 +8569,14 @@ function renderMeet(){
     second = '<div class="pl-second"><strong>' + esc(other.name) + '</strong> — ' + esc(fmtDateShort(other.date)) + ' · ' + (d2 < 0 ? (-d2) + (d2 === -1 ? ' day ago' : ' days ago') : d2 === 0 ? 'today' : d2 + (d2 === 1 ? ' day to go' : ' days to go')) +
       (gap !== null && gap > 0 && days >= 0 ? ' · ' + gap + (gap === 1 ? ' day after ' : ' days after ') + esc(name) + (gap <= 14 ? ' — closely spaced meets are usually held, not fully re-tapered; ask your coach how to bridge them' : '') : '') + '</div>';
   }
-  card.innerHTML = '<div class="pl-countdown' + cls + '"><div class="pl-days-wrap"><div class="pl-days">' + big + '</div><div class="pl-days-lbl">' + lbl + '</div></div>' +
+  setMeetHtml(card, 'card', '<div class="pl-countdown' + cls + '"><div class="pl-days-wrap"><div class="pl-days">' + big + '</div><div class="pl-days-lbl">' + lbl + '</div></div>' +
     '<div><div class="pl-meet-name">' + esc(name) + '</div><div class="pl-meet-date">' + esc(fmtDate(first.date)) + (weeks ? ' · ' + weeks : '') + '</div>' +
     '<div class="pl-meet-tags"><span class="pl-tag info">' + esc(m.course) + '</span><span class="pl-tag dim">' + esc(TAPER_LABEL[m.taper]) + '</span></div>' +
     (tw ? '<div class="pl-phase"><div class="pl-phase-name">' + esc(tw.phase) + '</div><div class="pl-phase-detail">' + esc(tw.detail) + ' <a href="#taper">Taper page <span aria-hidden="true">→</span></a>' + (days === 0 ? ' <a href="#race">Warm-up timeline <span aria-hidden="true">→</span></a>' : '') + '</div></div>' : '') +
-    second + '</div></div>';
-  if (cps) cps.innerHTML = renderCheckpoints({ name:name, date:first.date }, days);
+    second + '</div></div>');
+  setMeetHtml(cps, 'cps', renderCheckpoints({ name:name, date:first.date }, days));
+  plSyncHeadings();
+  return name + ': ' + big + ' ' + lbl + (tw ? ' — ' + tw.phase : '') + '.';
 }
 function renderCheckpoints(m, days){
   if (days < 0) return '';
@@ -8482,7 +8586,7 @@ function renderCheckpoints(m, days){
     var link = c.link ? ' <a href="' + esc(c.link) + '"' + (c.tab ? ' data-tab="' + esc(c.tab) + '"' : '') + (c.pageTab ? ' data-page-tab="' + esc(c.pageTab) + '"' : '') + '>' + esc(c.linkText) + ' <span aria-hidden="true">→</span></a>' : '';
     return '<li class="' + state + '"><div class="pl-cp-when">' + (c.d === 0 ? 'Race day' : c.d + (c.d === 1 ? ' day out' : ' days out')) + ' · ' + esc(fmtDateShort(addDays(m.date, -c.d))) + ' ' + tag + '</div><div class="pl-cp-title">' + esc(c.title) + '</div><div class="pl-cp-desc">' + esc(c.desc) + link + '</div></li>';
   }).join('');
-  return '<div class="pl-cp-wrap"><h4>CHECKPOINTS TO ' + esc((m.name || 'THE MEET').toUpperCase()) + '</h4><ul class="pl-timeline">' + items + '</ul></div>';
+  return '<div class="pl-cp-wrap"><h5>CHECKPOINTS TO ' + esc((m.name || 'THE MEET').toUpperCase()) + '</h5><ul class="pl-timeline">' + items + '</ul></div>';
 }
 var midnightTimer = 0;
 function clearMidnight(){ if (midnightTimer) { clearTimeout(midnightTimer); midnightTimer = 0; } }
@@ -10802,6 +10906,7 @@ function renderTimeline(){
     more.hidden = showAll || hidden === 0;
     more.textContent = 'Show ' + hidden + ' older release' + (hidden === 1 ? '' : 's');
   }
+  if (typeof window.tlSyncHeadingLevels === 'function') window.tlSyncHeadingLevels($('page-updates')); // release <h3>s sit under the two <h2>s
 }
 window.tlShowAllUpdates = function(){
   showAll = true;
@@ -11057,9 +11162,13 @@ function showUpdateToast(version, note){
   msg.setAttribute('role', 'status');
   msg.setAttribute('aria-live', 'polite');
   const same = !version || cmpVer(version, window.TL_VERSION) === 0;
-  msg.textContent = same ? 'Tidelyne was updated' : 'Tidelyne updated to ';
-  if (!same){ const b = document.createElement('b'); b.textContent = 'v' + version; msg.appendChild(b); }
-  if (note) msg.appendChild(document.createTextNode(' — ' + note));
+  // The message is written AFTER the toast is in the DOM (below): live regions announce changes to
+  // a region already in the tree, and text present at insertion is skipped by most screen readers.
+  const fill = function(){
+    msg.textContent = same ? 'Tidelyne was updated' : 'Tidelyne updated to ';
+    if (!same){ const b = document.createElement('b'); b.textContent = 'v' + version; msg.appendChild(b); }
+    if (note) msg.appendChild(document.createTextNode(' — ' + note));
+  };
   const reload = document.createElement('button');
   reload.type = 'button'; reload.className = 'btn-sm'; reload.textContent = 'Reload';
   reload.addEventListener('click', function(){ try { location.reload(); } catch(e){} });
@@ -11071,6 +11180,7 @@ function showUpdateToast(version, note){
   t.appendChild(msg); t.appendChild(reload); t.appendChild(x);
   const nav = document.querySelector('nav');
   if (nav && nav.parentNode) nav.parentNode.insertBefore(t, nav.nextSibling); else document.body.appendChild(t);
+  setTimeout(fill, 60);
   document.addEventListener('keydown', onUpdToastKey);
 }
 function hideUpdateToast(){
