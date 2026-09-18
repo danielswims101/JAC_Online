@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Page not found — Tidelyne</title>
 <meta name="robots" content="noindex">
-<link rel="icon" type="image/svg+xml" href="logo-mark.svg">
+<link rel="icon" type="image/svg+xml" href="/JAC_Online/logo-mark.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -24,12 +24,21 @@ a.btn:hover{background:#00b0d8}
 <div class="wrap">
 <h1>404</h1>
 <p>That page isn't here. Tidelyne is a single app — its sections live at the home page.</p>
-<a class="btn" href="./">Go to Tidelyne →</a>
+<a class="btn" id="home-link" href="/JAC_Online/">Go to Tidelyne →</a>
 <p class="small">Redirecting you home in a moment…</p>
 </div>
 <script>
-// Send mistyped/old deep links back into the app after a short pause.
-setTimeout(function(){ location.replace('./'); }, 2500);
+// GitHub Pages serves this file AT the missing URL, so a relative "./" would
+// resolve to the missing path's own folder (another 404 for nested URLs).
+// Derive the site root instead: the project path on github.io, "/" on a
+// custom domain. Update ROOT_SEGMENT if the repository is ever renamed.
+(function(){
+  var ROOT_SEGMENT = '/JAC_Online/';
+  var root = location.pathname.indexOf(ROOT_SEGMENT) === 0 ? ROOT_SEGMENT : '/';
+  var link = document.getElementById('home-link'); if (link) link.href = root;
+  var icon = document.querySelector('link[rel="icon"]'); if (icon) icon.href = root + 'logo-mark.svg';
+  setTimeout(function(){ location.replace(root); }, 2500);
+})();
 </script>
 </body>
 </html>
