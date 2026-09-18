@@ -57,7 +57,9 @@ self.addEventListener('activate', function(event){
   event.waitUntil(
     caches.keys().then(function(keys){
       const old = keys.filter(function(k){ return k.indexOf(CACHE_PREFIX) === 0 && k !== CACHE; });
-      const previous = old.length ? old[old.length - 1].slice(CACHE_PREFIX.length) : null;
+      // caches.keys() order is unspecified: pick the highest stale version by semver.
+      const vers = old.map(function(k){ return k.slice(CACHE_PREFIX.length); }).sort(compareVersions);
+      const previous = vers.length ? vers[vers.length - 1] : null;
       return Promise.all(old.map(function(k){ return caches.delete(k); }))
         .then(function(){ return self.clients.claim(); })
         .then(function(){ return self.clients.matchAll({ type: 'window', includeUncontrolled: true }); })
@@ -94,11 +96,27 @@ self.addEventListener('fetch', function(event){
   event.respondWith(staleWhileRevalidate(event, req));
 });
 
+// "3.1.1" vs "3.1.10" → numeric, part by part (missing parts count as 0).
+function compareVersions(a, b){
+  const pa = String(a).split('.'), pb = String(b).split('.'), n = Math.max(pa.length, pb.length);
+  for (let i = 0; i < n; i++){
+    const x = parseInt(pa[i], 10) || 0, y = parseInt(pb[i], 10) || 0;
+    if (x !== y) return x - y;
+  }
+  return 0;
+}
+
+// Pages are cached under origin + pathname so index.html?x=y navigations
+// share one entry instead of each storing their own copy.
+function pageKey(req){
+  try { const u = new URL(req.url); return u.origin + u.pathname; } catch(e){ return req; }
+}
+
 function networkFirst(req){
   return caches.open(CACHE).then(function(cache){
     return fetch(req).then(function(res){
       // A real answer (including 404) is returned as-is; only good ones are cached.
-      if (res && res.ok) cache.put(req, res.clone()).catch(function(){});
+      if (res && res.ok) cache.put(pageKey(req), res.clone()).catch(function(){});
       return res;
     }).catch(function(){
       return cache.match(req, { ignoreSearch: true }).then(function(hit){

@@ -685,6 +685,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-goal-input::placeholder{color:var(--white4);font-size:1rem;letter-spacing:0}
 #page-planner .pl-goal-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
 #page-planner .pl-goal-input[aria-invalid="true"]{border-color:var(--red)}
+#page-log .form-input[aria-invalid="true"],.pr-input[aria-invalid="true"]{border-color:var(--red)}
+.pr-hint{font-family:var(--fm);font-size:0.68rem;color:var(--red);letter-spacing:0.3px;min-height:1.1em;margin:-0.5rem 0 1rem}
+.nav-ai-btn.active{background:var(--cyan2);box-shadow:0 0 0 2px rgba(0,212,255,0.35)}
 #page-planner .pl-goal-card .pl-err{margin-top:0}
 #page-planner .pl-quick{display:flex;gap:6px}
 #page-planner .pl-quick .btn-ghost-sm{flex:1;padding:6px 4px;font-size:0.62rem;letter-spacing:0.5px}
@@ -1341,7 +1344,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
          labels for the platform). Skip that bundle's "insert nav_button.html" step: the button is already here.
          script.js hides it while window.openPalette is undefined so it is never a dead control. -->
     <button type="button" class="nav-key-btn tl-pal-navbtn" id="nav-search-btn" aria-label="Search (Cmd+K)" title="Search (Cmd+K)" onclick="if(window.openPalette)openPalette()"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg><span class="tl-pal-navhint" aria-hidden="true">⌘K</span></button>
-    <button class="nav-ai-btn" onclick="showPage('ai')">AI Coach ✦</button>
+    <button class="nav-ai-btn" id="nav-ai-coach-btn" onclick="showPage('ai')">AI Coach ✦</button>
     <button class="nav-ai-btn" id="nav-login-btn" onclick="openAuthGate('login')" style="background:var(--navy3);color:var(--cyan);border:1px solid var(--border)">Log In</button>
     <span id="current-username-display" style="font-family:var(--fm);font-size:0.65rem;color:var(--cyan);letter-spacing:0.5px;white-space:nowrap;padding:0 4px"></span>
     <button class="nav-key-btn" id="nav-logout-btn" onclick="doLogout()" title="Log out" style="display:none">⎋</button>
@@ -1468,10 +1471,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div id="motion-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px"></div>
   <div class="viz-controls" style="margin-top:8px">
     <span style="font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px">View:</span>
-    <button class="viz-btn" onclick="setView3D('side')">Side</button>
-    <button class="viz-btn" onclick="setView3D('front')">Front</button>
-    <button class="viz-btn" onclick="setView3D('top')">Below</button>
-    <button class="viz-btn" onclick="setView3D('three-quarter')">3/4 View</button>
+    <button class="viz-btn" data-view="side" aria-pressed="false" onclick="setView3D('side')">Side</button>
+    <button class="viz-btn" data-view="front" aria-pressed="false" onclick="setView3D('front')">Front</button>
+    <button class="viz-btn" data-view="top" aria-pressed="false" onclick="setView3D('top')">Below</button>
+    <button class="viz-btn" data-view="three-quarter" aria-pressed="false" onclick="setView3D('three-quarter')">3/4 View</button>
   </div>
   <div class="viz-controls" style="margin-top:8px" role="group" aria-label="Swimmer model and skin tone">
     <span class="viz-ctl-lbl" aria-hidden="true">Swimmer:</span>
@@ -1796,7 +1799,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="form-group"><label>Meso Phase</label><select class="form-select" id="gen-meso"><option value="meso1-early">Meso I — Wks 1–2</option><option value="meso1-late">Meso I — Wks 3–4</option><option value="meso2-early">Meso II — Wks 5–6</option><option value="meso2-late">Meso II — Wks 7–8</option><option value="taper">Taper / Pre-Meet</option></select></div>
     </div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Additional Notes (optional)</label>
-      <input class="form-input" id="gen-notes" placeholder="e.g. sore shoulders, include Golf score sets, pre-meet sharpener..."></div>
+      <input class="form-input" id="gen-notes" maxlength="300" placeholder="e.g. sore shoulders, include Golf score sets, pre-meet sharpener..."></div>
     <button class="btn-sm" id="gen-btn" onclick="generateWorkout()" style="padding:12px 28px;font-size:0.78rem">Generate Full Workout ✦</button>
   </div>
   <div class="gen-output" id="gen-output">
@@ -1920,6 +1923,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="section-eyebrow" style="margin-top:1.5rem">Breaststroke</div><div class="pr-grid" id="pr-grid-br"></div>
   <div class="section-eyebrow" style="margin-top:1.5rem">Butterfly</div><div class="pr-grid" id="pr-grid-fly"></div>
   <div class="section-eyebrow" style="margin-top:1.5rem">Individual Medley</div><div class="pr-grid" id="pr-grid-im"></div>
+  <div class="pr-hint" id="pr-hint" role="status" aria-live="polite"></div>
   <p style="font-size:0.82rem;color:var(--white3);margin-top:1.75rem;line-height:1.7">Everything here is saved only in this browser. <strong style="color:var(--white2)">Export a backup</strong> before clearing your data or switching devices, then import it to restore your PRs, name, and training log.</p>
   <div style="margin-top:0.75rem;display:flex;gap:10px;flex-wrap:wrap">
     <button class="btn-sm" onclick="exportBackup()">⬇ Export Backup</button>
@@ -1936,21 +1940,22 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Session Tracker</div>
   <div class="section-title">TRAINING <span>LOG</span></div>
-  <p class="section-intro">All log data is saved locally in your browser — it never leaves your device.</p>
+  <p class="section-intro">All log data is saved locally in your browser — it never leaves your device. Your most recent 2,000 sessions are kept; export a backup from My PRs to archive more.</p>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:1.75rem;margin-bottom:1.5rem">
     <div style="font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem;color:var(--cyan)">LOG A SESSION</div>
     <div class="gen-row">
       <div class="form-group"><label>Date</label><input class="form-input" id="log-date" type="date"></div>
       <div class="form-group"><label>Session Type</label><select class="form-select" id="log-type"><option value="AM Pool">AM Pool</option><option value="PM Pool">PM Pool</option><option value="Dryland">Dryland</option><option value="Race">Race</option><option value="Time Trial">Time Trial</option></select></div>
-      <div class="form-group"><label>Distance (m)</label><input class="form-input" id="log-distance" type="number" placeholder="e.g. 4500"></div>
+      <div class="form-group"><label>Distance (m)</label><input class="form-input" id="log-distance" type="number" min="0" max="100000" step="1" placeholder="e.g. 4500"></div>
     </div>
     <div class="gen-row">
-      <div class="form-group"><label>Duration (min)</label><input class="form-input" id="log-duration" type="number" placeholder="e.g. 75"></div>
+      <div class="form-group"><label>Duration (min)</label><input class="form-input" id="log-duration" type="number" min="0" max="600" step="1" placeholder="e.g. 75"></div>
       <div class="form-group"><label>Primary Zone</label><select class="form-select" id="log-zone"><option value="Z1 Recovery">Z1 Recovery</option><option value="Z2 AeT" selected>Z2 AeT</option><option value="Z3 Threshold">Z3 Threshold</option><option value="Z4 VO2">Z4 VO2 Max</option><option value="Z5 Speed">Z5 Speed</option><option value="Mixed">Mixed</option></select></div>
       <div class="form-group"><label>Effort (1–10)</label><input class="form-input" id="log-effort" type="number" min="1" max="10" placeholder="7"></div>
     </div>
     <div class="form-group" style="margin-bottom:1rem"><label>Main Set</label><input class="form-input" id="log-mainset" maxlength="200" placeholder="e.g. 12×200 FR @ 3:00 AeT, HR 24-28"></div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Notes</label><textarea class="form-textarea" id="log-notes" maxlength="1000" placeholder="Technique focus, energy levels, what went well..."></textarea></div>
+    <div id="log-form-err" role="alert" style="display:none;color:var(--red);font-size:0.82rem;margin-bottom:0.75rem"></div>
     <button class="btn-sm" onclick="saveLogEntry()">Save Session</button>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
@@ -3256,7 +3261,20 @@ function escapeHTML(s){
 // This makes every section keyboard-reachable, deep-linkable, Back-button
 // friendly, and gives each view its own crawlable title.
 function activatePage(name){
-  if(!document.getElementById('page-'+name)) name='home'; // guard unknown/empty
+  if(!document.getElementById('page-'+name)){ // guard unknown/empty
+    // An in-page anchor (the skip link's #main) must move focus, not bounce
+    // a keyboard user to Home: focus it and put the current view's hash back.
+    const anchor=name?document.getElementById(name):null, cur=document.querySelector('.page.active');
+    if(anchor&&cur&&cur.id.indexOf('page-')===0){
+      try{ history.replaceState(null,'',location.pathname+location.search+'#'+cur.id.slice(5)); }catch(e){}
+      if(!anchor.hasAttribute('tabindex')) anchor.setAttribute('tabindex','-1');
+      try{ anchor.focus({preventScroll:true}); }catch(e){ anchor.focus(); }
+      return;
+    }
+    // Unknown hash: show Home and clean the address bar so bookmarks and Back reflect the view.
+    if(name){ try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
+    name='home';
+  }
   const page=document.getElementById('page-'+name);
   const alreadyActive=page&&page.classList.contains('active');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -3265,6 +3283,9 @@ function activatePage(name){
   const nav=document.getElementById('nav-'+name);
   if(page) page.classList.add('active');
   if(nav){ nav.classList.add('active'); nav.setAttribute('aria-current','page'); const navGroup=nav.closest('.nav-group'); const navGroupBtn=navGroup&&navGroup.querySelector('.nav-group-btn'); if(navGroupBtn) navGroupBtn.classList.add('active'); }
+  // AI Coach lives outside the link list: mark its button current on #ai.
+  const aiBtn=document.getElementById('nav-ai-coach-btn');
+  if(aiBtn){ aiBtn.classList.toggle('active',name==='ai'); if(name==='ai') aiBtn.setAttribute('aria-current','page'); else aiBtn.removeAttribute('aria-current'); }
   if(!alreadyActive){
     const smooth=!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
     window.scrollTo({top:0,behavior:smooth?'smooth':'auto'});
@@ -4342,9 +4363,23 @@ const VIEWS = {
   top:            { pos:[0.6, -0.85, 1.6], target:[0, 0.5, 0] },
   'three-quarter':{ pos:[2.4, 0.3, 2.4],   target:[0, 0.45, 0] }
 };
+// Preset view buttons show which view is current; any manual orbit/zoom clears it.
+function markView3D(name) {
+  document.querySelectorAll('.viz-btn[data-view]').forEach(b => {
+    const on = b.getAttribute('data-view') === name;
+    b.classList.toggle('active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+}
+let viewClearBound = false;
+function bindViewClear3D() {
+  if (viewClearBound || !renderer || !renderer.domElement) return;
+  viewClearBound = true;
+  ['mousedown', 'touchstart', 'wheel'].forEach(ev => renderer.domElement.addEventListener(ev, () => { if (controls && controls.enabled) markView3D(null); }, { passive: true }));
+}
 function setView3D(name) {
   if (!viz3DInitialized) return;
   const v = VIEWS[name]; if(!v) return;
+  markView3D(name); bindViewClear3D();
   const startPos = camera.position.clone();
   const startTarget = controls.target.clone();
   const endPos = new THREE.Vector3(...v.pos);
@@ -5100,7 +5135,7 @@ async function _generateWorkoutInner(){
   const level=document.getElementById('gen-level').value;
   const equip=document.getElementById('gen-equip').value;
   const meso=document.getElementById('gen-meso').value;
-  const notes=document.getElementById('gen-notes').value;
+  const notes=String(document.getElementById('gen-notes').value||'').trim().slice(0,300); // matches maxlength; nothing longer reaches the prompt
   const output=document.getElementById('gen-output');
   const loading=document.getElementById('gen-loading');
   const result=document.getElementById('gen-result');
@@ -5326,6 +5361,7 @@ function parseTime(str){
   const mins=m[1]?parseInt(m[1],10):0;
   const secs=parseFloat(m[2]);
   const v=mins*60+secs;
+  if(!m[1] && v<10) return null; // a bare "1.55" is a m:ss typo, not 1.55 s — no swim time is under 10 s
   return (isFinite(v) && v>0 && v<3600) ? v : null;
 }
 function formatTime(secs){
@@ -5333,8 +5369,9 @@ function formatTime(secs){
   // Round to centiseconds FIRST so a value like 59.999 carries to 1:00.00
   // instead of printing the invalid "60.00".
   const cs=Math.round(secs*100);
-  const m=Math.floor(cs/6000);
+  const h=Math.floor(cs/360000), m=Math.floor((cs%360000)/6000);
   const s=((cs%6000)/100).toFixed(2).padStart(5,'0');
+  if(h>0) return h+':'+String(m).padStart(2,'0')+':'+s; // 1:00:00.00, not 60:00.00
   return m>0?m+':'+s:s+'s';
 }
 function calcGolf(){
@@ -5361,14 +5398,19 @@ function calcSplits(){
   const n=dist/50, avg=totalSecs/n;
   if(avg<15){alert('That works out to under 15 seconds per 50m — faster than the world record. Check the distance and time.');return;}
   if(avg>120){alert('That works out to over 2 minutes per 50m — check the distance and time.');return;}
-  const splits=[];
+  // Offsets are zero-mean so every strategy sums exactly to the target.
+  // Neg/pos ramp 4% of the average split from first to last 50 (a 200 @ 2:00
+  // spreads 1.2 s; a 1500 no longer implies an 11 s differential).
+  const ramp=avg*0.04, step=n>1?ramp/(n-1):0;
+  let off=[];
   for(let i=0;i<n;i++){
-    let s=avg;
-    if(strategy==='neg') s=avg+(n/2-i-0.5)*0.4;
-    else if(strategy==='pos') s=avg-(n/2-i-0.5)*0.4;
-    else if(strategy==='surge'){if(i<n/4)s=avg+0.5;else if(i<n*3/4)s=avg-0.3;else s=avg+0.15;}
-    splits.push(s);
+    if(strategy==='neg') off.push((n/2-i-0.5)*step);
+    else if(strategy==='pos') off.push(-(n/2-i-0.5)*step);
+    else if(strategy==='surge') off.push(i<n/4?0.5:(i<n*3/4?-0.3:0.15));
+    else off.push(0);
   }
+  const mean=off.reduce((a,b)=>a+b,0)/n;
+  const splits=off.map(o=>Math.max(15,avg+o-mean));
   let html='<div class="table-wrap"><table class="data-table"><thead><tr><th>Distance</th><th>50m Split</th><th>Cumulative</th></tr></thead><tbody>';
   let cum=0;
   splits.forEach((s,i)=>{cum+=s; html+=`<tr><td>${(i+1)*50}m</td><td>${formatTime(s)}</td><td>${formatTime(cum)}</td></tr>`;});
@@ -5376,8 +5418,10 @@ function calcSplits(){
   document.getElementById('split-result').innerHTML=html;
 }
 function calcPaceZones(){
-  const t=parseTime(document.getElementById('pace-100').value);
-  if(!t){alert('Enter a valid 100m time.');return;}
+  const rawPace=String(document.getElementById('pace-100').value||'').trim();
+  const t=parseTime(rawPace);
+  if(!t){alert(/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100m time as m:ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100m time (ss.ss or m:ss.ss).');return;}
+  if(t<35||t>240){alert('A 100m time between 35 s and 4:00 is expected — check the value (use m:ss for minutes).');return;}
   const zones=[
     {name:'Zone 1 — Recovery',pct:[1.28,1.45],color:'#00e599',desc:'HR <23 · <1.5 mmol'},
     {name:'Zone 2 — AeT Base',pct:[1.10,1.22],color:'#00d4ff',desc:'HR 24–28 · 2–3 mmol'},
@@ -5425,15 +5469,30 @@ function buildPRGrid(stroke){
     const key='pr_'+event.replace(/ /g,'_');
     const saved=localStorage.getItem(key)||'';
     const item=document.createElement('div'); item.className='pr-item';
-    item.innerHTML=`<span class="pr-event">${event}</span><input class="pr-input" placeholder="—" maxlength="12" value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value)">`;
+    item.innerHTML=`<span class="pr-event">${event}</span><input class="pr-input" placeholder="—" maxlength="12" inputmode="decimal" autocomplete="off" aria-label="${event} personal record" value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value,this)" onchange="savePR('${key}',this.value,this,true)">`;
     grid.appendChild(item);
   });
 }
+// "52.30" / "1:52.30" — the input form (no trailing s) for a stored PR.
+function prFmt(sec){ const cs=Math.round(sec*100), m=Math.floor(cs/6000), s=((cs%6000)/100).toFixed(2).padStart(5,'0'); return m>0?m+':'+s:s; }
+function prHint(msg){ const h=document.getElementById('pr-hint'); if(h) h.textContent=msg||''; }
 // Guarded localStorage writes: a full quota or a privacy-mode block must
 // never throw and break the page (reads are already guarded in readLog).
 function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
 function lsRemove(k){ try{ localStorage.removeItem(k); }catch(e){} }
-function savePR(key,value){ lsSet(key,value); }
+// Only a parseable time is stored (ss.ss or m:ss.ss); anything else is flagged
+// inline and left unsaved, so the planner and predictor never see "fast" or "1:75".
+// On change (blur) a valid value is normalised to the canonical form.
+function savePR(key,value,el,normalize){
+  const v=String(value==null?'':value).trim();
+  if(!v){ lsRemove(key); if(el) el.removeAttribute('aria-invalid'); prHint(''); return; }
+  const t=parseTime(v);
+  if(t===null){ if(el) el.setAttribute('aria-invalid','true'); prHint('Use ss.ss or m:ss.ss — e.g. 52.30 or 1:52.30'); return; }
+  if(el) el.removeAttribute('aria-invalid'); prHint('');
+  const out=normalize?prFmt(t):v;
+  if(normalize&&el&&el.value!==out) el.value=out;
+  lsSet(key,out);
+}
 function saveName(){
   const n=document.getElementById('profile-name').value;
   lsSet('swimmer_name',n);
@@ -5448,12 +5507,16 @@ function clearAllPRs(){
 // On-device data (name + PRs + training log) never reaches a server, so a
 // downloadable JSON backup is the only way to move it between devices or
 // survive a browser-data clear. Referenced by the Privacy Policy / Terms.
+// Planner / timer / analytics settings travel with the backup (version 2);
+// version-1 files (name + PRs + log only) still import.
+const BACKUP_TL_KEYS=['tl_goals','tl_meet','tl_pred_fit','tl_split_last','tl_tempo','tl_interval','tl_paceclock','tl_an_prefs'];
 function exportBackup(){
-  const data={ app:'Tidelyne', version:1, exported:new Date().toISOString(),
-    name:localStorage.getItem('swimmer_name')||'', prs:{}, log:readLog() };
+  const data={ app:'Tidelyne', version:2, exported:new Date().toISOString(),
+    name:localStorage.getItem('swimmer_name')||'', prs:{}, log:readLog(), tl:{} };
   Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>{
     const k='pr_'+e.replace(/ /g,'_'); const v=localStorage.getItem(k); if(v) data.prs[k]=v;
   }));
+  BACKUP_TL_KEYS.forEach(k=>{ try{ const v=JSON.parse(localStorage.getItem(k)||'null'); if(v&&typeof v==='object'&&!Array.isArray(v)) data.tl[k]=v; }catch(e){} });
   try{
     const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
     const a=document.createElement('a');
@@ -5469,14 +5532,23 @@ function importBackup(ev){
   r.onload=function(){
     try{
       const d=JSON.parse(r.result);
-      if(!d||typeof d!=='object') throw new Error('bad');
+      // Only a Tidelyne backup: known app tag, numeric version, plain object.
+      if(!d||typeof d!=='object'||Array.isArray(d)||d.app!=='Tidelyne'||!(Number(d.version)>=1)) throw new Error('bad');
+      const validKeys={}; Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>{ validKeys['pr_'+e.replace(/ /g,'_')]=1; }));
+      let nPR=0, nLog=0, nSet=0, skipped=0;
       if(d.prs&&typeof d.prs==='object') Object.keys(d.prs).forEach(k=>{
-        if(k.indexOf('pr_')===0) lsSet(k, String(d.prs[k]).slice(0,12));
+        const v=String(d.prs[k]==null?'':d.prs[k]).trim().slice(0,12); if(!v) return;
+        if(validKeys[k]&&parseTime(v)!==null){ lsSet(k,v); nPR++; } else skipped++;
       });
+      const hasName=typeof d.name==='string'&&d.name.trim()!=='';
       if(typeof d.name==='string') lsSet('swimmer_name', d.name.slice(0,30));
-      if(Array.isArray(d.log)) lsSet('swimiq_log', JSON.stringify(d.log.slice(0,100)));
+      if(Array.isArray(d.log)){ const clean=sanitizeLogEntries(d.log); skipped+=Math.max(0,d.log.length-clean.length); lsSet('swimiq_log', JSON.stringify(clean)); nLog=clean.length; }
+      if(d.tl&&typeof d.tl==='object') BACKUP_TL_KEYS.forEach(k=>{ const v=d.tl[k]; if(v&&typeof v==='object'&&!Array.isArray(v)&&lsSet(k, JSON.stringify(v))) nSet++; });
       initProfile(); if(typeof renderLog==='function') renderLog();
-      alert('Backup imported — your PRs, name, and training log have been restored.');
+      alert('Backup imported — '+nPR+' PR'+(nPR===1?'':'s')+', '+nLog+' session'+(nLog===1?'':'s')+(hasName?', your name':'')+(nSet?' and '+nSet+' saved setting'+(nSet===1?'':'s'):'')+' restored.'
+        +(skipped?' '+skipped+' unreadable item'+(skipped===1?' was':'s were')+' skipped.':'')
+        +(nSet?' The page will reload so the timer and planner settings apply.':''));
+      if(nSet) location.reload();
     }catch(e){ alert('That file is not a valid Tidelyne backup.'); }
   };
   r.readAsText(f);
@@ -5488,32 +5560,74 @@ function initProfile(){
   const nd=document.getElementById('profile-name-display'); if(nd) nd.textContent=name||'Swimmer';
   Object.keys(PR_EVENTS).forEach(s=>buildPRGrid(s));
 }
-initProfile();
+// Stored data must never stop the rest of this script (timers, planner,
+// analytics, palette and the nav bundle all initialise further down).
+try{ initProfile(); }catch(e){ console.error('initProfile failed',e); }
 // ─── TRAINING LOG ─────────────────────────────
 // Crash-proof read: renderLog() runs at page load — a single corrupted
 // localStorage entry must never take down the whole site's JavaScript.
+const LOG_MAX=2000, LOG_MAX_DIST=100000, LOG_MAX_DUR=600; // session cap (~600 kB) and per-field limits
 function readLog(){
   try{
     const v=JSON.parse(localStorage.getItem('swimiq_log')||'[]');
-    return Array.isArray(v)?v:[];
+    if(!Array.isArray(v)) return [];
+    // Drop anything that is not a session object (a hand-edited or hostile
+    // backup can hold null/number entries) and normalise ids to numbers so
+    // renderLog/deleteLogEntry can never throw on stored data.
+    let dirty=false, seq=Date.now();
+    const out=v.filter(e=>e&&typeof e==='object'&&!Array.isArray(e)).map(e=>{
+      const n=Number(e.id);
+      if(!(isFinite(n)&&n>0)){ e.id=seq++; dirty=true; } else if(e.id!==n){ e.id=n; dirty=true; }
+      return e;
+    });
+    if(dirty||out.length!==v.length) lsSet('swimiq_log',JSON.stringify(out));
+    return out;
   }catch(e){ return []; }
+}
+// Accept only plain session objects with a real date; coerce the numeric
+// fields, cap the text fields and assign ids where missing.
+function sanitizeLogEntries(list){
+  const out=[]; let seq=Date.now();
+  const num=(v,max)=>{ const n=Math.round(Number(v)); return (isFinite(n)&&n>0)?Math.min(n,max):0; };
+  (Array.isArray(list)?list:[]).forEach(e=>{
+    if(!e||typeof e!=='object'||Array.isArray(e)) return;
+    const date=String(e.date||'').slice(0,10);
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||isNaN(new Date(date+'T00:00:00').getTime())) return;
+    const id=Number(e.id), eff=Math.round(Number(e.effort));
+    out.push({ id:(isFinite(id)&&id>0)?id:seq++, date, type:String(e.type||'').slice(0,40),
+      dist:num(e.dist,LOG_MAX_DIST), dur:num(e.dur,LOG_MAX_DUR), zone:String(e.zone||'').slice(0,40),
+      effort:(eff>=1&&eff<=10)?eff:0, mainset:String(e.mainset||'').slice(0,200), notes:String(e.notes||'').slice(0,1000) });
+  });
+  return out.slice(0,LOG_MAX);
 }
 function saveLogEntry(){
   const date=document.getElementById('log-date').value;
-  if(!date){alert('Please select a date.');return;}
+  const errEl=document.getElementById('log-form-err');
+  const fields=['log-date','log-distance','log-duration','log-effort'];
+  fields.forEach(id=>{ const el=document.getElementById(id); if(el) el.removeAttribute('aria-invalid'); });
+  if(errEl){ errEl.textContent=''; errEl.style.display='none'; }
+  // Inline validation: the HTML min/max attributes are advisory only.
+  const fail=(msg,id)=>{ if(errEl){ errEl.textContent=msg; errEl.style.display='block'; } else alert(msg); const el=document.getElementById(id); if(el){ el.setAttribute('aria-invalid','true'); try{ el.focus({preventScroll:true}); }catch(e){} } };
+  if(!date||isNaN(new Date(date+'T00:00:00').getTime())){ fail('Please select a date.','log-date'); return; }
+  const raw=id=>String(document.getElementById(id).value||'').trim();
+  const distRaw=raw('log-distance'), durRaw=raw('log-duration'), effRaw=raw('log-effort');
+  const dist=distRaw===''?0:Number(distRaw), dur=durRaw===''?0:Number(durRaw), effort=effRaw===''?0:Number(effRaw);
+  if(!(isFinite(dist)&&dist>=0&&dist<=LOG_MAX_DIST)){ fail('Distance must be between 0 and 100,000 m.','log-distance'); return; }
+  if(!(isFinite(dur)&&dur>=0&&dur<=LOG_MAX_DUR)){ fail('Duration must be between 0 and 600 minutes.','log-duration'); return; }
+  if(effRaw!==''&&!(Number.isInteger(effort)&&effort>=1&&effort<=10)){ fail('Effort is a whole number from 1 to 10 — or leave it blank.','log-effort'); return; }
   const entry={
     id:Date.now(),
     date,
     type:document.getElementById('log-type').value,
-    dist:parseInt(document.getElementById('log-distance').value)||0,
-    dur:parseInt(document.getElementById('log-duration').value)||0,
+    dist:Math.round(dist),
+    dur:Math.round(dur),
     zone:document.getElementById('log-zone').value,
-    effort:parseInt(document.getElementById('log-effort').value)||0,
+    effort:effort,
     mainset:document.getElementById('log-mainset').value,
     notes:document.getElementById('log-notes').value
   };
   const entries=readLog();
-  entries.unshift(entry); entries.splice(100);
+  entries.unshift(entry); entries.splice(LOG_MAX);
   if(!lsSet('swimiq_log',JSON.stringify(entries))){ alert('Could not save the session — your device storage may be full or blocked.'); return; }
   ['log-distance','log-duration','log-effort','log-mainset','log-notes'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
@@ -5530,17 +5644,20 @@ function renderLog(){
     container.innerHTML='<p style="color:var(--white3);font-size:0.88rem;text-align:center;padding:2rem">No sessions logged yet.</p>';
     if(statsEl) statsEl.style.display='none'; return;
   }
-  container.innerHTML=entries.map(e=>`
+  // Every stored field is coerced or escaped: a crafted backup must render as text, never as markup.
+  container.innerHTML=entries.map(e=>{
+    const dist=Number(e.dist)||0, dur=Number(e.dur)||0, effort=Number(e.effort)||0, id=Number(e.id)||0;
+    return `
     <div class="log-entry">
       <div class="log-date">${escapeHTML(e.date)}</div>
       <div class="log-content">
         <div class="log-title">${escapeHTML(e.type)}</div>
-        <div class="log-meta">${e.dist?e.dist.toLocaleString()+'m · ':''}${e.dur?e.dur+' min · ':''}${escapeHTML(e.zone)} · Effort ${e.effort}/10</div>
+        <div class="log-meta">${dist>0?dist.toLocaleString()+'m · ':''}${dur>0?dur+' min · ':''}${escapeHTML(e.zone)} · ${effort>0?'Effort '+effort+'/10':'Effort —'}</div>
         ${e.mainset?`<div class="log-notes" style="color:var(--cyan)">${escapeHTML(e.mainset)}</div>`:''}
         ${e.notes?`<div class="log-notes">${escapeHTML(e.notes)}</div>`:''}
       </div>
-      <button onclick="deleteLogEntry(${e.id})" style="background:none;border:none;color:var(--white4);cursor:pointer;font-size:1.1rem;padding:4px;transition:color 0.2s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--white4)'">✕</button>
-    </div>`).join('');
+      <button type="button" data-del-id="${id}" aria-label="Delete session ${escapeHTML(e.date)}" title="Delete session" style="background:none;border:none;color:var(--white4);cursor:pointer;font-size:1.1rem;padding:4px;transition:color 0.2s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--white4)'">✕</button>
+    </div>`;}).join('');
   const now=new Date(), thirtyAgo=new Date(now-30*24*60*60*1000);
   const recent=entries.filter(e=>new Date(e.date)>=thirtyAgo);
   if(statsEl&&recent.length>0){
@@ -5562,7 +5679,9 @@ function deleteLogEntry(id){
 function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog();}
 const todayInput=document.getElementById('log-date');
 if(todayInput){const _d=new Date();_d.setMinutes(_d.getMinutes()-_d.getTimezoneOffset());todayInput.value=_d.toISOString().split('T')[0];}
-renderLog();
+// Delete buttons are delegated (no inline onclick built from stored ids).
+(function(){ const c=document.getElementById('log-entries'); if(c) c.addEventListener('click',function(ev){ const b=ev.target&&ev.target.closest?ev.target.closest('[data-del-id]'):null; if(b) deleteLogEntry(Number(b.getAttribute('data-del-id'))); }); })();
+try{ renderLog(); }catch(e){ console.error('renderLog failed',e); }
 // ─── TIMERS ───
 /* ═══════════════════════════════════════════════════════════════════════
    TIDELYNE — TIMERS PAGE  (tempo trainer · interval timer · pace clock)
@@ -5610,8 +5729,8 @@ function fmtCount(sec){ sec=Math.max(0,Math.ceil(sec-1e-6)); return sec>=60?fmtM
 // stopwatch "m:ss.d…" with a fixed number of decimals
 function fmtSW(sec,dec){
   dec=(dec==null)?2:dec; if(!(sec>=0)) sec=0;
-  var f=Math.pow(10,dec), t=Math.round(sec*f)/f, m=Math.floor(t/60), s=t-m*60, ss=s.toFixed(dec);
-  if(s<10) ss='0'+ss; return m+':'+ss;
+  var f=Math.pow(10,dec), t=Math.round(sec*f)/f, h=Math.floor(t/3600), m=Math.floor((t%3600)/60), s=t-h*3600-m*60, ss=s.toFixed(dec);
+  if(s<10) ss='0'+ss; return h?(h+':'+(m<10?'0':'')+m+':'+ss):(m+':'+ss); // an hour reads 1:00:00.0, not 60:00.0
 }
 // clock reading with tenths only when needed (1:30 / 1:07.5)
 function fmtClock(sec){
@@ -5872,7 +5991,7 @@ var IT_PRESETS={
 };
 var PHASE_LABEL={lead:'GET READY',work:'WORK',rest:'REST',setrest:'SET REST',done:'DONE',idle:'READY'};
 var PHASE_WORD={lead:'Get ready',work:'Work',rest:'Rest',setrest:'Set rest'};
-var IT={status:'idle',cfg:null,sched:[],cum:[],total:0,startedAt:0,pausedAt:0,pausedAccum:0,segIdx:-1,raf:0,scheduled:{}};
+var IT={status:'idle',cfg:null,sched:[],cum:[],total:0,startedAt:0,pausedAt:0,pausedAccum:0,segIdx:-1,raf:0,tick:0,scheduled:{}};
 
 // Blank, non-numeric or non-finite → the default (Number('') is 0, which would turn a blank Work box into 5 s).
 function itNormalize(c){
@@ -5906,8 +6025,17 @@ function itElapsed(){
   if(IT.status==='paused') return (IT.pausedAt-IT.startedAt-IT.pausedAccum)/1000;
   if(IT.status==='done') return IT.total; return 0;
 }
-function itLoopStart(){ if(!IT.raf) IT.raf=raf(itFrame); }
-function itLoopStop(){ if(IT.raf){ caf(IT.raf); IT.raf=0; } }
+// rAF stops in a hidden tab, so cues are also placed from a 250 ms interval
+// (keyed cues never double-fire; a wider lookahead covers background throttling).
+function itTick(){
+  if(IT.status!=='running') return;
+  var el=itElapsed(), idx=itSegAt(IT.cum,IT.total,el);
+  if(idx>=IT.sched.length){ itFinish(); return; }
+  IT.segIdx=idx; itScheduleBeeps(el,document.hidden?1.5:0.35);
+  if(document.hidden) itRender(el,idx);
+}
+function itLoopStart(){ if(!IT.raf) IT.raf=raf(itFrame); if(!IT.tick) IT.tick=setInterval(itTick,250); }
+function itLoopStop(){ if(IT.raf){ caf(IT.raf); IT.raf=0; } if(IT.tick){ clearInterval(IT.tick); IT.tick=0; } }
 function itSetPhase(phase,paused){ var d=$('tlt-int-display'); if(d){ d.setAttribute('data-phase',phase); d.setAttribute('data-paused',paused?'true':'false'); } }
 function itButtons(){
   var t=$('tlt-int-toggle'), sk=$('tlt-int-skip');
@@ -5953,8 +6081,8 @@ function itRender(el,idx){
 // Sample-accurate cues: every segment start (and the finish) plus the 3-2-1
 // ticks before each segment end are placed on the audio clock up to 350 ms
 // ahead. Keys make each cue fire once; cues that fall behind (hidden tab) are skipped.
-function itScheduleBeeps(el){
-  if(!AU.ctx) return; var now=AU.ctx.currentTime, LOOK=0.35, n=IT.sched.length;
+function itScheduleBeeps(el,look){
+  if(!AU.ctx) return; var now=AU.ctx.currentTime, LOOK=(look>0)?look:0.35, n=IT.sched.length;
   for(var i=Math.max(0,IT.segIdx);i<=n;i++){
     var tStart=(i<n)?IT.cum[i]:IT.total;
     if(tStart>el+LOOK) break;
@@ -6712,6 +6840,10 @@ function runFit(){
   if ((d1 < d2 && ta >= tb) || (d1 > d2 && tb >= ta)) { setErr('pl-fit-err', 'The longer event must have the longer time.'); return; }
   var bFit = fitExponent(d1, ta, d2, tb), bTyp = typicalExponent(stroke, d1, d2);
   if (bFit === null || bTyp === null) { setErr('pl-fit-err', 'Could not fit those two events.'); return; }
+  // b < 1 means a faster average pace over the longer distance; b > 1.4 is
+  // beyond any plausible record ratio. Neither is a real profile — reject it.
+  if (bFit < 1.0) { setErr('pl-fit-err', 'Your longer swim is faster per 100 than your shorter one — check the times or the course.'); return; }
+  if (bFit > 1.4) { setErr('pl-fit-err', 'That pair implies more drop-off than any plausible profile — check the times or the course.'); return; }
   setErr('pl-fit-err', '');
   var delta = bFit - bTyp, prof = profileOf(delta);
   var clamped = Math.abs(delta) > EXP_DELTA_MAX;
@@ -6892,12 +7024,14 @@ function runSplits(){
   var out = pl$('pl-sp-out'), cmp = pl$('pl-sp-compare'), copy = pl$('pl-sp-copy'); if (!out) return;
   var o = { course:(pl$('pl-sp-course') || {}).value, stroke:(pl$('pl-sp-stroke') || {}).value, dist:+((pl$('pl-sp-dist') || {}).value),
     goal:parseT((pl$('pl-sp-goal') || {}).value), strategy:(pl$('pl-sp-strategy') || {}).value, fade:+((pl$('pl-sp-fade') || {}).value), bonus:+((pl$('pl-sp-bonus') || {}).value) };
-  if (!o.goal) { setErr('pl-sp-err', 'Enter a valid goal time — ss.ss or m:ss.ss.'); return; }
-  var sane = sanityPace(o.dist, o.goal); if (sane) { setErr('pl-sp-err', sane); return; }
-  if (!(o.bonus >= 0 && o.bonus <= 3)) { setErr('pl-sp-err', 'Start bonus must be between 0 and 3 seconds.'); return; }
-  if (!(o.fade >= -15 && o.fade <= 15)) { setErr('pl-sp-err', 'Half-split difference must be between −15% and +15%.'); return; }
+  // An error must not leave the previous plan (table, comparison, Copy button) on screen.
+  var fail = function(msg){ setErr('pl-sp-err', msg); out.innerHTML = 'Choose an event, enter a goal time, and generate.'; if (copy) copy.hidden = true; if (cmp) cmp.innerHTML = ''; plSetText('pl-sp-status', ''); lastSplit = null; };
+  if (!o.goal) { fail('Enter a valid goal time — ss.ss or m:ss.ss.'); return; }
+  var sane = sanityPace(o.dist, o.goal); if (sane) { fail(sane); return; }
+  if (!(o.bonus >= 0 && o.bonus <= 3)) { fail('Start bonus must be between 0 and 3 seconds.'); return; }
+  if (!(o.fade >= -15 && o.fade <= 15)) { fail('Half-split difference must be between −15% and +15%.'); return; }
   var r = buildSplits(o);
-  if (r.error) { setErr('pl-sp-err', r.error); return; }
+  if (r.error) { fail(r.error); return; }
   setErr('pl-sp-err', '');
   lastSplit = r;
   lsPut(KEY_SPLIT, JSON.stringify({ course:o.course, stroke:o.stroke, dist:o.dist, goal:fmtPlain(o.goal, false), strategy:o.strategy, fade:o.fade, bonus:o.bonus }));
@@ -8291,7 +8425,7 @@ window.tl_an_debug = {
   var EMBED_BASE = 'https://www.youtube-nocookie.com/embed/';
   // The original embeds' permissions plus autoplay (needed for autoplay=1 in a
   // cross-origin frame — top frames delegate it via allow="autoplay").
-  var ALLOW = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  var ALLOW = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'; // no web-share: Chromium logs "Unrecognized feature" for it
   var players = (typeof WeakMap === 'function') ? new WeakMap() : null; // iframe → its facade
   var inited = false;
 
