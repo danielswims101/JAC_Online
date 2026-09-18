@@ -160,7 +160,7 @@ THREE.OrbitControls = function (camera, domElement) {
   --gold:#f5a623;--gold-dim:rgba(245,166,35,0.12);
   --green:#00e599;--green-dim:rgba(0,229,153,0.1);
   --red:#ff5252;--red-dim:rgba(255,82,82,0.1);
-  --purple:#a855f7;--purple-dim:rgba(168,85,247,0.1);
+  --purple:#a855f7;--purple-text:#c084fc;--purple-dim:rgba(168,85,247,0.1);
   --white:#eef3f8;--white2:#b0c4d8;--white3:#607a92;--white4:#3a5068;
   --card:#0b1d32;--card2:#0e2238;--card3:#112848;
   --border:rgba(0,212,255,0.15);--border2:rgba(0,212,255,0.07);
@@ -213,7 +213,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 /* LAYOUT */
 .section-wrap{max-width:1240px;margin:0 auto;padding:5rem 2rem}.section-wrap.narrow{max-width:960px}
 .section-eyebrow{font-family:var(--fm);font-size:0.6rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.75rem;opacity:0.85}
-.section-title{font-family:var(--fh);font-size:clamp(2.2rem,5vw,4rem);letter-spacing:2px;line-height:0.92;margin-bottom:1rem}
+.section-title{font-family:var(--fh);font-weight:400;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:2px;line-height:0.92;margin-bottom:1rem}
 .section-title span{color:var(--cyan)}
 .section-intro{font-size:0.95rem;color:var(--white2);max-width:660px;line-height:1.85;font-weight:300;margin-bottom:2.5rem}
 .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:3.5rem 0}
@@ -223,9 +223,10 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;transition:border-color 0.3s,transform 0.25s,box-shadow 0.3s}
 .card:hover{border-color:var(--border)}
-@media(hover:hover){.card[onclick]:hover,.card[role="button"]:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.35)}}
+@media(hover:hover){.card[onclick]:hover,.card[role="button"]:hover,.card.card-clickable:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.35)}}
 .card-icon{font-size:2rem;margin-bottom:1rem;display:block}.card-tag{font-family:var(--fm);font-size:0.58rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.85rem}
 .card h3{font-family:var(--fh);font-size:1.5rem;letter-spacing:1px;margin-bottom:0.85rem;line-height:1.1}
+.card-clickable{position:relative;cursor:pointer}.card-link{color:inherit;text-decoration:none}.card-link::after{content:"";position:absolute;inset:0}.card-clickable:has(.card-link:focus-visible){outline:2px solid var(--cyan);outline-offset:2px}@supports selector(:has(a)){.card-link:focus-visible{outline:none}}
 .card p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.85rem}
 .card ul{list-style:none}.card ul li{font-size:0.83rem;color:var(--white2);padding:6px 0;border-bottom:1px solid var(--border2);display:flex;align-items:flex-start;gap:10px;line-height:1.6}
 .card ul li:before{content:'→';color:var(--cyan);flex-shrink:0;font-size:0.75rem;margin-top:2px}.card ul li:last-child{border-bottom:none}
@@ -234,6 +235,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .badge.cyan{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,212,255,0.25)}.badge.gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(245,166,35,0.25)}.badge.green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,229,153,0.25)}.badge.red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,82,82,0.25)}.badge.purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,0.25)}
 /* TABS */
 .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2.5rem;overflow-x:auto;gap:0;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.tabs{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--tabs-fl,0px),#000 calc(100% - var(--tabs-fr,0px)),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 var(--tabs-fl,0px),#000 calc(100% - var(--tabs-fr,0px)),transparent 100%)}
 .tabs::-webkit-scrollbar{display:none}
 .tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--white3);font-family:var(--fb);font-size:0.78rem;font-weight:500;letter-spacing:0.3px;text-transform:uppercase;padding:11px 16px;cursor:pointer;margin-bottom:-1px;transition:color 0.2s,border-color 0.2s;white-space:nowrap;scroll-snap-align:start}
 .tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}.tab-btn:hover:not(.active){color:var(--white)}
@@ -242,6 +244,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .accordion{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);margin-bottom:1rem;overflow:hidden;transition:border-color 0.2s}.accordion:hover{border-color:var(--border)}
 .acc-header{padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:1rem;transition:background 0.2s}.acc-header:hover{background:var(--card2)}
 .acc-header h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;line-height:1.2}
+.acc-header .acc-btn{background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:left;cursor:pointer;line-height:inherit}
 .acc-body{padding:1.75rem;border-top:1px solid var(--border2);display:none}.acc-body.open{display:block}
 .acc-body p{font-size:0.9rem;color:var(--white2);line-height:1.9;margin-bottom:1rem;font-weight:300}.acc-body p:last-child{margin-bottom:0}
 .chevron{transition:transform 0.25s;font-size:1rem;color:var(--cyan);flex-shrink:0}.chevron.open{transform:rotate(180deg)}
@@ -279,7 +282,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .vos-val{font-family:var(--fm);font-size:1.1rem;color:var(--cyan);display:block;line-height:1;letter-spacing:0.5px}
 .vos-lbl{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;margin-top:3px;display:block}
 .viz-phase-bar{position:absolute;bottom:0;left:0;right:0;height:40px;background:rgba(4,13,24,0.85);border-top:1px solid var(--border);display:flex;align-items:stretch;gap:0;backdrop-filter:blur(8px)}
-.phase-step{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;background:none;border:0;border-right:1px solid var(--border2);border-radius:0;font-family:var(--fm);font-size:0.6rem;letter-spacing:0.5px;color:var(--white4);text-transform:uppercase;padding:0 4px;transition:color 0.3s,background 0.2s;cursor:pointer;line-height:1.3}
+.phase-step{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;background:none;border:0;border-right:1px solid var(--border2);border-radius:0;font-family:var(--fm);font-size:0.62rem;letter-spacing:0.5px;color:var(--white3);text-transform:uppercase;padding:0 4px;transition:color 0.3s,background 0.2s;cursor:pointer;line-height:1.3}
 .phase-step:last-child{border-right:none}
 .phase-step:hover{color:var(--white2);background:rgba(0,212,255,0.06)}
 .phase-step.active{color:var(--cyan)}
@@ -363,6 +366,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .reps{font-family:var(--fm);color:var(--gold);font-size:0.71rem;flex-shrink:0;min-width:48px}
 /* TRAINING LOG */
 .log-entry{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;margin-bottom:0.75rem;display:flex;gap:1rem;align-items:flex-start;transition:border-color 0.2s}.log-entry:hover{border-color:var(--border)}
+.log-del{background:none;border:0;color:var(--white4);cursor:pointer;font-size:1.1rem;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin:-8px -10px -8px 0;border-radius:var(--r8);transition:color 0.2s}.log-del:hover,.log-del:focus-visible{color:var(--red)}
 .log-date{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--cyan);text-transform:uppercase;min-width:70px;flex-shrink:0}
 .log-content{flex:1}.log-title{font-family:var(--fh);font-size:1.1rem;letter-spacing:1px;margin-bottom:0.25rem}.log-meta{font-size:0.8rem;color:var(--white3);font-family:var(--fm)}.log-notes{font-size:0.83rem;color:var(--white2);margin-top:0.5rem;line-height:1.6}
 /* NUTRITION */
@@ -404,7 +408,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .viz-overlay-stats{grid-template-columns:1fr 1fr;top:8px;right:8px}
   .vos-item{padding:6px 8px}
   .vos-val{font-size:0.95rem}
-  .phase-step{font-size:0.56rem}
+  .phase-step{font-size:0.58rem}
 }
 @media(max-width:480px){
   .hero h1{font-size:3.5rem}
@@ -421,9 +425,10 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .ai-messages{height:calc(100dvh - 300px)}
 }
 /* ACCESSIBILITY */
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.qp:focus-visible,[role="button"]:focus-visible,[role="link"]:focus-visible,#viz3d-container:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.qp:focus-visible,[role="button"]:focus-visible,[role="link"]:focus-visible,[tabindex]:not(.page):focus-visible,#viz3d-container:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 /* Inside overflow:hidden parents (accordion, canvas wrap) an outside ring is clipped — draw it inset */
 .acc-header:focus-visible,#viz3d-container:focus-visible,.phase-step:focus-visible{outline-offset:-3px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
   html{scroll-behavior:auto}
@@ -457,7 +462,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .viz-phase-bar{display:flex!important;height:36px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity}
   .viz-phase-bar::-webkit-scrollbar{display:none}
   .phase-step{scroll-snap-align:start}
-  .phase-step{font-size:0.6rem;letter-spacing:0;min-width:74px;flex:0 0 auto}
+  .phase-step{font-size:0.62rem;letter-spacing:0;min-width:74px;flex:0 0 auto}
 }
 /* Reduced motion: also stop the WebGL stroke loop, not just CSS particles */
 @media (prefers-reduced-motion: reduce){ .ai-dot{animation:none} }
@@ -534,7 +539,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-timers .tlt-opts{display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:1.25rem}
 #page-timers .tlt-opts .form-group{flex:1 1 200px}
 #page-timers .tlt-check{display:inline-flex;align-items:center;gap:9px;font-size:0.85rem;color:var(--white2);min-height:44px;cursor:pointer;user-select:none}
-#page-timers .tlt-check input{width:20px;height:20px;accent-color:var(--cyan);cursor:pointer;margin:0}
+#page-timers .tlt-check input{width:24px;height:24px;accent-color:var(--cyan);cursor:pointer;margin:0}
 #page-timers .tlt-tap{min-height:44px;padding:0 18px}
 
 /* ── transport buttons ── */
@@ -714,6 +719,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-goal-stats dd.gain{color:var(--green)}
 #page-planner .pl-goal-stats dd.slower{color:var(--gold)}
 #page-planner .pl-goal-stats dd.muted{color:var(--white4)}
+#page-planner .pl-nopr{display:inline-block;padding:5px 0}
 #page-planner .pl-to-splits{align-self:flex-start;padding:6px 12px;font-size:0.62rem}
 
 /* ─── predictor ─── */
@@ -1410,7 +1416,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <!-- Search button: initPalette() rewrites the hint and labels for the platform, and the nav script
          hides it while window.openPalette is undefined so it is never a dead control. -->
     <button type="button" class="nav-key-btn tl-pal-navbtn" id="nav-search-btn" aria-label="Search (Cmd+K)" title="Search (Cmd+K)" onclick="if(window.openPalette)openPalette()"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg><span class="tl-pal-navhint" aria-hidden="true">⌘K</span></button>
-    <button class="nav-ai-btn" id="nav-ai-coach-btn" onclick="showPage('ai')">AI Coach ✦</button>
+    <button class="nav-ai-btn" id="nav-ai-coach-btn" onclick="showPage('ai')">AI Coach <span aria-hidden="true">✦</span></button>
     <button class="nav-ai-btn" id="nav-login-btn" onclick="openAuthGate('login')" style="background:var(--navy3);color:var(--cyan);border:1px solid var(--border)">Log In</button>
     <span id="current-username-display" style="font-family:var(--fm);font-size:0.65rem;color:var(--cyan);letter-spacing:0.5px;white-space:nowrap;padding:0 4px"></span>
     <button class="nav-key-btn" id="nav-logout-btn" onclick="doLogout()" title="Log out" style="display:none">⎋</button>
@@ -1424,10 +1430,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="hero-bg"></div>
   <div class="hero-particles" id="hero-particles"></div>
   <p class="hero-eyebrow">A Complete Platform for Competitive Swimmers</p>
-  <h1><span class="l1">TRAIN</span><span class="l2">ELITE.</span><span class="l3">SWIM FAST.</span></h1>
+  <h1><span class="l1">TRAIN</span> <span class="l2">ELITE.</span> <span class="l3">SWIM FAST.</span></h1>
   <p class="hero-desc">AI coaching, 3D biomechanics visualizer, technique library, workout generator, pool-deck timers, race planner, training analytics, race strategy, nutrition, mental performance, taper protocols — everything a competitive swimmer needs.</p>
   <div class="hero-btns">
-    <button class="btn-hero" onclick="showPage('ai')">Talk to AI Coach ✦</button>
+    <button class="btn-hero" onclick="showPage('ai')">Talk to AI Coach <span aria-hidden="true">✦</span></button>
     <button class="btn-hero-ghost" onclick="showPage('visualizer')">3D Visualizer</button>
     <button class="btn-hero-ghost" onclick="showPage('workouts')">Generate Workout</button>
   </div>
@@ -1447,45 +1453,45 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="metric-card"><span class="val">3</span><span class="lbl">Deck Tools</span><span class="sub">Timers, Planner, Analytics</span></div>
   </div>
   <div class="section-eyebrow">Everything You Need</div>
-  <div class="section-title">A COMPLETE<br><span>TRAINING PLATFORM</span></div>
+  <h2 class="section-title">A COMPLETE<br><span>TRAINING PLATFORM</span></h2>
   <p class="section-intro">Built on established sports science and competitive programming.</p>
   <div class="grid-3 reveal">
-    <div class="card" onclick="showPage('visualizer')" style="cursor:pointer;border-color:rgba(168,85,247,0.3)">
+    <div class="card card-clickable" style="border-color:rgba(168,85,247,0.3)">
       <span class="card-icon">🎯</span><div class="card-tag" style="color:var(--purple-text)">Video + 3D Biomechanics</div>
-      <h3>STROKE TECHNIQUE LAB</h3>
+      <h3><a href="#visualizer" class="card-link">STROKE TECHNIQUE LAB</a></h3>
       <p>Elite stroke demos on video, paired with an interactive 3D biomechanics model — slow any movement down, orbit any angle, isolate a single phase.</p>
       <ul><li>Real elite technique video for every stroke</li><li>Joint-by-joint 3D reconstruction</li><li>AI: describe any movement, watch it rebuilt</li><li>Phase-by-phase coaching breakdown</li></ul>
     </div>
-    <div class="card" onclick="showPage('ai')" style="cursor:pointer;border-color:rgba(0,212,255,0.2)">
+    <div class="card card-clickable" style="border-color:rgba(0,212,255,0.2)">
       <span class="card-icon">🤖</span><div class="card-tag" style="color:var(--gold)">Streaming AI ✦</div>
-      <h3>AI SWIM COACH</h3>
+      <h3><a href="#ai" class="card-link">AI SWIM COACH</a></h3>
       <p>Expert-level coaching that streams its answers word by word, instantly — briefed on race strategy, technique, and physiology. Free account required.</p>
       <ul><li>Real-time streaming output</li><li>Full program knowledge</li><li>Race prep & taper advice</li><li>Physiology with real numbers</li></ul>
     </div>
-    <div class="card" onclick="showPage('technique')" style="cursor:pointer">
+    <div class="card card-clickable">
       <span class="card-icon">🏊</span><div class="card-tag">Deep Library</div>
-      <h3>TECHNIQUE LIBRARY</h3>
+      <h3><a href="#technique" class="card-link">TECHNIQUE LIBRARY</a></h3>
       <p>Exhaustive breakdowns — every stroke, every phase, every drill, with elite benchmarks and coaching cues.</p>
       <ul><li>Freestyle, back, breast, fly &amp; IM</li><li>Underwaters, turns and starts</li><li>Drills with elite benchmarks</li><li>Coaching cues for every phase</li></ul>
     </div>
-    <div class="card" onclick="showPage('race')" style="cursor:pointer">
-      <span class="card-icon">🏁</span><div class="card-tag" style="color:var(--gold)">Race Strategy</div><h3>RACE STRATEGY</h3>
+    <div class="card card-clickable">
+      <span class="card-icon">🏁</span><div class="card-tag" style="color:var(--gold)">Race Strategy</div><h3><a href="#race" class="card-link">RACE STRATEGY</a></h3>
       <p>Meet-day planner, split targets, warm-up protocols, event-specific race plans for every distance.</p>
       <ul><li>Meet-day timeline &amp; warm-up protocols</li><li>Event plans for every distance</li><li>Split targets &amp; pacing science</li></ul>
     </div>
-    <div class="card" onclick="showPage('nutrition')" style="cursor:pointer">
-      <span class="card-icon">🥗</span><div class="card-tag" style="color:var(--green)">Nutrition</div><h3>NUTRITION & FUELING</h3>
+    <div class="card card-clickable">
+      <span class="card-icon">🥗</span><div class="card-tag" style="color:var(--green)">Nutrition</div><h3><a href="#nutrition" class="card-link">NUTRITION & FUELING</a></h3>
       <p>Pre-training, intra-session, and recovery nutrition. Race-day fueling and everyday habits for swimmers.</p>
       <ul><li>Daily fueling around AM/PM sessions</li><li>Race-day and between-event eating</li><li>Recovery &amp; hydration protocols</li></ul>
     </div>
-    <div class="card" onclick="showPage('mental')" style="cursor:pointer">
-      <span class="card-icon">🧠</span><div class="card-tag" style="color:var(--purple-text)">Mental Performance</div><h3>MENTAL PERFORMANCE</h3>
+    <div class="card card-clickable">
+      <span class="card-icon">🧠</span><div class="card-tag" style="color:var(--purple-text)">Mental Performance</div><h3><a href="#mental" class="card-link">MENTAL PERFORMANCE</a></h3>
       <p>Visualization protocols, arousal control, race-day anxiety management, focus techniques.</p>
       <ul><li>Visualization protocols</li><li>Arousal &amp; race-anxiety control</li><li>Focus cues and a pre-race routine</li></ul>
     </div>
   </div>
 </div>
-<footer>
+<footer role="contentinfo" aria-label="Site footer">
   <div class="footer-inner">
     <div class="footer-brand"><img src="logo-mark.svg" alt="" width="40" height="40" style="border-radius:9px;display:block;margin-bottom:10px"><h3>TIDE<span>LYNE</span></h3><p>A complete training platform for competitive swimmers. Sports science, AI coaching, 3D biomechanics.</p></div>
     <div class="footer-col"><h4>Learn</h4><ul><li><a href="#technique">Technique Library</a></li><li><a href="#videos">Video Library</a></li><li><a href="#sets">Training Sets</a></li><li><a href="#zones">Training Zones</a></li></ul></div>
@@ -1500,15 +1506,15 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-visualizer">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Stroke Technique Lab</div>
-  <div class="section-title">STROKE <span>VISUALIZER</span></div>
+  <h1 class="section-title">STROKE <span>VISUALIZER</span></h1>
   <p class="section-intro">Watch real elite technique on video, then study the same movement joint-by-joint in the interactive 3D biomechanics lab below.</p>
   <div class="section-eyebrow" style="margin-top:0">Watch It — Real Stroke Demos</div>
   <div class="tabs" style="margin-bottom:1.5rem">
-    <button class="tab-btn active" onclick="switchTab(this,'vd-fr')">🏊 Freestyle</button>
-    <button class="tab-btn" onclick="switchTab(this,'vd-bk')">🔄 Backstroke</button>
-    <button class="tab-btn" onclick="switchTab(this,'vd-br')">🐸 Breaststroke</button>
-    <button class="tab-btn" onclick="switchTab(this,'vd-fly')">🦋 Butterfly</button>
-    <button class="tab-btn" onclick="switchTab(this,'vd-uw')">🌊 Underwater</button>
+    <button class="tab-btn active" onclick="switchTab(this,'vd-fr')"><span aria-hidden="true">🏊 </span>Freestyle</button>
+    <button class="tab-btn" onclick="switchTab(this,'vd-bk')"><span aria-hidden="true">🔄 </span>Backstroke</button>
+    <button class="tab-btn" onclick="switchTab(this,'vd-br')"><span aria-hidden="true">🐸 </span>Breaststroke</button>
+    <button class="tab-btn" onclick="switchTab(this,'vd-fly')"><span aria-hidden="true">🦋 </span>Butterfly</button>
+    <button class="tab-btn" onclick="switchTab(this,'vd-uw')"><span aria-hidden="true">🌊 </span>Underwater</button>
   </div>
   <div class="tab-panel active" id="vd-fr"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="Q0vq-34dWF0" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/Q0vq-34dWF0/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Freestyle · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Freestyle · Demo</span><p>Division I coach breakdown of front crawl technique.</p></div></div></div>
   <div class="tab-panel" id="vd-bk"><div class="video-card" style="max-width:640px"><div class="video-embed"><div class="yt-lite" data-video="YkjOvxHsY1g" data-params=""><img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/YkjOvxHsY1g/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="yt-lite-play" aria-label="Play video: Backstroke · Demo"><span aria-hidden="true">▶</span></button></div></div><div class="video-info"><span class="video-tag">Backstroke · Demo</span><p>Six elements of backstroke with perfect technique.</p></div></div></div>
@@ -1526,18 +1532,18 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="vos-item"><span class="vos-val" id="stat-velocity">—</span><span class="vos-lbl">m/s</span></div>
       <div class="vos-item"><span class="vos-val" id="stat-efficiency">—</span><span class="vos-lbl">Effic.</span></div>
     </div>
-    <div class="viz-phase-bar" id="viz-phase-bar"></div>
+    <div class="viz-phase-bar" id="viz-phase-bar" role="group" aria-label="Stroke phases"></div>
   </div>
   <div class="viz-controls" style="margin-top:1rem">
-    <button class="viz-btn active" onclick="setStroke3D('freestyle',this)">🏊 Freestyle</button>
-    <button class="viz-btn" onclick="setStroke3D('backstroke',this)">🔄 Backstroke</button>
-    <button class="viz-btn" onclick="setStroke3D('breaststroke',this)">🐸 Breaststroke</button>
-    <button class="viz-btn" onclick="setStroke3D('butterfly',this)">🦋 Butterfly</button>
-    <button class="viz-btn" onclick="setStroke3D('dolphin',this)">🌊 Dolphin Kick</button>
+    <button class="viz-btn active" onclick="setStroke3D('freestyle',this)"><span aria-hidden="true">🏊 </span>Freestyle</button>
+    <button class="viz-btn" onclick="setStroke3D('backstroke',this)"><span aria-hidden="true">🔄 </span>Backstroke</button>
+    <button class="viz-btn" onclick="setStroke3D('breaststroke',this)"><span aria-hidden="true">🐸 </span>Breaststroke</button>
+    <button class="viz-btn" onclick="setStroke3D('butterfly',this)"><span aria-hidden="true">🦋 </span>Butterfly</button>
+    <button class="viz-btn" onclick="setStroke3D('dolphin',this)"><span aria-hidden="true">🌊 </span>Dolphin Kick</button>
   </div>
   <div class="viz-controls" style="margin-top:10px;align-items:stretch">
     <input class="form-input" id="motion-prompt" maxlength="300" aria-label="Describe a swimming movement to reconstruct in 3D" placeholder='✦ Describe a movement, e.g. "flip turn"' style="flex:1;min-width:230px" onkeydown="if(event.key==='Enter')generateMotion()">
-    <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple-text);font-weight:600">✦ AI Reconstruct</button>
+    <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple-text);font-weight:600"><span aria-hidden="true">✦ </span>AI Reconstruct</button>
   </div>
   <div id="motion-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px">Try "breaststroke pullout off the wall" or "backstroke start" — the lab rebuilds it joint by joint.</div>
   <div class="viz-controls" style="margin-top:8px">
@@ -1559,9 +1565,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="viz-controls" style="margin-top:8px">
     <button class="viz-btn active" id="vbtn-play" onclick="togglePlay3D()">⏸ Pause</button>
-    <button class="viz-btn" data-speed onclick="setSpeed3D(0.3,this)">0.3× Slow</button>
-    <button class="viz-btn active" data-speed onclick="setSpeed3D(1,this)">1× Normal</button>
-    <button class="viz-btn" data-speed onclick="setSpeed3D(2,this)">2× Fast</button>
+    <button class="viz-btn" data-speed aria-pressed="false" onclick="setSpeed3D(0.3,this)">0.3× Slow</button>
+    <button class="viz-btn active" data-speed aria-pressed="true" onclick="setSpeed3D(1,this)">1× Normal</button>
+    <button class="viz-btn" data-speed aria-pressed="false" onclick="setSpeed3D(2,this)">2× Fast</button>
     <button class="viz-btn active" id="vbtn-forces" onclick="toggleForces3D(this)">Forces: On</button>
   </div>
   <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px">🖱 Drag to orbit · Scroll to zoom · Tap a phase below to jump to it</p>
@@ -1583,7 +1589,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="divider"></div>
   <div class="section-eyebrow">AI Technique Analysis</div>
-  <div class="section-title" style="font-size:2.5rem">ASK THE <span>VISUALIZER</span></div>
+  <h2 class="section-title" style="font-size:2.5rem">ASK THE <span>VISUALIZER</span></h2>
   <p class="section-intro" style="margin-bottom:1.5rem">Ask the AI to explain any biomechanical concept with detailed force analysis, phases, and coaching cues — streamed in real time. Free account required.</p>
   <div class="imggen-wrap">
     <div class="imggen-grid">
@@ -1636,17 +1642,17 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-technique">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Olympic-Level Execution</div>
-  <div class="section-title">TECHNIQUE <span>LIBRARY</span></div>
+  <h1 class="section-title">TECHNIQUE <span>LIBRARY</span></h1>
   <p class="section-intro">Complete breakdowns of every stroke, phase, drill, and race element — with elite benchmarks, exact numbers, and the physiology behind every movement.</p>
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab(this,'t-fr')">🏊 Freestyle</button>
-    <button class="tab-btn" onclick="switchTab(this,'t-bk')">🔄 Backstroke</button>
-    <button class="tab-btn" onclick="switchTab(this,'t-br')">🐸 Breaststroke</button>
-    <button class="tab-btn" onclick="switchTab(this,'t-fly')">🦋 Butterfly</button>
-    <button class="tab-btn" onclick="switchTab(this,'t-uw')">🌊 Underwater</button>
-    <button class="tab-btn" onclick="switchTab(this,'t-turns')">🔁 Turns</button>
-    <button class="tab-btn" onclick="switchTab(this,'t-starts')">⚡ Starts</button>
-    <button class="tab-btn" onclick="switchTab(this,'t-im')">🏆 IM</button>
+    <button class="tab-btn active" onclick="switchTab(this,'t-fr')"><span aria-hidden="true">🏊 </span>Freestyle</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-bk')"><span aria-hidden="true">🔄 </span>Backstroke</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-br')"><span aria-hidden="true">🐸 </span>Breaststroke</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-fly')"><span aria-hidden="true">🦋 </span>Butterfly</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-uw')"><span aria-hidden="true">🌊 </span>Underwater</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-turns')"><span aria-hidden="true">🔁 </span>Turns</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-starts')"><span aria-hidden="true">⚡ </span>Starts</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-im')"><span aria-hidden="true">🏆 </span>IM</button>
   </div>
   <div class="tab-panel active" id="t-fr">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>ENTRY & HIGH ELBOW CATCH</h4><span class="chevron open">▾</span></div>
@@ -1734,7 +1740,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-videos">
 <div class="section-wrap">
   <div class="section-eyebrow">Learn by Watching</div>
-  <div class="section-title">TECHNIQUE <span>VIDEO LIBRARY</span></div>
+  <h1 class="section-title">TECHNIQUE <span>VIDEO LIBRARY</span></h1>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'v-fr')">Freestyle</button>
     <button class="tab-btn" onclick="switchTab(this,'v-bk')">Backstroke</button>
@@ -1775,7 +1781,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-sets">
 <div class="section-wrap">
   <div class="section-eyebrow">Meso-Cycle Programming</div>
-  <div class="section-title">TRAINING <span>SET LIBRARY</span></div>
+  <h1 class="section-title">TRAINING <span>SET LIBRARY</span></h1>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'s-aet')">AeT Work</button>
     <button class="tab-btn" onclick="switchTab(this,'s-thresh')">Threshold</button>
@@ -1786,7 +1792,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel active" id="s-aet">
     <div class="info-box">AeT sets are the backbone of Meso I and majority of Meso II. <strong>80%+ of all training volume lives in this zone.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>Set</th><th>Details</th><th>Purpose & Notes</th></tr></thead><tbody>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose & Notes</th></tr></thead><tbody>
       <tr><td>20×50 FR @ :55</td><td>Rd 1: Sub-thresh · Rd 2: AeT<br>Benchmark check on Rd 2</td><td><span class="ptag">Aerobic Base Benchmark</span>Primary testing set. HR 25–27 Rd 1, AeT ceiling Rd 2.</td></tr>
       <tr><td>12×200 FR @ 3:00</td><td>Reps 1–2: Cruise · 3–12: AeT<br>HR 24–28 · 2,400m</td><td><span class="ptag">Volume Load</span>Flagship Meso II aerobic set.</td></tr>
       <tr><td>5×100 BK ×5 Rds @ 1:25</td><td>60–90s between rounds<br>Rd 1 with the Duck drill (Technique › Backstroke)</td><td><span class="ptag">Stroke-Specific AeT</span>Backstroke aerobic maintenance.</td></tr>
@@ -1794,28 +1800,28 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="s-thresh">
     <div class="warn-box">Threshold sets first appear Meso I Week 4. <strong>Base before threshold — always.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>Set</th><th>Details</th><th>Purpose</th></tr></thead><tbody>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose</th></tr></thead><tbody>
       <tr><td>6×400 FR @ 6:00</td><td>Threshold · HR 28–30 · 2,400m</td><td><span class="ptag">Threshold Introduction</span>Week 4 first threshold.</td></tr>
       <tr><td>3 RDs: 3×400 Des</td><td>60s rest · Rd 1: 6:00 / Rd 2: 5:45 / Rd 3: 5:30</td><td><span class="ptag">Progressive Pressure</span>Each round targets faster pace.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-kick">
     <div class="info-box">Kick training in every session. <strong>Every missed kick set is speed left on the table.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>Set</th><th>Details</th><th>Purpose</th></tr></thead><tbody>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose</th></tr></thead><tbody>
       <tr><td>10×100 FR Kick</td><td>A:1:45 B:1:50 C:2:00 · No board</td><td><span class="ptag">Aerobic Kick Base</span>Correct body position required.</td></tr>
       <tr><td>Kick Pyramid</td><td>8×100 @2:00 snorkel → 6×100 @1:45 → 4×100 @1:40 → 2×100 @1:35</td><td><span class="ptag">Threshold Kick</span>Most demanding kick set.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-tech">
     <div class="info-box">Tech sets require <strong>maximum awareness over maximum effort.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>Set</th><th>Details</th><th>Purpose</th></tr></thead><tbody>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose</th></tr></thead><tbody>
       <tr><td>10×50 FR Padd+Snorkel</td><td>Reps 1–5: Des to Golf BA · 6–10: Hold</td><td><span class="ptag">Golf Score Tech</span>Descend to Best Average, lock it in.</td></tr>
       <tr><td>UW 15m IM Drill @ 1:00</td><td>Max depth · tight streamline · every session</td><td><span class="ptag">Underwater Dev</span>Single most consequential drill.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-warmup">
     <div class="info-box">Warm-up is programming — not filler. <strong>Each element serves a specific physiological function.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>Element</th><th>Prescription</th><th>Purpose</th></tr></thead><tbody>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Element</th><th scope="col">Prescription</th><th scope="col">Purpose</th></tr></thead><tbody>
       <tr><td>Easy swim + IM 400–600m</td><td>HR below 22</td><td><span class="ptag">Thermal + Neural Priming</span>Raises core temp 1–2°C.</td></tr>
       <tr><td>Kick on back 4–8×50</td><td>Fins, dolphin or flutter</td><td><span class="ptag">Hip Activation</span>Fin overspeed primes kick velocity.</td></tr>
       <tr><td>Build swims 4×50</td><td>Build to ~80%</td><td><span class="ptag">Lactate Priming</span>Primes clearance system for main set.</td></tr>
@@ -1823,7 +1829,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="s-speed">
     <div class="warn-box">Speed work is Zone 4–5. <strong>Full recovery mandatory — 2:00–5:00 rest per 25m of effort.</strong></div>
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>Set</th><th>Details</th><th>Purpose</th></tr></thead><tbody>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose</th></tr></thead><tbody>
       <tr><td>10×25 Sprint</td><td>Full rest 2–3 min · max effort each rep</td><td><span class="ptag">Pure Velocity</span>Maximum neuromuscular output.</td></tr>
       <tr><td>8×50 Race Pace</td><td>Target 100 race pace · 3–4 min rest</td><td><span class="ptag">Race-Pace Specificity</span>Trains exact neuromuscular patterns.</td></tr>
     </tbody></table></div>
@@ -1835,7 +1841,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-dryland">
 <div class="section-wrap">
   <div class="section-eyebrow">Strength & Conditioning</div>
-  <div class="section-title">DRYLAND <span>PROGRAMMING</span></div>
+  <h1 class="section-title">DRYLAND <span>PROGRAMMING</span></h1>
   <p class="section-intro">Four principles that transfer directly to water: scapular stability, rotational power, hip hinge strength, and core anti-rotation.</p>
   <div class="dl-grid reveal">
     <div class="dl-card"><div class="dl-day">Day 1 — Monday</div><h4>PULL STRENGTH</h4><ul>
@@ -1856,7 +1862,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-workouts">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">AI-Powered · Streaming</div>
-  <div class="section-title">WORKOUT <span>GENERATOR</span></div>
+  <h1 class="section-title">WORKOUT <span>GENERATOR</span></h1>
   <p class="section-intro">Configure your session and the AI builds a complete, printable workout — streaming in real time as it writes. Free account required.</p>
   <div class="gen-form">
     <div class="gen-row">
@@ -1882,7 +1888,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div id="gen-actions" style="margin-top:1.5rem;display:none;gap:10px;flex-wrap:wrap">
       <button class="btn-sm" onclick="window.print()">🖨 Print Workout</button>
       <button class="btn-ghost-sm" onclick="generateWorkout()">↺ Regenerate</button>
-      <button class="btn-ghost-sm" onclick="showPage('ai')">Ask AI Coach ✦</button>
+      <button class="btn-ghost-sm" onclick="showPage('ai')">Ask AI Coach <span aria-hidden="true">✦</span></button>
     </div>
   </div>
 </div>
@@ -1892,7 +1898,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-calculator">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Performance Tools</div>
-  <div class="section-title">RACE & PACE <span>CALCULATOR</span></div>
+  <h1 class="section-title">RACE & PACE <span>CALCULATOR</span></h1>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'c-golf')">Golf Score</button>
     <button class="tab-btn" onclick="switchTab(this,'c-splits')">Race Splits</button>
@@ -1909,7 +1915,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       </div>
       <div class="calc-panel"><h4>SCORE GUIDE</h4>
         <div class="info-box" style="margin-top:0">Golf Score = Split (sec) + Stroke Count. Lower is always better.</div>
-        <div class="table-wrap" style="margin-top:1rem"><table class="data-table"><thead><tr><th>Score</th><th>Level</th></tr></thead><tbody>
+        <div class="table-wrap" style="margin-top:1rem"><table class="data-table"><thead><tr><th scope="col">Score</th><th scope="col">Level</th></tr></thead><tbody>
           <tr><td style="color:var(--green)">Below 55</td><td>World Class / National Elite</td></tr>
           <tr><td style="color:var(--cyan)">55–62</td><td>High Performance / Senior National</td></tr>
           <tr><td style="color:var(--gold)">62–70</td><td>Competitive Age-Group / Senior Club</td></tr>
@@ -1980,8 +1986,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-profile">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Personal Records</div>
-  <div class="section-title">MY <span>PRs</span></div>
+  <h1 class="section-title">MY <span>PRs</span></h1>
   <p class="section-intro">Click any time field and type your personal record. All data saved locally in your browser — never sent anywhere.</p>
+  <span id="pr-format-hint" class="sr-only">Enter the time as minutes:seconds.hundredths, for example 1:02.45</span>
   <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:2rem">
     <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
       <div style="width:58px;height:58px;border-radius:50%;background:var(--cyan-dim);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0">🏊</div>
@@ -2010,7 +2017,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-log">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Session Tracker</div>
-  <div class="section-title">TRAINING <span>LOG</span></div>
+  <h1 class="section-title">TRAINING <span>LOG</span></h1>
   <p class="section-intro">All log data is saved locally in your browser — it never leaves your device. Your most recent 2,000 sessions are kept; export a backup from My PRs to archive more.</p>
   <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:1.5rem">
     <div style="font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem;color:var(--cyan)">LOG A SESSION</div>
@@ -2034,6 +2041,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="btn-ghost-sm" onclick="clearLog()">Clear All</button>
   </div>
   <div id="log-entries"></div>
+  <p id="log-status" class="sr-only" role="status" aria-live="polite"></p>
   <div id="log-stats" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;display:none">
     <div style="font-family:var(--fh);font-size:1.1rem;letter-spacing:1px;margin-bottom:1rem;color:var(--cyan)">30-DAY SUMMARY</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem">
@@ -2050,7 +2058,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-nutrition">
 <div class="section-wrap">
   <div class="section-eyebrow">Fuel to Perform</div>
-  <div class="section-title">NUTRITION & <span>FUELING</span></div>
+  <h1 class="section-title">NUTRITION & <span>FUELING</span></h1>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'n-daily')">Daily Fueling</button>
     <button class="tab-btn" onclick="switchTab(this,'n-race')">Race Day</button>
@@ -2089,7 +2097,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-race">
 <div class="section-wrap">
   <div class="section-eyebrow">Compete at Your Best</div>
-  <div class="section-title">RACE <span>STRATEGY</span></div>
+  <h1 class="section-title">RACE <span>STRATEGY</span></h1>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'r-meetday')">Meet Day</button>
     <button class="tab-btn" onclick="switchTab(this,'r-warmup')">Warm-Up</button>
@@ -2122,7 +2130,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="warn-box"><strong>Total: about 1,200–1,400m.</strong> Anything past ~1,800m is a training set before your race.</div>
   </div>
   <div class="tab-panel" id="r-events">
-    <div class="table-wrap"><table class="data-table"><thead><tr><th>Event</th><th>Strategy</th><th>Key Tactic</th><th>Common Error</th></tr></thead><tbody>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Event</th><th scope="col">Strategy</th><th scope="col">Key Tactic</th><th scope="col">Common Error</th></tr></thead><tbody>
       <tr><td>50 Free</td><td>All-out from start</td><td>Clean start, max UW, no breathing</td><td>Tension in the stroke</td></tr>
       <tr><td>100 Free</td><td>95% out, hold 75m, sprint home</td><td>Minimal breathing first 50</td><td>Going out at 100% and dying</td></tr>
       <tr><td>200 Free</td><td>Negative split — back 100 faster</td><td>First 50 controlled, build 100–150</td><td>Going out too fast</td></tr>
@@ -2140,7 +2148,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-taper">
 <div class="section-wrap">
   <div class="section-eyebrow">Peak for Competition</div>
-  <div class="section-title">TAPER & <span>RECOVERY</span></div>
+  <h1 class="section-title">TAPER & <span>RECOVERY</span></h1>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'tp-protocol')">Taper Protocol</button>
     <button class="tab-btn" onclick="switchTab(this,'tp-recovery')">Recovery Modalities</button>
@@ -2184,7 +2192,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-mental">
 <div class="section-wrap">
   <div class="section-eyebrow">The Psychological Edge</div>
-  <div class="section-title">MENTAL <span>PERFORMANCE</span></div>
+  <h1 class="section-title">MENTAL <span>PERFORMANCE</span></h1>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'m-viz')">Visualization</button>
     <button class="tab-btn" onclick="switchTab(this,'m-arousal')">Arousal Control</button>
@@ -2230,7 +2238,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-injury">
 <div class="section-wrap">
   <div class="section-eyebrow">Stay in the Water</div>
-  <div class="section-title">INJURY <span>PREVENTION</span></div>
+  <h1 class="section-title">INJURY <span>PREVENTION</span></h1>
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab(this,'i-shoulder')">Shoulder</button>
     <button class="tab-btn" onclick="switchTab(this,'i-knee')">Knee</button>
@@ -2344,7 +2352,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-season">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Time-Aware</div>
-  <div class="section-title">SEASON & <span>MEET CALENDAR</span></div>
+  <h1 class="section-title">SEASON & <span>MEET CALENDAR</span></h1>
   <p class="section-intro">Reads today's date to tell you where you are in the swim season — short course or long course, and what's coming up on the national calendar.</p>
   <div id="season-now-card" class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:1.5rem">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1rem">
@@ -2358,13 +2366,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="section-eyebrow" id="season-calendar-eyebrow" style="margin-top:0">National Meet Calendar</div>
   <div class="warn-box" id="season-archive-note" style="display:none"></div>
-  <div class="table-wrap"><table class="data-table" id="season-meet-table"><thead><tr><th>Meet</th><th>Dates</th><th>Course</th><th>Status</th></tr></thead><tbody>
+  <div class="table-wrap"><table class="data-table" id="season-meet-table"><thead><tr><th scope="col">Meet</th><th scope="col">Dates</th><th scope="col">Course</th><th scope="col">Status</th></tr></thead><tbody>
     <!-- filled by JS using real dates, with live countdown/status -->
   </tbody></table></div>
   <p id="season-calendar-note" style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;line-height:1.6">Dates reflect the published USA Swimming national events calendar and are subject to official updates — always confirm with usaswimming.org before planning travel.</p>
   <div class="divider"></div>
   <div class="section-eyebrow">Cuts & Motivational Standards</div>
-  <div class="section-title" style="font-size:2.2rem">FUTURES, JUNIORS <span>& NATIONAL CUTS</span></div>
+  <h2 class="section-title" style="font-size:2.2rem">FUTURES, JUNIORS <span>& NATIONAL CUTS</span></h2>
   <div class="warn-box"><strong>Exact cut times aren't shown here on purpose.</strong> Futures, Speedo Junior Nationals, Toyota Nationals, and the B/BB/A/AA/AAA/AAAA Motivational Standards are each a full table of times split by event, age group, gender, and course (SCY/LCM) — and they get revised. Rather than risk showing you a stale or wrong number for a swim that matters, this links straight to the official current standard.</div>
   <div class="grid-2">
     <div class="card">
@@ -2400,7 +2408,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-ai">
 <div class="section-wrap narrow" style="padding:1.75rem 2rem 0.75rem;max-width:1200px">
   <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
-    <div class="section-title" style="font-size:2.2rem;margin-bottom:0.5rem">AI SWIM <span>COACH</span></div>
+    <h1 class="section-title" style="font-size:2.2rem;margin-bottom:0.5rem">AI SWIM <span>COACH</span></h1>
     <span style="font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase">Streaming · Free account · 20 msgs / 5 hrs</span>
   </div>
 </div>
@@ -2412,13 +2420,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="ai-header-text"><h3>COACH AI</h3><p>Expert coaching knowledge · Streaming · Free account</p></div>
       </div>
       <div class="ai-mode-btns">
-        <button class="ai-mode-btn active" id="mode-coach" onclick="setMode('coach',this)">🏊 Coaching</button>
-        <button class="ai-mode-btn" id="mode-tech" onclick="setMode('technique',this)">⚙️ Technique</button>
-        <button class="ai-mode-btn" id="mode-race" onclick="setMode('race',this)">🏁 Race</button>
-        <button class="ai-mode-btn" id="mode-science" onclick="setMode('science',this)">🔬 Science</button>
-        <button class="ai-mode-btn" id="mode-nutrition" onclick="setMode('nutrition',this)">🥗 Nutrition</button>
-        <button class="ai-mode-btn" id="mode-mental" onclick="setMode('mental',this)">🧠 Mental</button>
-        <button class="ai-mode-btn" id="mode-clear" onclick="clearChat()">✕ Clear</button>
+        <button class="ai-mode-btn active" id="mode-coach" aria-pressed="true" onclick="setMode('coach',this)"><span aria-hidden="true">🏊 </span>Coaching</button>
+        <button class="ai-mode-btn" id="mode-tech" aria-pressed="false" onclick="setMode('technique',this)"><span aria-hidden="true">⚙️ </span>Technique</button>
+        <button class="ai-mode-btn" id="mode-race" aria-pressed="false" onclick="setMode('race',this)"><span aria-hidden="true">🏁 </span>Race</button>
+        <button class="ai-mode-btn" id="mode-science" aria-pressed="false" onclick="setMode('science',this)"><span aria-hidden="true">🔬 </span>Science</button>
+        <button class="ai-mode-btn" id="mode-nutrition" aria-pressed="false" onclick="setMode('nutrition',this)"><span aria-hidden="true">🥗 </span>Nutrition</button>
+        <button class="ai-mode-btn" id="mode-mental" aria-pressed="false" onclick="setMode('mental',this)"><span aria-hidden="true">🧠 </span>Mental</button>
+        <button class="ai-mode-btn" id="mode-clear" onclick="clearChat()"><span aria-hidden="true">✕ </span>Clear</button>
       </div>
     </div>
     <div class="ai-messages" id="ai-messages">
@@ -2452,7 +2460,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-timers">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Pool-Deck Tools</div>
-  <div class="section-title">SWIM <span>TIMERS</span></div>
+  <h1 class="section-title">SWIM <span>TIMERS</span></h1>
   <p class="section-intro">A stroke-rate metronome, a work/rest circuit timer and a pace clock with send-off and split tools. Big numbers, big buttons, sound — and nothing leaves your device.</p>
 
   <div class="tlt-soundbar">
@@ -2520,7 +2528,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="warn-box"><strong>Elite race ranges, not training targets.</strong> These are the rates world-class swimmers hold in the free-swimming part of a race, measured in published race analyses. Most training is swum well below race rate; use these to feel what race tempo is, to set race-pace reps, and to see where your own rate sits — not as a daily default.</div>
     <div class="table-wrap">
       <table class="data-table tlt-preset-table">
-        <thead><tr><th>Event</th><th>Cycles / min</th><th>s per cycle</th><th>Strokes / min<br><span class="tlt-th-sub">single-arm, free &amp; back</span></th><th><span class="tlt-vh">Load into the tempo trainer</span></th></tr></thead>
+        <thead><tr><th scope="col">Event</th><th scope="col">Cycles / min</th><th scope="col">s per cycle</th><th scope="col">Strokes / min<br><span class="tlt-th-sub">single-arm, free &amp; back</span></th><th scope="col"><span class="tlt-vh">Load into the tempo trainer</span></th></tr></thead>
         <tbody id="tlt-preset-body"></tbody>
       </table>
     </div>
@@ -2621,7 +2629,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       </div>
       <div class="calc-panel"><h4>LEAVE TIMES</h4>
         <div id="tlt-so-summary" class="tlt-so-summary">Enter a set to list every send-off on the clock.</div>
-        <div class="table-wrap tlt-hidden" id="tlt-so-wrap"><table class="data-table tlt-num-table"><thead><tr><th>Rep</th><th>Leave (clock)</th><th>Finish</th><th>Rest</th></tr></thead><tbody id="tlt-so-body"></tbody></table></div>
+        <div class="table-wrap tlt-hidden" id="tlt-so-wrap"><table class="data-table tlt-num-table" aria-label="Send-off schedule"><thead><tr><th scope="col">Rep</th><th scope="col">Leave (clock)</th><th scope="col">Finish</th><th scope="col">Rest</th></tr></thead><tbody id="tlt-so-body"></tbody></table></div>
         <div class="tlt-row-actions"><button type="button" class="btn-ghost-sm tlt-hidden" id="tlt-so-copy" onclick="tlt_copy('so')">Copy as text</button></div>
         <textarea id="tlt-so-text" class="tlt-copytext" aria-hidden="true" tabindex="-1" readonly></textarea>
       </div>
@@ -2640,7 +2648,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="tlt-sp-opts"><div class="form-group"><label for="tlt-sp-dist">Split distance (m or yd) — for pace per 100</label><input class="form-input" type="number" id="tlt-sp-dist" min="0" max="1500" step="1" value="50" inputmode="numeric"></div></div>
       <div class="tlt-status" id="tlt-sp-status" role="status" aria-live="polite"></div>
       <p class="tlt-hint">Space bar starts, then records a split on each press. Stop records the final split. Times come from the device's high-resolution clock, so a hidden screen does not drift them.</p>
-      <div class="table-wrap tlt-hidden" id="tlt-sp-wrap"><table class="data-table tlt-num-table"><thead><tr><th>#</th><th>Cumulative</th><th>Split</th><th>Δ prev</th><th>Per 100</th><th>Note</th></tr></thead><tbody id="tlt-sp-body"></tbody></table></div>
+      <div class="table-wrap tlt-hidden" id="tlt-sp-wrap"><table class="data-table tlt-num-table" aria-label="Recorded splits"><thead><tr><th scope="col">#</th><th scope="col">Cumulative</th><th scope="col">Split</th><th scope="col">Δ prev</th><th scope="col">Per 100</th><th scope="col">Note</th></tr></thead><tbody id="tlt-sp-body"></tbody></table></div>
       <div class="tlt-sp-summary" id="tlt-sp-summary"></div>
       <textarea id="tlt-sp-text" class="tlt-copytext" aria-hidden="true" tabindex="-1" readonly></textarea>
     </div>
@@ -2652,7 +2660,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-planner">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Plan the Swim</div>
-  <div class="section-title">RACE <span>PLANNER</span></div>
+  <h1 class="section-title">RACE <span>PLANNER</span></h1>
   <p class="section-intro">Set goal times against your PRs, see what one swim implies about the others, plan every length of a race, and count down to the meet. Everything here saves in this browser only and is included in the <a href="#profile">My PRs</a> backup.</p>
   <div class="tabs">
     <button class="tab-btn active" id="pl-tab-goals" onclick="switchTab(this,'pl-goals')">Goal Times</button>
@@ -2782,7 +2790,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-analytics">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Training Analytics</div>
-  <div class="section-title">VOLUME, CONSISTENCY <span>&amp; EFFICIENCY</span></div>
+  <h1 class="section-title">VOLUME, CONSISTENCY <span>&amp; EFFICIENCY</span></h1>
   <p class="section-intro">Everything on this page is computed in your browser from the Training Log — weekly volume, consistency, intensity distribution and a set of rule-based observations — plus three pool-deck efficiency calculators. Distances are shown in whatever unit you log (meters or yards). Nothing is sent anywhere.</p>
 
   <div class="an-toolbar">
@@ -3022,7 +3030,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="page" id="page-updates">
 <div class="section-wrap narrow">
   <div class="section-eyebrow">Release Notes</div>
-  <div class="section-title">WHAT'S <span>NEW</span></div>
+  <h1 class="section-title">WHAT'S <span>NEW</span></h1>
   <p class="section-intro">Every Tidelyne release, newest first — what was added, what got better, what was fixed. New versions download in the background; when one lands you get a small prompt to reload, never an interruption mid-set.</p>
 
   <div class="tl-upd-app" id="tl-upd-app">
@@ -3113,6 +3121,7 @@ function showAuthScreen(name) {
     var el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
+  document.querySelectorAll('#access-gate [aria-invalid]').forEach(function(i){ i.removeAttribute('aria-invalid'); i.removeAttribute('aria-describedby'); });
   var gate = document.getElementById('access-gate'), shown = document.getElementById('screen-' + name);
   if (gate && gate.style.display === 'flex' && shown) {
     var first = shown.querySelector('input');
@@ -3125,6 +3134,10 @@ function showAuthError(screenPrefix, message) {
   el.style.color = 'var(--red)'; // reset — success messages recolor it green
   el.textContent = message;
   el.style.display = 'block';
+  // Flag the screen's fields so assistive tech links them to the message
+  document.querySelectorAll('#screen-' + screenPrefix + ' input:not([type="checkbox"])').forEach(function(i){
+    i.setAttribute('aria-invalid', 'true'); i.setAttribute('aria-describedby', el.id);
+  });
 }
 // Escape closes the auth overlay; so does clicking the dark backdrop.
 document.addEventListener('keydown', function(e){
@@ -3256,7 +3269,7 @@ async function initSupabaseAuth(){
 document.addEventListener('DOMContentLoaded', initSupabaseAuth);
 </script>
 <div id="access-gate" onclick="if(event.target===this)closeAuthGate()" style="position:fixed;inset:0;background:rgba(4,13,24,0.94);z-index:9998;display:none">
-  <button type="button" onclick="closeAuthGate()" title="Close" style="position:fixed;top:8px;right:8px;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:none;border:none;color:var(--white3);font-size:1.6rem;cursor:pointer;line-height:1;z-index:1">✕</button>
+  <button type="button" onclick="closeAuthGate()" aria-label="Close sign-in dialog" title="Close" style="position:fixed;top:8px;right:8px;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:none;border:none;color:var(--white3);font-size:1.6rem;cursor:pointer;line-height:1;z-index:1"><span aria-hidden="true">✕</span></button>
   <div class="auth-card-wrap" style="max-width:440px;width:100%;margin:auto">
   <!-- LOGIN -->
   <div id="screen-login" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
@@ -3268,7 +3281,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Password</label>
       <input id="login-password" type="password" autocomplete="current-password" class="form-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button id="login-btn" onclick="doLogin()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">LOG IN →</button>
-    <p id="login-error" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
+    <p id="login-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p class="auth-links" style="font-size:0.82rem;color:var(--white3)">
       <button type="button" class="tl-linkbtn" onclick="showAuthScreen('forgot')">Forgot password?</button>
       <button type="button" class="tl-linkbtn" onclick="showAuthScreen('signup')">Create an account</button>
@@ -3290,7 +3303,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     </label>
     <button id="signup-btn" onclick="doSignup()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.6rem">CREATE ACCOUNT →</button>
     <p style="font-size:0.72rem;color:var(--white4);text-align:left;line-height:1.5;margin-bottom:0.85rem">By creating an account you agree to our <a href="terms.html" target="_blank" rel="noopener" style="color:var(--cyan)">Terms of Use</a> and <a href="privacy.html" target="_blank" rel="noopener" style="color:var(--cyan)">Privacy Policy</a>.</p>
-    <p id="signup-error" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
+    <p id="signup-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><span>Already have an account?</span> <button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Log in</button></p>
   </div>
   <!-- FORGOT PASSWORD -->
@@ -3300,7 +3313,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Email</label>
       <input id="forgot-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doForgotPassword()"></div>
     <button onclick="doForgotPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SEND RESET LINK →</button>
-    <p id="forgot-msg" style="font-family:var(--fm);font-size:0.78rem;letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
+    <p id="forgot-msg" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.78rem;letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
     <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Back to login</button></p>
   </div>
   </div>
@@ -3319,7 +3332,7 @@ function escapeHTML(s){
 // showPage(), which sets the hash (or re-activates on a same-page click).
 // This makes every section keyboard-reachable, deep-linkable, Back-button
 // friendly, and gives each view its own crawlable title.
-function activatePage(name){
+function activatePage(name,opts){
   if(!document.getElementById('page-'+name)){ // guard unknown/empty
     // An in-page anchor (the skip link's #main) must move focus, not bounce
     // a keyboard user to Home: focus it and put the current view's hash back.
@@ -3349,7 +3362,7 @@ function activatePage(name){
     const smooth=!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
     window.scrollTo({top:0,behavior:smooth?'smooth':'auto'});
     // Move focus to the new view for screen-reader/keyboard users.
-    if(page){ page.setAttribute('tabindex','-1'); try{ page.focus({preventScroll:true}); }catch(e){ page.focus(); } }
+    if(page&&!(opts&&opts.focus===false)){ page.setAttribute('tabindex','-1'); try{ page.focus({preventScroll:true}); }catch(e){ page.focus(); } }
   }
   if(typeof setPageTitle==='function') setPageTitle(name);
   initReveal();
@@ -3360,6 +3373,7 @@ function activatePage(name){
   }
   if (name === 'season' && typeof renderSeasonPage === 'function') {
     renderSeasonPage();
+    if (typeof markNewTabLinks === 'function') markNewTabLinks(page);
   }
   // Feature pages register window.onShow_<page> to refresh when activated.
   const hook=window['onShow_'+name]; if(typeof hook==='function'){ try{ hook(); }catch(e){ console.error(e); } }
@@ -3378,7 +3392,7 @@ function showPageTab(page, tabId){
   if(btn) switchTab(btn, tabId);
 }
 window.addEventListener('hashchange', function(){ activatePage(location.hash.slice(1)||'home'); });
-document.addEventListener('DOMContentLoaded', function(){ activatePage(location.hash.slice(1)||'home'); });
+document.addEventListener('DOMContentLoaded', function(){ activatePage(location.hash.slice(1)||'home',{focus:false}); }); // initial load: leave focus at the top so the skip link and nav come first
 const PAGE_TITLES={
   home:'Tidelyne — Swimming Technique & Training Tools',
   technique:'Swimming Technique Library — Freestyle, Back, Breast, Fly',
@@ -3407,58 +3421,118 @@ function setPageTitle(name){
   document.title = PAGE_TITLES[name] || 'Tidelyne';
 }
 function switchTab(btn,id){
-  btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');});
-  btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');b.setAttribute('tabindex','-1');});
+  btn.classList.add('active'); btn.setAttribute('aria-selected','true'); btn.setAttribute('tabindex','0');
   const panel=document.getElementById(id); if(!panel)return;
   panel.parentElement.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   panel.classList.add('active');
 }
 function toggleAcc(header){
+  header=header.closest('.acc-header')||header;
   const body=header.nextElementSibling, chev=header.querySelector('.chevron');
   const open=body.classList.toggle('open');
   if(chev) chev.classList.toggle('open',open);
-  header.setAttribute('aria-expanded', open?'true':'false');
+  (header.querySelector('.acc-btn')||header).setAttribute('aria-expanded', open?'true':'false');
 }
 // ─── ACCESSIBILITY UPGRADES (applied once on load) ────────────────────────
 // Centralizes the keyboard/ARIA fixes so the markup stays lean: makes
 // accordions, tab strips, AI quick-prompts and clickable cards operable by
 // keyboard and understandable to assistive tech.
 function enhanceA11y(){
-  document.querySelectorAll('.acc-header').forEach(h=>{
-    h.setAttribute('role','button'); h.setAttribute('tabindex','0');
-    const body=h.nextElementSibling;
-    h.setAttribute('aria-expanded', body&&body.classList.contains('open')?'true':'false');
+  // Accordions: a real <button> inside the heading (the title stays a heading,
+  // Enter/Space come for free) wired to its body via aria-controls. Clicks on
+  // the button bubble to the header's onclick, so toggleAcc keeps working.
+  document.querySelectorAll('.acc-header').forEach((h,i)=>{
+    const body=h.nextElementSibling, hd=h.querySelector('h2,h3,h4');
     const chev=h.querySelector('.chevron'); if(chev) chev.setAttribute('aria-hidden','true');
-    h.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleAcc(h); } });
+    const open=body&&body.classList.contains('open')?'true':'false';
+    if(!hd){ h.setAttribute('role','button'); h.setAttribute('tabindex','0'); h.setAttribute('aria-expanded',open);
+      h.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleAcc(h); } }); return; }
+    if(body&&!body.id) body.id='acc-body-'+(i+1);
+    const btn=document.createElement('button'); btn.type='button'; btn.className='acc-btn';
+    while(hd.firstChild) btn.appendChild(hd.firstChild);
+    hd.appendChild(btn);
+    btn.setAttribute('aria-expanded',open);
+    if(body) btn.setAttribute('aria-controls',body.id);
   });
+  // Tabs: full WAI-ARIA tabs pattern — named tablist, aria-controls, tabpanels
+  // labelled by their tab, roving tabindex, Arrow/Home/End keys.
   document.querySelectorAll('.tabs').forEach(strip=>{
     strip.setAttribute('role','tablist');
+    if(!strip.getAttribute('aria-label')){
+      const pg=strip.closest('.page'), st=pg&&pg.querySelector('.section-title');
+      const t=strip.getAttribute('data-label')||(st&&st.textContent);
+      if(t) strip.setAttribute('aria-label', t.replace(/\s+/g,' ').trim());
+    }
     const btns=[...strip.querySelectorAll('.tab-btn')];
     btns.forEach((b,i)=>{
+      const active=b.classList.contains('active');
       b.setAttribute('role','tab');
-      b.setAttribute('aria-selected', b.classList.contains('active')?'true':'false');
+      b.setAttribute('aria-selected', active?'true':'false');
+      b.setAttribute('tabindex', active?'0':'-1');
+      const m=/switchTab\(this,\s*'([^']+)'/.exec(b.getAttribute('onclick')||'');
+      const panel=m&&document.getElementById(m[1]);
+      if(panel){
+        if(!b.id) b.id=m[1]+'-tab';
+        b.setAttribute('aria-controls', m[1]);
+        panel.setAttribute('role','tabpanel'); panel.setAttribute('aria-labelledby', b.id);
+        if(!panel.querySelector('a[href],button,input,select,textarea,[tabindex]')) panel.setAttribute('tabindex','0');
+      }
       b.addEventListener('keydown',e=>{
         let idx=-1;
         if(e.key==='ArrowRight') idx=(i+1)%btns.length;
         else if(e.key==='ArrowLeft') idx=(i-1+btns.length)%btns.length;
+        else if(e.key==='Home') idx=0;
+        else if(e.key==='End') idx=btns.length-1;
         if(idx>=0){ e.preventDefault(); btns[idx].focus(); btns[idx].click(); }
       });
     });
+    // A strip that scrolls fades its clipped edge so off-screen tabs are discoverable
+    const fade=()=>{
+      const more=strip.scrollWidth-strip.clientWidth-strip.scrollLeft>2, less=strip.scrollLeft>2;
+      strip.style.setProperty('--tabs-fr', more?'40px':'0px'); strip.style.setProperty('--tabs-fl', less?'28px':'0px');
+    };
+    strip.addEventListener('scroll', fade, {passive:true});
+    if('ResizeObserver' in window) new ResizeObserver(fade).observe(strip); else window.addEventListener('resize', fade);
+    fade();
   });
-  // Horizontal strips (tab bars, AI mode chips, quick prompts) hide their scrollbar, so show a
+  // Horizontal strips (AI mode chips, quick prompts, phase bar; tab bars above) hide their scrollbar, so show a
   // right-edge fade only while more items sit past the edge; cleared once scrolled to the end.
-  const fadeStrips=[...document.querySelectorAll('.tabs,.ai-mode-btns,.quick-prompts,.viz-phase-bar')];
+  const fadeStrips=[...document.querySelectorAll('.ai-mode-btns,.quick-prompts,.viz-phase-bar')];
   const syncFade=el=>el.classList.toggle('tl-scroll-more', el.scrollWidth-el.clientWidth-el.scrollLeft>2);
   const syncAllFades=()=>fadeStrips.forEach(syncFade);
   fadeStrips.forEach(el=>{ el.addEventListener('scroll',()=>syncFade(el),{passive:true}); syncFade(el); });
   window.addEventListener('resize',syncAllFades);
   window.addEventListener('hashchange',()=>setTimeout(syncAllFades,80));
   if(typeof ResizeObserver==='function'){ const ro=new ResizeObserver(syncAllFades); fadeStrips.forEach(el=>ro.observe(el)); }
+  // Tables: header cells get scope, and a table with no caption is named after
+  // its tab or the nearest preceding heading so table navigation announces it.
+  document.querySelectorAll('table').forEach(t=>{
+    t.querySelectorAll('thead th:not([scope])').forEach(th=>th.setAttribute('scope','col'));
+    if(t.caption||t.hasAttribute('aria-label')||t.hasAttribute('aria-labelledby')) return;
+    const panel=t.closest('.tab-panel'); let n=t, name='';
+    while(n&&!name&&n!==panel&&!n.classList.contains('page')){
+      let s=n.previousElementSibling;
+      while(s&&!name){ const h=s.matches('h1,h2,h3,h4,h5,h6')?s:[...s.querySelectorAll('h1,h2,h3,h4,h5,h6')].pop(); if(h) name=h.textContent; s=s.previousElementSibling; }
+      n=n.parentElement;
+    }
+    if(!name&&panel){ const tb=document.getElementById(panel.getAttribute('aria-labelledby')||''); if(tb) name=tb.textContent; }
+    if(name) t.setAttribute('aria-label', name.replace(/\s+/g,' ').trim());
+  });
+  // Heading outline: each view starts at its h1; the styled h3/h4 blocks below
+  // it are exposed at the next level down (aria-level) so heading navigation
+  // reads h1 > h2 > h3 with no skipped levels and no CSS churn.
+  document.querySelectorAll('.page').forEach(pg=>{
+    const hs=[...pg.querySelectorAll('h1,h2,h3,h4,h5,h6')].filter(h=>!h.closest('footer'));
+    const rank={}; [...new Set(hs.map(h=>+h.tagName[1]))].sort().forEach((l,i)=>rank[l]=i+1);
+    hs.forEach(h=>{ const r=rank[+h.tagName[1]]; if(r!==+h.tagName[1]){ h.setAttribute('role','heading'); h.setAttribute('aria-level',String(r)); } });
+  });
+  markNewTabLinks(document);
   document.querySelectorAll('.qp').forEach(qp=>{
     qp.setAttribute('role','button'); qp.setAttribute('tabindex','0');
     qp.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); qp.click(); } });
   });
-  document.querySelectorAll('.card[onclick],.metric-card[onclick]').forEach(el=>{
+  document.querySelectorAll('.metric-card[onclick]').forEach(el=>{
     el.setAttribute('role','button'); el.setAttribute('tabindex','0');
     el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } });
   });
@@ -3507,6 +3581,15 @@ function enhanceA11y(){
   }); }
 }
 document.addEventListener('DOMContentLoaded', enhanceA11y);
+// Links that open a new tab say so (screen-reader text + a small glyph unless
+// the label already ends in an arrow). Idempotent, so re-run after renders.
+function markNewTabLinks(root){
+  (root||document).querySelectorAll('a[target="_blank"]:not([data-newtab])').forEach(a=>{
+    a.setAttribute('data-newtab','1');
+    if(!/[→↗]\s*$/.test(a.textContent)){ const g=document.createElement('span'); g.setAttribute('aria-hidden','true'); g.textContent=' ↗'; a.appendChild(g); }
+    const sr=document.createElement('span'); sr.className='sr-only'; sr.textContent=' (opens in a new tab)'; a.appendChild(sr);
+  });
+}
 function initReveal(){
   const els=document.querySelectorAll('.reveal:not(.visible)');
   if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('visible'));return;}
@@ -4620,8 +4703,8 @@ function togglePlay3D() {
 }
 function setSpeed3D(s, btn) {
   speed = s;
-  document.querySelectorAll('.viz-btn[data-speed]').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.viz-btn[data-speed]').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+  if (btn) { btn.classList.add('active'); btn.setAttribute('aria-pressed','true'); }
 }
 function resizeViz3D() {
   const container = document.getElementById('viz3d-container');
@@ -5058,8 +5141,8 @@ function renderSeasonPage(now) {
 let currentMode='coach';
 function setMode(mode,btn){
   currentMode=mode;
-  document.querySelectorAll('.ai-mode-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('.ai-mode-btn').forEach(b=>{ b.classList.remove('active'); if(b.hasAttribute('aria-pressed')) b.setAttribute('aria-pressed','false'); });
+  btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
   const labels={coach:'Coaching',technique:'Technique',race:'Race Strategy',science:'Sports Science',nutrition:'Nutrition',mental:'Mental Performance'};
   addMsg('Mode: '+labels[mode]+'. Ask me anything.','ai');
 }
@@ -5501,7 +5584,7 @@ function calcSplits(){
   }
   const mean=off.reduce((a,b)=>a+b,0)/n;
   const splits=off.map(o=>Math.max(15,avg+o-mean));
-  let html='<div class="table-wrap"><table class="data-table"><thead><tr><th>Distance</th><th>50m Split</th><th>Cumulative</th></tr></thead><tbody>';
+  let html='<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Distance</th><th scope="col">50m Split</th><th scope="col">Cumulative</th></tr></thead><tbody>';
   let cum=0;
   splits.forEach((s,i)=>{cum+=s; html+=`<tr><td>${(i+1)*50}m</td><td>${formatTime(s)}</td><td>${formatTime(cum)}</td></tr>`;});
   html+=`</tbody></table></div><div class="info-box" style="margin-top:1rem">Target: <strong>${formatTime(totalSecs)}</strong> &nbsp;·&nbsp; Avg 50m: <strong>${formatTime(avg)}</strong></div>`;
@@ -5519,7 +5602,7 @@ function calcPaceZones(){
     {name:'Zone 4 — VO2 Max',pct:[1.00,1.03],color:'#ff7043',desc:'HR 31–35 · 5–8 mmol'},
     {name:'Zone 5 — Sprint',pct:[0.88,1.00],color:'#ff5252',desc:'Max HR · 8+ mmol'}
   ];
-  let html='<div class="table-wrap"><table class="data-table"><thead><tr><th>Zone</th><th>Per 100m</th><th>Per 50m</th><th>Notes</th></tr></thead><tbody>';
+  let html='<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Zone</th><th scope="col">Per 100m</th><th scope="col">Per 50m</th><th scope="col">Notes</th></tr></thead><tbody>';
   zones.forEach(z=>{
     const fast=t*z.pct[0], slow=t*z.pct[1];
     html+=`<tr><td style="color:${z.color}">${z.name}</td><td>${formatTime(fast)}–${formatTime(slow)}</td><td>${formatTime(fast/2)}–${formatTime(slow/2)}</td><td style="color:var(--white3);font-size:0.76rem">${z.desc}</td></tr>`;
@@ -5533,7 +5616,7 @@ function convertTime(){
   if(!t){alert('Enter a valid time.');return;}
   const factors={scy:1.00,scm:1.11,lcm:1.14};
   const labels={scy:'SCY — 25 yards',scm:'SCM — 25 meters',lcm:'LCM — 50 meters'};
-  let html='<div class="table-wrap"><table class="data-table"><thead><tr><th>Pool Format</th><th>Equivalent Time</th><th>Difference</th></tr></thead><tbody>';
+  let html='<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Pool Format</th><th scope="col">Equivalent Time</th><th scope="col">Difference</th></tr></thead><tbody>';
   Object.keys(factors).forEach(to=>{
     const conv=t*(factors[to]/factors[from]);
     const diff=((conv-t)/t*100);
@@ -5559,7 +5642,7 @@ function buildPRGrid(stroke){
     const key='pr_'+event.replace(/ /g,'_');
     const saved=localStorage.getItem(key)||'';
     const item=document.createElement('div'); item.className='pr-item';
-    item.innerHTML=`<span class="pr-event">${event}</span><input class="pr-input" placeholder="—" maxlength="12" inputmode="decimal" autocomplete="off" aria-label="${event} personal record" value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value,this)" onchange="savePR('${key}',this.value,this,true)">`;
+    item.innerHTML=`<label class="pr-event" for="pr-in-${key}">${event}</label><input id="pr-in-${key}" class="pr-input" placeholder="—" maxlength="12" inputmode="decimal" autocomplete="off" aria-describedby="pr-format-hint" value="${escapeHTML(saved)}" oninput="savePR('${key}',this.value,this)" onchange="savePR('${key}',this.value,this,true)">`;
     grid.appendChild(item);
   });
 }
@@ -5723,6 +5806,12 @@ function saveLogEntry(){
     const el=document.getElementById(id); if(el) el.value='';
   });
   renderLog();
+  setLogStatus('Session saved — '+entries.length+' logged.');
+}
+// Screen-reader feedback for log actions (the list itself re-renders silently)
+function setLogStatus(msg){
+  const s=document.getElementById('log-status'); if(!s) return;
+  s.textContent=''; setTimeout(()=>{ s.textContent=msg; },50);
 }
 function renderLog(){
   if(typeof window.onLogChange==='function'){ try{ window.onLogChange(); }catch(e){ console.error(e); } }
@@ -5746,7 +5835,7 @@ function renderLog(){
         ${e.mainset?`<div class="log-notes" style="color:var(--cyan)">${escapeHTML(e.mainset)}</div>`:''}
         ${e.notes?`<div class="log-notes">${escapeHTML(e.notes)}</div>`:''}
       </div>
-      <button type="button" data-del-id="${id}" aria-label="Delete session ${escapeHTML(e.date)}" title="Delete session" style="background:none;border:none;color:var(--white4);cursor:pointer;font-size:1.1rem;padding:4px;transition:color 0.2s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--white4)'">✕</button>
+      <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(e.date)} ${escapeHTML(e.type)}" title="Delete session"><span aria-hidden="true">✕</span></button>
     </div>`;}).join('');
   const now=new Date(), thirtyAgo=new Date(now-30*24*60*60*1000);
   const recent=entries.filter(e=>new Date(e.date)>=thirtyAgo);
@@ -5765,8 +5854,9 @@ function renderLog(){
 function deleteLogEntry(id){
   lsSet('swimiq_log',JSON.stringify(readLog().filter(e=>e.id!==id)));
   renderLog();
+  setLogStatus('Session deleted.');
 }
-function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog();}
+function clearLog(){if(!confirm('Clear all log entries?'))return; lsRemove('swimiq_log'); renderLog(); setLogStatus('All sessions cleared.');}
 const todayInput=document.getElementById('log-date');
 if(todayInput){const _d=new Date();_d.setMinutes(_d.getMinutes()-_d.getTimezoneOffset());todayInput.value=_d.toISOString().split('T')[0];}
 // Delete buttons are delegated (no inline onclick built from stored ids).
@@ -6677,7 +6767,7 @@ function goalStats(ev, prSec, goalSec){
 function renderGoalCard(ev, goals){
   var pr = readPR(ev), raw = goals[ev] || '', gs = parseT(raw);
   var st = goalStats(ev, pr, gs), id = goalId(ev);
-  var prHtml = pr ? 'PR <strong>' + esc(fmtT(pr)) + '</strong>' : '<a href="#profile">No PR — add one</a>';
+  var prHtml = pr ? 'PR <strong>' + esc(fmtT(pr)) + '</strong>' : '<a href="#profile" class="pl-nopr">No PR — add one</a>';
   var quick = pr ? '<div class="pl-quick" role="group" aria-label="Quick-fill goal from PR">' +
       [1, 2, 3].map(function(p){ return '<button type="button" class="btn-ghost-sm" data-fill="' + p + '" data-event="' + esc(ev) + '" aria-label="Set goal ' + p + ' percent faster than PR">−' + p + '%</button>'; }).join('') + '</div>' : '';
   return '<div class="pl-goal-card' + (gs ? ' has-goal' : '') + '" data-event="' + esc(ev) + '">' +
