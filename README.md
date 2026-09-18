@@ -101,8 +101,9 @@ Then commit and push; GitHub Pages serves the new files, and the next visit (or 
 next background check, at most 24 h later) installs the update. Nothing needs a build
 (GitHub Pages runs Jekyll, but only to apply `_config.yml`'s `exclude` list).
 
-If the mark itself changes, regenerate every icon from one source so they never drift:
+If the mark itself changes, regenerate every icon from one source so they never drift
+(run from the repo root — `make_logo.py` writes into the current directory):
 
 ```bash
-cd tools && python3 make_logo.py && python3 make_pwa_icons.py --out ..
+python3 tools/make_logo.py && python3 tools/make_pwa_icons.py --out .
 ```
