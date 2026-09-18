@@ -49,6 +49,13 @@
       "type": "image/png",
       "form_factor": "wide",
       "label": "Tidelyne — 3D stroke lab, technique library and pace tools for competitive swimmers"
+    },
+    {
+      "src": "screenshot-phone.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tidelyne on a phone: the pool-deck tempo trainer, interval timer and pace clock"
     }
   ],
   "shortcuts": [
