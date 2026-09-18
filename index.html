@@ -187,6 +187,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .nav-links li a{display:block;padding:4px 8px;font-size:0.65rem;font-weight:500;letter-spacing:0.3px;color:var(--white3);text-decoration:none;text-transform:uppercase;transition:color 0.2s;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;line-height:48px}
 .nav-links li a:hover,.nav-links li a.active{color:var(--cyan);border-bottom-color:var(--cyan)}
 .nav-right{display:flex;gap:6px;align-items:center;flex-shrink:0}
+@media(min-width:769px){.nav-right>button{min-height:30px;display:inline-flex;align-items:center;justify-content:center}}
 .nav-ai-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:6px 10px;font-family:var(--fm);font-size:0.65rem;letter-spacing:1px;font-weight:600;text-transform:uppercase;transition:background 0.2s;cursor:pointer;white-space:nowrap}
 .nav-ai-btn:hover{background:var(--cyan2)}
 .nav-key-btn{background:var(--navy3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--white3);font-size:0.8rem;cursor:pointer;transition:all 0.2s;flex-shrink:0}
@@ -221,7 +222,8 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem}
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;transition:border-color 0.3s,transform 0.25s,box-shadow 0.3s}
-.card:hover{border-color:var(--border);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.35)}
+.card:hover{border-color:var(--border)}
+@media(hover:hover){.card[onclick]:hover,.card[role="button"]:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.35)}}
 .card-icon{font-size:2rem;margin-bottom:1rem;display:block}.card-tag{font-family:var(--fm);font-size:0.58rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.85rem}
 .card h3{font-family:var(--fh);font-size:1.5rem;letter-spacing:1px;margin-bottom:0.85rem;line-height:1.1}
 .card p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.85rem}
@@ -231,9 +233,9 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .badge{display:inline-block;font-family:var(--fm);font-size:0.58rem;letter-spacing:2px;padding:4px 11px;border-radius:4px;text-transform:uppercase;margin-bottom:1rem}
 .badge.cyan{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,212,255,0.25)}.badge.gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(245,166,35,0.25)}.badge.green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,229,153,0.25)}.badge.red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,82,82,0.25)}.badge.purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,0.25)}
 /* TABS */
-.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2.5rem;overflow-x:auto;gap:0;scrollbar-width:none}
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2.5rem;overflow-x:auto;gap:0;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
 .tabs::-webkit-scrollbar{display:none}
-.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--white3);font-family:var(--fb);font-size:0.78rem;font-weight:500;letter-spacing:0.3px;text-transform:uppercase;padding:11px 16px;cursor:pointer;margin-bottom:-1px;transition:color 0.2s,border-color 0.2s;white-space:nowrap}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--white3);font-family:var(--fb);font-size:0.78rem;font-weight:500;letter-spacing:0.3px;text-transform:uppercase;padding:11px 16px;cursor:pointer;margin-bottom:-1px;transition:color 0.2s,border-color 0.2s;white-space:nowrap;scroll-snap-align:start}
 .tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}.tab-btn:hover:not(.active){color:var(--white)}
 .tab-panel{display:none}.tab-panel.active{display:block}
 /* ACCORDION */
@@ -256,7 +258,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .ptag{font-family:var(--fm);font-size:0.58rem;letter-spacing:1px;color:var(--cyan);display:block;margin-bottom:3px}
 /* METRICS */
 .metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:1rem;margin-bottom:3rem}
-.metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border);transform:translateY(-3px)}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4}
+.metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border)}@media(hover:hover){.metric-card[onclick]:hover{transform:translateY(-3px)}}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4}
 /* VIDEO */
 .video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
 .video-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);overflow:hidden;transition:border-color 0.3s,transform 0.25s}.video-card:hover{border-color:var(--border);transform:translateY(-3px)}
@@ -275,13 +277,14 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .viz-overlay-stats{position:absolute;top:12px;right:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px;pointer-events:none}
 .vos-item{background:rgba(4,13,24,0.85);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center;backdrop-filter:blur(8px)}
 .vos-val{font-family:var(--fm);font-size:1.1rem;color:var(--cyan);display:block;line-height:1;letter-spacing:0.5px}
-.vos-lbl{font-family:var(--fm);font-size:0.52rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;margin-top:3px;display:block}
-.viz-phase-bar{position:absolute;bottom:0;left:0;right:0;height:40px;background:rgba(4,13,24,0.85);border-top:1px solid var(--border);display:flex;align-items:center;gap:0;backdrop-filter:blur(8px)}
-.phase-step{flex:1;text-align:center;font-family:var(--fm);font-size:0.52rem;letter-spacing:0.5px;color:var(--white4);text-transform:uppercase;padding:0 4px;transition:color 0.3s;cursor:pointer;line-height:1.3;border-right:1px solid var(--border2)}
+.vos-lbl{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;margin-top:3px;display:block}
+.viz-phase-bar{position:absolute;bottom:0;left:0;right:0;height:40px;background:rgba(4,13,24,0.85);border-top:1px solid var(--border);display:flex;align-items:stretch;gap:0;backdrop-filter:blur(8px)}
+.phase-step{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;background:none;border:0;border-right:1px solid var(--border2);border-radius:0;font-family:var(--fm);font-size:0.6rem;letter-spacing:0.5px;color:var(--white4);text-transform:uppercase;padding:0 4px;transition:color 0.3s,background 0.2s;cursor:pointer;line-height:1.3}
 .phase-step:last-child{border-right:none}
+.phase-step:hover{color:var(--white2);background:rgba(0,212,255,0.06)}
 .phase-step.active{color:var(--cyan)}
 .viz-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:1rem}
-.viz-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:7px 14px;font-family:var(--fm);font-size:0.65rem;letter-spacing:0.8px;cursor:pointer;transition:all 0.2s;text-transform:uppercase}
+.viz-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:7px 14px;min-height:34px;display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1.2;font-family:var(--fm);font-size:0.65rem;letter-spacing:0.8px;cursor:pointer;transition:all 0.2s;text-transform:uppercase}
 .viz-btn.active,.viz-btn:hover{background:var(--cyan-dim);color:var(--cyan);border-color:rgba(0,212,255,0.4)}
 /* 3D lab: swimmer model / skin-tone controls */
 .viz-ctl-lbl{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px}
@@ -375,9 +378,10 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .footer-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:2rem;margin-bottom:2rem}
 .footer-brand h3{font-family:var(--fh);font-size:1.8rem;letter-spacing:2px;color:var(--cyan);margin-bottom:0.75rem}.footer-brand h3 span{color:var(--white)}.footer-brand p{font-size:0.83rem;color:var(--white3);line-height:1.8;max-width:300px}
 .footer-col h4{font-family:var(--fm);font-size:0.61rem;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:1rem}
-.footer-col ul{list-style:none}.footer-col ul li{font-size:0.83rem;padding:4px 0}.footer-col ul li a{color:var(--white3);text-decoration:none;transition:color 0.2s}.footer-col ul li a:hover,.footer-col ul li a:focus-visible{color:var(--cyan)}
+.footer-col ul{list-style:none}.footer-col ul li{font-size:0.83rem;padding:2px 0}.footer-col ul li a{display:inline-block;padding:5px 0;color:var(--white3);text-decoration:none;transition:color 0.2s}.footer-col ul li a:hover,.footer-col ul li a:focus-visible{color:var(--cyan)}
 .footer-bottom{max-width:1240px;margin:0 auto;padding-top:1.5rem;border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 .footer-bottom p{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white4);text-transform:uppercase}
+.footer-bottom a{display:inline-block;padding:10px 4px;font-size:0.7rem;color:var(--white3);transition:color 0.2s}.footer-bottom a:hover{color:var(--cyan)}
 /* IMGGEN */
 .imggen-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2rem}
 .imggen-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
@@ -400,18 +404,26 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .viz-overlay-stats{grid-template-columns:1fr 1fr;top:8px;right:8px}
   .vos-item{padding:6px 8px}
   .vos-val{font-size:0.95rem}
-  .phase-step{font-size:0.44rem}
+  .phase-step{font-size:0.56rem}
 }
 @media(max-width:480px){
   .hero h1{font-size:3.5rem}
   .metrics-row{grid-template-columns:repeat(2,1fr)}
   .viz-phase-bar{display:none}
   #viz3d-container{height:320px}
-  .ai-mode-btns{gap:4px}
-  .ai-mode-btn{padding:4px 8px;font-size:0.58rem}
+  .ai-header{padding:0.9rem 1rem}
+  .ai-mode-btns{gap:4px;flex:1 1 100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+  .ai-mode-btns::-webkit-scrollbar{display:none}
+  .ai-mode-btn{padding:4px 10px;font-size:0.58rem;flex:0 0 auto;white-space:nowrap}
+  .quick-prompts{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0.6rem 1rem}
+  .quick-prompts::-webkit-scrollbar{display:none}
+  .qp{flex:0 0 auto;white-space:nowrap}
+  .ai-messages{height:calc(100dvh - 300px)}
 }
 /* ACCESSIBILITY */
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.qp:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.qp:focus-visible,[role="button"]:focus-visible,[role="link"]:focus-visible,#viz3d-container:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+/* Inside overflow:hidden parents (accordion, canvas wrap) an outside ring is clipped — draw it inset */
+.acc-header:focus-visible,#viz3d-container:focus-visible,.phase-step:focus-visible{outline-offset:-3px}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
   html{scroll-behavior:auto}
@@ -424,14 +436,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   padding:10px 18px;border-radius:0 0 8px 0;font-family:var(--fm);font-size:0.8rem;font-weight:700}
 .skip-link:focus{left:0}
 /* Higher-contrast muted text (was ~2.4:1 against navy) */
-:root{--white3:#8ba5bd;--white4:#6d879f}
+:root{--white3:#8ba5bd;--white4:#7b95ad;--purple-text:#bf8cff}
 /* Pool-deck touch targets: 44px minimum on phones */
 @media(max-width:768px){
   .viz-btn,.btn-sm,.btn-ghost-sm,.qp,.tab-btn,.ai-mode-btn{min-height:44px;display:inline-flex;
     align-items:center;justify-content:center}
   .nav-links li a{line-height:44px;padding:4px 12px;font-size:0.72rem}
-  .nav-ai-btn,.nav-key-btn,#nav-login-btn,#nav-logout-btn{min-height:40px;display:inline-flex;align-items:center;justify-content:center}
+  .nav-ai-btn,.nav-key-btn,#nav-login-btn,#nav-logout-btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
   .form-input,.form-select,.form-textarea,.pr-input,.goal-input{min-height:44px}
+  .form-input,.form-select,.form-textarea,.ai-input{font-size:16px}
+  .tab-btn{padding:11px 13px}
   .calc-btn,.ai-send{min-height:48px}
   /* Stack the training-zone rows so the bar isn't crushed to a sliver */
   .zone-row{flex-direction:column;align-items:stretch;gap:4px}
@@ -440,8 +454,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* The phase bar is the point of the lab — keep it readable by letting it
    scroll horizontally on small screens instead of crushing the labels. */
 @media(max-width:480px){
-  .viz-phase-bar{display:flex!important;height:36px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .phase-step{font-size:0.55rem;letter-spacing:0;min-width:66px;flex:0 0 auto}
+  .viz-phase-bar{display:flex!important;height:36px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity}
+  .viz-phase-bar::-webkit-scrollbar{display:none}
+  .phase-step{scroll-snap-align:start}
+  .phase-step{font-size:0.6rem;letter-spacing:0;min-width:74px;flex:0 0 auto}
 }
 /* Reduced motion: also stop the WebGL stroke loop, not just CSS particles */
 @media (prefers-reduced-motion: reduce){ .ai-dot{animation:none} }
@@ -481,7 +497,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-timers .tlt-hidden{display:none}
 #page-timers .tlt-copytext{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 #page-timers .tlt-vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-#page-timers .tlt-th-sub{display:block;font-size:0.52rem;letter-spacing:1px;color:var(--white3);margin-top:2px;text-transform:none}
+#page-timers .tlt-th-sub{display:block;font-size:0.6rem;letter-spacing:1px;color:var(--white3);margin-top:2px;text-transform:none}
 #page-timers .tlt-td-sub{display:block;font-size:0.7rem;color:var(--white3);font-weight:300;margin-top:2px}
 #page-timers .tlt-num-table td{font-family:var(--fm);font-size:0.8rem;font-variant-numeric:tabular-nums;white-space:nowrap}
 #page-timers .tlt-num-table td:first-child{color:var(--white2);font-weight:400}
@@ -690,7 +706,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-quick .btn-ghost-sm{flex:1;padding:6px 4px;font-size:0.62rem;letter-spacing:0.5px}
 #page-planner .pl-goal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0}
 #page-planner .pl-goal-stats div{background:var(--navy3);border-radius:6px;padding:6px 7px;border:1px solid var(--border2);min-width:0}
-#page-planner .pl-goal-stats dt{font-family:var(--fm);font-size:0.5rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase}
+#page-planner .pl-goal-stats dt{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase}
 #page-planner .pl-goal-stats dd{font-family:var(--fm);font-size:0.78rem;color:var(--white);margin:2px 0 0;line-height:1.35;overflow-wrap:anywhere}
 #page-planner .pl-goal-stats dd.gain{color:var(--green)}
 #page-planner .pl-goal-stats dd.slower{color:var(--gold)}
@@ -716,7 +732,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-fifty span{color:var(--white3)}
 #page-planner .pl-halves{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:0.85rem}
 #page-planner .pl-halves div{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;padding:8px 10px;text-align:center}
-#page-planner .pl-halves .k{font-family:var(--fm);font-size:0.52rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;display:block}
+#page-planner .pl-halves .k{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;display:block}
 #page-planner .pl-halves .v{font-family:var(--fh);font-size:1.35rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1.1;margin-top:3px}
 #page-planner .pl-compare h4{font-family:var(--fh);font-size:1.25rem;letter-spacing:1px;margin-bottom:0.25rem}
 #page-planner .pl-compare .pl-compare-sub{font-size:0.8rem;color:var(--white3);margin-bottom:0.75rem;line-height:1.6}
@@ -760,7 +776,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-timeline li.done::before{background:var(--green);border-color:var(--green)}
 #page-planner .pl-timeline li.done .pl-cp-title,#page-planner .pl-timeline li.done .pl-cp-desc{opacity:0.6}
 #page-planner .pl-cp-when{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-#page-planner .pl-cp-when .pl-tag{font-size:0.5rem;padding:2px 6px}
+#page-planner .pl-cp-when .pl-tag{font-size:0.6rem;padding:2px 6px}
 #page-planner .pl-cp-title{font-family:var(--fh);font-size:1.1rem;letter-spacing:1px;margin:3px 0 2px;line-height:1.15}
 #page-planner .pl-cp-desc{font-size:0.83rem;color:var(--white2);line-height:1.65}
 #page-planner .pl-cp-desc a{color:var(--cyan)}
@@ -1048,7 +1064,7 @@ html.tl-pal-lock{overflow:hidden}
    +17 px at 375 px). Match the site's 40 px nav-button height and trim the
    nav's own padding/gaps, but only on the containers initPalette() tagged. */
 @media(max-width:480px){
-  nav.tl-pal-nav{padding:0 5px;gap:3px}
+  nav.tl-pal-nav{padding:0 12px;gap:6px}
   .tl-pal-navright{gap:3px}
   .tl-pal-navbtn{min-width:36px;min-height:40px;padding:6px 4px}
 }
@@ -1177,7 +1193,7 @@ nav .nav-drawer-scroll{display:flex;align-items:center;min-width:0}
 nav .nav-links{display:flex;align-items:center;list-style:none;margin:0;padding:0;gap:2px;width:auto}
 nav .nav-links>li{position:relative;margin:0;padding:0}
 /* Top-level items: page links (Home, What's New) and group buttons share one look. */
-nav .nav-links>li>a,nav .nav-group-btn{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;font-family:var(--fb);font-size:0.65rem;font-weight:500;letter-spacing:0.3px;line-height:48px;text-transform:uppercase;white-space:nowrap;color:var(--white3);background:none;border:0;border-bottom:2px solid transparent;border-radius:0;cursor:pointer;transition:color 0.2s,border-color 0.2s}
+nav .nav-links>li>a,nav .nav-group-btn{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;font-family:var(--fb);font-size:0.65rem;font-weight:500;letter-spacing:0.3px;line-height:46px;text-transform:uppercase;white-space:nowrap;color:var(--white3);background:none;border:0;border-bottom:2px solid transparent;border-radius:0;cursor:pointer;transition:color 0.2s,border-color 0.2s}
 nav .nav-links>li>a:hover,nav .nav-links>li>a.active,nav .nav-group-btn:hover,nav .nav-group-btn[aria-expanded="true"],nav .nav-group-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}
 nav #nav-updates{position:relative}
 nav .nav-caret{display:inline-block;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);opacity:0.75;transition:transform 0.2s}
@@ -1271,6 +1287,57 @@ nav #nav-search-btn[hidden]{display:none}
 html.tl-nav-lock{overflow-y:scroll}
 html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 /* ===== /NAV BUNDLE ===== */
+
+/* ===== FORENSIC R1: visual & layout ===== */
+/* Auth overlay: scroll when the card is taller than the viewport (short phones, landscape);
+   margin:auto on the card keeps it centred whenever it fits. */
+#access-gate{align-items:flex-start;justify-content:center;padding:2rem;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.auth-card{padding:2.75rem 2.25rem}
+.tl-panel{padding:1.75rem}
+.auth-links{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 6px}
+.tl-linkbtn{background:none;border:0;padding:0 6px;min-height:44px;color:var(--cyan);font:inherit;cursor:pointer;border-radius:6px}
+.tl-linkbtn:hover{text-decoration:underline;text-underline-offset:3px}
+/* Tab strips wrap on desktop so the last tab is never clipped; below that the strip still
+   swipes, and enhanceA11y() adds .tl-scroll-more while more items sit past the right edge. */
+@media(min-width:900px){.tabs{flex-wrap:wrap}}
+.tl-scroll-more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent)}
+/* Logged out the username span is empty — do not leave its padding as a phantom gap. */
+#current-username-display:empty{display:none}
+/* Orphan tiles: keep grids full at tablet/phone widths */
+@media(max-width:899px){
+  .footer-inner{grid-template-columns:repeat(2,1fr)}
+  .key-grid{grid-template-columns:repeat(2,1fr)}
+  .nutr-grid{grid-template-columns:repeat(2,1fr)}
+  .nutr-grid>.nutr-card:last-child:nth-child(odd){grid-column:1/-1}
+}
+@media(max-width:768px){
+  #page-home .metrics-row{grid-template-columns:repeat(6,1fr);gap:0.75rem}
+  #page-home .metrics-row .metric-card{grid-column:span 2}
+  #page-home .metrics-row .metric-card:nth-child(4),#page-home .metrics-row .metric-card:nth-child(5){grid-column:span 3}
+  .dl-grid>.dl-card:last-child:nth-child(odd){grid-column:1/-1}
+}
+@media(max-width:600px){.nutr-grid{grid-template-columns:1fr}}
+@media(max-width:480px){
+  #access-gate{padding:1rem 0.75rem}
+  .auth-card{padding:2rem 1.25rem}
+  .footer-inner{grid-template-columns:1fr}
+  .key-grid{grid-template-columns:1fr}
+  #page-home .metrics-row{grid-template-columns:repeat(2,1fr);gap:0.75rem}
+  #page-home .metrics-row .metric-card:nth-child(n){grid-column:auto}
+  #page-home .metrics-row .metric-card:last-child:nth-child(odd){grid-column:1/-1}
+  /* Phone hero: above-the-fold headline, full-width CTAs, an even 2×2 stat grid */
+  .hero{padding:3.5rem 1.25rem 3rem;min-height:auto}
+  .hero-btns{flex-direction:column;align-items:stretch;width:100%;max-width:340px;gap:10px;margin-bottom:2.5rem}
+  .btn-hero,.btn-hero-ghost{width:100%}
+  .hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem 1rem;width:100%;max-width:340px}
+  .hstat{min-width:0}
+  /* Phone forms: give the inputs the width back; PR cards stay two-up */
+  .gen-form,.gen-output,.imggen-wrap,.calc-panel,.tl-panel{padding:1.1rem}
+  .pr-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  /* Season meet table fits the phone without a sideways scroll */
+  .data-table th,.data-table td{padding:9px 10px}
+  #season-meet-table td:nth-child(2){white-space:normal}
+}
 </style>
 </head>
 <body>
@@ -1382,7 +1449,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <p class="section-intro">Built on established sports science and competitive programming.</p>
   <div class="grid-3 reveal">
     <div class="card" onclick="showPage('visualizer')" style="cursor:pointer;border-color:rgba(168,85,247,0.3)">
-      <span class="card-icon">🎯</span><div class="card-tag" style="color:var(--purple)">Video + 3D Biomechanics</div>
+      <span class="card-icon">🎯</span><div class="card-tag" style="color:var(--purple-text)">Video + 3D Biomechanics</div>
       <h3>STROKE TECHNIQUE LAB</h3>
       <p>Elite stroke demos on video, paired with an interactive 3D biomechanics model — slow any movement down, orbit any angle, isolate a single phase.</p>
       <ul><li>Real elite technique video for every stroke</li><li>Joint-by-joint 3D reconstruction</li><li>AI: describe any movement, watch it rebuilt</li><li>Phase-by-phase coaching breakdown</li></ul>
@@ -1397,18 +1464,22 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <span class="card-icon">🏊</span><div class="card-tag">Deep Library</div>
       <h3>TECHNIQUE LIBRARY</h3>
       <p>Exhaustive breakdowns — every stroke, every phase, every drill, with elite benchmarks and coaching cues.</p>
+      <ul><li>Freestyle, back, breast, fly &amp; IM</li><li>Underwaters, turns and starts</li><li>Drills with elite benchmarks</li><li>Coaching cues for every phase</li></ul>
     </div>
     <div class="card" onclick="showPage('race')" style="cursor:pointer">
       <span class="card-icon">🏁</span><div class="card-tag" style="color:var(--gold)">Race Strategy</div><h3>RACE STRATEGY</h3>
       <p>Meet-day planner, split targets, warm-up protocols, event-specific race plans for every distance.</p>
+      <ul><li>Meet-day timeline &amp; warm-up protocols</li><li>Event plans for every distance</li><li>Split targets &amp; pacing science</li></ul>
     </div>
     <div class="card" onclick="showPage('nutrition')" style="cursor:pointer">
       <span class="card-icon">🥗</span><div class="card-tag" style="color:var(--green)">Nutrition</div><h3>NUTRITION & FUELING</h3>
       <p>Pre-training, intra-session, and recovery nutrition. Race-day fueling and everyday habits for swimmers.</p>
+      <ul><li>Daily fueling around AM/PM sessions</li><li>Race-day and between-event eating</li><li>Recovery &amp; hydration protocols</li></ul>
     </div>
     <div class="card" onclick="showPage('mental')" style="cursor:pointer">
-      <span class="card-icon">🧠</span><div class="card-tag" style="color:var(--purple)">Mental Performance</div><h3>MENTAL PERFORMANCE</h3>
+      <span class="card-icon">🧠</span><div class="card-tag" style="color:var(--purple-text)">Mental Performance</div><h3>MENTAL PERFORMANCE</h3>
       <p>Visualization protocols, arousal control, race-day anxiety management, focus techniques.</p>
+      <ul><li>Visualization protocols</li><li>Arousal &amp; race-anxiety control</li><li>Focus cues and a pre-race routine</li></ul>
     </div>
   </div>
 </div>
@@ -1462,10 +1533,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="viz-btn" onclick="setStroke3D('dolphin',this)">🌊 Dolphin Kick</button>
   </div>
   <div class="viz-controls" style="margin-top:10px;align-items:stretch">
-    <input class="form-input" id="motion-prompt" maxlength="300" aria-label="Describe a swimming movement to reconstruct in 3D" placeholder='✦ Describe any movement — e.g. "breaststroke pullout off the wall" or "backstroke start"' style="flex:1;min-width:230px" onkeydown="if(event.key==='Enter')generateMotion()">
-    <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple);font-weight:600">✦ AI Reconstruct</button>
+    <input class="form-input" id="motion-prompt" maxlength="300" aria-label="Describe a swimming movement to reconstruct in 3D" placeholder='✦ Describe a movement, e.g. "flip turn"' style="flex:1;min-width:230px" onkeydown="if(event.key==='Enter')generateMotion()">
+    <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple-text);font-weight:600">✦ AI Reconstruct</button>
   </div>
-  <div id="motion-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px"></div>
+  <div id="motion-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px">Try "breaststroke pullout off the wall" or "backstroke start" — the lab rebuilds it joint by joint.</div>
   <div class="viz-controls" style="margin-top:8px">
     <span style="font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;align-self:center;margin-right:4px">View:</span>
     <button class="viz-btn" onclick="setView3D('side')">Side</button>
@@ -1505,7 +1576,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div id="viz-stroke-name" style="font-family:var(--fm);font-size:0.65rem;letter-spacing:3px;color:var(--white3);text-transform:uppercase"></div>
     </div>
     <div id="viz-phase-text" style="font-size:0.9rem;color:var(--white2);line-height:1.8;font-weight:300">The lab renders a realistic 3D swimmer — anatomically proportioned, with wet skin, swimwear, cap and goggles — whose joints move on timing from elite stroke-phase research. Orbit freely, zoom in close, or use the view buttons to inspect technique from any angle; X-ray shows the skeleton underneath.</div>
-    <div id="viz-physics-row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-top:1rem"></div>
+    <div id="viz-physics-row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem;margin-top:1rem"></div>
   </div>
   <div class="divider"></div>
   <div class="section-eyebrow">AI Technique Analysis</div>
@@ -1908,7 +1979,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="section-eyebrow">Personal Records</div>
   <div class="section-title">MY <span>PRs</span></div>
   <p class="section-intro">Click any time field and type your personal record. All data saved locally in your browser — never sent anywhere.</p>
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:1.75rem;margin-bottom:2rem">
+  <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:2rem">
     <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
       <div style="width:58px;height:58px;border-radius:50%;background:var(--cyan-dim);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0">🏊</div>
       <div><h3 id="profile-name-display" style="font-family:var(--fh);font-size:1.75rem;letter-spacing:1px">Swimmer</h3><p style="font-size:0.8rem;color:var(--white3);margin-top:3px">PRs auto-saved in your browser</p></div>
@@ -1937,7 +2008,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="section-eyebrow">Session Tracker</div>
   <div class="section-title">TRAINING <span>LOG</span></div>
   <p class="section-intro">All log data is saved locally in your browser — it never leaves your device.</p>
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:1.75rem;margin-bottom:1.5rem">
+  <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:1.5rem">
     <div style="font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem;color:var(--cyan)">LOG A SESSION</div>
     <div class="gen-row">
       <div class="form-group"><label>Date</label><input class="form-input" id="log-date" type="date"></div>
@@ -2269,7 +2340,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="section-eyebrow">Time-Aware</div>
   <div class="section-title">SEASON & <span>MEET CALENDAR</span></div>
   <p class="section-intro">Reads today's date to tell you where you are in the swim season — short course or long course, and what's coming up on the national calendar.</p>
-  <div id="season-now-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:1.75rem;margin-bottom:1.5rem">
+  <div id="season-now-card" class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:1.5rem">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1rem">
       <div>
         <div id="season-today" style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1px;color:var(--cyan)">—</div>
@@ -2287,7 +2358,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <p id="season-calendar-note" style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;line-height:1.6">Dates reflect the published USA Swimming national events calendar and are subject to official updates — always confirm with usaswimming.org before planning travel.</p>
   <div class="divider"></div>
   <div class="section-eyebrow">Cuts & Motivational Standards</div>
-  <div class="section-title" style="font-size:2.2rem">FUTURES, JUNIORS<span>, & NATIONAL CUTS</span></div>
+  <div class="section-title" style="font-size:2.2rem">FUTURES, JUNIORS, <span>& NATIONAL CUTS</span></div>
   <div class="warn-box"><strong>Exact cut times aren't shown here on purpose.</strong> Futures, Speedo Junior Nationals, Toyota Nationals, and the B/BB/A/AA/AAA/AAAA Motivational Standards are each a full table of times split by event, age group, gender, and course (SCY/LCM) — and they get revised. Rather than risk showing you a stale or wrong number for a swim that matters, this links straight to the official current standard.</div>
   <div class="grid-2">
     <div class="card">
@@ -2303,7 +2374,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <a href="https://www.usaswimming.org/times/time-standards" target="_blank" rel="noopener" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Juniors standards →</a>
     </div>
     <div class="card">
-      <div class="card-tag" style="color:var(--purple)">Open / Senior</div>
+      <div class="card-tag" style="color:var(--purple-text)">Open / Senior</div>
       <h3>TOYOTA NATIONALS & U.S. OPEN</h3>
       <p>The deepest domestic senior fields. U.S. Open cuts are faster than Nationals cuts.</p>
       <a href="https://www.usaswimming.org/times/time-standards" target="_blank" rel="noopener" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Nationals standards →</a>
@@ -3053,6 +3124,11 @@ function showAuthScreen(name) {
     var el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
+  var gate = document.getElementById('access-gate'), shown = document.getElementById('screen-' + name);
+  if (gate && gate.style.display === 'flex' && shown) {
+    var first = shown.querySelector('input');
+    if (first) try { first.focus(); } catch(e){}
+  }
 }
 function showAuthError(screenPrefix, message) {
   var el = document.getElementById(screenPrefix + '-error') || document.getElementById(screenPrefix + '-msg');
@@ -3190,11 +3266,11 @@ async function initSupabaseAuth(){
 // ready before any user can click Log In.
 document.addEventListener('DOMContentLoaded', initSupabaseAuth);
 </script>
-<div id="access-gate" onclick="if(event.target===this)closeAuthGate()" style="position:fixed;inset:0;background:rgba(4,13,24,0.94);z-index:9998;display:none;align-items:center;justify-content:center;padding:2rem">
-  <button onclick="closeAuthGate()" title="Close" style="position:absolute;top:16px;right:22px;background:none;border:none;color:var(--white3);font-size:1.6rem;cursor:pointer;line-height:1">✕</button>
-  <div style="max-width:440px;width:100%;">
+<div id="access-gate" onclick="if(event.target===this)closeAuthGate()" style="position:fixed;inset:0;background:rgba(4,13,24,0.94);z-index:9998;display:none">
+  <button type="button" onclick="closeAuthGate()" title="Close" style="position:fixed;top:8px;right:8px;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:none;border:none;color:var(--white3);font-size:1.6rem;cursor:pointer;line-height:1;z-index:1">✕</button>
+  <div class="auth-card-wrap" style="max-width:440px;width:100%;margin:auto">
   <!-- LOGIN -->
-  <div id="screen-login" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2.75rem 2.25rem;width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)">
+  <div id="screen-login" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
     <div style="font-size:2.6rem;margin-bottom:1rem">🏊</div>
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">WELCOME<br><span style="color:var(--cyan)">BACK</span></h2>
@@ -3204,14 +3280,13 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
       <input id="login-password" type="password" autocomplete="current-password" class="form-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button id="login-btn" onclick="doLogin()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">LOG IN →</button>
     <p id="login-error" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
-    <p style="font-size:0.82rem;color:var(--white3)">
-      <a onclick="showAuthScreen('forgot')" style="cursor:pointer;color:var(--cyan)">Forgot password?</a>
-      &nbsp;·&nbsp;
-      <a onclick="showAuthScreen('signup')" style="cursor:pointer;color:var(--cyan)">Create an account</a>
+    <p class="auth-links" style="font-size:0.82rem;color:var(--white3)">
+      <button type="button" class="tl-linkbtn" onclick="showAuthScreen('forgot')">Forgot password?</button>
+      <button type="button" class="tl-linkbtn" onclick="showAuthScreen('signup')">Create an account</button>
     </p>
   </div>
   <!-- SIGNUP -->
-  <div id="screen-signup" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2.75rem 2.25rem;width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)">
+  <div id="screen-signup" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
     <div style="font-size:2.6rem;margin-bottom:1rem">🏊</div>
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne — Free Account</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">CREATE YOUR<br><span style="color:var(--cyan)">ACCOUNT</span></h2>
@@ -3227,17 +3302,17 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
     <button id="signup-btn" onclick="doSignup()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.6rem">CREATE ACCOUNT →</button>
     <p style="font-size:0.72rem;color:var(--white4);text-align:left;line-height:1.5;margin-bottom:0.85rem">By creating an account you agree to our <a href="terms.html" target="_blank" rel="noopener" style="color:var(--cyan)">Terms of Use</a> and <a href="privacy.html" target="_blank" rel="noopener" style="color:var(--cyan)">Privacy Policy</a>.</p>
     <p id="signup-error" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
-    <p style="font-size:0.82rem;color:var(--white3)">Already have an account? <a onclick="showAuthScreen('login')" style="cursor:pointer;color:var(--cyan)">Log in</a></p>
+    <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><span>Already have an account?</span> <button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Log in</button></p>
   </div>
   <!-- FORGOT PASSWORD -->
-  <div id="screen-forgot" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2.75rem 2.25rem;width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)">
+  <div id="screen-forgot" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
     <div style="font-size:2.6rem;margin-bottom:1rem">🔑</div>
     <h2 style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:1.25rem">RESET YOUR<br><span style="color:var(--cyan)">PASSWORD</span></h2>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Email</label>
       <input id="forgot-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doForgotPassword()"></div>
     <button onclick="doForgotPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:700;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SEND RESET LINK →</button>
     <p id="forgot-msg" style="font-family:var(--fm);font-size:0.78rem;letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
-    <p style="font-size:0.82rem;color:var(--white3)"><a onclick="showAuthScreen('login')" style="cursor:pointer;color:var(--cyan)">Back to login</a></p>
+    <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Back to login</button></p>
   </div>
   </div>
 </div>
@@ -3357,6 +3432,15 @@ function enhanceA11y(){
       });
     });
   });
+  // Horizontal strips (tab bars, AI mode chips, quick prompts) hide their scrollbar, so show a
+  // right-edge fade only while more items sit past the edge; cleared once scrolled to the end.
+  const fadeStrips=[...document.querySelectorAll('.tabs,.ai-mode-btns,.quick-prompts,.viz-phase-bar')];
+  const syncFade=el=>el.classList.toggle('tl-scroll-more', el.scrollWidth-el.clientWidth-el.scrollLeft>2);
+  const syncAllFades=()=>fadeStrips.forEach(syncFade);
+  fadeStrips.forEach(el=>{ el.addEventListener('scroll',()=>syncFade(el),{passive:true}); syncFade(el); });
+  window.addEventListener('resize',syncAllFades);
+  window.addEventListener('hashchange',()=>setTimeout(syncAllFades,80));
+  if(typeof ResizeObserver==='function'){ const ro=new ResizeObserver(syncAllFades); fadeStrips.forEach(el=>ro.observe(el)); }
   document.querySelectorAll('.qp').forEach(qp=>{
     qp.setAttribute('role','button'); qp.setAttribute('tabindex','0');
     qp.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); qp.click(); } });
@@ -4413,7 +4497,7 @@ function buildPhaseBar3D(strokeKey) {
   const phases = STROKES[strokeKey].phases;
   bar.innerHTML = phases.map((p,i) =>
     // p.name can be AI-generated (custom motion) — escape before it hits innerHTML.
-    `<div class="phase-step" id="ps3d-${i}" onclick="jumpToPhase3D(${i})">${escapeHTML(p.name)}</div>`
+    `<button type="button" class="phase-step" id="ps3d-${i}" aria-pressed="false" onclick="jumpToPhase3D(${i})">${escapeHTML(p.name)}</button>`
   ).join('');
 }
 function jumpToPhase3D(i) {
@@ -4423,13 +4507,27 @@ function jumpToPhase3D(i) {
   clockT = t;
 }
 function updatePhaseBar3D(idx) {
-  document.querySelectorAll('.phase-step').forEach((el,i) => el.classList.toggle('active', i===idx));
+  document.querySelectorAll('.phase-step').forEach((el,i) => { el.classList.toggle('active', i===idx); el.setAttribute('aria-pressed', i===idx ? 'true' : 'false'); });
 }
 // Info-panel sync — PERF-CONSCIOUS: the physics row is built ONCE; after
 // that only number spans update via textContent, throttled to 10Hz. Phase
 // name/description/bar update only when the phase actually changes.
 // (The old version rebuilt the whole row with innerHTML 60x/second.)
 const _panelState = { t: 0, idx: -1, stroke: '' };
+const STROKE_LABELS = { freestyle:'Freestyle', backstroke:'Backstroke', breaststroke:'Breaststroke', butterfly:'Butterfly', dolphin:'Dolphin Kick' };
+function strokeLabel3D(key) { const s = STROKES[key]; return (s && s.name) || STROKE_LABELS[key] || key; }
+// Fill the panel the moment a stroke is chosen — the animation loop only refreshes it on the
+// next phase change, which left "Select a stroke" on screen while freestyle was already playing.
+function seedInfoPanel3D(key) {
+  const s = STROKES[key]; if (!s || !s.phases || !s.phases.length) return;
+  const p = s.phases[0];
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('viz-phase-name', `Phase 1: ${p.name}`);
+  set('viz-stroke-name', strokeLabel3D(key));
+  set('viz-phase-text', p.desc || '');
+  updatePhaseBar3D(0);
+  _panelState.idx = 0; _panelState.stroke = key; _panelState.t = 0;
+}
 function buildPhysicsRow() {
   const physRow = document.getElementById('viz-physics-row');
   if (!physRow || physRow.dataset.built) return;
@@ -4467,7 +4565,7 @@ function syncInfoPanel3D() {
     _panelState.idx = currentPhaseInfo.idx;
     _panelState.stroke = currentStroke;
     set('viz-phase-name', `Phase ${currentPhaseInfo.idx+1}: ${currentPhaseInfo.name}`);
-    set('viz-stroke-name', STROKES[currentStroke].name || currentStroke);
+    set('viz-stroke-name', strokeLabel3D(currentStroke));
     set('viz-phase-text', currentPhaseInfo.desc);
     updatePhaseBar3D(currentPhaseInfo.idx);
   }
@@ -4483,6 +4581,7 @@ function setStroke3D(s, btn) {
   });
   if (btn) btn.classList.add('active');
   buildPhaseBar3D(s);
+  seedInfoPanel3D(s);
 }
 function togglePlay3D() {
   playing = !playing;
@@ -4590,6 +4689,7 @@ function startViz3D() {
   applyStrokePatches();          // measured keyframe corrections, once (before the phase bar: names may change)
   rebuildSwimmer(currentStroke); // builds the realistic human asynchronously; mannequin if the modules are missing
   buildPhaseBar3D(currentStroke);
+  seedInfoPanel3D(currentStroke);
   resizeViz3D();
   lastTime3D = performance.now();
   animate3D();
@@ -4726,6 +4826,7 @@ function loadCustomMotion(motion, statusEl, prefix){
   });
   if(viz3DInitialized) rebuildSwimmer('custom');
   buildPhaseBar3D('custom');
+  seedInfoPanel3D('custom');
   statusEl.textContent=(prefix||'✓ Reconstructed: ')+motion.name+' ('+motion.phases.length+' phases). Orbit it, slow to 0.3×, or tap a phase under the canvas.';
 }
 async function generateMotion(){
