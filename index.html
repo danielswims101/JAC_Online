@@ -3425,7 +3425,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <p class="tl-upd-note">New versions download in the background; when one lands you get a small prompt to reload, never an interruption mid-set. Update checks run through your browser's service worker against this site only — nothing about you is sent anywhere. The one thing saved is the version you last read, so the nav dot knows when to appear.</p>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p><p data-tl-version>Version 3.1.1</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p data-tl-version>Version 3.2.0</p></div></footer>
 </div>
 </main>
 <!-- COMMAND PALETTE / GLOBAL SEARCH — ⌘K · Ctrl+K · "/" -->
@@ -11239,14 +11239,28 @@ window.tl_an_debug = {
 // in sync with VERSION in sw.js (README.md, "Releasing a new version").
 const UPDATES = [
   {
+    version: '3.2.0', date: '2026-09-18',
+    title: 'Forensic polish across the whole site',
+    summary: 'Six audit rounds — six auditors each, 723 findings — landed 710 fixes on every page, tool and dialog: accuracy, layout, accessibility, function and speed, with no change to how you use the site.',
+    items: [
+      { tag: 'Fixed',    text: 'Copy and swimming science — 161 wording fixes and 110 accuracy corrections: pacing, zone, taper, nutrition, kick-rate and warm-up figures now agree on every page that quotes them, zone names and units are written one way site-wide, and the privacy, terms and disclaimer pages say exactly what the site stores and sends.', link: '#technique' },
+      { tag: 'Improved', text: 'Layout and phones — 138 fixes: every page fits a 320 px screen with no sideways scroll, data tables stack into cards on phones, touch targets are brought up to 44 px, the sign-in dialog scrolls on short phones and the training log shows 50 sessions at a time.', link: '#sets' },
+      { tag: 'Improved', text: 'Accessibility — 106 fixes: real headings on every page, a full keyboard pattern on 13 tab strips and every accordion, labelled PR and planner fields, dialogs and the search palette that keep the page behind them inert, announced page changes and timer events, Windows High Contrast support and a header that survives 200% text.' },
+      { tag: 'Fixed',    text: 'Tools and calculators — 103 fixes to what the tools do and check: race splits always add up to the target and refuse sub-world-record plans, pace zones are contiguous, the Golf Score bands match a per-arm count, time fields accept 62.30 and 1.52.30, the log rejects impossible sessions and keeps an undo for every delete, and the backup carries your planner, timer and analytics settings.', link: '#calculator' },
+      { tag: 'Fixed',    text: 'AI features and accounts — the coach gets a Stop button and a 20-second timeout and keeps a half-streamed answer, the password-reset link works, every error reads as a plain sentence, and the workout generator scales its volume to your level, session length and taper.', link: '#ai' },
+      { tag: 'Fixed',    text: '3D lab — 95 fixes: freestyle and backstroke run at 48 and 46 cycles a minute, the dolphin kick is shown at a 96-a-minute study tempo (elite is nearer 115), thrust and drag balance over every cycle with the velocity following them, the panel labels the phase on screen, the phase strip works from the keyboard, and the lab shows its build progress and retries a blocked download.', link: '#visualizer' },
+      { tag: 'Improved', text: 'Speed and offline — 92 code fixes: a Content-Security-Policy on every page, pinned and integrity-checked libraries with the sign-in library loaded only when needed, fonts and the 3D engine cached for offline use, a service worker that falls back to the saved shell on a stalled network or a host outage, and a lab that renders only while it is on screen.' }
+    ]
+  },
+  {
     version: '3.1.1', date: '2026-09-16',
     title: 'Technique pass: butterfly, breaststroke and underwater',
     summary: 'Butterfly, breaststroke and the underwater dolphin kick in the 3D lab were re-authored from coaching references — body wave, kick timing, arm path and breath — and each now runs at its own realistic tempo.',
     items: [
       { tag: 'Improved', text: 'Butterfly — the chest presses and the hips lift through the cycle, two timed kicks, a high-elbow catch into the keyhole pull, straight arms clearing the water on the recovery, and a faster tempo (53 cycles a minute).', link: '#visualizer' },
       { tag: 'Improved', text: 'Breaststroke — the body rises about 30° into the breath and lunges forward into a long glide; the heels draw to the buttocks with the feet turned out, then whip round and squeeze together (43 cycles a minute).' },
-      { tag: 'Improved', text: 'Underwater dolphin kick — a wave that travels from the chest through the hips to the toes with the head held level, at a realistic 96 kicks a minute.' },
-      { tag: 'Improved', text: 'Those three strokes now run at their own tempo (freestyle and backstroke are unchanged); the 0.3× button still slows everything down for study.' }
+      { tag: 'Improved', text: 'Underwater dolphin kick — a wave that travels from the chest through the hips to the toes with the head held level, at a 96 kicks-a-minute study tempo.' },
+      { tag: 'Improved', text: 'Those three strokes now run at their own tempo; the 0.3× button still slows everything down for study.' }
     ]
   },
   {
