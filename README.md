@@ -46,7 +46,7 @@ The logo and favicons are produced by the scripts in `tools/` (see `tools/make_l
 
 ## Data & privacy
 
-Personal data (swimmer name, PRs, training log, Race Planner goals and meets) is stored only in the visitor's browser via `localStorage`; the **Export Backup** button on the My PRs page downloads it as JSON so it can be restored on another device. See `privacy.html` for the full policy.
+Personal data (swimmer name, PRs, training log, Race Planner goals and meets, timer and analytics settings) is stored only in the visitor's browser via `localStorage`; the **Export Backup** button on the My PRs page downloads all of it as JSON so it can be restored on another device. See `privacy.html` for the full policy.
 
 ## Maintainer notes
 
@@ -74,7 +74,7 @@ This is a personal, all-rights-reserved project. See [`LICENSE`](LICENSE) and `t
 
 ## Releasing a new version
 
-Tidelyne is an installable, offline-capable app. Three things carry the version
+Tidelyne is an installable, offline-capable app. Four things carry the version
 number and **must move together** on every release:
 
 1. **`index.html` — `UPDATES[0]`** (in the What's New script). Add a new entry at the

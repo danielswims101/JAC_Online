@@ -1133,7 +1133,7 @@
 //   bodyWave                                       travelling trunk wave + bob + breath lift for strokes that define sd.wave
 //                                                  (butterfly + dolphin: sinusoid params; breaststroke: a knot table); every other
 //                                                  stroke gets EXACTLY the page's old single-hinge formula
-//   STROKE_PATCHES / applyPatches                  coaching corrections to strokes.json (clone, never mutate); copies rate / wave / hold; may
+//   STROKE_PATCHES / applyPatches                  coaching corrections to the STROKES table in index.html (clone, never mutate); copies rate / wave / hold; may
 //                                                  append keyframes (butterfly: a 7th `Entry` keyframe at u 0.90, technique pass 4)
 //
 // Body-local axes: +Y head, +X anatomical LEFT, +Z anterior. Prone: +Z = down (water). Supine: +Z = up.
@@ -1532,8 +1532,7 @@
   // ═════════════════════════════════════════════════════════════════════════════════
   // Returns { spineX, bob, neckX } — spineX in rad on the spine pivot (+ = chest DOWN / ventral, the driver's sign), bob in
   // metres on swimmerOrient (whole body, world y), neckX in rad on the neck (− = face forward / up). The page ADDS these to its
-  // own spineX / bob / neckX, which are 0 when it takes this branch (index.html updateSwimmer, technique pass §11 in
-  // preview/NOTES.md). u = cycle position, b = the driver's breath envelope (0..1).
+  // own spineX / bob / neckX, which are 0 when it takes this branch (index.html updateSwimmer). u = cycle position, b = the driver's breath envelope (0..1).
   //   sd.wave = { chestAmp (deg), chestPhase (u of the chest-press peak), breathLift (deg of chest-UP folded in with b),
   //               bobAmp (m), bobPhase (u of the highest hip line), breathBob (m·b), neckBreath (rad·b, face forward),
   //               neckAmp? (deg, + = face down) at neckPhase? (defaults to chestPhase) — the dolphin's head-node term (pass 6) }
@@ -1830,7 +1829,7 @@
     var roll = swimmer.root ? swimmer.root.rotation.y : 0;
     var spine = swimmer.spine, hips = swimmer.hips;
     if (spine && hips) {
-      if (spine.rotation.order === 'XYZ') spine.rotation.order = 'YXZ';   // exact: net = Rx(spineX) (see NOTES)
+      if (spine.rotation.order === 'XYZ') spine.rotation.order = 'YXZ';   // exact: net = Rx(spineX)
       var phi = (1 - config.hipRollRatio) * roll;
       hips.rotation.y = -phi;
       spine.rotation.y = phi;
@@ -2059,7 +2058,7 @@
   }
 
   // ═════════════════════════════════════════════════════════════════════════════════
-  // 5. STROKE_PATCHES — coaching corrections (see NOTES-motion.md for the numbers + sources)
+  // 5. STROKE_PATCHES — coaching corrections (the numbers and their sources are in each patch's `notes` string below)
   // ═════════════════════════════════════════════════════════════════════════════════
   // Format: { [stroke]: { rollAmp?, breath?, depth?, rate?, wave?, hold?, append?: { at, phases: [full phase objects] }, phases?: { [i]: { name?, desc?, dur?, drag?, thrust?, lift?, vel?, eff?, L?: {sh?,el?,hi?,kn?}, R?: {...} } },
   //           rate: tempo multiplier on the page's global 0.55 cycles/s clock (technique pass; the page reads sd.rate),
@@ -2193,7 +2192,7 @@
         5: { name: 'Recovery', dur: 0.19, drag: 40, thrust: 22, lift: 9, vel: 1.66, eff: 54, desc: 'Straight, relaxed arms sweep low and wide over the water in one continuous swing, thumbs down, as the head goes back under.',
              L: { sh: [-117, -4, 74], el: [8], hi: [6, 0, 0], kn: [4] }, R: { sh: [-117, 4, -74], el: [8], hi: [6, 0, 0], kn: [4] } }
       },
-      // the 7th keyframe (strokes.json has six): appended by applyPatches only when the record still has exactly six phases
+      // the 7th keyframe (the STROKES table in index.html has six): appended by applyPatches only when the record still has exactly six phases
       append: { at: 6, phases: [
         { name: 'Entry', dur: 0.10, drag: 40, thrust: 30, lift: 14, vel: 1.70, eff: 57, desc: 'The hands enter shoulder-width in front of the head with momentum, fingertips first, as the hips rise for the next press and the knees load the first kick.',
           L: { sh: [-156, 40, 9], el: [3], hi: [31, 0, 0], kn: [66] }, R: { sh: [-156, -40, -9], el: [3], hi: [31, 0, 0], kn: [66] } } ] }
@@ -2307,7 +2306,7 @@
  * Implicit-surface anatomy (tapered elliptical capsules + ellipsoids + rounded boxes, max-blend smooth-min),
  * own marching cubes on a block-sparse grid, weld + Taubin, SDF-derived skin weights, one THREE.SkinnedMesh
  * with material groups (0 skin, 1 suit, 2 cap) + rigid goggles on the head bone.
- * three.js r128 UMD. No top-level THREE access. IIFE, one global. See NOTES-body.md.
+ * three.js r128 UMD. No top-level THREE access. IIFE, one global.
  */
 (function () {
   'use strict';
@@ -2346,7 +2345,7 @@
   var A_POSE_DEG = 14;           // build/bind pose: shoulders abducted so hands clear the thighs (driver resets to 0)
   var LAP_NEAR_PASSES = 16, LAP_NEAR_RADIUS = 0.085;  // round-4: extra weight-smoothing passes within 8.5 cm of the shoulder joints (step 8b')
   var DQS_LBS_RADIUS = 0.075;    // round-4: linear-blend skinning within this distance of a shoulder joint, dual quaternion beyond +4 cm (assembleRig / DQS_POS)
-  var LAP_NEAR_GAMMA = 1.0;      // round-4: arm-vs-torso weight split steepening (w^γ / (w^γ + (1−w)^γ)) within LAP_NEAR_RADIUS (step 8b''); 1 = off — see NOTES §11: sharpening (γ 2-8) left the armpit-floor lip behind as a pale tongue, diffusion (16 passes) pulls it inside
+  var LAP_NEAR_GAMMA = 1.0;      // round-4: arm-vs-torso weight split steepening (w^γ / (w^γ + (1−w)^γ)) within LAP_NEAR_RADIUS (step 8b''); 1 = off — sharpening (γ 2-8) left the armpit-floor lip behind as a pale tongue, diffusion (16 passes) pulls it inside
   var ANKLE_REST = 1.15;         // rad, plantarflexed rest (never touched by the driver)
   var BONE_DEFS = [
     // name, parent, [x,y,z]
@@ -2887,7 +2886,7 @@
 
   // ───────────────────────────── grid / blocks / marching cubes ─────────────────────────────
   // Round-2: high samples at 5.5 mm (was 7) — fingers/toes/face are the limit of the field resolution; QEM brings it back to the
-  // same shipped budget (≈ 2× the field cost: ~1.1 s in node, see NOTES §9).
+  // same shipped budget (≈ 2× the field cost: ~1.1 s in node).
   var QUALITY = { high: { voxel: 0.0055, taubin: 3, target: 52000 }, medium: { voxel: 0.0105, taubin: 3, target: 19500 }, low: { voxel: 0.0145, taubin: 2, target: 7000 } };
 
   function makeGrid(prims, voxel) {
@@ -3225,7 +3224,7 @@
     //      vertices left with a one-edge weight jump at the armpit floor (24 edges > 0.35 after the 4 global passes — each one a
     //      triangle stretched between the torso-rigid and arm-rigid predictions). More GLOBAL passes would blur every other joint,
     //      so `lapNear` extra passes run only on vertices within `lapRadius` of a shoulder joint (build pose): the transition
-    //      becomes a smooth cone across the axilla instead of a sliver (r3-shoulder-lab: max deviation / edge jumps, see NOTES).
+    //      becomes a smooth cone across the axilla instead of a sliver (r3-shoulder-lab: max deviation / edge jumps).
     var lapNear = opts.lapNear, lapR2 = opts.lapRadius * opts.lapRadius;
     if (lapNear > 0 && lapR2 > 0) {
       var shLo = frames.shoulderL.o, shRo = frames.shoulderR.o, nearSh = new Uint8Array(nv), nNear = 0;
