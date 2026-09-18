@@ -299,6 +299,7 @@ nav.tl-tight2 .nav-ai-btn{min-width:40px} /* icon-only pill keeps a 40px target 
 .hero h1{font-family:var(--fh);font-size:clamp(4rem,9vw,8rem);line-height:0.88;letter-spacing:4px;margin-bottom:1.75rem;position:relative}
 .hero h1 .l1{display:block;color:var(--white)}.hero h1 .l2{display:block;color:var(--cyan);text-shadow:0 0 80px rgba(0,212,255,0.5)}.hero h1 .l3{display:block;color:var(--white)}
 .hero-desc{font-size:1.05rem;color:var(--white2);max-width:580px;margin:0 auto 2.5rem;line-height:1.85;font-weight:300;position:relative}
+.tl-nowrap{white-space:nowrap} /* compound modifiers ("pool-deck") never split at the hyphen on phone widths */
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;position:relative}
 .btn-hero{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:500;transition:background-color .25s,color .25s,border-color .25s,box-shadow .25s,transform .25s;text-transform:uppercase;cursor:pointer;display:inline-block;text-align:center;line-height:normal;text-decoration:none}
 .btn-hero:hover{background:var(--cyan2);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,212,255,0.35)}
@@ -311,6 +312,7 @@ nav.tl-tight2 .nav-ai-btn{min-width:40px} /* icon-only pill keeps a 40px target 
 .section-eyebrow{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.75rem;opacity:0.85}
 h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* section titles promoted from <div> to real headings keep their look */
 .section-title{font-family:var(--fh);font-weight:400;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:2px;line-height:0.92;margin-top:0;margin-bottom:1rem}
+.section-title.sub-section{font-size:clamp(1.8rem,3.2vw,2.4rem)} /* a page's second major section (Ask the Visualizer, Futures & cuts): one scale between the H1 and the 1.5rem .sub-title, instead of two inline sizes (2.5rem / 2.2rem) */
 .section-title span{color:var(--cyan)}
 .section-intro{font-size:0.95rem;color:var(--white2);max-width:660px;line-height:1.85;font-weight:300;margin-bottom:2.5rem}
 /* Peer section headings inside a page (Log, What's New, Analytics) share one scale — a step below .section-title, above the card h3/h4s; .section-eyebrow stays for labelled groups */
@@ -364,18 +366,17 @@ h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-w
 /* TABLES */
 .table-wrap{position:relative;overflow-x:auto;border-radius:var(--r12);border:1px solid var(--border2);margin:1.25rem 0}
 div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollable wrapper: the ring sits inside the box so the right-edge fade mask cannot clip it */
-.data-table th .th-unit, .form-group label .th-unit{text-transform:none} /* unit symbols are case-sensitive: m, s, m:ss.ss */
+.data-table th .th-unit, .form-group label .th-unit, .metric-card .lbl .th-unit{text-transform:none} /* unit symbols are case-sensitive: m, s, m:ss.ss */
 .data-table th .th-unit i{font-style:normal} /* a variable name in the monospace header: no DM Mono italic face is requested, so the oblique would be synthesised */
 .data-table{width:100%;border-collapse:collapse;font-size:0.84rem}.data-table th{background:var(--navy3);color:var(--cyan);font-family:var(--fm);font-weight:500;font-size:var(--fs-micro);letter-spacing:2px;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--white2);vertical-align:top;line-height:1.6}.data-table tr:hover td{background:rgba(0,212,255,0.03)}.data-table td:first-child{color:var(--white);font-weight:500}
 .ptag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1px;color:var(--cyan);display:block;margin-bottom:3px}
-.log-stat-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px}
 .viz-phys-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
 /* METRICS */
 .metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:1rem;margin-bottom:3rem}
 .metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border)}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4;overflow-wrap:anywhere}
 /* VIDEO */
 .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}.video-grid>.video-card:only-child{grid-column:1/-1;max-width:640px}
-@media(min-width:664px) and (max-width:1011px){.video-grid>.video-card:last-child:nth-child(odd):not(:only-child){grid-column:1/-1;max-width:640px;justify-self:center;width:100%}} /* the two-column band (grid 624–947px wide): a 2+1 tab's odd card spans the row, centred, instead of sitting alone at half width; three-up desktops keep their rows */
+@media(min-width:664px) and (max-width:1011px){.video-grid>.video-card:last-child:nth-child(odd):not(:only-child){grid-column:1/-1;max-width:calc(50% - 0.75rem);justify-self:center;width:100%}} /* the two-column band (grid 624–947px wide): a 2+1 tab's odd card is centred on its own row at the same size as its siblings (half the grid minus half the gap) — neither an orphan at the left nor a 640px hero twice their size; three-up desktops keep their rows */
 .video-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);overflow:hidden;transition:border-color 0.3s,transform 0.25s}.video-card:hover{border-color:var(--border);transform:translateY(-3px)}
 .video-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}.video-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 .video-info{padding:1.25rem}.video-info h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;margin-bottom:0.5rem}.video-info p{font-size:0.84rem;color:var(--white2);line-height:1.75;font-weight:300}.video-tag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem;display:block}
@@ -455,6 +456,12 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .msg-avatar.ai-av{background:var(--cyan-dim);border:1px solid rgba(0,212,255,0.3);color:var(--cyan)}.msg-avatar.user-av{background:var(--gold-dim);border:1px solid rgba(245,166,35,0.3);color:var(--gold)}
 .msg-bubble{max-width:80%;min-width:0;overflow-wrap:anywhere;background:var(--card3);border-radius:14px;padding:0.85rem 1.1rem;font-size:0.88rem;color:var(--white2);line-height:1.8;font-weight:300;border:1px solid var(--border2)} /* a pasted URL wraps inside the bubble instead of scrolling the chat sideways */
 .msg-bubble.user-b{background:rgba(0,212,255,0.07);border-color:rgba(0,212,255,0.15);color:var(--white)}
+/* Finished coach replies are typeset (tlChatFormat): headings, bold, lists and rules instead of raw markdown */
+.msg-bubble p{margin:0 0 0.6em}.msg-bubble p:last-child{margin-bottom:0}
+.msg-bubble ul,.msg-bubble ol{margin:0.3em 0 0.7em;padding-left:1.3em}.msg-bubble ul:last-child,.msg-bubble ol:last-child{margin-bottom:0}.msg-bubble li{margin:0.15em 0;padding-left:0.15em}
+.msg-bubble strong{color:var(--white);font-weight:600}.msg-bubble .msg-h{display:block;margin:0.7em 0 0.25em;letter-spacing:0.2px}.msg-bubble .msg-h:first-child{margin-top:0}
+.msg-bubble code{font-family:var(--fm);font-size:0.86em;background:rgba(255,255,255,0.07);border-radius:4px;padding:1px 5px}
+.msg-bubble hr{border:0;border-top:1px solid var(--border2);margin:0.7em 0}
 /* streaming cursor */
 .msg-bubble.streaming::after{content:'▋';color:var(--cyan);animation:blink 0.8s step-end infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -491,7 +498,9 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 .form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300d4ff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;min-width:0;max-width:100%}
 /* One height for every single-line control so date pickers, selects and number inputs align in a row (the ≤768 min-height:44px still wins on touch) */
 .form-select,.form-input{height:40px;line-height:18px}
-.form-select:focus,.form-input:focus,.form-textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}.form-select option{background:var(--navy2)}.form-textarea{resize:vertical;min-height:80px;line-height:1.6}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--white4);opacity:1} /* the site hint grey (same as the palette, chat and goal-time fields) instead of each browser default */
+.form-select:focus,.form-input:focus,.form-textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
+.form-select:focus-visible,.form-input:focus-visible,.form-textarea:focus-visible,.ai-input:focus-visible,.pr-input:focus-visible,#page-planner .pl-goal-input:focus-visible{box-shadow:none;outline-offset:0} /* keyboard focus: the site-wide 2px outline sits on the cyan border, not a third ring 2px outside the glow */.form-select option{background:var(--navy2)}.form-textarea{resize:vertical;min-height:80px;line-height:1.6}
 /* CALCULATOR */
 .calc-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 @media(max-width:700px){.calc-wrapper{grid-template-columns:minmax(0,1fr)}}
@@ -511,9 +520,11 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 @media(min-width:600px){.pr-grid{grid-template-columns:repeat(3,1fr)}} /* three-event strokes fill a row and freestyle splits 3+3 (auto-fit gave four tracks: an empty fourth in four sections and a 4+2 freestyle) */
 .pr-item{background:var(--card);border-radius:var(--r8);padding:0.9rem;border:1px solid var(--border2);text-align:center;transition:border-color 0.2s}.pr-item:hover{border-color:var(--border)}
 .pr-event{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:7px;display:block}
-.pr-input{background:var(--navy2);border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.6rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s}.pr-input:focus{border-color:var(--cyan)}.pr-input::placeholder{color:var(--white4);font-size:1rem}
+.pr-input{background:var(--navy3);border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.6rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s;min-height:44px} /* navy3 + 44px: the same field as every .form-input and the planner goal input (was the darker navy2 at 43px) */.pr-input:focus{border-color:var(--cyan)}.pr-input::placeholder{color:var(--white4);font-size:1rem}
 /* DRYLAND */
 .dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem}
+/* Four-column desktops (≥1164px): the fifth "Daily" card runs full width under the four days with its routine in two columns, instead of sitting alone at 25% beside an empty row (the ≤768 block does the same for the 2+2+1 case) */
+@media(min-width:1164px){.dl-grid>.dl-card:last-child:nth-child(odd){grid-column:1/-1}.dl-grid>.dl-card:last-child:nth-child(odd) ul{columns:2;column-gap:2.5rem}.dl-grid>.dl-card:last-child:nth-child(odd) ul li{break-inside:avoid}}
 .dl-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.4rem;transition:border-color 0.3s,transform 0.2s}.dl-card:hover{border-color:var(--border);transform:translateY(-2px)}
 .dl-card h4{font-family:var(--fh);font-size:1.15rem;letter-spacing:1px;margin-bottom:0.4rem;color:var(--gold)}.dl-day{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-bottom:0.85rem}
 .dl-card ul{list-style:none}.dl-card ul li{font-size:0.82rem;color:var(--white2);padding:5px 0;display:flex;gap:9px;align-items:flex-start;border-bottom:1px solid var(--border2);line-height:1.6}.dl-card ul li:last-child{border-bottom:none}
@@ -545,6 +556,12 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .footer-bottom a{display:inline-block;padding:10px 4px;font-size:0.7rem;color:var(--white3);transition:color 0.2s}.footer-bottom a:hover{color:var(--cyan)}
 /* The legal-links line reads at the links' own size (separators included) instead of the 9.9px tracked uppercase of the brand line */
 .footer-bottom .footer-links{font-size:0.7rem;letter-spacing:0.5px;text-transform:none}
+/* Flex row with the " · " drawn as a CSS dot in the 12px gap before each item; a wrapped line can never end
+   (or start) with a separator because a line-start item's dot falls outside the row box and is clipped.
+   margin/padding cancel so the link text starts on the same x as the brand and disclaimer lines. */
+.footer-bottom .footer-links{display:flex;flex-wrap:wrap;align-items:center;column-gap:12px;overflow:hidden;margin:-4px -8px;padding:4px}
+.footer-bottom .footer-links>*{position:relative}
+.footer-bottom .footer-links>*::before{content:"";position:absolute;left:-7.5px;top:50%;width:3px;height:3px;margin-top:-1.5px;border-radius:50%;background:var(--white4)}
 /* "Install app" in the footer links (shown by the What's New module only while the browser holds an install prompt, or on iOS Safari outside the installed app) */
 .footer-bottom .footer-install{background:none;border:0;margin:0;padding:10px 4px;font:inherit;font-size:0.7rem;color:var(--white3);cursor:pointer;transition:color 0.2s}.footer-bottom .footer-install:hover{color:var(--cyan)}
 /* Sub-page footers carry one brand line and the legal links, so they do not need the home footer's 160px of padding */
@@ -621,6 +638,16 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
    3D canvas kept a taller-than-screen height (the phone overrides above are max-width rules) — after them so it wins. */
 @media(max-height:500px) and (orientation:landscape){
   .ai-messages{min-height:160px;height:calc(100vh - 230px);height:calc(100dvh - 230px)}
+  /* Title block + chat header compact: nav 52 + title 122 + header 146 filled 320 of 375px, so the pane began
+     under the fold and the composer sat at y=549 — two screens away once the keyboard opened */
+  #page-ai .ai-title-wrap{padding:8px 20px 4px}
+  #page-ai .ai-title-wrap .section-eyebrow{margin-bottom:4px}
+  #page-ai .ai-title-wrap .section-title{font-size:1.4rem;margin-bottom:0}
+  .ai-title-note,.ai-header-text p{display:none}
+  .ai-header{padding:6px 12px;gap:8px;flex-wrap:nowrap}
+  .ai-header-left{flex:0 0 auto}
+  .ai-header-text h3{font-size:1.05rem;white-space:nowrap}
+  .ai-mode-btns{flex:1 1 auto;min-width:0}
   /* Mode buttons and quick prompts as single scrolling rows (as on portrait phones): wrapped they cost ~330px of height */
   .ai-mode-btns{gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
   .ai-mode-btns::-webkit-scrollbar{display:none}
@@ -678,6 +705,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .gen-output,.workout-set,.card,.content-block,.section-wrap{background:#fff!important;color:#000!important;border-color:#bbb!important;box-shadow:none!important}
   .workout-set,.card p,.content-block p,.section-intro{color:#000!important}
   .workout-phase h2,.section-title,.section-title span{color:#000!important}
+  /* Whole-page print reset: the dark theme's table, box, badge and accordion colours printed at
+     1.1–1.8:1 on paper and closed accordions / inactive tabs never printed at all (Sets, Race plans,
+     Zones — the pages a coach prints — came out blank). Every element in the active page goes
+     black-on-white; the bar fills keep their colour (print-color-adjust) so zone widths still read. */
+  .page.active *:not(.zone-fill):not(.an-zone-seg):not(.an-swatch):not(.pl-bar-fill):not(.legend-dot){color:#000!important;background-color:transparent!important;border-color:#bbb!important;box-shadow:none!important;text-shadow:none!important}
+  .zone-fill,.an-zone-seg,.an-swatch,.pl-bar-fill,.legend-dot{color:#000!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .acc-body{display:block!important}
+  .chevron{display:none!important}
+  .tab-panel{display:block!important}
+  .tab-panel+.tab-panel{break-before:page;page-break-before:always}
+  .tab-panel[data-tab-title]::before{content:attr(data-tab-title);display:block;font-family:var(--fh);font-size:1.5rem;letter-spacing:1px;line-height:1;margin:0 0 0.75rem;color:#000}
 }
 /* ── timers ── */
 /* ============================================================
@@ -913,7 +951,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-goal-pr a{color:var(--white3);text-decoration:underline;text-underline-offset:2px}
 #page-planner .pl-goal-pr a:hover{color:var(--cyan)}
 #page-planner .pl-goal-label{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase}
-#page-planner .pl-goal-input{background:var(--navy2);border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.6rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s;min-height:44px}
+#page-planner .pl-goal-input{background:var(--navy3);border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.6rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s;min-height:44px}
 #page-planner .pl-goal-input::placeholder{color:var(--white4);font-size:1rem;letter-spacing:0}
 #page-planner .pl-goal-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
 /* the id-scoped outline:none above out-specifies the site-wide input:focus-visible ring — restore it here */
@@ -924,7 +962,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .nav-ai-btn.active{background:var(--cyan2);box-shadow:0 0 0 2px rgba(0,212,255,0.35)}
 #page-planner .pl-goal-card .pl-err{margin-top:0}
 #page-planner .pl-quick{display:flex;gap:6px}
-#page-planner .pl-quick .btn-ghost-sm{flex:1;padding:6px 4px;font-size:0.62rem;letter-spacing:0.5px}
+#page-planner .pl-quick .btn-ghost-sm{flex:1;padding:6px 4px;letter-spacing:0.5px} /* family 0.7rem — the 0.62rem override left these the only ghost buttons at the 9.9px micro floor */
 #page-planner .pl-goal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0}
 #page-planner .pl-goal-stats div{background:var(--navy3);border-radius:6px;padding:6px 7px;border:1px solid var(--border2);min-width:0}
 #page-planner .pl-goal-stats dt{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;color:var(--white3);text-transform:uppercase}
@@ -1157,7 +1195,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-list li strong{color:var(--white);font-weight:500}
 #page-analytics .an-panel-p{font-size:0.83rem;color:var(--white2);line-height:1.7;font-weight:300;margin-bottom:0.5rem}
 #page-analytics .an-ref-wrap{margin-top:0.75rem}
-#page-analytics .an-ref-table td,#page-analytics .an-ref-table th{padding:8px;font-size:0.76rem;white-space:nowrap}#page-analytics .an-ref-table th{white-space:normal}
+#page-analytics .an-ref-table td,#page-analytics .an-ref-table th{padding:8px 6px;font-size:0.76rem;white-space:nowrap}#page-analytics .an-ref-table th{letter-spacing:1px;vertical-align:bottom}
+#page-analytics .an-ref-table th[colspan]{text-align:center;border-bottom:1px solid var(--border2)} /* two-row header (Men / Women over Rate · Per cycle), one word per cell: the old "Per cycle — women" headers wrapped to four lines (94px) in the 436px desktop column */
 #page-analytics .an-css-table-wrap{margin:1rem 0 0}
 #page-analytics .an-css-table td,#page-analytics .an-css-table th{padding:8px 10px;font-size:0.76rem;white-space:nowrap;text-align:left}
 #page-analytics .an-css-table td{font-family:var(--fm);font-variant-numeric:tabular-nums}
@@ -1475,8 +1514,11 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-right{margin-left:auto}
   nav .nav-brand{min-height:44px;padding:0 4px;margin-left:-4px} /* the wordmark was the one nav control under 40px on touch (100×31) */
   nav .nav-ai-btn,nav #nav-login-btn{min-height:40px;padding:6px 10px;font-size:0.66rem;letter-spacing:0.6px;position:relative}
-  nav .nav-ai-btn::before,nav .nav-burger::before{content:"";position:absolute;inset:-2px}
+  nav .nav-ai-btn::before,nav .nav-burger::before,nav #nav-search-btn::before{content:"";position:absolute;inset:-2px}
   nav #nav-logout-btn{min-width:40px;min-height:40px}
+  /* The ⌘K pill was the one header control off the 40px line (32×30 at 769–899, 44×44 at 481–768): icon-only, 40×40, same hit area */
+  nav #nav-search-btn{width:40px;min-width:40px;height:40px;min-height:40px;padding:0;display:inline-flex;align-items:center;justify-content:center;position:relative}
+  nav #nav-search-btn .tl-pal-navhint{display:none}
   nav .nav-burger{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;min-height:40px;padding:0;order:99;position:relative;flex-shrink:0}
   nav .nav-burger-bars{position:relative;display:block;width:18px;height:14px}
   nav .nav-burger-bars span{position:absolute;left:0;top:6px;width:18px;height:2px;border-radius:1px;background:currentColor;transition:transform 0.2s ease,opacity 0.2s ease}
@@ -1545,6 +1587,12 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-drawer{width:min(340px,90vw)}
   nav .nav-drawer-head{padding-right:12px}
 }
+/* 320px phones: brand + pills + burger ran 9px past the content box and the burger sat 3px from the screen edge
+   (navCramped() also catches this now); 2px less gap and 7px pill padding keep the wordmark and the 12px gutter */
+@media(max-width:340px){
+  nav.tl-pal-nav{gap:4px}
+  nav .nav-ai-btn,nav #nav-login-btn{padding:6px 7px}
+}
 /* Body scroll lock while the drawer is open (the nav module also fixes the body for iOS). Keeps the
    scrollbar gutter so desktop-width narrow windows do not shift when the page stops scrolling. */
 html.tl-nav-lock{overflow-y:scroll}
@@ -1585,6 +1633,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 @media(max-width:899px){
   .footer-inner{grid-template-columns:repeat(2,1fr)}
   .footer-inner>:last-child:nth-child(odd){grid-column:1/-1}
+  /* Tablets get the phone footer shape too: brand full-width on top, then the four link columns 2×2
+     (the brand used to share row one with Learn and Compete stretched to 723px on row three) */
+  .footer-inner>.footer-brand{grid-column:1/-1}
+  .footer-inner>.footer-col:last-child:nth-child(odd){grid-column:auto}
   .key-grid{grid-template-columns:repeat(2,1fr)}
   .nutr-grid{grid-template-columns:repeat(2,1fr)}
   .nutr-grid>.nutr-card:last-child:nth-child(odd){grid-column:1/-1}
@@ -1796,7 +1848,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="hero-particles" id="hero-particles"></div>
   <p class="hero-eyebrow">A Complete Platform for Competitive Swimmers</p>
   <h1><span class="l1">TRAIN</span> <span class="l2">ELITE.</span> <span class="l3">SWIM FAST.</span></h1>
-  <p class="hero-desc">AI coaching, 3D biomechanics visualizer, technique library, workout generator, pool-deck timers, race planner, training analytics, race strategy, nutrition, mental performance, taper protocols — everything a competitive swimmer needs.</p>
+  <p class="hero-desc">AI coaching, 3D biomechanics visualizer, technique library, workout generator, <span class="tl-nowrap">pool-deck</span> timers, race planner, training analytics, race strategy, nutrition, mental performance, taper protocols — everything a competitive swimmer needs.</p>
   <div class="hero-btns">
     <a class="btn-hero" href="#ai">Talk to AI Coach <span aria-hidden="true">✦</span></a>
     <a class="btn-hero-ghost" href="#visualizer">3D Visualizer</a>
@@ -1864,7 +1916,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="footer-col"><h4>Track</h4><ul><li><a href="#profile">My PRs</a></li><li><a href="#log">Training Log</a></li><li><a href="#analytics">Training Analytics</a></li></ul></div>
     <div class="footer-col"><h4>Compete</h4><ul><li><a href="#race">Race Strategy</a></li><li><a href="#taper">Taper &amp; Recovery</a></li><li><a href="#mental">Mental Performance</a></li><li><a href="#injury">Injury Prevention</a></li><li><a href="#season">Season Calendar</a></li></ul></div>
   </div>
-  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p class="footer-links"><a href="#ai">AI Coach</a> · <a href="#updates">What's New</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a><span id="tl-footer-install-wrap" hidden> · <button type="button" class="footer-install" id="tl-footer-install" onclick="tlFooterInstall()">Install app</button></span></p><p>Educational information only — not medical advice</p></div>
+  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p class="footer-links"><a href="#ai">AI Coach</a><a href="#updates">What's New</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="disclaimer.html">Medical Disclaimer</a><span id="tl-footer-install-wrap" hidden><button type="button" class="footer-install" id="tl-footer-install" onclick="tlFooterInstall()">Install app</button></span></p><p>Educational information only — not medical advice</p></div>
 </footer>
 </div>
 <!-- 3D VISUALIZER PAGE -->
@@ -1959,7 +2011,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="divider"></div>
   <div class="section-eyebrow">AI Technique Analysis</div>
-  <h2 class="section-title" style="font-size:2.5rem">ASK THE <span>VISUALIZER</span></h2>
+  <h2 class="section-title sub-section">ASK THE <span>VISUALIZER</span></h2>
   <p class="section-intro" style="margin-bottom:1.5rem">Ask the AI to explain any biomechanical concept with detailed force analysis, phases, and coaching cues — streamed in real time. Free account required.</p>
   <div class="imggen-wrap">
     <div class="imggen-grid">
@@ -2421,13 +2473,14 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <p class="form-notice is-ok" id="log-undo" hidden><button type="button" class="tl-linkbtn" id="log-undo-btn" onclick="undoLogDelete()">Undo</button></p>
     </div>
   </div>
-  <div id="log-stats" style="margin-bottom:1.5rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;display:none">
+  <div id="log-stats" style="margin-bottom:2rem;display:none">
     <h2 class="sub-title">30-DAY SUMMARY</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem">
-      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-sessions" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Sessions</div></div>
-      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-km" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Distance <span style="text-transform:none">m/yd</span></div></div>
-      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-hours" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div class="log-stat-lbl">Hours</div></div>
-      <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-avg-effort" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">—</div><div class="log-stat-lbl">Avg Effort</div></div>
+    <!-- Same .metric-card tiles as Analytics and the Planner (one link away) — the summary used to be its own inline-styled family -->
+    <div class="metrics-row" style="margin-bottom:0">
+      <div class="metric-card"><span class="val" id="stat-sessions">0</span><span class="lbl">Sessions</span></div>
+      <div class="metric-card"><span class="val" id="stat-km">0</span><span class="lbl">Distance <span class="th-unit">m/yd</span></span></div>
+      <div class="metric-card"><span class="val" id="stat-hours">0</span><span class="lbl">Hours</span></div>
+      <div class="metric-card"><span class="val" id="stat-avg-effort">—</span><span class="lbl">Avg Effort</span></div>
     </div>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
@@ -2762,7 +2815,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <p id="season-calendar-note" style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;line-height:1.6">Dates reflect the published USA Swimming national events calendar and are subject to official updates — always confirm with usaswimming.org before planning travel.</p>
   <div class="divider"></div>
   <div class="section-eyebrow">Cuts & Motivational Times</div>
-  <h2 class="section-title" style="font-size:2.2rem">FUTURES, JUNIORS <span>& NATIONAL CUTS</span></h2>
+  <h2 class="section-title sub-section">FUTURES, JUNIORS <span>& NATIONAL CUTS</span></h2>
   <div class="warn-box"><strong>Exact cut times aren't shown here on purpose.</strong> Futures, Speedo Junior Nationals, Toyota Nationals, and the B/BB/A/AA/AAA/AAAA Motivational Times are each a full table of times split by event, age group, gender, and course (SCY/LCM) — and they get revised. Rather than risk showing you a stale or wrong number for a swim that matters, every button below opens USA Swimming's time-standards page, where each current table is published.</div>
   <div class="grid-2">
     <div class="card">
@@ -3356,7 +3409,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         </div>
         <div class="calc-panel"><h4>ELITE FREESTYLE REFERENCE</h4>
           <p class="an-panel-p">Approximate mid-pool race values for finalists and semi-finalists at the 2019 European Short-Course Championships (25 m pool, 324 swimmers; Staunton, Ruiz-Navarro &amp; Born 2025). Read from published density plots, so treat the bands as rounded. Rate is in cycles per minute; distance per cycle is per two arm strokes.</p>
-          <div class="table-wrap an-ref-wrap"><table class="data-table an-ref-table"><thead><tr><th scope="col">Event</th><th scope="col">Rate — men</th><th scope="col">Per cycle — men</th><th scope="col">Rate — women</th><th scope="col">Per cycle — women</th></tr></thead><tbody id="an-ref-body"></tbody></table></div>
+          <div class="table-wrap an-ref-wrap"><table class="data-table an-ref-table"><thead><tr><th scope="col" rowspan="2">Event</th><th scope="colgroup" colspan="2">Men</th><th scope="colgroup" colspan="2">Women</th></tr><tr><th scope="col">Rate</th><th scope="col">Per cycle</th><th scope="col">Rate</th><th scope="col">Per cycle</th></tr></thead><tbody id="an-ref-body"></tbody></table></div>
           <ul class="an-list">
             <li><strong>Measure a mid-pool segment.</strong> Time and count strokes between two marks (for example the 15 m and 45 m lines, or flags to flags). A full length includes the push-off and glide, which inflates distance per stroke.</li>
             <li><strong>Speed = rate × distance per cycle.</strong> The two trade off. Judge a technique change by speed at a fixed effort, or by stroke index (speed × distance per cycle), not by distance per stroke alone. Across elite fields, faster swimmers in the same event mostly cover more distance per stroke rather than stroking faster (Craig et al. 1985).</li>
@@ -4148,6 +4201,9 @@ function enhanceA11y(){
         b.setAttribute('aria-controls', m[1]);
         panel.setAttribute('role','tabpanel'); panel.setAttribute('aria-labelledby', b.id);
         if(!panel.querySelector('a[href],button,input,select,textarea,[tabindex]')) panel.setAttribute('tabindex','0');
+        // Print caption: every panel prints in sequence with the tab strip hidden, so each carries its tab's name (emoji span dropped)
+        const bc=b.cloneNode(true); bc.querySelectorAll('[aria-hidden="true"]').forEach(x=>x.remove());
+        const bt=bc.textContent.replace(/\s+/g,' ').trim(); if(bt) panel.setAttribute('data-tab-title',bt);
       }
       b.addEventListener('keydown',e=>{
         let idx=-1;
@@ -4244,7 +4300,7 @@ function enhanceA11y(){
   document.querySelectorAll('.footer-bottom').forEach(fb=>{
     if(!fb.querySelector('a[href="privacy.html"]')){
       const p=document.createElement('p'); p.className='footer-links';
-      p.innerHTML='<a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a>';
+      p.innerHTML='<a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="disclaimer.html">Medical Disclaimer</a>'; // separators are CSS dots (.footer-links), so a wrapped line never ends in one
       fb.appendChild(p);
     }
   });
@@ -6266,16 +6322,42 @@ function updateStreamBubble(el,text){
   _streamPending={el,text};
   if(!_streamRaf) _streamRaf=requestAnimationFrame(_flushStream);
 }
+// Markdown-lite for a finished coach reply: the model answers structured questions in markdown
+// (**bold**, ### headings, - / 1. lists, --- rules) and the bubble used to show that syntax raw.
+// Escapes first, then only ever emits its own tags — never a tag from the reply. Streaming keeps
+// textContent; this runs once per reply in finishStreamBubble.
+function tlChatFormat(text){
+  const inline=s=>escapeHTML(s)
+    .replace(/`([^`\n]+)`/g,'<code>$1</code>')
+    .replace(/\*\*([^\n]+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/(^|[\s(])\*([^*\n]+?)\*(?=[\s.,;:!?)]|$)/g,'$1<em>$2</em>');
+  const lines=String(text).replace(/\r\n?/g,'\n').split('\n');
+  let html='', list=null, para=[];
+  const closeList=()=>{ if(list){ html+='</'+list+'>'; list=null; } };
+  const flushPara=()=>{ if(para.length){ html+='<p>'+para.join('<br>')+'</p>'; para=[]; } };
+  lines.forEach(raw=>{
+    const line=raw.trim(); let m;
+    if(!line){ flushPara(); closeList(); return; }
+    if(/^([-*_])\1{2,}$/.test(line)){ flushPara(); closeList(); html+='<hr>'; return; }
+    if((m=/^#{1,4}\s+(.+?)\s*#*$/.exec(line))){ flushPara(); closeList(); html+='<strong class="msg-h">'+inline(m[1])+'</strong>'; return; }
+    if((m=/^[-*•]\s+(.+)$/.exec(line))){ flushPara(); if(list!=='ul'){ closeList(); list='ul'; html+='<ul>'; } html+='<li>'+inline(m[1])+'</li>'; return; }
+    if((m=/^\d{1,3}[.)]\s+(.+)$/.exec(line))){ flushPara(); if(list!=='ol'){ closeList(); list='ol'; html+='<ol>'; } html+='<li>'+inline(m[1])+'</li>'; return; }
+    if(list){ html=html.slice(0,-5)+'<br>'+inline(line)+'</li>'; return; } // wrapped list item continues the item
+    para.push(inline(line));
+  });
+  flushPara(); closeList();
+  return html;
+}
 function finishStreamBubble(el,text){
   if(!el) return;
   if(_streamRaf){ cancelAnimationFrame(_streamRaf); _streamRaf=0; }
   _streamPending=null;
   el.id='';
   el.classList.remove('streaming');
-  el.style.whiteSpace='pre-wrap';
   el.removeAttribute('aria-busy');
   el.removeAttribute('aria-live'); // back inside the polite log before the final text lands, so it is announced exactly once
-  el.textContent=text;
+  el.style.whiteSpace='normal'; // the typeset reply carries its own paragraphs, lists and line breaks
+  el.innerHTML=tlChatFormat(text);
   const msgs=document.getElementById('ai-messages');
   msgs.scrollTop=msgs.scrollHeight;
 }
@@ -9725,6 +9807,14 @@ function updateChartAria(D){
 function renderLegend(){
   var el = an$('an-legend'); if (!el) return;
   var series = seriesFor(state.stack);
+  // Only the series drawn in the 12-week window get a swatch (same predicate as the table's columns):
+  // a pool-only log used to list Dryland / Race / Time Trial keys for colours that never appear. An
+  // empty log keeps the full key so the reader sees what the chart can show.
+  if (state.model) {
+    var D = chartSeriesData();
+    var drawn = D.series.filter(function(s, j){ return D.stacks.some(function(row){ return row[j] > 0; }); });
+    if (drawn.length) series = drawn;
+  }
   el.innerHTML = series.map(function(s){
     return '<span class="an-legend-item"><span class="an-swatch" style="background:' + s.color + '"></span>' + anEsc(s.label) + '</span>';
   }).join('') + '<span class="an-legend-item"><span class="an-swatch line"></span>4-wk rolling avg</span>' +
@@ -12162,6 +12252,14 @@ if (window.__TL_TEST__ === true){
   // (.tl-tight), then clip the AI Coach label (.tl-tight2); both controls keep their accessible names.
   function navCramped(n){
     if (n.scrollWidth > n.clientWidth + 1) return true;
+    // Overflow that lands inside the bar's own right padding does not grow scrollWidth (320px phones: the
+    // burger sat 3px from the screen edge), so also compare the in-flow children against the content box.
+    var limit = n.getBoundingClientRect().right - (parseFloat(getComputedStyle(n).paddingRight) || 0) + 1;
+    for (var i = 0; i < n.children.length; i++) {
+      var c = n.children[i], cs = getComputedStyle(c);
+      if (cs.display === 'none' || cs.position === 'fixed' || cs.position === 'absolute') continue;
+      if (c.getBoundingClientRect().right > limit) return true;
+    }
     if (!isDesktop()) return false;
     var ul = n.querySelector('.nav-links'), li = ul ? ul.querySelector('li') : null;
     return !!li && ul.getBoundingClientRect().height > li.getBoundingClientRect().height * 1.5;
