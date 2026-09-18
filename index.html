@@ -170,7 +170,7 @@ THREE.OrbitControls = function (camera, domElement) {
   --gold:#f5a623;--gold-dim:rgba(245,166,35,0.12);
   --green:#00e599;--green-dim:rgba(0,229,153,0.1);
   --red:#ff5252;--red-dim:rgba(255,82,82,0.1);
-  --purple:#a855f7;--purple-text:#c084fc;--purple-dim:rgba(168,85,247,0.1);
+  --purple:#a855f7;--purple-text:#bf8cff;--purple-dim:rgba(168,85,247,0.1);
   --white:#eef3f8;--white2:#b0c4d8;--white3:#607a92;--white4:#3a5068;
   --card:#0b1d32;--card2:#0e2238;--card3:#112848;
   --border:rgba(0,212,255,0.15);--border2:rgba(0,212,255,0.07);
@@ -448,7 +448,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   padding:10px 18px;border-radius:0 0 8px 0;font-family:var(--fm);font-size:0.8rem;font-weight:700}
 .skip-link:focus{left:0}
 /* Higher-contrast muted text (was ~2.4:1 against navy) */
-:root{--white3:#8ba5bd;--white4:#7b95ad;--purple-text:#bf8cff}
+:root{--white3:#8ba5bd;--white4:#7b95ad}
 /* Pool-deck touch targets: 44px minimum on phones */
 @media(max-width:768px){
   .viz-btn,.btn-sm,.btn-ghost-sm,.qp,.tab-btn,.ai-mode-btn{min-height:44px;display:inline-flex;
@@ -1584,7 +1584,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Drag</div>
     <div class="legend-item"><div class="legend-dot" style="background:#00ff88"></div>Thrust / Propulsion</div>
     <div class="legend-item"><div class="legend-dot" style="background:#4488ff"></div>Lift</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#ffaa00"></div>Net Force</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ffaa00"></div>Net Force (+ accelerating / − decelerating)</div>
   </div>
   <p style="font-size:0.7rem;color:var(--white4);margin-top:0.5rem;font-family:var(--fm)">Force and velocity values are illustrative teaching approximations, not measured data.</p>
   <div id="viz-info-panel" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r12);padding:1.5rem">
@@ -1679,7 +1679,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>BODY ROTATION & HEAD POSITION</h4><span class="chevron">▾</span></div>
     <div class="acc-body"><p>Sprint rotation: 35–45°. Distance: 25–35°. Head position: hairline at the surface, eyes at the pool floor. Even a 2-inch head lift forces the hips down.</p></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>6-BEAT KICK MECHANICS</h4><span class="chevron">▾</span></div>
-    <div class="acc-body"><p>Elite sprinters derive 30–40% of propulsion from the kick. The kick originates at the hip — knee bends only 30–40° on the downbeat. Ankle plantarflexion is the biggest limiter for most swimmers.</p>
+    <div class="acc-body"><p>The kick supplies up to ~30% of propulsion in sprint freestyle (≈10–15% at distance pace). The kick originates at the hip — knee bends only 30–40° on the downbeat. Ankle plantarflexion is the biggest limiter for most swimmers.</p>
     <div class="cue-box">🎯 Cue: "Kick from your hip pocket, not your knee."</div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>GOLF SCORE SYSTEM</h4><span class="chevron">▾</span></div>
     <div class="acc-body"><p>Golf Score = 50m split (seconds) + stroke count per 50m. Lower is always better. Elite benchmarks: Below 55 = world class. 55–62 = senior national. 62–70 = competitive club.</p></div></div>
@@ -1689,7 +1689,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="acc-body open"><p>Correct position: hips at the surface, ears slightly submerged, eyes toward feet. Even a small hip drop creates exponentially increasing drag.</p>
     <div class="cue-box">🎯 Cue: "Squeeze a coin between your glutes, belly button to the ceiling."</div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>PINKY ENTRY & 2-2-2 DRILL</h4><span class="chevron">▾</span></div>
-    <div class="acc-body"><p>Entry is pinky-first, hand rotated so thumb points inward toward centerline. Arm enters directly above the shoulder. The 2-2-2 drill (2 right strokes, 2 left strokes, 2 full) isolates each side.</p></div></div>
+    <div class="acc-body"><p>Entry is pinky-first, hand rotated so the palm faces out — pinky down, thumb up. Arm enters directly above the shoulder. The 2-2-2 drill (2 right strokes, 2 left strokes, 2 full) isolates each side.</p></div></div>
   </div>
   <div class="tab-panel" id="t-br">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>2K1 SCULL — THE CORE DRILL</h4><span class="chevron open">▾</span></div>
@@ -1714,18 +1714,18 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="key-point"><span class="kp-label">Streamline</span><p>Hands stacked dominant-on-top, arms past ears, core rigid.</p></div>
       <div class="key-point"><span class="kp-label">Kick depth</span><p>25–35cm amplitude. Hip-driven.</p></div>
       <div class="key-point"><span class="kp-label">Swim depth</span><p>0.5–0.6m below surface.</p></div>
-      <div class="key-point"><span class="kp-label">Elite rate</span><p>About 110–130 kicks/min at race speed (1.8–2.2 Hz). Rate, not amplitude, is what rises with speed.</p></div>
+      <div class="key-point"><span class="kp-label">Elite rate</span><p>About 2.0–2.5 Hz (120–150 kicks/min) at full race speed; elite means sit near 1.9 Hz. Rate, not amplitude, is what rises with speed.</p></div>
     </div></div></div>
   </div>
   <div class="tab-panel" id="t-turns">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>FREESTYLE FLIP TURN</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Elite push-off/glide velocities reach ~2.8–3.2 m/s. Every 0.1s lost at the wall costs far more metabolically to recover. Approach at full speed. Initiate flip 1.2–1.5 body lengths from wall. Drive into tight streamline with ≥5m UW dolphin kick off every wall.</p></div></div>
+    <div class="acc-body open"><p>Elite push-off/glide velocities reach ~2.8–3.2 m/s. Every 0.1s lost at the wall costs far more metabolically to recover. Approach at full speed. Initiate the flip about one body length out — roughly 1–1.5 m from head to wall, as the T passes under you. Drive into tight streamline with ≥5m UW dolphin kick off every wall.</p></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>BREASTSTROKE PULLOUT</h4><span class="chevron">▾</span></div>
     <div class="acc-body"><p>The breaststroke pullout is the fastest point in the stroke. Legal sequence: push off → streamline glide → one full underwater pull to the thighs (with one optional dolphin kick) → recover the arms → one breaststroke kick → breakout as the head surfaces. Begin the pull the moment you sense velocity starting to drop.</p></div></div>
   </div>
   <div class="tab-panel" id="t-starts">
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>GRAB START & TRACK START MECHANICS</h4><span class="chevron open">▾</span></div>
-    <div class="acc-body open"><p>Track start (one foot back) is now dominant at elite level; the grab start (both feet at the front edge, hands gripping the block) is the older alternative — a stronger but slower push, now rare in elite racing. Reaction time target: &lt;0.65 seconds. Takeoff angle: 35–45°.</p>
+    <div class="acc-body open"><p>Track start (one foot back) is now dominant at elite level; the grab start (both feet at the front edge, hands gripping the block) is the older alternative — a stronger but slower push, now rare in elite racing and kept mainly for relay take-overs, where the arm swing is timed to the incoming swimmer. Reaction time target: &lt;0.65 seconds. Takeoff angle: 35–45°.</p>
     <div class="key-grid">
       <div class="key-point"><span class="kp-label">Reaction time</span><p>Fast-elite: ~0.60–0.64s; most swimmers are slower — chase clean, not just fast.</p></div>
       <div class="key-point"><span class="kp-label">Takeoff angle</span><p>35–45° for maximum horizontal distance.</p></div>
@@ -1739,7 +1739,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="key-grid">
       <div class="key-point"><span class="kp-label">Fly pacing</span><p>Go out controlled — 200 IM is not a 50 fly sprint.</p></div>
       <div class="key-point"><span class="kp-label">Breast leg</span><p>The race decider. If you've gone out too hard, breaststroke is where you pay.</p></div>
-      <div class="key-point"><span class="kp-label">Elite split</span><p>200 IM — fly ~22%, back ~25%, breast ~29%, free ~24% of race time: breaststroke is the slowest leg, fly (with the dive) the fastest. Full patterns in the <a href="#planner" onclick="showPageTab('planner','pl-splits');return false;">Race Planner</a>.</p></div>
+      <div class="key-point"><span class="kp-label">Elite split</span><p>200 IM — fly ~22%, back ~25%, breast ~28–29%, free ~24–25% of race time: breaststroke is the slowest leg, fly (with the dive) the fastest. Full patterns in the <a href="#planner" onclick="showPageTab('planner','pl-splits');return false;">Race Planner</a>.</p></div>
     </div></div></div>
   </div>
 </div>
@@ -1818,7 +1818,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="info-box">Kick training in every session. <strong>Every missed kick set is speed left on the table.</strong></div>
     <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose</th></tr></thead><tbody>
       <tr><td>10×100 FR Kick</td><td>A:1:45 B:1:50 C:2:00 · No board</td><td><span class="ptag">Aerobic Kick Base</span>Correct body position required.</td></tr>
-      <tr><td>Kick Pyramid</td><td>8×100 @2:00 snorkel → 6×100 @1:45 → 4×100 @1:40 → 2×100 @1:35</td><td><span class="ptag">Threshold Kick</span>Most demanding kick set.</td></tr>
+      <tr><td>Kick Ladder (2,000 m)</td><td>8×100 @2:00 snorkel → 6×100 @1:45 → 4×100 @1:40 → 2×100 @1:35</td><td><span class="ptag">Threshold Kick</span>Most demanding kick set.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-tech">
@@ -1831,13 +1831,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="s-warmup">
     <div class="info-box">Warm-up is programming — not filler. <strong>Each element serves a specific physiological function.</strong></div>
     <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Element</th><th scope="col">Prescription</th><th scope="col">Purpose</th></tr></thead><tbody>
-      <tr><td>Easy swim + IM 400–600m</td><td>HR below 22</td><td><span class="ptag">Thermal + Neural Priming</span>Raises core temp 1–2°C.</td></tr>
+      <tr><td>Easy swim + IM 400–600m</td><td>HR below 22</td><td><span class="ptag">Thermal + Neural Priming</span>Raises muscle temperature 1–2°C.</td></tr>
       <tr><td>Kick on back 4–8×50</td><td>Fins, dolphin or flutter</td><td><span class="ptag">Hip Activation</span>Fin overspeed primes kick velocity.</td></tr>
       <tr><td>Build swims 4×50</td><td>Build to ~80%</td><td><span class="ptag">Lactate Priming</span>Primes clearance system for main set.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-speed">
-    <div class="warn-box">Speed work is Zone 4–5. <strong>Full recovery mandatory — 2:00–5:00 rest per 25m of effort.</strong></div>
+    <div class="warn-box">Speed work is Zone 4–5. <strong>Full recovery mandatory — 2–5 min between efforts, longer for longer reps.</strong></div>
     <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Set</th><th scope="col">Details</th><th scope="col">Purpose</th></tr></thead><tbody>
       <tr><td>10×25 Sprint</td><td>Full rest 2–3 min · max effort each rep</td><td><span class="ptag">Pure Velocity</span>Maximum neuromuscular output.</td></tr>
       <tr><td>8×50 Race Pace</td><td>Target 100 race pace · 3–4 min rest</td><td><span class="ptag">Race-Pace Specificity</span>Trains exact neuromuscular patterns.</td></tr>
@@ -1860,7 +1860,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="dl-card"><div class="dl-day">Day 3 — Thursday</div><h4>EXPLOSIVE POWER</h4><ul>
       <li><span class="reps">4×4</span>Box Jumps</li><li><span class="reps">4×6</span>Hang Power Clean</li><li><span class="reps">3×8</span>Lat Pulldown + pause</li><li><span class="reps">3×12</span>Hip Thrust</li><li><span class="reps">3×10</span>Serratus Punch</li></ul></div>
     <div class="dl-card"><div class="dl-day">Day 4 — Friday</div><h4>SHOULDER HEALTH</h4><ul>
-      <li><span class="reps">3×15</span>Sidelying External Rotation</li><li><span class="reps">3×12</span>Y-T-W-L on incline</li><li><span class="reps">3×10</span>GIRD + sleeper stretch</li><li><span class="reps">3×20</span>Ankle circles + toe spreads</li></ul></div>
+      <li><span class="reps">3×15</span>Sidelying External Rotation</li><li><span class="reps">3×12</span>Y-T-W-L on incline</li><li><span class="reps">3×30s</span>Sleeper stretch (for GIRD)</li><li><span class="reps">3×20</span>Ankle circles + toe spreads</li></ul></div>
     <div class="dl-card"><div class="dl-day">Daily</div><h4>MOBILITY ROUTINE</h4><ul>
       <li><span class="reps">5 min</span>Ankle plantarflexion loading</li><li><span class="reps">2 min</span>Thoracic rotation</li><li><span class="reps">3 min</span>Shoulder CARs</li><li><span class="reps">2 min</span>Hip 90/90 switches</li></ul></div>
   </div>
@@ -1982,7 +1982,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="zone-row"><div class="zone-name">Recovery</div><div class="zone-track"><div class="zone-fill z1">Z1</div></div><div class="zone-info">&lt;1.5 mmol · HR &lt;22</div></div>
       <div class="zone-row"><div class="zone-name">AeT / Base</div><div class="zone-track"><div class="zone-fill z2">Z2 AeT</div></div><div class="zone-info">2.0–3.0 mmol · HR 24–28</div></div>
       <div class="zone-row"><div class="zone-name">Threshold</div><div class="zone-track"><div class="zone-fill z3">Z3 Thresh</div></div><div class="zone-info">3.0–5.0 mmol · HR 27–31</div></div>
-      <div class="zone-row"><div class="zone-name">VO₂ Max</div><div class="zone-track"><div class="zone-fill z4">Z4 VO₂</div></div><div class="zone-info">5.0–8.0 mmol · HR 31–35</div></div>
+      <div class="zone-row"><div class="zone-name">VO₂ Max</div><div class="zone-track"><div class="zone-fill z4">Z4 VO₂</div></div><div class="zone-info">5.0–8.0 mmol · HR 30–33</div></div>
       <div class="zone-row"><div class="zone-name">Anaerobic</div><div class="zone-track"><div class="zone-fill z5">Z5 Sprint</div></div><div class="zone-info">8.0+ mmol · HR max</div></div>
     </div>
   </div>
@@ -1990,7 +1990,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="card"><div class="badge green">Zone 1</div><h3>RECOVERY</h3><p><strong>Lactate:</strong> below 1.5 mmol/L · <strong>HR:</strong> under 22 on the 10-second count · Easy enough to hold a full conversation. Used for warm-up, cool-down, and between hard sets — it clears lactate rather than building fitness, and going too hard here is the most common way swimmers blunt the next quality set.</p></div>
     <div class="card"><div class="badge cyan">Zone 2 — AeT</div><h3>AEROBIC THRESHOLD</h3><p><strong>Lactate:</strong> 2.0–3.0 mmol/L · <strong>HR:</strong> 24–28 on the 10-second count · <strong>80%+ of total training volume.</strong> Builds mitochondrial density, oxidative enzyme capacity, cardiac output.</p></div>
     <div class="card"><div class="badge gold">Zone 3</div><h3>THRESHOLD</h3><p><strong>Lactate:</strong> 3.0–5.0 mmol/L · <strong>HR:</strong> 27–31 on the 10-second count · <strong>3–4 word sentences max.</strong> Typically introduced around Week 4 of a season and expanded progressively through Meso II.</p></div>
-    <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX &amp; SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · 3–8 min intervals · 48–72 hr recovery. <strong>Zone 5:</strong> 8.0+ mmol/L · 10–30 sec reps · full rest only.</p></div>
+    <div class="card"><div class="badge red">Zone 4–5</div><h3>VO₂ MAX &amp; SPRINT</h3><p><strong>Zone 4:</strong> 5.0–8.0 mmol/L · HR 30–33 on the 10-second count · 3–8 min intervals · 48–72 hr recovery. <strong>Zone 5:</strong> 8.0+ mmol/L · 10–30 sec reps · full rest only.</p></div>
   </div>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
@@ -2101,7 +2101,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="content-block"><h4>THE 30-MINUTE RECOVERY WINDOW</h4><p>Glycogen resynthesis rate is highest in the first 30–45 minutes after training. Target: 1–1.2 g/kg carbs + 0.3–0.4 g/kg protein. Best options: chocolate milk, rice + protein, yogurt + banana.</p></div>
   </div>
   <div class="tab-panel" id="n-hydration">
-    <div class="info-box"><strong>Even 2% dehydration measurably reduces performance.</strong> Swimmers underestimate fluid loss — you sweat just as much in the pool.</div>
+    <div class="info-box"><strong>Even 2% dehydration measurably reduces performance.</strong> Swimmers underestimate fluid loss — you still sweat in the pool, typically 0.3–0.6 L per hour, and never notice it.</div>
     <div class="content-block"><h4>DAILY HYDRATION</h4><ul><li>Baseline: 35–45ml per kg bodyweight</li><li>Add 400–600ml per hour of training</li><li>Urine target: pale yellow</li><li>Electrolytes recommended on 90+ min sessions</li></ul></div>
   </div>
 </div>
@@ -2147,13 +2147,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Event</th><th scope="col">Strategy</th><th scope="col">Key Tactic</th><th scope="col">Common Error</th></tr></thead><tbody>
       <tr><td>50 Free</td><td>All-out from start</td><td>Clean start, max UW, no breathing</td><td>Tension in the stroke</td></tr>
       <tr><td>100 Free</td><td>95% out, hold 75m, sprint home</td><td>Minimal breathing first 50</td><td>Going out at 100% and dying</td></tr>
-      <tr><td>200 Free</td><td>Negative split — back 100 faster</td><td>First 50 controlled, build 100–150</td><td>Going out too fast</td></tr>
+      <tr><td>200 Free</td><td>Even effort — hold the third 50</td><td>First 50 controlled, build 100–150</td><td>Going out too fast</td></tr>
       <tr><td>100 Breast</td><td>Strong first 50, patient second</td><td>Legal pullout every wall</td><td>Overlap — kick before pull finishes</td></tr>
       <tr><td>200 IM</td><td>Fly controlled, build through back</td><td>Legal transitions — DQ risk</td><td>Dying on breaststroke leg</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="r-pacing">
-    <div class="content-block"><h4>PACING SCIENCE</h4><p><strong>100m:</strong> the second 50 is normally 1.5–2.5 s slower than the first — most of that gap is the dive, not fatigue. More than ~3 s slower means you went out too hard. <strong>200m:</strong> the second 100 within ~2–3% of the first (which includes the dive) in freestyle and backstroke, with the last 50 held or lifted; butterfly and breaststroke 200s fade more. <strong>400m and up:</strong> even 100s, with a lift on the final segment. The championship-final split patterns behind these targets are in the <a href="#planner" onclick="showPageTab('planner','pl-splits');return false;">Race Planner's split reference</a>.</p></div>
+    <div class="content-block"><h4>PACING SCIENCE</h4><p><strong>100m:</strong> the first 50 is normally 1.5–3 s faster than the second (about 2 s in freestyle, closer to 3 s in fly and breast) — the dive and the underwater do that for you, so the job is to minimise the fade, not to negative split. A freestyle second 50 more than ~3 s slower means you went out too hard. <strong>200m:</strong> the second 100 is normally 2–3% (2–3 s) slower than the first in every elite final, so the target is to hold the third 50 at the pace of the second; butterfly and breaststroke 200s fade a little more. <strong>400m and up:</strong> even 100s, with the lift coming at the end. The championship-final split patterns behind these targets are in the <a href="#planner" onclick="showPageTab('planner','pl-splits');return false;">Race Planner's split reference</a>.</p></div>
   </div>
 </div>
 <footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
@@ -2225,7 +2225,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="content-block"><h4>OPTIMAL AROUSAL</h4><p>Too calm = under-activated. Too anxious = overthinking. Every swimmer has their own optimal zone — finding it is a training task.</p></div>
     <div class="content-block"><h4>REGULATION TOOLS</h4>
       <p><strong style="color:var(--cyan)">DOWN-regulation:</strong> Box breathing 5×, progressive muscle relaxation, slow warm-up, 60–80 BPM music.</p>
-      <p><strong style="color:var(--gold)">UP-regulation:</strong> Explosive warm-up bursts, 120–140 BPM music, power posing 2 min, activating self-talk.</p>
+      <p><strong style="color:var(--gold)">UP-regulation:</strong> Explosive warm-up bursts, 120–140 BPM music, explosive activation (arm swings, 3–5 jump squats), activating self-talk.</p>
     </div>
   </div></div>
   <div class="tab-panel" id="m-focus">
@@ -2233,7 +2233,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <li>Maximum 2 focus cues per race</li>
       <li>Cues should be action-based: "High elbow" not "Don't drop my elbow"</li>
       <li>Practice cues in training until automatic</li>
-      <li>Self-talk in final 50m: "This is where you train for."</li>
+      <li>Self-talk in final 50m: "This is what you train for."</li>
     </ul></div>
   </div>
   <div class="tab-panel" id="m-routine">
@@ -2271,7 +2271,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
   </div>
   <div class="tab-panel" id="i-knee">
-    <div class="content-block"><h4>BREASTSTROKER'S KNEE</h4><ul><li>Primary cause: hip adductor weakness</li><li>Copenhagen planks 3×/week</li><li>Narrow heel recovery drill</li><li>Self-test: kick on your back — can you see the inside of your knees?</li></ul></div>
+    <div class="content-block"><h4>BREASTSTROKER'S KNEE</h4><ul><li>Primary cause: valgus/rotation load from a wide-knee recovery and kick volume; hip abductor/adductor weakness adds to it</li><li>Copenhagen planks 3×/week</li><li>Narrow heel recovery drill</li><li>Self-test: kick on your back — can you see the inside of your knees?</li></ul></div>
   </div>
   <div class="tab-panel" id="i-back">
     <div class="content-block"><h4>LOW BACK PAIN</h4><ul><li>Cause: tight hip flexors + weak glutes + weak deep core</li><li>Daily hip flexor stretching (90/90, couch stretch)</li><li>Glute activation: hip thrusts, clamshells</li><li>Dead bug for deep core stability</li></ul></div>
@@ -2392,7 +2392,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="card">
       <div class="card-tag" style="color:var(--gold)">National (Zoned) Meet</div>
       <h3>FUTURES</h3>
-      <p>Entry point to the national meet pipeline — between Sectionals and Speedo Junior Nationals. Zoned, so the qualifying time depends on your zone.</p>
+      <p>Entry point to the national meet pipeline — between Sectionals and Speedo Junior Nationals. One national time standard; you swim at the site for your zone. Sectional cuts, by contrast, vary by zone and LSC.</p>
       <a href="https://www.usaswimming.org/times/time-standards" target="_blank" rel="noopener" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Futures standards →</a>
     </div>
     <div class="card">
@@ -4008,11 +4008,11 @@ const STROKES = {
     // half a cycle behind (R[i] = mirror of L[i+3]) — when one hand enters,
     // the other is finishing at the hip. No catch-up pause.
     phases: [
-      { name:'Entry & Extension', dur:0.16, drag:26, thrust:60, lift:14, vel:1.78, eff:62,
-        desc:'Hand enters narrow at 10-15° and extends overhead while the OTHER hand finishes its push past the hip — true opposition timing, never catch-up. Body roll ~45°.',
+      { name:'Entry & Extension', dur:0.16, drag:26, thrust:20, lift:14, vel:1.78, eff:62,
+        desc:'Hand enters narrow at 10-15° and extends overhead while the OTHER hand finishes its push past the hip — true opposition timing, never catch-up. Body roll ~25–45° depending on distance (the model shows a distance-pace roll).',
         L:{ sh:[170,0,8],   el:[8],   hi:[8,0,0], kn:[8] },
         R:{ sh:[-12,0,-2],  el:[20],  hi:[8,0,0], kn:[8] } },
-      { name:'Catch', dur:0.14, drag:40, thrust:64, lift:24, vel:1.84, eff:67,
+      { name:'Catch', dur:0.14, drag:40, thrust:36, lift:24, vel:1.84, eff:67,
         desc:'Elbow rises high and flares outward, wrist presses down — the forearm becomes a vertical paddle while the opposite elbow lifts clear of the water behind.',
         L:{ sh:[125,10,10],  el:[58],  hi:[8,0,0], kn:[8] },
         R:{ sh:[-95,-55,70], el:[105], hi:[8,0,0], kn:[8] } },
@@ -4024,11 +4024,11 @@ const STROKES = {
         desc:'The hand pushes past the hip, thumb brushing the thigh, exactly as the opposite hand enters overhead — the propulsive engine never stops.',
         L:{ sh:[-12,0,2],    el:[20],  hi:[8,0,0], kn:[8] },
         R:{ sh:[170,0,-8],   el:[8],   hi:[8,0,0], kn:[8] } },
-      { name:'Recovery & Breath', dur:0.14, drag:33, thrust:70, lift:12, vel:1.86, eff:64,
+      { name:'Recovery & Breath', dur:0.14, drag:33, thrust:28, lift:12, vel:1.86, eff:64,
         desc:'The elbow leads the recovery, lifted clear of the water, while the head rotates with the body roll to breathe — chin stays low, one goggle in the water.',
         L:{ sh:[-95,55,-70], el:[105], hi:[8,0,0], kn:[8] },
         R:{ sh:[125,-10,-10],el:[58],  hi:[8,0,0], kn:[8] } },
-      { name:'Reach Forward', dur:0.20, drag:30, thrust:120, lift:16, vel:2.02, eff:70,
+      { name:'Reach Forward', dur:0.20, drag:30, thrust:24, lift:16, vel:2.02, eff:70,
         desc:'The recovering arm straightens and reaches forward for a narrow entry while the opposite arm drives through the middle of its pull.',
         L:{ sh:[150,-20,-15],el:[70],  hi:[8,0,0], kn:[8] },
         R:{ sh:[55,-5,-4],   el:[95],  hi:[8,0,0], kn:[8] } }
@@ -4122,23 +4122,23 @@ const STROKES = {
   dolphin: {
     color: 0xff7043, rollAmp: 0, undulate: true,
     phases: [
-      { name:'Peak Streamline', dur:0.16, drag:21, thrust:7, lift:4, vel:2.56, eff:88,
+      { name:'Peak Streamline', dur:0.16, drag:21, thrust:7, lift:4, vel:2.05, eff:88,
         desc:'Maximum streamline — hands stacked, arms locked past the ears, core completely rigid. Push-off/glide velocity peaks around 2.8–3.2 m/s — the fastest a swimmer travels, before drag slows the glide.',
         L:{ sh:[172,0,5], el:[4], hi:[2,0,0], kn:[3] },
         R:{ sh:[172,0,-5], el:[4], hi:[2,0,0], kn:[3] } },
-      { name:'Hip Load', dur:0.18, drag:30, thrust:40, lift:16, vel:2.40, eff:81,
+      { name:'Hip Load', dur:0.18, drag:30, thrust:40, lift:16, vel:1.95, eff:81,
         desc:'The hips drive downward to begin the wave while the core stays rigid, transmitting force from hip to foot rather than from the torso.',
         L:{ sh:[172,0,5], el:[4], hi:[15,0,0], kn:[18] },
         R:{ sh:[172,0,-5], el:[4], hi:[15,0,0], kn:[18] } },
-      { name:'Downbeat Peak', dur:0.20, drag:46, thrust:154, lift:60, vel:2.62, eff:84,
+      { name:'Downbeat Peak', dur:0.20, drag:46, thrust:154, lift:60, vel:2.25, eff:84,
         desc:'The foot reaches its lowest point for maximum downward thrust. Ankle flexibility, not leg strength, is the single biggest limiter of kick speed for most swimmers.',
         L:{ sh:[172,0,5], el:[4], hi:[28,0,0], kn:[42] },
         R:{ sh:[172,0,-5], el:[4], hi:[28,0,0], kn:[42] } },
-      { name:'Upbeat Drive', dur:0.21, drag:33, thrust:84, lift:38, vel:2.46, eff:79,
-        desc:'The hips rise as the calf fires concentrically — roughly 30% of total kick propulsion comes from this upbeat, a phase most swimmers underuse.',
+      { name:'Upbeat Drive', dur:0.21, drag:33, thrust:84, lift:38, vel:2.15, eff:79,
+        desc:'The hips rise as the glutes and hamstrings fire — roughly 30% of total kick propulsion comes from this upbeat, a phase most swimmers underuse.',
         L:{ sh:[172,0,5], el:[4], hi:[-8,0,0], kn:[10] },
         R:{ sh:[172,0,-5], el:[4], hi:[-8,0,0], kn:[10] } },
-      { name:'Upbeat Peak', dur:0.25, drag:24, thrust:50, lift:26, vel:2.58, eff:85,
+      { name:'Upbeat Peak', dur:0.25, drag:24, thrust:50, lift:26, vel:2.10, eff:85,
         desc:'The foot returns to neutral as the body reaches its highest streamline point — velocity peaks here just before the next downbeat begins loading.',
         L:{ sh:[172,0,5], el:[4], hi:[-15,0,0], kn:[5] },
         R:{ sh:[172,0,-5], el:[4], hi:[-15,0,0], kn:[5] } }
@@ -4633,7 +4633,10 @@ function jumpToPhase3D(i) {
   const phases = STROKES[currentStroke].phases;
   let t = 0;
   for (let j=0;j<i;j++) t += phases[j].dur;
-  clockT = t;
+  // Land a hair INSIDE the phase: exactly on the boundary, the modulo in
+  // updateSwimmer can leave a floating-point residue that resolves to the
+  // END of the previous phase (its title with this phase's numbers).
+  clockT = t + 1e-4;
 }
 function updatePhaseBar3D(idx) {
   document.querySelectorAll('.phase-step').forEach((el,i) => { el.classList.toggle('active', i===idx); el.setAttribute('aria-pressed', i===idx ? 'true' : 'false'); });
@@ -4688,7 +4691,11 @@ function syncInfoPanel3D() {
   set('pr-thrust', physState.thrust.toFixed(0));
   set('pr-lift', physState.lift.toFixed(0));
   set('pr-vel', physState.vel.toFixed(2));
-  set('pr-net', Math.max(0, physState.thrust - physState.drag).toFixed(0));
+  // Signed: a negative net force IS the lesson (the swimmer is decelerating
+  // in that phase) — never clamp it to 0.
+  const netF = Math.round(physState.thrust - physState.drag);
+  set('pr-net', (netF > 0 ? '+' : '') + netF);
+  const netEl = document.getElementById('pr-net'); if (netEl) netEl.style.color = netF < 0 ? '#ff4444' : '';
   set('pr-eff', physState.eff.toFixed(0));
   if (currentPhaseInfo.idx !== _panelState.idx || currentStroke !== _panelState.stroke) {
     _panelState.idx = currentPhaseInfo.idx;
@@ -5299,6 +5306,15 @@ async function _generateWorkoutInner(){
   loading.style.display='flex';
   result.innerHTML='';
   actions.style.display='none';
+  // Volume density scales with the athlete level — 5,000 m in 60 min is an
+  // elite session, not an age-group or masters one.
+  const VOL_TARGETS={
+    'age-group':'45min=2000-2800m, 60min=2800-3800m, 75min=3500-4500m, 90min=4000-5500m',
+    masters:'45min=2000-2800m, 60min=2800-3800m, 75min=3500-4500m, 90min=4000-5500m',
+    senior:'45min=2500-3300m, 60min=3500-4500m, 75min=4200-5500m, 90min=5000-6500m',
+    elite:'45min=2500-3500m, 60min=3500-5000m, 75min=4500-6500m, 90min=5500-8000m'
+  };
+  const volTargets=VOL_TARGETS[level]||VOL_TARGETS.senior;
   const prompt=`Generate a complete, detailed swim training session:
 - Focus: ${focus}
 - Stroke: ${stroke}
@@ -5314,7 +5330,7 @@ MAIN SET (Xm):
 COOL-DOWN (Xm):
 TOTAL: Xm
 COACH NOTES:
-Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g. HR 24–28). Volume targets: 45min=2500-3500m, 60min=3500-5000m, 75min=4500-6500m, 90min=5500-8000m.`;
+Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g. 24–28 = AeT). Volume targets for this level: ${volTargets}.`;
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
@@ -5556,23 +5572,29 @@ function calcSplits(){
   if(avg<15){tlNotice('split-notice','That works out to under 15 seconds per 50m — faster than the world record. Check the distance and time.');document.getElementById('split-time').focus();return;}
   if(avg>120){tlNotice('split-notice','That works out to over 2 minutes per 50m — check the distance and time.');document.getElementById('split-time').focus();return;}
   tlNotice('split-notice','');
-  // Offsets are zero-mean so every strategy sums exactly to the target.
-  // Neg/pos ramp 4% of the average split from first to last 50 (a 200 @ 2:00
-  // spreads 1.2 s; a 1500 no longer implies an 11 s differential).
-  const ramp=avg*0.04, step=n>1?ramp/(n-1):0;
-  let off=[];
-  for(let i=0;i<n;i++){
-    if(strategy==='neg') off.push((n/2-i-0.5)*step);
-    else if(strategy==='pos') off.push(-(n/2-i-0.5)*step);
-    else if(strategy==='surge') off.push(i<n/4?0.5:(i<n*3/4?-0.3:0.15));
-    else off.push(0);
+  // Splits come from the planner's buildSplits (one source of truth): the
+  // negative/positive ramp is a ±2% half-difference scaled to the race, so a
+  // 1500 no longer fans out into sprint-pace 50s, and the long-course dive
+  // bonus comes off the first 50 (the fastest 50 of every real race).
+  // Every strategy sums exactly to the target.
+  const PL=window.tlPlanner||{};
+  const bonus=(PL.START_BONUS&&PL.START_BONUS.LCM)||1.4;
+  let splits=[];
+  if(strategy==='surge'){
+    // first quarter held back, middle surged, last quarter eased — per-50
+    // weights renormalised so the total still matches the target.
+    const w=[]; for(let i=0;i<n;i++) w.push(i<n/4?1.015:(i<n*3/4?0.99:1.005));
+    const k=(totalSecs+bonus)/w.reduce((a,b)=>a+b*avg,0);
+    splits=w.map((x,i)=>x*avg*k-(i===0?bonus:0));
+  } else {
+    const r=PL.buildSplits?PL.buildSplits({dist, course:'LCM', goal:totalSecs, stroke:'fr', strategy, fade:2, bonus}):{error:'Split planner unavailable — reload the page.'};
+    if(r.error){tlNotice('split-notice',r.error);return;}
+    splits=r.lengths;
   }
-  const mean=off.reduce((a,b)=>a+b,0)/n;
-  const splits=off.map(o=>Math.max(15,avg+o-mean));
   let html='<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Distance</th><th scope="col">50m Split</th><th scope="col">Cumulative</th></tr></thead><tbody>';
   let cum=0;
   splits.forEach((s,i)=>{cum+=s; html+=`<tr><td>${(i+1)*50}m</td><td>${formatTime(s)}</td><td>${formatTime(cum)}</td></tr>`;});
-  html+=`</tbody></table></div><div class="info-box" style="margin-top:1rem">Target: <strong>${formatTime(totalSecs)}</strong> &nbsp;·&nbsp; Avg 50m: <strong>${formatTime(avg)}</strong></div>`;
+  html+=`</tbody></table></div><div class="info-box" style="margin-top:1rem">Target: <strong>${formatTime(totalSecs)}</strong> &nbsp;·&nbsp; Avg 50m: <strong>${formatTime(avg)}</strong> &nbsp;·&nbsp; First 50 includes the dive (−${bonus.toFixed(1)} s, long course)</div>`;
   document.getElementById('split-result').innerHTML=html;
 }
 function calcPaceZones(){
@@ -5582,18 +5604,18 @@ function calcPaceZones(){
   if(t<35||t>240){tlNotice('pace-notice','A 100m time between 35 s and 4:00 is expected — check the value (use m:ss for minutes).');document.getElementById('pace-100').focus();return;}
   tlNotice('pace-notice','');
   const zones=[
-    {name:'Zone 1 — Recovery',pct:[1.28,1.45],color:'#00e599',desc:'HR <23 · <1.5 mmol'},
-    {name:'Zone 2 — AeT Base',pct:[1.10,1.22],color:'#00d4ff',desc:'HR 24–28 · 2–3 mmol'},
-    {name:'Zone 3 — Threshold',pct:[1.03,1.10],color:'#f5a623',desc:'HR 27–31 · 3–5 mmol'},
-    {name:'Zone 4 — VO2 Max',pct:[1.00,1.03],color:'#ff7043',desc:'HR 31–35 · 5–8 mmol'},
-    {name:'Zone 5 — Sprint',pct:[0.88,1.00],color:'#ff5252',desc:'Max HR · 8+ mmol'}
+    {name:'Zone 1 — Recovery',pct:[1.35,1.50],color:'#00e599',desc:'HR <23 · <1.5 mmol'},
+    {name:'Zone 2 — AeT Base',pct:[1.22,1.35],color:'#00d4ff',desc:'HR 24–28 · 2–3 mmol'},
+    {name:'Zone 3 — Threshold',pct:[1.12,1.20],color:'#f5a623',desc:'HR 27–31 · 3–5 mmol'},
+    {name:'Zone 4 — VO2 Max',pct:[1.04,1.10],color:'#ff7043',desc:'HR 30–33 · 5–8 mmol'},
+    {name:'Zone 5 — Sprint',pct:[0.90,1.02],color:'#ff5252',desc:'Max HR · 8+ mmol'}
   ];
   let html='<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Zone</th><th scope="col">Per 100m</th><th scope="col">Per 50m</th><th scope="col">Notes</th></tr></thead><tbody>';
   zones.forEach(z=>{
     const fast=t*z.pct[0], slow=t*z.pct[1];
     html+=`<tr><td style="color:${z.color}">${z.name}</td><td>${formatTime(fast)}–${formatTime(slow)}</td><td>${formatTime(fast/2)}–${formatTime(slow/2)}</td><td style="color:var(--white3);font-size:0.76rem">${z.desc}</td></tr>`;
   });
-  html+='</tbody></table></div>';
+  html+='</tbody></table></div><div class="info-box" style="margin-top:1rem">Bands are scaled from your best 100 — a rough guide, since the drop-off from a best time varies by swimmer. For a measured threshold pace, run the Critical Swim Speed test in Analytics.</div>';
   document.getElementById('pace-result').innerHTML=html;
 }
 function convertTime(){
@@ -5878,8 +5900,8 @@ const ELITE_RATES = [
   { name:'800 / 1500 FR', men:[35,48], women:[39,55], dpcM:'2.2–2.6', dpcW:'1.8–2.2', arms:true, sub:'two styles: long-stroke ~35–40, high-rate ~45–55' },
   { name:'100 BK',  lo:48, hi:54, arms:true },
   { name:'200 BK',  lo:37, hi:46, arms:true },
-  { name:'100 BR',  lo:47, hi:58 },
-  { name:'200 BR',  lo:31, hi:39 },
+  { name:'100 BR',  lo:44, hi:58 },
+  { name:'200 BR',  lo:31, hi:43 },
   { name:'100 FLY', lo:52, hi:60, sub:'estimate, bracketed by 50 and 200 fly data' },
   { name:'200 FLY', lo:48, hi:55 }
 ];
@@ -7569,7 +7591,7 @@ window.onPageChange = function(n){ if (typeof prevPageChange === 'function') { t
 window.tlNextMeet = function(){ return nextMeet(); };
 // Pure model surface (tests + other pages)
 window.tlPlanner = { EXP:EXP, PATTERNS:PATTERNS, predict:predict, fitExponent:fitExponent, typicalExponent:typicalExponent, profileOf:profileOf, chainSegs:chainSegs,
-  buildSplits:buildSplits, patternKey:patternKey, splitsAsText:splitsAsText, defaultFade:defaultFade, daysUntil:daysUntil, taperWindow:taperWindow, parseISODate:parseISODate,
+  buildSplits:buildSplits, START_BONUS:START_BONUS, patternKey:patternKey, splitsAsText:splitsAsText, defaultFade:defaultFade, daysUntil:daysUntil, taperWindow:taperWindow, parseISODate:parseISODate,
   addDays:addDays, nextMeet:nextMeet, meetList:meetList, readMeet:readMeet, distsFor:distsFor, goalStats:goalStats, readGoals:readGoals, sanityPace:sanityPace, fmtPlain:fmtPlain, init:init };
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ init(); });
 else init();
@@ -8482,7 +8504,8 @@ function calcStrokeValues(o){
   if (o.stroke === 'fr') {
     // Elite reference: ~1.8–2.7 m per cycle across 50–1500 m, men and women,
     // mid-pool free swimming at the 2019 European SC Championships (Staunton et al. 2025).
-    if (dpcM >= 1.8) compare = 'Your distance per cycle (' + fmtDec(dpcM, 2) + ' m) is inside the range measured for elite freestylers in competition — roughly 1.8–2.7 m per cycle across sprint to distance events, men and women (Staunton et al. 2025).';
+    if (dpcM > 2.7) compare = 'Your distance per cycle (' + fmtDec(dpcM, 2) + ' m) is above the elite competition range (roughly 1.8–2.7 m per cycle; Staunton et al. 2025). Check the measured distance and count first — a push-off and glide inside the measured segment inflates distance per cycle.';
+    else if (dpcM >= 1.8) compare = 'Your distance per cycle (' + fmtDec(dpcM, 2) + ' m) is inside the range measured for elite freestylers in competition — roughly 1.8–2.7 m per cycle across sprint to distance events, men and women (Staunton et al. 2025).';
     else if (dpcM >= 1.5) compare = 'Your distance per cycle (' + fmtDec(dpcM, 2) + ' m) is below the elite competition range (roughly 1.8–2.7 m per cycle; Staunton et al. 2025), which is common for club and age-group freestylers. Elite finalists cover more distance per stroke than slower swimmers in the same event (Craig et al. 1985), so stroke length is a reasonable thing to work on with your coach.';
     else compare = 'Your distance per cycle (' + fmtDec(dpcM, 2) + ' m) is well below the elite competition range (roughly 1.8–2.7 m per cycle; Staunton et al. 2025). Check the measured distance and count first; if they are right, stroke length is the obvious area to discuss with your coach.';
     compare += ' Judge changes by speed at a fixed effort or by stroke index, since rate and length trade off.';
