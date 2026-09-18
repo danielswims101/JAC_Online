@@ -14,10 +14,11 @@
 <meta name="theme-color" content="#040d18">
 <meta name="color-scheme" content="dark">
 <!-- Content-Security-Policy (GitHub Pages cannot send headers, so it lives here; frame-ancestors is not honoured in a meta tag).
-     Scripts: this file + the pinned jsDelivr builds (supabase-js, Three.js). Styles/fonts: inline + Google Fonts. Images: local, data: (inline
-     SVG) and YouTube thumbnails. Fetches: only the Supabase project. Frames: youtube-nocookie facades. 'unsafe-inline' stays until the inline
-     onclick handlers move to delegated listeners; the host allow-list already blocks exfiltration and foreign frames. Add any new origin here. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; connect-src 'self' https://gzqovsffnziumfbmqdes.supabase.co; frame-src https://www.youtube-nocookie.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+     Scripts: this file + the two pinned jsDelivr files by exact path (supabase-js, Three.js — a library bump must update the path here with the
+     pin and the sha384, or the new file is blocked). Styles/fonts: inline + Google Fonts. Images: local, data: (inline SVG) and YouTube thumbnails.
+     Fetches: only the Supabase project. Frames: only youtube-nocookie /embed/. 'unsafe-inline' stays until the inline onclick handlers move to
+     delegated listeners; the allow-list already blocks exfiltration, other jsDelivr packages and foreign frames. Add any new origin here. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; connect-src 'self' https://gzqovsffnziumfbmqdes.supabase.co; frame-src https://www.youtube-nocookie.com/embed/; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tidelyne — Swimming Technique & Training Tools">
 <meta name="twitter:description" content="Free swim training app that works offline: 3D stroke visualizer, technique library, AI coach, pace calculators, deck timers, race planner and training log.">
@@ -42,12 +43,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preconnect" href="https://gzqovsffnziumfbmqdes.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://gzqovsffnziumfbmqdes.supabase.co">
 <link rel="dns-prefetch" href="https://i.ytimg.com">
 <link rel="dns-prefetch" href="https://www.youtube-nocookie.com">
 <!-- Fonts CSS is preloaded and promoted to a stylesheet once it arrives, so first paint never waits on the cross-origin request (display=swap covers the font files). crossorigin makes the response non-opaque so sw.js can cache it for offline typography. -->
-<link rel="preload" as="style" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Mono:wght@400;500&display=swap"></noscript>
+<link rel="preload" as="style" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300..700;1,300..400&family=DM+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300..700;1,300..400&family=DM+Mono:wght@400;500&display=swap"></noscript>
 <!-- supabase-js is pinned (not the floating @2 tag) so an upstream release cannot change the auth path unseen; integrity is that file's sha384 — bump version and hash together.
      It is injected on demand (loadSupabase below), async and never render-blocking: only a stored session, an auth-callback link, a Log In click or an AI feature needs the
      218 KB library, so the logged-out majority never downloads or compiles it. At boot it starts here — before the body streams — when a session may exist; otherwise
@@ -58,6 +59,12 @@ function loadSupabase(){
   if (window.__sbScriptRequested) return;
   window.__sbScriptRequested = true;
   if (typeof sbScriptState === 'string' && sbScriptState === 'idle') sbScriptState = 'loading'; // the auth block has parsed: its waiters (openAuthGate) rely on this
+  // The project host is contacted only once the library has landed (session refresh, the ask-ai call): open
+  // its TLS connection now, in parallel with the download, instead of for every visitor from <head> — most
+  // never use it (the head keeps a dns-prefetch for the host).
+  var pc = document.createElement('link');
+  pc.rel = 'preconnect'; pc.href = 'https://gzqovsffnziumfbmqdes.supabase.co'; pc.crossOrigin = 'anonymous';
+  document.head.appendChild(pc);
   var s = document.createElement('script');
   s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js';
   s.integrity = 'sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP';
@@ -239,7 +246,7 @@ THREE.OrbitControls = function (camera, domElement) {
   --gold:#f5a623;--gold-dim:rgba(245,166,35,0.12);
   --green:#00e599;--green-dim:rgba(0,229,153,0.1);
   --red:#ff5252;--red-dim:rgba(255,82,82,0.1);
-  --purple:#a855f7;--purple-text:#bf8cff;--purple-dim:rgba(168,85,247,0.1);
+  --purple:#a855f7;--purple-text:#bf8cff;
   --white:#eef3f8;--white2:#b0c4d8;--white3:#8ba5bd;--white4:#7b95ad; /* muted text kept ≥ 4.5:1 against navy */
   --card:#0b1d32;--card2:#0e2238;--card3:#112848;
   --border:rgba(0,212,255,0.15);--border2:rgba(0,212,255,0.07);
@@ -276,7 +283,7 @@ nav.tl-tight .nav-word{display:none}
 nav.tl-tight2 .nav-ai-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 nav.tl-tight2 .nav-ai-btn{min-width:40px} /* icon-only pill keeps a 40px target */
 @media(min-width:769px){.nav-right>button{min-height:30px;display:inline-flex;align-items:center;justify-content:center}}
-.nav-ai-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:6px 10px;font-family:var(--fm);font-size:0.65rem;letter-spacing:1px;font-weight:600;text-transform:uppercase;transition:background 0.2s;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:4px} /* gap: the star span is a flex item, so the trailing space of the text node would collapse */
+.nav-ai-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:6px 10px;font-family:var(--fm);font-size:0.65rem;letter-spacing:1px;font-weight:500;text-transform:uppercase;transition:background 0.2s;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:4px} /* gap: the star span is a flex item, so the trailing space of the text node would collapse */
 .nav-ai-btn:hover{background:var(--cyan2)}
 .nav-key-btn{background:var(--navy3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--white3);font-size:0.8rem;cursor:pointer;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;flex-shrink:0}
 .nav-key-btn:hover{color:var(--cyan);border-color:var(--cyan)}
@@ -293,7 +300,7 @@ nav.tl-tight2 .nav-ai-btn{min-width:40px} /* icon-only pill keeps a 40px target 
 .hero h1 .l1{display:block;color:var(--white)}.hero h1 .l2{display:block;color:var(--cyan);text-shadow:0 0 80px rgba(0,212,255,0.5)}.hero h1 .l3{display:block;color:var(--white)}
 .hero-desc{font-size:1.05rem;color:var(--white2);max-width:580px;margin:0 auto 2.5rem;line-height:1.85;font-weight:300;position:relative}
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;position:relative}
-.btn-hero{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:600;transition:background-color .25s,color .25s,border-color .25s,box-shadow .25s,transform .25s;text-transform:uppercase;cursor:pointer;display:inline-block;text-align:center;line-height:normal;text-decoration:none}
+.btn-hero{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:500;transition:background-color .25s,color .25s,border-color .25s,box-shadow .25s,transform .25s;text-transform:uppercase;cursor:pointer;display:inline-block;text-align:center;line-height:normal;text-decoration:none}
 .btn-hero:hover{background:var(--cyan2);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,212,255,0.35)}
 .btn-hero-ghost{background:transparent;color:var(--cyan);border:1.5px solid rgba(0,212,255,0.4);border-radius:var(--r8);padding:13px 28px;font-family:var(--fm);font-size:0.8rem;letter-spacing:1.5px;font-weight:500;transition:background-color .25s,color .25s,border-color .25s,box-shadow .25s,transform .25s;text-transform:uppercase;cursor:pointer;display:inline-block;text-align:center;line-height:normal;text-decoration:none}
 .btn-hero-ghost:hover{background:var(--cyan-dim);transform:translateY(-3px);border-color:var(--cyan)}
@@ -307,7 +314,7 @@ h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-w
 .section-title span{color:var(--cyan)}
 .section-intro{font-size:0.95rem;color:var(--white2);max-width:660px;line-height:1.85;font-weight:300;margin-bottom:2.5rem}
 /* Peer section headings inside a page (Log, What's New, Analytics) share one scale — a step below .section-title, above the card h3/h4s; .section-eyebrow stays for labelled groups */
-.sub-title{font-family:var(--fh);font-weight:400;font-size:1.5rem;letter-spacing:1px;line-height:1;color:var(--white);margin:0 0 1rem}.sub-title span{color:var(--cyan)}
+.sub-title{font-family:var(--fh);font-weight:400;font-size:1.5rem;letter-spacing:1px;line-height:1;color:var(--white);margin:0 0 1rem}
 .form-notice{color:var(--red);font-size:0.82rem;line-height:1.55;margin-top:0.75rem}.form-notice.is-ok{color:var(--green)}.form-notice[hidden]{display:none}
 .form-field-msg{margin-top:0} /* the copy of a notice placed under its field (tlNotice, data-field-msg): the form-group's gap is the spacing */
 /* Training-log delete notice + its Undo button: the button is a sibling of the role=alert, not part of its text */
@@ -319,7 +326,7 @@ h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-w
 .card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;transition:border-color 0.3s,transform 0.25s,box-shadow 0.3s}
 .card-lg{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem}
 .card:hover{border-color:var(--border)}
-@media(hover:hover){.card[onclick]:hover,.card[role="button"]:hover,.card.card-clickable:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.35)}}
+@media(hover:hover){.card.card-clickable:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.35)}}
 .card-icon{font-size:2rem;margin-bottom:1rem;display:block}.card-tag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.85rem}
 .card h3{font-family:var(--fh);font-size:1.5rem;letter-spacing:1px;margin-bottom:0.85rem;line-height:1.1}
 .card-clickable{position:relative;cursor:pointer}.card-link{color:inherit;text-decoration:none}.card-link::after{content:"";position:absolute;inset:0}.card-clickable:has(.card-link:focus-visible){outline:2px solid var(--cyan);outline-offset:2px}@supports selector(:has(a)){.card-link:focus-visible{outline:none}}
@@ -350,7 +357,7 @@ h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-w
 /* COACHING CUES */
 .cue-box{background:rgba(0,212,255,0.06);border-left:3px solid var(--cyan);border-radius:0 var(--r8) var(--r8) 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.87rem;color:var(--cyan);line-height:1.75}
 .key-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0.85rem;margin:1.25rem 0}
-.key-point{background:var(--navy3);border-radius:var(--r8);padding:1rem 1.1rem;border:1px solid var(--border2)}.key-point .kp-label{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:6px;display:block}.key-point p,.key-point dd{font-size:0.82rem;color:var(--white2);line-height:1.65;margin:0}
+.key-point{background:var(--navy3);border-radius:var(--r8);padding:1rem 1.1rem;border:1px solid var(--border2)}.key-point .kp-label{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:6px;display:block}.key-point dd{font-size:0.82rem;color:var(--white2);line-height:1.65;margin:0}
 .info-box{background:var(--cyan-dim);border:1px solid rgba(0,212,255,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.info-box strong{color:var(--cyan)}
 .warn-box{background:var(--gold-dim);border:1px solid rgba(245,166,35,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.warn-box strong{color:var(--gold)}
 .success-box{background:var(--green-dim);border:1px solid rgba(0,229,153,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.success-box strong{color:var(--green)}
@@ -358,13 +365,14 @@ h2.section-eyebrow,h4.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-w
 .table-wrap{position:relative;overflow-x:auto;border-radius:var(--r12);border:1px solid var(--border2);margin:1.25rem 0}
 div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollable wrapper: the ring sits inside the box so the right-edge fade mask cannot clip it */
 .data-table th .th-unit, .form-group label .th-unit{text-transform:none} /* unit symbols are case-sensitive: m, s, m:ss.ss */
+.data-table th .th-unit i{font-style:normal} /* a variable name in the monospace header: no DM Mono italic face is requested, so the oblique would be synthesised */
 .data-table{width:100%;border-collapse:collapse;font-size:0.84rem}.data-table th{background:var(--navy3);color:var(--cyan);font-family:var(--fm);font-weight:500;font-size:var(--fs-micro);letter-spacing:2px;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--white2);vertical-align:top;line-height:1.6}.data-table tr:hover td{background:rgba(0,212,255,0.03)}.data-table td:first-child{color:var(--white);font-weight:500}
 .ptag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1px;color:var(--cyan);display:block;margin-bottom:3px}
 .log-stat-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px}
 .viz-phys-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
 /* METRICS */
 .metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:1rem;margin-bottom:3rem}
-.metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border)}@media(hover:hover){.metric-card[onclick]:hover{transform:translateY(-3px)}}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4;overflow-wrap:anywhere}
+.metric-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.3rem 1rem;text-align:center;transition:border-color 0.3s,transform 0.2s;cursor:default}.metric-card:hover{border-color:var(--border)}.metric-card .val{font-family:var(--fh);font-size:2.4rem;color:var(--cyan);letter-spacing:1px;display:block;line-height:1}.metric-card .lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px;display:block}.metric-card .sub{font-size:0.73rem;color:var(--white2);margin-top:5px;line-height:1.4;overflow-wrap:anywhere}
 /* VIDEO */
 .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}.video-grid>.video-card:only-child{grid-column:1/-1;max-width:640px}
 @media(min-width:664px) and (max-width:1011px){.video-grid>.video-card:last-child:nth-child(odd):not(:only-child){grid-column:1/-1;max-width:640px;justify-self:center;width:100%}} /* the two-column band (grid 624–947px wide): a 2+1 tab's odd card spans the row, centred, instead of sitting alone at half width; three-up desktops keep their rows */
@@ -430,16 +438,16 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .ai-mode-btn{background:var(--navy3);border:1px solid var(--border2);border-radius:6px;color:var(--white3);padding:5px 11px;font-family:var(--fm);font-size:0.63rem;letter-spacing:0.8px;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}
 .ai-mode-btn.active{background:var(--cyan-dim);color:var(--cyan);border-color:var(--cyan);box-shadow:inset 0 0 0 1px var(--cyan)}
 @media(hover:hover){.ai-mode-btn:hover:not(.active){color:var(--white);border-color:rgba(0,212,255,0.3)}}
-.ai-messages{height:calc(100dvh - 400px);min-height:340px;max-height:1100px;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;scroll-behavior:smooth}
+.ai-messages{height:calc(100vh - 400px);height:calc(100dvh - 400px);min-height:340px;max-height:1100px;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;scroll-behavior:smooth}
 /* Keep the composer in view: the chat card is capped to the viewport below the page title and the message pane
    gives way first (the card sits ~174px down on tablets, ~194px on desktop where the title is 48px, ~174px on phones, eyebrow and meta line included). Very short viewports keep the flowing layout. */
 @media(min-height:600px){
-  .ai-wrapper{display:flex;flex-direction:column;max-height:calc(100dvh - 196px)}
+  .ai-wrapper{display:flex;flex-direction:column;max-height:calc(100vh - 196px);max-height:calc(100dvh - 196px)}
   .ai-messages{flex:1 1 auto;min-height:180px}
   .ai-header,.quick-prompts,.ai-input-row{flex-shrink:0}
 }
-@media(min-height:600px) and (min-width:900px){.ai-wrapper{max-height:calc(100dvh - 208px)}}
-@media(min-height:600px) and (max-width:480px){.ai-wrapper{max-height:calc(100dvh - 198px)}}
+@media(min-height:600px) and (min-width:900px){.ai-wrapper{max-height:calc(100vh - 208px);max-height:calc(100dvh - 208px)}}
+@media(min-height:600px) and (max-width:480px){.ai-wrapper{max-height:calc(100vh - 198px);max-height:calc(100dvh - 198px)}}
 .ai-messages::-webkit-scrollbar{width:4px}.ai-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .msg{display:flex;gap:10px;align-items:flex-start;animation:fadeUp 0.3s ease}.msg.user{flex-direction:row-reverse}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -457,7 +465,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 /* Landscape phones (a deck-mounted phone is usually sideways): a 340px pane plus a ten-chip prompt block put the
    composer two screens down. Shorten the pane and make the prompts a one-line strip so the input is within reach. */
 @media(max-height:480px) and (orientation:landscape){
-  .ai-messages{min-height:160px;height:calc(100dvh - 260px)}
+  .ai-messages{min-height:160px;height:calc(100vh - 260px);height:calc(100dvh - 260px)}
   .quick-prompts{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .quick-prompts::-webkit-scrollbar{display:none}
   .qp{flex:0 0 auto;white-space:nowrap}
@@ -465,7 +473,7 @@ div.table-wrap[tabindex]:focus-visible{outline-offset:-2px} /* keyboard-scrollab
 .qp{background:var(--navy3);border:1px solid var(--border2);border-radius:20px;padding:5px 13px;font-size:0.71rem;color:var(--white3);cursor:pointer;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;font-family:var(--fm);letter-spacing:0.3px}.qp:hover{color:var(--cyan);border-color:rgba(0,212,255,0.4);background:var(--cyan-dim)}
 .ai-input-row{border-top:1px solid var(--border);padding:1rem 1.25rem;display:flex;gap:10px;align-items:stretch}
 .ai-input{flex:1;min-width:0;background:var(--navy3);border:1px solid var(--border-input);border-radius:var(--r8);padding:11px 14px;color:var(--white);font-size:0.88rem;outline:none;transition:border-color 0.2s}.ai-input::placeholder{color:var(--white4)}.ai-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
-.ai-send{flex-shrink:0;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px 22px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}.ai-send:hover:not(:disabled):not([aria-busy="true"]){background:var(--cyan2);box-shadow:0 4px 18px rgba(0,212,255,0.3)}.ai-send:disabled{opacity:0.4;cursor:not-allowed}
+.ai-send{flex-shrink:0;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px 22px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:500;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}.ai-send:hover:not(:disabled):not([aria-busy="true"]){background:var(--cyan2);box-shadow:0 4px 18px rgba(0,212,255,0.3)}.ai-send:disabled{opacity:0.4;cursor:not-allowed}
 /* Action buttons mid-request (tlSetBusy): dimmed like :disabled but still focusable */
 button[aria-busy="true"]{opacity:0.45;cursor:progress}
 .ai-send.ai-stop{background:var(--navy3);color:var(--white);border:1px solid var(--border-input)}.ai-send.ai-stop:hover{background:var(--navy3);border-color:var(--red);color:var(--red);box-shadow:none}
@@ -490,7 +498,7 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 .calc-panel{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.75rem;min-width:0}.calc-panel h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem}
 .calc-result{background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:1.25rem;margin-top:1.25rem;text-align:center;display:none}.calc-result.show{display:block}
 .calc-result .big{font-family:var(--fh);font-size:3rem;color:var(--cyan);letter-spacing:2px;line-height:1}.calc-result .sub{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px}
-.calc-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;width:100%;margin-top:0.5rem;cursor:pointer}.calc-btn:hover{background:var(--cyan2)}
+.calc-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:500;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;width:100%;margin-top:0.5rem;cursor:pointer}.calc-btn:hover{background:var(--cyan2)}
 /* ZONE BARS */
 .zone-bars{display:flex;flex-direction:column;gap:12px;margin-top:1.5rem}
 .zone-row{display:flex;align-items:center;gap:14px}.zone-name{font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;color:var(--white3);text-transform:uppercase;min-width:95px;text-align:right}
@@ -524,7 +532,7 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 /* CONTENT BLOCKS */
 .content-block{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;margin-bottom:1.25rem}.content-block h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1rem;color:var(--white)}.content-block p{font-size:0.88rem;color:var(--white2);line-height:1.85;font-weight:300;margin-bottom:0.85rem}.content-block p:last-child{margin-bottom:0}
 /* Reading measure: a tab whose only content is one block set 14px prose 1118px wide (~180 characters a line) on the 1240px pages; the card keeps its width so tabs do not jump, the text column does not (≈690px, the same measure as .section-intro) */
-.content-block>p,.content-block>ul,.content-block>ol,#page-timers .tlt-card>p{max-width:690px}#page-planner .pl-fine,#page-timers .tlt-note{max-width:72ch}
+.content-block>p,.content-block>ul,#page-timers .tlt-card>p{max-width:690px}#page-planner .pl-fine,#page-timers .tlt-note{max-width:72ch}
 .content-block ul{list-style:none}.content-block ul li{font-size:0.85rem;color:var(--white2);padding:7px 0;border-bottom:1px solid var(--border2);display:flex;gap:10px;align-items:flex-start;line-height:1.6}.content-block ul li:before{content:'→';color:var(--cyan);flex-shrink:0;font-size:0.75rem;margin-top:2px}.content-block ul li:last-child{border-bottom:none}
 /* FOOTER */
 footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2rem}
@@ -552,7 +560,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 /* REVEAL ANIMATION */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}.reveal.visible{opacity:1;transform:none}
 /* MISC BUTTONS */
-.btn-sm{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:8px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;font-weight:600;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}.btn-sm:hover{background:var(--cyan2)}
+.btn-sm{background:var(--cyan);color:var(--navy);border:none;border-radius:6px;padding:8px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;font-weight:500;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}.btn-sm:hover{background:var(--cyan2)}
 .btn-ghost-sm{background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.35);border-radius:6px;padding:7px 16px;font-family:var(--fm);font-size:0.7rem;letter-spacing:1px;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s;text-transform:uppercase;cursor:pointer}.btn-ghost-sm:hover{background:var(--cyan-dim)}
 /* Same 30px box whether the control is a <button>, an <a> (which would inherit the body line-height) or carries an emoji glyph */
 .btn-sm,.btn-ghost-sm{line-height:1.2;min-height:30px}
@@ -569,7 +577,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   /* Footer gutter follows the page gutter (20px) so its columns line up with the content column */
   footer{padding:2.5rem 1.25rem}
   .page:not(#page-home) footer{padding:1.25rem}
-  .ai-messages{height:calc(100dvh - 320px);min-height:280px}
+  .ai-messages{height:calc(100vh - 320px);height:calc(100dvh - 320px);min-height:280px}
   #ai-section{padding:0 1.25rem 2rem}
   #page-ai .ai-title-wrap{padding:1.5rem 1.25rem 0.75rem}
   /* Suggested questions as one swipeable strip on tablets too: wrapped at 44px touch height the ten pills were a five-row 269px block that left the chat 35% of the card */
@@ -605,14 +613,14 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .ai-mode-btn{padding:4px 10px;flex:0 0 auto;white-space:nowrap}
   .quick-prompts{padding:0.6rem 1rem} /* the nowrap strip itself comes from the ≤768 rule */
   .ai-header-text p{display:none} /* the title's meta line already says it; the 36px it cost the pane is what the welcome bubble needs to show without an inner scroll */
-  .ai-messages{height:calc(100dvh - 300px);padding:14px;gap:0.85rem}
+  .ai-messages{height:calc(100vh - 300px);height:calc(100dvh - 300px);padding:14px;gap:0.85rem}
   /* Bubbles take the full width beside the avatar (80% of a 265px row was a 212px column that made the welcome 409px tall) */
   .msg-bubble{max-width:calc(100% - 42px);padding:0.75rem 0.9rem;line-height:1.5}
 }
 /* Landscape phone (812×375, 667×375): the message pane's height floor pushed the composer far below the fold and the
    3D canvas kept a taller-than-screen height (the phone overrides above are max-width rules) — after them so it wins. */
 @media(max-height:500px) and (orientation:landscape){
-  .ai-messages{min-height:160px;height:calc(100dvh - 230px)}
+  .ai-messages{min-height:160px;height:calc(100vh - 230px);height:calc(100dvh - 230px)}
   /* Mode buttons and quick prompts as single scrolling rows (as on portrait phones): wrapped they cost ~330px of height */
   .ai-mode-btns{gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
   .ai-mode-btns::-webkit-scrollbar{display:none}
@@ -620,7 +628,7 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
   .quick-prompts{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .quick-prompts::-webkit-scrollbar{display:none}
   .qp{flex:0 0 auto;white-space:nowrap}
-  #viz3d-container{height:min(520px,calc(100dvh - 90px))}
+  #viz3d-container{height:min(520px,calc(100vh - 90px));height:min(520px,calc(100dvh - 90px))}
 }
 /* ACCESSIBILITY */
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.qp:focus-visible,[role="button"]:focus-visible,[role="link"]:focus-visible,[tabindex]:not(.page):focus-visible,#viz3d-container:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
@@ -746,7 +754,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* ── transport buttons ── */
 #page-timers .tlt-transport{display:grid;grid-template-columns:2fr 1fr;gap:10px}
 #page-timers .tlt-transport.three{grid-template-columns:2fr 1fr 1fr}
-#page-timers .tlt-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);min-height:56px;padding:0 16px;font-family:var(--fm);font-size:0.85rem;letter-spacing:1.5px;font-weight:600;text-transform:uppercase;cursor:pointer;transition:background 0.2s,color 0.2s;white-space:nowrap}
+#page-timers .tlt-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);min-height:56px;padding:0 16px;font-family:var(--fm);font-size:0.85rem;letter-spacing:1.5px;font-weight:500;text-transform:uppercase;cursor:pointer;transition:background 0.2s,color 0.2s;white-space:nowrap}
 #page-timers .tlt-btn:hover{background:var(--cyan2)}
 #page-timers .tlt-btn.ghost{background:transparent;color:var(--cyan);border:1px solid rgba(0,212,255,0.35)}
 #page-timers .tlt-btn.ghost:hover{background:var(--cyan-dim)}
@@ -1077,7 +1085,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-analytics .an-seg-lbl{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:2px;color:var(--white3);text-transform:uppercase;padding:0 10px 0 12px;white-space:nowrap}
 #page-analytics .an-seg-btn{background:transparent;border:none;border-left:1px solid var(--border2);color:var(--white3);font-family:var(--fm);font-size:0.65rem;letter-spacing:0.8px;text-transform:uppercase;padding:9px 13px;cursor:pointer;transition:background 0.2s,color 0.2s;white-space:nowrap;min-height:36px}
 #page-analytics .an-seg-btn:hover{color:var(--white)}
-#page-analytics .an-seg-btn[aria-pressed="true"]{background:var(--cyan-dim);color:var(--cyan);font-weight:600;box-shadow:inset 0 0 0 2px var(--cyan)}
+#page-analytics .an-seg-btn[aria-pressed="true"]{background:var(--cyan-dim);color:var(--cyan);font-weight:500;box-shadow:inset 0 0 0 2px var(--cyan)}
 #page-analytics .an-table-btn{margin-left:auto;min-height:38px} /* same height as the segmented pills beside it (36px buttons + border) */
 #page-analytics .an-chart-wrap{position:relative;width:100%;height:300px}
 #page-analytics .an-chart-canvas{display:block;width:100%;height:100%;touch-action:pan-y;border-radius:8px;cursor:crosshair}
@@ -1363,7 +1371,7 @@ html.tl-pal-lock{overflow:hidden}
 #page-updates .tl-upd-items a:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:2px}
 /* Touch: a single-line release link is a 24px flex item in a 44px row — pad it to the row without moving the text */
 @media(hover:none) and (pointer:coarse){#page-updates .tl-upd-items a{padding:10px 0;margin:-10px 0}}
-#page-updates .tl-upd-tag{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;padding:3px 0;border-radius:4px;border:1px solid;flex:0 0 74px;text-align:center;margin-top:3px;line-height:1.4}
+#page-updates .tl-upd-tag{font-family:var(--fm);font-weight:400;font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;padding:3px 0;border-radius:4px;border:1px solid;flex:0 0 74px;text-align:center;margin-top:3px;line-height:1.4}
 #page-updates .tl-upd-tag.new{color:var(--green);background:var(--green-dim);border-color:rgba(0,229,153,0.3)}
 #page-updates .tl-upd-tag.improved{color:var(--cyan);background:var(--cyan-dim);border-color:rgba(0,212,255,0.3)}
 #page-updates .tl-upd-tag.fixed{color:var(--gold);background:var(--gold-dim);border-color:rgba(245,166,35,0.3)}
@@ -1383,7 +1391,7 @@ html.tl-pal-lock{overflow:hidden}
 .tl-upd-toast{position:fixed;left:50%;bottom:20px;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 32px);background:var(--card2);border:1px solid var(--border);border-radius:var(--r12);padding:10px 10px 10px 18px;box-shadow:0 16px 40px rgba(0,0,0,0.45),0 0 40px rgba(0,212,255,0.08);animation:tlUpdIn 0.3s ease}
 @keyframes tlUpdIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
 .tl-upd-toast-msg{font-family:var(--fm);font-size:0.72rem;letter-spacing:0.3px;color:var(--white);line-height:1.5}
-.tl-upd-toast-msg b{color:var(--cyan);font-weight:600}
+.tl-upd-toast-msg b{color:var(--cyan);font-weight:500}
 .tl-upd-toast .btn-sm{white-space:nowrap}
 .tl-upd-toast-x{background:none;border:none;color:var(--white3);font-size:1.05rem;line-height:1;cursor:pointer;min-width:44px;min-height:44px;border-radius:6px;transition:color 0.2s,background 0.2s}
 .tl-upd-toast-x:hover{color:var(--white);background:var(--navy3)}
@@ -1547,14 +1555,18 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 /* Auth overlay: scroll when the card is taller than the viewport (short phones, landscape);
    margin:auto on the card keeps it centred whenever it fits. */
 #access-gate{align-items:flex-start;justify-content:center;padding:2rem;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.auth-card{padding:2.75rem 2.25rem}
+.auth-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1);padding:2.75rem 2.25rem}
+.auth-card .form-group{margin-bottom:0.9rem;text-align:left}.auth-card .form-group.auth-fg-last{margin-bottom:1rem}
+.auth-btn{width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:500;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem}
+#screen-signup .auth-btn{margin-bottom:0.6rem} /* the legal line sits right under it */
+.auth-msg{font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;margin-bottom:0.85rem;line-height:1.5} /* the scripts toggle display and recolour a success green */
 /* Sign-up consent: a 20px box in a 44px label (the native 13px box sat in a 19px line beside 44px inputs); legal links get a taller tap area without moving the line */
 .auth-consent{display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 0;margin-bottom:0.6rem;font-size:0.82rem;color:var(--white3);text-align:left;cursor:pointer;line-height:1.5}
 .auth-consent input{width:20px;height:20px;flex:0 0 auto;margin:0;accent-color:var(--cyan);cursor:pointer}
 .auth-legal{font-size:0.78rem;color:var(--white4);text-align:left;line-height:1.5;margin-bottom:0.85rem}
 .auth-legal a{color:var(--cyan);display:inline-block;padding:6px 0;margin:-6px 0}
 .tl-panel{padding:1.75rem}
-.auth-links{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 6px}
+.auth-links{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 6px;font-size:0.82rem;color:var(--white3)}
 .tl-linkbtn{background:none;border:0;padding:0 6px;min-height:44px;color:var(--cyan);font:inherit;cursor:pointer;border-radius:6px}
 .tl-linkbtn:hover{text-decoration:underline;text-underline-offset:3px}
 /* Tab strips wrap on desktop so the last tab is never clipped; below that the strip still
@@ -1897,7 +1909,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="viz-controls" style="margin-top:10px;align-items:stretch">
     <input class="form-input" id="motion-prompt" maxlength="300" aria-label="Describe a swimming movement to reconstruct in 3D" placeholder='Describe a movement, e.g. "flip turn"' style="flex:1;min-width:230px">
-    <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple-text);font-weight:600"><span aria-hidden="true">✦ </span>AI Reconstruct</button>
+    <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple-text);font-weight:500"><span aria-hidden="true">✦ </span>AI Reconstruct</button>
   </div>
   <div id="motion-status" role="status" aria-live="polite" data-hint="Try &quot;breaststroke pullout off the wall&quot; or &quot;backstroke start&quot; — the lab rebuilds it joint by joint." style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px">Try "breaststroke pullout off the wall" or "backstroke start" — the lab rebuilds it joint by joint.</div>
   <div class="viz-controls viz-row-view" style="margin-top:8px" role="group" aria-label="Camera view">
@@ -3842,61 +3854,61 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
   <button type="button" onclick="closeAuthGate()" aria-label="Close log-in dialog" title="Close" style="position:fixed;top:8px;right:8px;top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:none;border:none;color:var(--white3);font-size:1.6rem;cursor:pointer;line-height:1;z-index:1"><span aria-hidden="true">✕</span></button>
   <div class="auth-card-wrap" style="max-width:440px;width:100%;margin:auto">
   <!-- LOGIN -->
-  <div id="screen-login" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
+  <div id="screen-login" class="auth-card">
     <img src="logo-mark.svg" alt="" width="48" height="48" style="border-radius:11px;margin:0 auto 1rem;display:block">
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne</div>
     <h2 id="auth-h-login" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;line-height:1;margin-bottom:1.5rem">LOG IN TO <br><span style="color:var(--cyan)">YOUR ACCOUNT</span></h2>
-    <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
+    <div class="form-group"><label>Email</label>
       <input id="login-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doLogin()"></div>
-    <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Password</label>
+    <div class="form-group auth-fg-last"><label>Password</label>
       <input id="login-password" type="password" autocomplete="current-password" class="form-input" placeholder="••••••••" onkeydown="if(tlPlainEnter(event))doLogin()"></div>
-    <button id="login-btn" onclick="doLogin()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:500;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">LOG IN <span aria-hidden="true">→</span></button>
-    <p id="login-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
-    <p class="auth-links" style="font-size:0.82rem;color:var(--white3)">
+    <button id="login-btn" onclick="doLogin()" class="auth-btn">LOG IN <span aria-hidden="true">→</span></button>
+    <p id="login-error" role="alert" class="auth-msg" style="display:none"></p>
+    <p class="auth-links">
       <button type="button" class="tl-linkbtn" onclick="showAuthScreen('forgot')">Forgot password?</button>
       <button type="button" class="tl-linkbtn" onclick="showAuthScreen('signup')">Create an account</button>
     </p>
   </div>
   <!-- SIGNUP -->
-  <div id="screen-signup" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
+  <div id="screen-signup" class="auth-card" style="display:none">
     <img src="logo-mark.svg" alt="" width="48" height="48" style="border-radius:11px;margin:0 auto 1rem;display:block">
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne — Free Account</div>
     <h2 id="auth-h-signup" style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;line-height:1;margin-bottom:1.5rem">CREATE YOUR <br><span style="color:var(--cyan)">ACCOUNT</span></h2>
-    <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Choose a Username</label>
+    <div class="form-group"><label>Choose a Username</label>
       <input id="signup-username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" class="form-input" placeholder="e.g. coach_daniel" maxlength="24" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
-    <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
+    <div class="form-group"><label>Email</label>
       <input id="signup-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
-    <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Choose a Password</label>
+    <div class="form-group auth-fg-last"><label>Choose a Password</label>
       <input id="signup-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(tlPlainEnter(event))doSignup()"></div>
     <label class="auth-consent">
       <input type="checkbox" id="signup-age"> I confirm I am 13 years of age or older.
     </label>
-    <button id="signup-btn" onclick="doSignup()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:500;text-transform:uppercase;cursor:pointer;margin-bottom:0.6rem">CREATE ACCOUNT <span aria-hidden="true">→</span></button>
+    <button id="signup-btn" onclick="doSignup()" class="auth-btn">CREATE ACCOUNT <span aria-hidden="true">→</span></button>
     <p class="auth-legal">By creating an account you agree to our <a href="terms.html" target="_blank" rel="noopener">Terms of Use</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</p>
-    <p id="signup-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
-    <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><span>Already have an account?</span> <button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Log in</button></p>
+    <p id="signup-error" role="alert" class="auth-msg" style="display:none"></p>
+    <p class="auth-links"><span>Already have an account?</span> <button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Log in</button></p>
   </div>
   <!-- FORGOT PASSWORD -->
-  <div id="screen-forgot" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
+  <div id="screen-forgot" class="auth-card" style="display:none">
     <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🔑</div>
     <h2 id="auth-h-forgot" style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:1.25rem">RESET YOUR <br><span style="color:var(--cyan)">PASSWORD</span></h2>
-    <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Email</label>
+    <div class="form-group auth-fg-last"><label>Email</label>
       <input id="forgot-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" class="form-input" placeholder="you@example.com" onkeydown="if(tlPlainEnter(event))doForgotPassword()"></div>
-    <button id="forgot-btn" onclick="doForgotPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:500;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SEND RESET LINK <span aria-hidden="true">→</span></button>
-    <p id="forgot-msg" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.78rem;letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
-    <p class="auth-links" style="font-size:0.82rem;color:var(--white3)"><button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Back to log in</button></p>
+    <button id="forgot-btn" onclick="doForgotPassword()" class="auth-btn">SEND RESET LINK <span aria-hidden="true">→</span></button>
+    <p id="forgot-msg" role="status" aria-live="polite" class="auth-msg" style="display:none"></p>
+    <p class="auth-links"><button type="button" class="tl-linkbtn" onclick="showAuthScreen('login')">Back to log in</button></p>
   </div>
   <!-- NEW PASSWORD (opened by the emailed recovery link) -->
-  <div id="screen-newpass" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
+  <div id="screen-newpass" class="auth-card" style="display:none">
     <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🔑</div>
     <h2 id="auth-h-newpass" style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:0.75rem">CHOOSE A NEW <br><span style="color:var(--cyan)">PASSWORD</span></h2>
     <p style="font-size:0.82rem;color:var(--white3);line-height:1.5;margin-bottom:1.1rem">Your reset link checked out. Pick a new password for your account.</p>
-    <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>New Password</label>
+    <div class="form-group"><label>New Password</label>
       <input id="newpass-password" type="password" autocomplete="new-password" class="form-input" placeholder="8+ characters" onkeydown="if(tlPlainEnter(event))doSetNewPassword()"></div>
-    <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Confirm New Password</label>
+    <div class="form-group auth-fg-last"><label>Confirm New Password</label>
       <input id="newpass-confirm" type="password" autocomplete="new-password" class="form-input" placeholder="Type it again" onkeydown="if(tlPlainEnter(event))doSetNewPassword()"></div>
-    <button id="newpass-btn" onclick="doSetNewPassword()" style="width:100%;background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:14px;font-family:var(--fm);font-size:0.82rem;letter-spacing:2px;font-weight:500;text-transform:uppercase;cursor:pointer;margin-bottom:0.85rem">SET NEW PASSWORD <span aria-hidden="true">→</span></button>
-    <p id="newpass-error" role="alert" style="font-family:var(--fm);font-size:0.78rem;color:var(--red);letter-spacing:0.3px;display:none;margin-bottom:0.85rem;line-height:1.5"></p>
+    <button id="newpass-btn" onclick="doSetNewPassword()" class="auth-btn">SET NEW PASSWORD <span aria-hidden="true">→</span></button>
+    <p id="newpass-error" role="alert" class="auth-msg" style="display:none"></p>
   </div>
   </div>
 </div>
@@ -4146,20 +4158,17 @@ function enhanceA11y(){
         if(idx>=0){ e.preventDefault(); btns[idx].focus(); btns[idx].click(); }
       });
     });
-    // A strip that scrolls fades its clipped edge so off-screen tabs are discoverable
-    const fade=()=>{
-      const more=strip.scrollWidth-strip.clientWidth-strip.scrollLeft>2, less=strip.scrollLeft>2;
-      strip.style.setProperty('--tabs-fr', more?'40px':'0px'); strip.style.setProperty('--tabs-fl', less?'28px':'0px');
-    };
-    strip.addEventListener('scroll', fade, {passive:true});
-    if('ResizeObserver' in window) new ResizeObserver(fade).observe(strip); else window.addEventListener('resize', fade);
-    fade();
+    // A strip that scrolls fades its clipped edge so off-screen tabs are discoverable: registered with the
+    // other horizontal strips below (one shared ResizeObserver), which set --tabs-fl/--tabs-fr for .tabs.
   });
-  // Horizontal strips (AI mode chips, quick prompts, phase bar; tab bars above) hide their scrollbar, and wide tables
+  // Horizontal strips (tab bars, AI mode chips, quick prompts, phase bar) hide their scrollbar, and wide tables
   // scroll inside .table-wrap, so show a right-edge fade only while more sits past the edge; cleared once scrolled to the end.
-  const fadeStrips=[...document.querySelectorAll('.ai-mode-btns,.quick-prompts,.viz-phase-bar,.table-wrap')];
+  const FADE_SEL='.tabs,.ai-mode-btns,.quick-prompts,.viz-phase-bar,.table-wrap';
+  const fadeStrips=[...document.querySelectorAll(FADE_SEL)];
   const syncFade=el=>{
-    el.classList.toggle('tl-scroll-more', el.scrollWidth-el.clientWidth-el.scrollLeft>2);
+    const more=el.scrollWidth-el.clientWidth-el.scrollLeft>2;
+    if(el.classList.contains('tabs')){ el.style.setProperty('--tabs-fr', more?'40px':'0px'); el.style.setProperty('--tabs-fl', el.scrollLeft>2?'28px':'0px'); return; }
+    el.classList.toggle('tl-scroll-more', more);
     // A table that scrolls sideways (phones) must stay reachable from the keyboard: a scroll container with no
     // focusable cell cannot be scrolled with the arrow keys in Firefox/Safari unless it is itself focusable, so it
     // becomes a named region while it overflows and goes back to a plain div once it fits again.
@@ -4173,7 +4182,9 @@ function enhanceA11y(){
     } else if(el.getAttribute('role')==='region'&&el.getAttribute('tabindex')==='0'){ el.removeAttribute('tabindex'); el.removeAttribute('role'); el.removeAttribute('aria-label'); }
   };
   const syncAllFades=()=>fadeStrips.forEach(syncFade);
-  const ro=(typeof ResizeObserver==='function')?new ResizeObserver(syncAllFades):null;
+  // One observer for every strip, re-measuring only the strips that actually resized (a route change re-lays
+  // out one page's tables, not all 33 strips) — window resize and hashchange still sweep them all.
+  const ro=(typeof ResizeObserver==='function')?new ResizeObserver(entries=>entries.forEach(en=>syncFade(en.target))):null;
   const registerFade=el=>{ if(el.__tlFade) return; el.__tlFade=1; fadeStrips.push(el); el.addEventListener('scroll',()=>syncFade(el),{passive:true}); if(ro) ro.observe(el); syncFade(el); };
   fadeStrips.splice(0).forEach(registerFade);
   window.addEventListener('resize',syncAllFades);
@@ -4181,7 +4192,6 @@ function enhanceA11y(){
   // Result tables and strips written later by innerHTML (calculator splits/zones/conversion, the planner's
   // predictor, exponent, split and elite tables) get the same fade and keyboard region: a MutationObserver on
   // <main> registers any new .table-wrap/strip as it lands, and drops the ones that were replaced.
-  const FADE_SEL='.ai-mode-btns,.quick-prompts,.viz-phase-bar,.table-wrap';
   if(typeof MutationObserver==='function'){
     const root=document.getElementById('main')||document.body;
     new MutationObserver(muts=>{
@@ -4213,10 +4223,6 @@ function enhanceA11y(){
   document.querySelectorAll('.qp').forEach(qp=>{
     qp.setAttribute('role','button'); qp.setAttribute('tabindex','0');
     qp.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); qp.click(); } });
-  });
-  document.querySelectorAll('.metric-card[onclick]').forEach(el=>{
-    el.setAttribute('role','button'); el.setAttribute('tabindex','0');
-    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } });
   });
   // Enter-to-submit for calculator / generator / log panels: one delegated
   // handler lives next to the calculators (see 'Enter in a calculator' below).
@@ -5685,11 +5691,14 @@ function tlWarmLab(){
     document.head.appendChild(l);
   });
 }
-// Home page idle: warm only on an unmetered, fast connection (unknown = assume fine).
+// Home page idle: warm only on an unmetered, fast connection. Without the Network Information API (Firefox,
+// Safari) a phone is assumed to be on a metered link and is not warmed idly — the pointerenter/focus intent
+// path above still warms it on the way to the lab; a desktop without the API is assumed fine.
 function scheduleLabWarm(){
   if (_labWarmed) return;
   const conn = navigator.connection;
   if (conn && (conn.saveData || (conn.effectiveType && conn.effectiveType !== '4g'))) return;
+  try { if (!conn && window.matchMedia && matchMedia('(pointer:coarse)').matches) return; } catch(e){}
   const go = function(){ if (location.hash.replace('#','') === 'home' || !location.hash) tlWarmLab(); };
   if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 4000 });
   else setTimeout(go, 2500);
@@ -5885,6 +5894,18 @@ async function readAIStream(resp, guard, onText, stale){
   const reader=resp.body.getReader();
   const decoder=new TextDecoder();
   let fullText='', buffer='';
+  const takeLine=line=>{
+    if(!line.startsWith('data: ')) return;
+    const data=line.slice(6).trim();
+    if(!data||data==='[DONE]') return;
+    try{
+      const parsed=JSON.parse(data);
+      if(parsed.type==='content_block_delta'&&parsed.delta?.type==='text_delta'){
+        fullText+=parsed.delta.text;
+        if(onText) onText(fullText);
+      }
+    }catch(e){}
+  };
   while(true){
     const {done,value}=await reader.read();
     if(stale && stale()){ reader.cancel().catch(()=>{}); return fullText; }
@@ -5893,19 +5914,12 @@ async function readAIStream(resp, guard, onText, stale){
     buffer+=decoder.decode(value,{stream:true});
     const lines=buffer.split('\n');
     buffer=lines.pop()||''; // keep the incomplete line
-    for(const line of lines){
-      if(!line.startsWith('data: ')) continue;
-      const data=line.slice(6).trim();
-      if(data==='[DONE]') continue;
-      try{
-        const parsed=JSON.parse(data);
-        if(parsed.type==='content_block_delta'&&parsed.delta?.type==='text_delta'){
-          fullText+=parsed.delta.text;
-          if(onText) onText(fullText);
-        }
-      }catch(e){}
-    }
+    lines.forEach(takeLine);
   }
+  // A stream that ends without a trailing newline leaves its last event in the buffer: flush the decoder's
+  // pending bytes and that line too, or the reply silently ends one delta short.
+  buffer+=decoder.decode();
+  if(buffer) takeLine(buffer);
   return fullText;
 }
 let _aiChatGuard=null; // the coach chat's running stream (Stop button)
@@ -6950,7 +6964,10 @@ function importBackup(ev){
       }
     }catch(e){ tlNotice('profile-notice','That file is not a valid Tidelyne backup.'); }
   };
-  r.readAsText(f);
+  // A file that cannot be read (a cloud-only file not yet downloaded, one removed between picking and reading,
+  // a permission error) fires onerror, not onload: without this the input is already cleared and nothing is said.
+  r.onerror=r.onabort=function(){ tlNotice('profile-notice','Could not read that file — try choosing it again.'); };
+  try{ r.readAsText(f); }catch(e){ r.onerror(); }
   ev.target.value=''; // allow re-importing the same file
 }
 function initProfile(){
@@ -11741,6 +11758,13 @@ window.tlCheckForUpdates = function(){
       setStatus(first ? 'Offline support is still being set up — reload once to finish caching.'
                       : 'Update found — installing in the background. You will be prompted to reload.', 'ok');
       return !first;
+    }
+    // A newer worker already claimed this tab (its toast was dismissed): nothing is installing, but this
+    // page is the stale one — say so and re-offer the reload instead of calling the old shell "latest".
+    if (window.TL_SHELL_STALE && swVersion){
+      setStatus('Version ' + swVersion + ' is installed — reload to open it.', 'ok');
+      showUpdateToast(swVersion);
+      return true;
     }
     setStatus('You have the latest version (v' + window.TL_VERSION + ').', 'ok');
     return false;

@@ -96,6 +96,9 @@ on every release:
    agree: `grep -c "VERSION      = '$(grep -o -m1 "version: *'[^']*'" index.html | cut -d\' -f2)'" sw.js`
    must print `1`.
 3. **`site.webmanifest`** — only when icons or the start URL change.
+   Likewise only on a **library bump** (supabase-js or Three.js): the `<meta http-equiv="Content-Security-Policy">`
+   in `index.html` allows the two jsDelivr files by exact path, so a new version needs its path, its
+   `integrity` sha384 and (for Three.js) `sw.js`'s `THREE_URL` and the prefetch in `tlWarmLab` changed together.
 4. **`sitemap.xml` — `<lastmod>`** of the home entry (and of any legal page you edited):
    set it to the release date so crawlers see that the page changed, then run
    `xmllint --noout sitemap.xml` — a `--` inside the XML comment makes every parser
