@@ -174,6 +174,7 @@ THREE.OrbitControls = function (camera, domElement) {
   --white:#eef3f8;--white2:#b0c4d8;--white3:#607a92;--white4:#3a5068;
   --card:#0b1d32;--card2:#0e2238;--card3:#112848;
   --border:rgba(0,212,255,0.15);--border2:rgba(0,212,255,0.07);
+  --border-input:rgba(0,212,255,0.5); /* ≥3:1 against the card — text-field boundaries must be perceivable (WCAG 1.4.11); --border stays for decorative outlines */
   --fh:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
   --r8:8px;--r12:12px;--r16:16px;
 }
@@ -182,6 +183,9 @@ body{background:var(--navy);color:var(--white);font-family:var(--fb);min-height:
 ::selection{background:rgba(0,212,255,0.25)}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--navy2)}::-webkit-scrollbar-thumb{background:var(--cyan2);border-radius:3px}
 a{color:var(--cyan);text-decoration:none}
+/* Inline prose links carry an underline, not colour alone (WCAG 1.4.1). Zero-specificity :where() so nav, footer and button-styled links keep their own rules. */
+:where(main p,main li,main td,main dd,.info-box,.warn-box,.pl-hint,.pl-fine,.tlt-note,.an-hint) a:not(:where(.btn-sm,.btn-ghost-sm,.card-link,.an-link-btn,.tl-linkbtn)){text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+main footer a{text-decoration:none}
 button{cursor:pointer;font-family:var(--fb)}
 input,textarea,select{font-family:var(--fb)}
 .noise{position:fixed;inset:0;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");z-index:9999}
@@ -222,13 +226,14 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 /* LAYOUT */
 .section-wrap{max-width:1240px;margin:0 auto;padding:5rem 2rem}.section-wrap.narrow{max-width:960px}
 .section-eyebrow{font-family:var(--fm);font-size:0.6rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.75rem;opacity:0.85}
+h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* section titles promoted from <div> to real headings keep their look */
 .section-title{font-family:var(--fh);font-weight:400;font-size:clamp(2.2rem,5vw,4rem);letter-spacing:2px;line-height:0.92;margin-top:0;margin-bottom:1rem}
 .section-title span{color:var(--cyan)}
 .section-intro{font-size:0.95rem;color:var(--white2);max-width:660px;line-height:1.85;font-weight:300;margin-bottom:2.5rem}
 .form-notice{color:var(--red);font-size:0.82rem;line-height:1.55;margin-top:0.75rem}.form-notice.is-ok{color:var(--green)}.form-notice[hidden]{display:none}
 .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:3.5rem 0}
-.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
-.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:1.5rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1.5rem}
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.75rem;transition:border-color 0.3s,transform 0.25s,box-shadow 0.3s}
 .card:hover{border-color:var(--border)}
@@ -265,7 +270,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .warn-box{background:var(--gold-dim);border:1px solid rgba(245,166,35,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.warn-box strong{color:var(--gold)}
 .success-box{background:var(--green-dim);border:1px solid rgba(0,229,153,0.2);border-radius:var(--r8);padding:1.1rem 1.4rem;margin:1.25rem 0;font-size:0.88rem;color:var(--white2);line-height:1.8}.success-box strong{color:var(--green)}
 /* TABLES */
-.table-wrap{overflow-x:auto;border-radius:var(--r12);border:1px solid var(--border2);margin:1.25rem 0}
+.table-wrap{position:relative;overflow-x:auto;border-radius:var(--r12);border:1px solid var(--border2);margin:1.25rem 0}
 .data-table{width:100%;border-collapse:collapse;font-size:0.84rem}.data-table th{background:var(--navy3);color:var(--cyan);font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}.data-table td{padding:11px 14px;border-bottom:1px solid var(--border2);color:var(--white2);vertical-align:top;line-height:1.6}.data-table tr:hover td{background:rgba(0,212,255,0.03)}.data-table td:first-child{color:var(--white);font-weight:500}
 .ptag{font-family:var(--fm);font-size:0.58rem;letter-spacing:1px;color:var(--cyan);display:block;margin-bottom:3px}
 /* METRICS */
@@ -331,24 +336,24 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .quick-prompts{padding:0.75rem 1.1rem;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border2)}
 .qp{background:var(--navy3);border:1px solid var(--border2);border-radius:20px;padding:5px 13px;font-size:0.71rem;color:var(--white3);cursor:pointer;transition:all 0.2s;font-family:var(--fm);letter-spacing:0.3px}.qp:hover{color:var(--cyan);border-color:rgba(0,212,255,0.4);background:var(--cyan-dim)}
 .ai-input-row{border-top:1px solid var(--border);padding:1rem 1.25rem;display:flex;gap:10px;align-items:center}
-.ai-input{flex:1;background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:11px 14px;color:var(--white);font-size:0.88rem;outline:none;transition:border-color 0.2s}.ai-input::placeholder{color:var(--white4)}.ai-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
+.ai-input{flex:1;background:var(--navy3);border:1px solid var(--border-input);border-radius:var(--r8);padding:11px 14px;color:var(--white);font-size:0.88rem;outline:none;transition:border-color 0.2s}.ai-input::placeholder{color:var(--white4)}.ai-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
 .ai-send{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px 22px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:all 0.2s;text-transform:uppercase;cursor:pointer}.ai-send:hover:not(:disabled){background:var(--cyan2);box-shadow:0 4px 18px rgba(0,212,255,0.3)}.ai-send:disabled{opacity:0.4;cursor:not-allowed}
 /* WORKOUT GENERATOR */
 .gen-form{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2rem}
-.gen-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin-bottom:1.25rem}
+.gen-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:1rem;margin-bottom:1.25rem}
 .gen-output{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;display:none}.gen-output.show{display:block}
-.workout-phase{margin-bottom:1.75rem}.workout-phase h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;color:var(--cyan);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border2)}
+.workout-phase{margin-bottom:1.75rem}.workout-phase h2,.workout-phase h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;color:var(--cyan);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border2)}
 .workout-set{background:var(--navy3);border-radius:var(--r8);padding:0.85rem 1rem;margin-bottom:0.5rem;border:1px solid var(--border2);font-size:0.85rem;color:var(--white2);line-height:1.75}
 .loading-state{display:flex;align-items:center;gap:12px;color:var(--white3);padding:2.5rem 0;font-size:0.88rem}
 /* FORM ELEMENTS */
-.form-group{display:flex;flex-direction:column;gap:6px}.form-group label{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}
-.form-select,.form-input,.form-textarea{background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:10px 12px;color:var(--white);font-size:0.875rem;outline:none;transition:border-color 0.2s;appearance:none;-webkit-appearance:none}
+.form-group{display:flex;flex-direction:column;gap:6px;min-width:0}.form-group label{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}
+.form-select,.form-input,.form-textarea{background:var(--navy3);border:1px solid var(--border-input);border-radius:var(--r8);padding:10px 12px;color:var(--white);font-size:0.875rem;outline:none;transition:border-color 0.2s;appearance:none;-webkit-appearance:none;min-width:0}
 .form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300d4ff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
 .form-select:focus,.form-input:focus,.form-textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}.form-select option{background:var(--navy2)}.form-textarea{resize:vertical;min-height:80px;line-height:1.6}
 /* CALCULATOR */
 .calc-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 @media(max-width:700px){.calc-wrapper{grid-template-columns:1fr}}
-.calc-panel{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.75rem}.calc-panel h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem}
+.calc-panel{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.75rem;min-width:0}.calc-panel h4{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem}
 .calc-result{background:var(--navy3);border:1px solid var(--border);border-radius:var(--r8);padding:1.25rem;margin-top:1.25rem;text-align:center;display:none}.calc-result.show{display:block}
 .calc-result .big{font-family:var(--fh);font-size:3rem;color:var(--cyan);letter-spacing:2px;line-height:1}.calc-result .sub{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:7px}
 .calc-btn{background:var(--cyan);color:var(--navy);border:none;border-radius:var(--r8);padding:11px;font-family:var(--fm);font-size:0.75rem;letter-spacing:1.5px;font-weight:600;transition:all 0.2s;text-transform:uppercase;width:100%;margin-top:0.5rem;cursor:pointer}.calc-btn:hover{background:var(--cyan2)}
@@ -363,7 +368,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-fil
 .pr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.85rem;margin-bottom:1.25rem}
 .pr-item{background:var(--card);border-radius:var(--r8);padding:0.9rem;border:1px solid var(--border2);text-align:center;transition:border-color 0.2s}.pr-item:hover{border-color:var(--border)}
 .pr-event{font-family:var(--fm);font-size:0.6rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:7px;display:block}
-.pr-input{background:var(--navy2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.6rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s}.pr-input:focus{border-color:var(--cyan)}.pr-input::placeholder{color:var(--white4);font-size:1rem}
+.pr-input{background:var(--navy2);border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.6rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s}.pr-input:focus{border-color:var(--cyan)}.pr-input::placeholder{color:var(--white4);font-size:1rem}
 /* DRYLAND */
 .dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem}
 .dl-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.4rem;transition:border-color 0.3s,transform 0.2s}.dl-card:hover{border-color:var(--border);transform:translateY(-2px)}
@@ -486,7 +491,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .page{display:none}.page.active{display:block}
   .gen-output,.workout-set,.card,.content-block,.section-wrap{background:#fff!important;color:#000!important;border-color:#bbb!important;box-shadow:none!important}
   .workout-set,.card p,.content-block p,.section-intro{color:#000!important}
-  .workout-phase h4,.section-title,.section-title span{color:#000!important}
+  .workout-phase h2,.workout-phase h4,.section-title,.section-title span{color:#000!important}
 }
 /* ── timers ── */
 /* ============================================================
@@ -504,6 +509,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-timers .tlt-hint{font-family:var(--fm);font-size:0.64rem;color:var(--white4);letter-spacing:0.3px;margin-top:0.75rem;line-height:1.7}
 #page-timers .tlt-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r16);padding:1.5rem;margin-bottom:1.5rem}
 #page-timers .tlt-card-title{font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1rem}
+#page-timers .tlt-card:focus-visible,#page-timers .tlt-int-display:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 #page-timers .tlt-status{font-family:var(--fm);font-size:0.72rem;color:var(--white2);min-height:1.2em;margin-top:0.75rem;line-height:1.6}
 /* id+class specificity already beats the site's ≤768px `.btn-ghost-sm{display:inline-flex}` rule */
 #page-timers .tlt-hidden{display:none}
@@ -709,7 +715,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 #page-planner .pl-goal-pr a{color:var(--white3);text-decoration:underline;text-underline-offset:2px}
 #page-planner .pl-goal-pr a:hover{color:var(--cyan)}
 #page-planner .pl-goal-label{font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase}
-#page-planner .pl-goal-input{background:var(--navy2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.55rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s;min-height:44px}
+#page-planner .pl-goal-input{background:var(--navy2);border:1px solid var(--border-input);border-radius:6px;padding:5px 8px;color:var(--white);font-family:var(--fh);font-size:1.55rem;width:100%;text-align:center;letter-spacing:1px;outline:none;transition:border-color 0.2s;min-height:44px}
 #page-planner .pl-goal-input::placeholder{color:var(--white4);font-size:1rem;letter-spacing:0}
 #page-planner .pl-goal-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
 #page-planner .pl-goal-input[aria-invalid="true"]{border-color:var(--red)}
@@ -1049,6 +1055,7 @@ html.tl-pal-lock{overflow:hidden}
 .tl-pal-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid var(--border2);background:var(--card2);font-family:var(--fm);font-size:0.6rem;letter-spacing:0.5px;color:var(--white3)}
 .tl-pal-foot kbd{display:inline-block;font-family:var(--fm);font-size:0.58rem;color:var(--white2);background:var(--navy3);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin-right:4px;line-height:1.6}
 .tl-pal-foot-r{margin-left:auto}
+.tl-pal-slash{display:inline-flex;align-items:center;gap:4px;cursor:pointer;color:inherit}.tl-pal-slash input{accent-color:var(--cyan);margin:0 4px 0 0;width:14px;height:14px;cursor:pointer}.tl-pal-slash input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
 .tl-pal-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 /* Destination highlight ring (1.5 s) */
 .tl-pal-hit{outline:2px solid var(--cyan);outline-offset:4px;border-radius:6px;box-shadow:0 0 0 8px rgba(0,212,255,0.14);scroll-margin-top:84px;animation:tlPalHit 1.5s ease-out forwards}
@@ -1533,7 +1540,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="section-eyebrow">Study It — Interactive 3D Biomechanics Lab</div>
   <p class="section-intro" style="margin-bottom:1.5rem">A realistic human swimmer — built in your browser from real athlete proportions, with wet skin, race swimwear, silicone cap and goggles — swimming underwater in caustic light and depth haze, every joint driven by elite stroke-phase timing. Slow it down, orbit any angle, zoom in on a hand or a foot, isolate a single phase, switch between the male and female swimmer or X-ray the skeleton, or describe any movement and the AI reconstructs it. It exists so you can see what video moves too fast to show.</p>
   <div class="viz-canvas-wrap" style="position:relative">
-    <div id="viz3d-container" role="img" tabindex="0" aria-label="Interactive 3D swimmer. Use the stroke and phase buttons below, or the arrow keys, to step through each phase. Each phase is described in words in the panel underneath."></div>
+    <div id="viz3d-container" role="application" tabindex="0" aria-label="Interactive 3D swimmer. Left and Right arrow keys step through the stroke phases; the stroke and phase buttons below do the same. Each phase is described in words in the panel underneath."></div>
     <div class="viz-overlay-stats">
       <div class="vos-item"><span class="vos-val" id="stat-drag">—</span><span class="vos-lbl">Drag (N)</span></div>
       <div class="vos-item"><span class="vos-val" id="stat-thrust">—</span><span class="vos-lbl">Thrust (N)</span></div>
@@ -1542,12 +1549,12 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <div class="viz-phase-bar" id="viz-phase-bar" role="group" aria-label="Stroke phases"></div>
   </div>
-  <div class="viz-controls" style="margin-top:1rem">
-    <button class="viz-btn active" onclick="setStroke3D('freestyle',this)"><span aria-hidden="true">🏊 </span>Freestyle</button>
-    <button class="viz-btn" onclick="setStroke3D('backstroke',this)"><span aria-hidden="true">🔄 </span>Backstroke</button>
-    <button class="viz-btn" onclick="setStroke3D('breaststroke',this)"><span aria-hidden="true">🐸 </span>Breaststroke</button>
-    <button class="viz-btn" onclick="setStroke3D('butterfly',this)"><span aria-hidden="true">🦋 </span>Butterfly</button>
-    <button class="viz-btn" onclick="setStroke3D('dolphin',this)"><span aria-hidden="true">🌊 </span>Dolphin Kick</button>
+  <div class="viz-controls" style="margin-top:1rem" role="group" aria-label="Stroke">
+    <button class="viz-btn active" aria-pressed="true" onclick="setStroke3D('freestyle',this)"><span aria-hidden="true">🏊 </span>Freestyle</button>
+    <button class="viz-btn" aria-pressed="false" onclick="setStroke3D('backstroke',this)"><span aria-hidden="true">🔄 </span>Backstroke</button>
+    <button class="viz-btn" aria-pressed="false" onclick="setStroke3D('breaststroke',this)"><span aria-hidden="true">🐸 </span>Breaststroke</button>
+    <button class="viz-btn" aria-pressed="false" onclick="setStroke3D('butterfly',this)"><span aria-hidden="true">🦋 </span>Butterfly</button>
+    <button class="viz-btn" aria-pressed="false" onclick="setStroke3D('dolphin',this)"><span aria-hidden="true">🌊 </span>Dolphin Kick</button>
   </div>
   <div class="viz-controls" style="margin-top:10px;align-items:stretch">
     <input class="form-input" id="motion-prompt" maxlength="300" aria-label="Describe a swimming movement to reconstruct in 3D" placeholder='✦ Describe a movement, e.g. "flip turn"' style="flex:1;min-width:230px" onkeydown="if(event.key==='Enter')generateMotion()">
@@ -1563,22 +1570,22 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="viz-controls" style="margin-top:8px" role="group" aria-label="Swimmer model and skin tone">
     <span class="viz-ctl-lbl" aria-hidden="true">Swimmer:</span>
-    <button class="viz-btn active" id="vbtn-model-male" aria-pressed="true" onclick="setHumanModel('male')">♂ Male</button>
-    <button class="viz-btn" id="vbtn-model-female" aria-pressed="false" onclick="setHumanModel('female')">♀ Female</button>
-    <button class="viz-btn" id="vbtn-xray" aria-pressed="false" title="Show the skeleton and joints inside the swimmer" onclick="toggleXray3D()">🩻 X-ray</button>
+    <button class="viz-btn active" id="vbtn-model-male" aria-pressed="true" onclick="setHumanModel('male')"><span aria-hidden="true">♂ </span>Male</button>
+    <button class="viz-btn" id="vbtn-model-female" aria-pressed="false" onclick="setHumanModel('female')"><span aria-hidden="true">♀ </span>Female</button>
+    <button class="viz-btn" id="vbtn-xray" aria-pressed="false" title="Show the skeleton and joints inside the swimmer" onclick="toggleXray3D()"><span aria-hidden="true">🩻 </span>X-ray</button>
     <span class="viz-ctl-lbl" style="margin-left:6px" aria-hidden="true">Skin:</span>
     <button class="viz-btn viz-tone" id="vbtn-tone-light" aria-pressed="false" aria-label="Light skin tone" onclick="setSkinTone3D('light')"><span class="tone-swatch" style="background:#e8b99a"></span>Light</button>
     <button class="viz-btn viz-tone active" id="vbtn-tone-medium" aria-pressed="true" aria-label="Medium skin tone" onclick="setSkinTone3D('medium')"><span class="tone-swatch" style="background:#c9915f"></span>Medium</button>
     <button class="viz-btn viz-tone" id="vbtn-tone-deep" aria-pressed="false" aria-label="Deep skin tone" onclick="setSkinTone3D('deep')"><span class="tone-swatch" style="background:#6b3f22"></span>Deep</button>
   </div>
   <div class="viz-controls" style="margin-top:8px">
-    <button class="viz-btn active" id="vbtn-play" onclick="togglePlay3D()">⏸ Pause</button>
+    <button class="viz-btn active" id="vbtn-play" onclick="togglePlay3D()"><span aria-hidden="true">⏸ </span>Pause</button>
     <button class="viz-btn" data-speed aria-pressed="false" onclick="setSpeed3D(0.3,this)">0.3× Slow</button>
     <button class="viz-btn active" data-speed aria-pressed="true" onclick="setSpeed3D(1,this)">1× Normal</button>
     <button class="viz-btn" data-speed aria-pressed="false" onclick="setSpeed3D(2,this)">2× Fast</button>
-    <button class="viz-btn active" id="vbtn-forces" onclick="toggleForces3D(this)">Forces: On</button>
+    <button class="viz-btn active" id="vbtn-forces" aria-pressed="true" onclick="toggleForces3D(this)">Forces: On</button>
   </div>
-  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px">🖱 Drag to orbit · Scroll to zoom · Tap a phase below to jump to it</p>
+  <p style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;font-family:var(--fm);letter-spacing:0.3px"><span aria-hidden="true">🖱 </span>Drag to orbit · Scroll to zoom · Tap a phase below to jump to it</p>
   <div id="human-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:4px;letter-spacing:0.3px"></div>
   <div class="force-legend">
     <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Drag</div>
@@ -1589,7 +1596,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <p style="font-size:0.7rem;color:var(--white4);margin-top:0.5rem;font-family:var(--fm)">Force and velocity values are illustrative teaching approximations, not measured data.</p>
   <div id="viz-info-panel" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r12);padding:1.5rem">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
-      <div id="viz-phase-name" style="font-family:var(--fh);font-size:1.4rem;letter-spacing:1px;color:var(--cyan)">Select a stroke</div>
+      <h2 id="viz-phase-name" style="font-family:var(--fh);font-weight:400;font-size:1.4rem;letter-spacing:1px;color:var(--cyan)">Select a stroke</h2>
       <div id="viz-stroke-name" style="font-family:var(--fm);font-size:0.65rem;letter-spacing:3px;color:var(--white3);text-transform:uppercase"></div>
     </div>
     <div id="viz-phase-text" style="font-size:0.9rem;color:var(--white2);line-height:1.8;font-weight:300">The lab renders a realistic 3D swimmer — anatomically proportioned, with wet skin, swimwear, cap and goggles — whose joints move on timing from elite stroke-phase research. Orbit freely, zoom in close, or use the view buttons to inspect technique from any angle; X-ray shows the skeleton underneath.</div>
@@ -1628,7 +1635,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
             <option value="coach">Coach Level — Full technical analysis</option>
           </select>
         </div>
-        <button class="btn-sm" id="viz-gen-btn" onclick="generateVisualization()" style="padding:12px">Generate Analysis ✦</button>
+        <button class="btn-sm" id="viz-gen-btn" onclick="generateVisualization()" style="padding:12px">Generate Analysis <span aria-hidden="true">✦</span></button>
         <p class="form-notice" id="viz-notice" role="alert" hidden></p>
       </div>
       <div class="imggen-result" id="viz-result">
@@ -1886,17 +1893,17 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
     <div class="form-group" style="margin-bottom:1.25rem"><label>Additional Notes (optional)</label>
       <input class="form-input" id="gen-notes" maxlength="300" placeholder="e.g. sore shoulders, include Golf score sets, pre-meet sharpener..."></div>
-    <button class="btn-sm" id="gen-btn" onclick="generateWorkout()" style="padding:12px 28px;font-size:0.78rem">Generate Full Workout ✦</button>
+    <button class="btn-sm" id="gen-btn" onclick="generateWorkout()" style="padding:12px 28px;font-size:0.78rem">Generate Full Workout <span aria-hidden="true">✦</span></button>
   </div>
   <div class="gen-output" id="gen-output">
-    <div class="loading-state" id="gen-loading" style="display:none">
+    <div class="loading-state" id="gen-loading" role="status" aria-live="polite" style="display:none">
       <div class="typing-indicator" style="padding:0"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
       <span>Building your session…</span>
     </div>
     <div id="gen-result"></div>
     <div id="gen-actions" style="margin-top:1.5rem;display:none;gap:10px;flex-wrap:wrap">
-      <button class="btn-sm" onclick="window.print()">🖨 Print Workout</button>
-      <button class="btn-ghost-sm" onclick="generateWorkout()">↺ Regenerate</button>
+      <button class="btn-sm" onclick="window.print()"><span aria-hidden="true">🖨 </span>Print Workout</button>
+      <button class="btn-ghost-sm" onclick="generateWorkout()"><span aria-hidden="true">↺ </span>Regenerate</button>
       <button class="btn-ghost-sm" onclick="showPage('ai')">Ask AI Coach <span aria-hidden="true">✦</span></button>
     </div>
   </div>
@@ -1921,7 +1928,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="form-group" style="margin-bottom:1rem"><label>Stroke Count (per 50m)</label><input class="form-input" id="golf-strokes" type="number" placeholder="e.g. 28" min="10" max="60"></div>
         <button class="calc-btn" onclick="calcGolf()">Calculate →</button>
         <p class="form-notice" id="golf-notice" role="alert" hidden></p>
-        <div class="calc-result" id="golf-result"><div class="big" id="golf-score">—</div><div class="sub">Golf Score</div><p style="margin-top:1rem;font-size:0.84rem;color:var(--white2);line-height:1.7" id="golf-rating"></p></div>
+        <div class="calc-result" id="golf-result" aria-live="polite" aria-atomic="true"><div class="big" id="golf-score">—</div><div class="sub">Golf Score</div><p style="margin-top:1rem;font-size:0.84rem;color:var(--white2);line-height:1.7" id="golf-rating"></p></div>
       </div>
       <div class="calc-panel"><h4>SCORE GUIDE</h4>
         <div class="info-box" style="margin-top:0">Golf Score = Split (sec) + Stroke Count. Lower is always better.</div>
@@ -1944,7 +1951,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button class="calc-btn" onclick="calcSplits()">Generate Splits →</button>
         <p class="form-notice" id="split-notice" role="alert" hidden></p>
       </div>
-      <div class="calc-panel"><h4>SPLIT TABLE</h4><div id="split-result" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Enter your target time above.</div></div>
+      <div class="calc-panel"><h4>SPLIT TABLE</h4><div id="split-result" aria-live="polite" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Enter your target time above.</div></div>
     </div>
   </div>
   <div class="tab-panel" id="c-pace">
@@ -1952,7 +1959,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="form-group" style="margin-bottom:1rem"><label>Best 100m Freestyle (m:ss)</label><input class="form-input" id="pace-100" placeholder="e.g. 0:55.5 or 1:02.0"></div>
       <button class="calc-btn" onclick="calcPaceZones()">Calculate Zones →</button>
       <p class="form-notice" id="pace-notice" role="alert" hidden></p>
-      <div id="pace-result" style="margin-top:1.5rem"></div>
+      <div id="pace-result" aria-live="polite" style="margin-top:1.5rem"></div>
       <p style="font-size:0.76rem;color:var(--white3);margin-top:1rem;line-height:1.6">Rough reference paces derived from your 100m time, not lab-tested lactate zones. Use them as a starting point and adjust to feel, heart rate, and how the set actually goes.</p>
     </div>
   </div>
@@ -1964,7 +1971,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button class="calc-btn" onclick="convertTime()">Convert →</button>
         <p class="form-notice" id="conv-notice" role="alert" hidden></p>
       </div>
-      <div class="calc-panel"><h4>CONVERSION RESULTS</h4><div id="conv-result" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Fill in the form above.</div>
+      <div class="calc-panel"><h4>CONVERSION RESULTS</h4><div id="conv-result" aria-live="polite" style="color:var(--white3);font-size:0.88rem;line-height:1.7">Fill in the form above.</div>
       <div class="info-box" style="margin-top:1.5rem"><strong>Note:</strong> LCM is ~2–3% slower than SCM because of fewer turns. These are flat approximations for training reference — they are <strong>not</strong> the official USA Swimming conversion factors, which vary by event and distance. For anything that counts (cuts, entries, seeding), use the official conversion on <a href="https://www.usaswimming.org" target="_blank" rel="noopener">usaswimming.org</a>.</div></div>
     </div>
   </div>
@@ -2005,20 +2012,20 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:2rem">
     <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
       <div style="width:58px;height:58px;border-radius:50%;background:var(--cyan-dim);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0">🏊</div>
-      <div><h3 id="profile-name-display" style="font-family:var(--fh);font-size:1.75rem;letter-spacing:1px">Swimmer</h3><p style="font-size:0.8rem;color:var(--white3);margin-top:3px">PRs auto-saved in your browser</p></div>
+      <div><h2 id="profile-name-display" style="font-family:var(--fh);font-size:1.75rem;letter-spacing:1px">Swimmer</h2><p style="font-size:0.8rem;color:var(--white3);margin-top:3px">PRs auto-saved in your browser</p></div>
     </div>
-    <div class="form-group" style="max-width:300px"><label>Swimmer Name</label><input class="form-input" id="profile-name" placeholder="Your name" maxlength="30" oninput="saveName()"></div>
+    <div class="form-group" style="max-width:300px"><label>Swimmer Name</label><input class="form-input" id="profile-name" placeholder="Your name" maxlength="30" autocomplete="name" oninput="saveName()"></div>
   </div>
-  <div class="section-eyebrow" style="margin-top:0">Freestyle</div><div class="pr-grid" id="pr-grid-fr"></div>
-  <div class="section-eyebrow" style="margin-top:1.5rem">Backstroke</div><div class="pr-grid" id="pr-grid-bk"></div>
-  <div class="section-eyebrow" style="margin-top:1.5rem">Breaststroke</div><div class="pr-grid" id="pr-grid-br"></div>
-  <div class="section-eyebrow" style="margin-top:1.5rem">Butterfly</div><div class="pr-grid" id="pr-grid-fly"></div>
-  <div class="section-eyebrow" style="margin-top:1.5rem">Individual Medley</div><div class="pr-grid" id="pr-grid-im"></div>
+  <h2 class="section-eyebrow" style="margin-top:0">Freestyle</h2><div class="pr-grid" id="pr-grid-fr"></div>
+  <h2 class="section-eyebrow" style="margin-top:1.5rem">Backstroke</h2><div class="pr-grid" id="pr-grid-bk"></div>
+  <h2 class="section-eyebrow" style="margin-top:1.5rem">Breaststroke</h2><div class="pr-grid" id="pr-grid-br"></div>
+  <h2 class="section-eyebrow" style="margin-top:1.5rem">Butterfly</h2><div class="pr-grid" id="pr-grid-fly"></div>
+  <h2 class="section-eyebrow" style="margin-top:1.5rem">Individual Medley</h2><div class="pr-grid" id="pr-grid-im"></div>
   <div class="pr-hint" id="pr-hint" role="status" aria-live="polite"></div>
   <p style="font-size:0.82rem;color:var(--white3);margin-top:1.75rem;line-height:1.7">Everything here is saved only in this browser. <strong style="color:var(--white2)">Export a backup</strong> before clearing your data or switching devices, then import it to restore your PRs, name, training log, Race Planner goals and meets, and your timer and analytics settings.</p>
   <div style="margin-top:0.75rem;display:flex;gap:10px;flex-wrap:wrap">
-    <button class="btn-sm" onclick="exportBackup()">⬇ Export Backup</button>
-    <button class="btn-ghost-sm" onclick="document.getElementById('import-file').click()">⬆ Import Backup</button>
+    <button class="btn-sm" onclick="exportBackup()"><span aria-hidden="true">⬇ </span>Export Backup</button>
+    <button class="btn-ghost-sm" onclick="document.getElementById('import-file').click()"><span aria-hidden="true">⬆ </span>Import Backup</button>
     <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importBackup(event)">
     <button class="btn-ghost-sm" onclick="clearAllPRs()">Clear All PR<span style="text-transform:none">s</span></button>
     <button class="btn-sm" onclick="showPageTab('calculator','c-pace')">Calculate Pace Zones →</button>
@@ -2034,7 +2041,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <h1 class="section-title">TRAINING <span>LOG</span></h1>
   <p class="section-intro">All log data is saved locally in your browser — it never leaves your device. Your most recent 2,000 sessions are kept; export a backup from My PRs to archive more.</p>
   <div class="tl-panel" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);margin-bottom:1.5rem">
-    <div style="font-family:var(--fh);font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem;color:var(--cyan)">LOG A SESSION</div>
+    <h2 style="font-family:var(--fh);font-weight:400;font-size:1.3rem;letter-spacing:1px;margin-bottom:1.25rem;color:var(--cyan)">LOG A SESSION</h2>
     <div class="gen-row">
       <div class="form-group"><label>Date</label><input class="form-input" id="log-date" type="date"></div>
       <div class="form-group"><label>Session Type</label><select class="form-select" id="log-type"><option value="AM Pool">AM Pool</option><option value="PM Pool">PM Pool</option><option value="Dryland">Dryland</option><option value="Race">Race</option><option value="Time Trial">Time Trial</option></select></div>
@@ -2051,13 +2058,13 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <p class="form-notice" id="log-notice" role="alert" hidden></p>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
-    <div style="font-family:var(--fh);font-size:1.5rem;letter-spacing:1px">SESSION HISTORY</div>
+    <h2 style="font-family:var(--fh);font-weight:400;font-size:1.5rem;letter-spacing:1px">SESSION HISTORY</h2>
     <button class="btn-ghost-sm" onclick="clearLog()">Clear All</button>
   </div>
   <div id="log-entries"></div>
   <p id="log-status" class="sr-only" role="status" aria-live="polite"></p>
   <div id="log-stats" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border2);border-radius:var(--r12);padding:1.25rem;display:none">
-    <div style="font-family:var(--fh);font-size:1.1rem;letter-spacing:1px;margin-bottom:1rem;color:var(--cyan)">30-DAY SUMMARY</div>
+    <h2 style="font-family:var(--fh);font-weight:400;font-size:1.1rem;letter-spacing:1px;margin-bottom:1rem;color:var(--cyan)">30-DAY SUMMARY</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0.75rem">
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-sessions" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div style="font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px">Sessions</div></div>
       <div style="text-align:center;background:var(--navy3);border-radius:var(--r8);padding:0.85rem;border:1px solid var(--border2)"><div id="stat-km" style="font-family:var(--fh);font-size:1.8rem;color:var(--cyan)">0</div><div style="font-family:var(--fm);font-size:0.56rem;letter-spacing:2px;color:var(--white3);text-transform:uppercase;margin-top:4px">K swum (m or yd)</div></div>
@@ -2380,7 +2387,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="section-eyebrow" id="season-calendar-eyebrow" style="margin-top:0">National Meet Calendar</div>
   <div class="warn-box" id="season-archive-note" style="display:none"></div>
-  <div class="table-wrap"><table class="data-table" id="season-meet-table"><thead><tr><th scope="col">Meet</th><th scope="col">Dates</th><th scope="col">Course</th><th scope="col">Status</th></tr></thead><tbody>
+  <div class="table-wrap"><table class="data-table" id="season-meet-table" aria-labelledby="season-calendar-eyebrow"><thead><tr><th scope="col">Meet</th><th scope="col">Dates</th><th scope="col">Course</th><th scope="col">Status</th></tr></thead><tbody>
     <!-- filled by JS using real dates, with live countdown/status -->
   </tbody></table></div>
   <p id="season-calendar-note" style="font-size:0.74rem;color:var(--white4);margin-top:0.6rem;line-height:1.6">Dates reflect the published USA Swimming national events calendar and are subject to official updates — always confirm with usaswimming.org before planning travel.</p>
@@ -2493,7 +2500,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <!-- ══════════════ TAB 1 · TEMPO TRAINER ══════════════ -->
   <div class="tab-panel active" id="tlt-tab-tempo">
-    <div class="tlt-card" id="tlt-tempo-card">
+    <div class="tlt-card" id="tlt-tempo-card" tabindex="0" role="group" aria-label="Tempo trainer. Space starts or pauses; Up and Down arrows change the tempo.">
       <div class="tlt-seg" role="group" aria-label="Tempo unit">
         <button type="button" id="tlt-mode-spm" aria-pressed="true" onclick="tlt_setMode('spm')">Strokes / min<small>one beep per arm stroke</small></button>
         <button type="button" id="tlt-mode-cpm" aria-pressed="false" onclick="tlt_setMode('cpm')">Cycles / min<small>one beep per full cycle</small></button>
@@ -2533,16 +2540,16 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button type="button" class="tlt-btn ghost" id="tlt-tempo-stop" onclick="tlt_tempoStop()"><span aria-hidden="true">■ </span>Stop</button>
       </div>
       <div class="tlt-status" id="tlt-tempo-status" role="status" aria-live="polite"></div>
-      <p class="tlt-hint">Keys: Space start / pause · ↑ ↓ ±1 · Shift + ↑ ↓ ±5. Your last setting is remembered on this device.</p>
+      <p class="tlt-hint">Keys (with the trainer focused, or once it is running): Space start / pause · ↑ ↓ ±1 · Shift + ↑ ↓ ±5. Your last setting is remembered on this device.</p>
     </div>
 
     <div class="info-box"><strong>Strokes vs cycles.</strong> A stroke is one arm pull — every hand entry counts. A cycle is both arms, right and left. Wearable tempo trainers count arm strokes: 1.00 s per beep is a FINIS Mode 1 tempo of 1.00 and a Mode 3 rate of 60 strokes/min. Race analyses count cycles, so a 100 free swum at 50 cycles/min is a tempo of 0.60 s per arm stroke. In butterfly and breaststroke both arms move together, so one stroke is one cycle and the two units read the same.</div>
 
-    <div class="section-eyebrow" style="margin-top:2rem">Elite race stroke-rate ranges</div>
+    <h2 class="section-eyebrow" style="margin-top:2rem" id="tlt-elite-title">Elite race stroke-rate ranges</h2>
     <div class="warn-box"><strong>Elite race ranges, not training targets.</strong> These are the rates world-class swimmers hold in the free-swimming part of a race, measured in published race analyses. Most training is swum well below race rate; use these to feel what race tempo is, to set race-pace reps, and to see where your own rate sits — not as a daily default.</div>
     <div class="table-wrap">
       <table class="data-table tlt-preset-table">
-        <thead><tr><th scope="col">Event</th><th scope="col">Cycles / min</th><th scope="col">s per cycle</th><th scope="col">Strokes / min<br><span class="tlt-th-sub">single-arm, free &amp; back</span></th><th scope="col"><span class="tlt-vh">Load into the tempo trainer</span></th></tr></thead>
+        <thead><tr><th scope="col">Event</th><th scope="col">Cycles / min</th><th scope="col">s per cycle</th><th scope="col">Strokes / min<br><span class="tlt-th-sub">single-arm, free &amp; back</span></th><th scope="col"><span class="sr-only">Load into the tempo trainer</span></th></tr></thead>
         <tbody id="tlt-preset-body"></tbody>
       </table>
     </div>
@@ -2551,7 +2558,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <!-- ══════════════ TAB 2 · INTERVAL / CIRCUIT TIMER ══════════════ -->
   <div class="tab-panel" id="tlt-tab-interval">
-    <div class="tlt-int-display" id="tlt-int-display" data-phase="idle" data-paused="false">
+    <div class="tlt-int-display" id="tlt-int-display" data-phase="idle" data-paused="false" tabindex="0" role="group" aria-label="Interval timer. Space starts or pauses.">
       <div class="tlt-int-top">
         <div class="tlt-int-phase" id="tlt-int-phase" aria-live="polite">READY</div>
         <div class="tlt-int-round" id="tlt-int-round">—</div>
@@ -2567,11 +2574,11 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <button type="button" class="tlt-btn ghost" id="tlt-int-reset" onclick="tlt_intReset()">Reset</button>
       </div>
       <div class="tlt-status" id="tlt-int-status" role="status" aria-live="polite"></div>
-      <p class="tlt-hint">Space bar starts and pauses. Short beeps at 3-2-1, a different tone at each change, a rising triple at the end. The screen stays awake while it runs, where the browser allows it.</p>
+      <p class="tlt-hint">Space bar starts and pauses once the timer is focused or running. Short beeps at 3-2-1, a different tone at each change, a rising triple at the end. The screen stays awake while it runs, where the browser allows it.</p>
     </div>
 
     <div class="tlt-card">
-      <div class="tlt-card-title">CIRCUIT SETUP</div>
+      <h2 class="tlt-card-title">CIRCUIT SETUP</h2>
       <div class="tlt-cfg">
         <div class="form-group"><label for="tlt-int-work">Work (s)</label><input class="form-input" type="number" id="tlt-int-work" min="5" max="600" step="1" value="30" inputmode="numeric"></div>
         <div class="form-group"><label for="tlt-int-rest">Rest (s)</label><input class="form-input" type="number" id="tlt-int-rest" min="0" max="600" step="1" value="15" inputmode="numeric"></div>
@@ -2581,7 +2588,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
         <div class="form-group"><label for="tlt-int-lead">Lead-in (s)</label><input class="form-input" type="number" id="tlt-int-lead" min="0" max="60" step="1" value="10" inputmode="numeric"></div>
       </div>
       <div class="tlt-int-summary" id="tlt-int-summary"></div>
-      <div class="tlt-card-title" style="margin-top:1.5rem">PRESETS</div>
+      <h2 class="tlt-card-title" style="margin-top:1.5rem">PRESETS</h2>
       <div class="tlt-chips">
         <button type="button" class="tlt-chip" onclick="tlt_intPreset('prehab')">Shoulder prehab<small>30 s work / 15 s rest × 8</small></button>
         <button type="button" class="tlt-chip" onclick="tlt_intPreset('core')">Core circuit<small>40 s / 20 s × 6 · 2 sets · 60 s between</small></button>
@@ -2627,7 +2634,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
     <div class="info-box"><strong>Reading the clock.</strong> An analog pace clock has a red seconds hand and a black minute hand (drawn grey here so it shows on the dark face), with 60 at the top where a 12 would be. "The top" is :00, "the bottom" is :30, and the quarters are ":15" and ":45". "Leave on the top" means push off when the red hand reaches 60; "on the bottom" means at 30. The face here tints the upper half red so top and bottom read at a glance. The clock runs on your device's time, so two phones on the same deck agree — tap a sync button to line it up with a pool clock that is not.</div>
 
-    <div class="section-eyebrow" style="margin-top:2rem">Send-off calculator</div>
+    <h2 class="section-eyebrow" style="margin-top:2rem">Send-off calculator</h2>
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>SET ON AN INTERVAL</h4>
         <div class="tlt-cfg two">
@@ -2649,8 +2656,8 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       </div>
     </div>
 
-    <div class="section-eyebrow" style="margin-top:2rem">Split taker</div>
-    <div class="tlt-card tlt-split">
+    <h2 class="section-eyebrow" style="margin-top:2rem">Split taker</h2>
+    <div class="tlt-card tlt-split" id="tlt-split-card" tabindex="0" role="group" aria-label="Split taker. Space starts, then records a split on each press.">
       <div class="tlt-sp-time" id="tlt-sp-time">0:00.0</div>
       <div class="tlt-sp-sub" id="tlt-sp-sub">Ready</div>
       <button type="button" class="tlt-sp-main" id="tlt-sp-main" onclick="tlt_spMain()">START</button>
@@ -2661,7 +2668,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       </div>
       <div class="tlt-sp-opts"><div class="form-group"><label for="tlt-sp-dist">Split distance (m or yd) — for pace per 100</label><input class="form-input" type="number" id="tlt-sp-dist" min="0" max="1500" step="1" value="50" inputmode="numeric"></div></div>
       <div class="tlt-status" id="tlt-sp-status" role="status" aria-live="polite"></div>
-      <p class="tlt-hint">Space bar starts, then records a split on each press. Stop records the final split. Times come from the device's high-resolution clock, so a hidden screen does not drift them.</p>
+      <p class="tlt-hint">With the split taker focused, Space starts, then records a split on each press. Stop records the final split. Times come from the device's high-resolution clock, so a hidden screen does not drift them.</p>
       <div class="table-wrap tlt-hidden" id="tlt-sp-wrap"><table class="data-table tlt-num-table" aria-label="Recorded splits"><thead><tr><th scope="col">#</th><th scope="col">Cumulative</th><th scope="col">Split</th><th scope="col">Δ prev</th><th scope="col">Per 100</th><th scope="col">Note</th></tr></thead><tbody id="tlt-sp-body"></tbody></table></div>
       <div class="tlt-sp-summary" id="tlt-sp-summary"></div>
       <textarea id="tlt-sp-text" class="tlt-copytext" aria-hidden="true" tabindex="-1" readonly></textarea>
@@ -2780,16 +2787,16 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div id="pl-mt-card" aria-live="polite"></div>
     <div class="calc-wrapper">
       <div class="calc-panel"><h4>NEXT MEET</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-name">Meet name</label><input class="form-input" id="pl-mt-name" maxlength="60" placeholder="e.g. Winter Juniors" autocomplete="off"></div>
-        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-date">First day of the meet</label><input class="form-input" id="pl-mt-date" type="date"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-name">Next meet name</label><input class="form-input" id="pl-mt-name" maxlength="60" placeholder="e.g. Winter Juniors" autocomplete="off"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-date">First day of the next meet</label><input class="form-input" id="pl-mt-date" type="date"></div>
         <div class="pl-two">
           <div class="form-group"><label for="pl-mt-course">Course</label><select class="form-select" id="pl-mt-course"><option value="SCY">SCY</option><option value="SCM">SCM</option><option value="LCM">LCM</option></select></div>
           <div class="form-group"><label for="pl-mt-taper">Taper type</label><select class="form-select" id="pl-mt-taper"><option value="sprint">Sprint (7–14 days)</option><option value="distance">Distance (14–21 days)</option></select></div>
         </div>
       </div>
       <div class="calc-panel"><h4>SECOND MEET (OPTIONAL)</h4>
-        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-name2">Meet name</label><input class="form-input" id="pl-mt-name2" maxlength="60" placeholder="e.g. Sectionals" autocomplete="off"></div>
-        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-date2">First day of the meet</label><input class="form-input" id="pl-mt-date2" type="date"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-name2">Second meet name</label><input class="form-input" id="pl-mt-name2" maxlength="60" placeholder="e.g. Sectionals" autocomplete="off"></div>
+        <div class="form-group" style="margin-bottom:1rem"><label for="pl-mt-date2">First day of the second meet</label><input class="form-input" id="pl-mt-date2" type="date"></div>
         <div class="pl-actions"><button type="button" class="calc-btn" id="pl-mt-save" style="width:auto;margin-top:0;padding:11px 22px">Save meets</button><button type="button" class="btn-ghost-sm" id="pl-mt-clear">Clear</button></div>
         <div class="pl-err" id="pl-mt-status" role="status" aria-live="polite"></div>
       </div>
@@ -2819,7 +2826,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 
   <!-- EMPTY STATE — shown when the log has no usable entries -->
   <div id="an-empty" class="an-empty" hidden>
-    <div class="an-empty-title">NOTHING TO ANALYZE YET</div>
+    <h2 class="an-empty-title">NOTHING TO ANALYZE YET</h2>
     <p>This page reads the sessions you save on the <a href="#log">Training Log</a> page. Three things make the analytics useful from the first week:</p>
     <ol class="an-steps">
       <li><strong>Log every session</strong> — pool and dryland — with the date it happened. Weeks run Monday to Sunday.</li>
@@ -3031,11 +3038,12 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <button type="button" class="tl-pal-close" id="tl-pal-close" aria-label="Close search">✕</button>
     </div>
     <div id="tl-pal-list" class="tl-pal-list" role="listbox" aria-label="Search results"></div>
-    <div class="tl-pal-foot" aria-hidden="true">
-      <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
-      <span><kbd>↵</kbd> open</span>
-      <span><kbd>esc</kbd> close</span>
-      <span class="tl-pal-foot-r"><kbd id="tl-pal-modkey">⌘</kbd><kbd>K</kbd> or <kbd>/</kbd> from anywhere</span>
+    <div class="tl-pal-foot">
+      <span aria-hidden="true"><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+      <span aria-hidden="true"><kbd>↵</kbd> open</span>
+      <span aria-hidden="true"><kbd>esc</kbd> close</span>
+      <span class="tl-pal-foot-r" aria-hidden="true"><kbd id="tl-pal-modkey">⌘</kbd><kbd>K</kbd> from anywhere</span>
+      <label class="tl-pal-slash" for="tl-pal-slash"><input type="checkbox" id="tl-pal-slash"><span class="sr-only">Slash key</span><kbd aria-hidden="true">/</kbd> also opens search</label>
     </div>
     <div id="tl-pal-status" class="tl-pal-sr" role="status" aria-live="polite"></div>
   </div>
@@ -3076,6 +3084,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <footer><div class="footer-bottom"><p>Tidelyne</p><p data-tl-version>Version 3.1.1</p></div></footer>
 </div>
 </main>
+<div id="tl-ai-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 <!-- AUTH — real Supabase email/password accounts. Content is public; an
      account is only required for AI features (chat, generator, visualizer
      analysis). The auth overlay is hidden by default and opened on demand. -->
@@ -3119,7 +3128,7 @@ function _authTrap(e){
   var g = document.getElementById('access-gate');
   if (!g || g.style.display === 'none' || e.key !== 'Tab') return;
   var f = [].slice.call(g.querySelectorAll('a[href], button, input, [tabindex]:not([tabindex="-1"])'))
-            .filter(function(el){ return el.offsetParent !== null && !el.disabled; });
+            .filter(function(el){ return !el.disabled && !el.hidden && el.getClientRects().length > 0; }); // getClientRects: the fixed-position close button has no offsetParent
   if (!f.length) return;
   var first = f[0], last = f[f.length-1];
   if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -3287,7 +3296,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
   <div class="auth-card-wrap" style="max-width:440px;width:100%;margin:auto">
   <!-- LOGIN -->
   <div id="screen-login" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
-    <div style="font-size:2.6rem;margin-bottom:1rem">🏊</div>
+    <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🏊</div>
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">WELCOME<br><span style="color:var(--cyan)">BACK</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Email</label>
@@ -3303,7 +3312,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
   </div>
   <!-- SIGNUP -->
   <div id="screen-signup" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
-    <div style="font-size:2.6rem;margin-bottom:1rem">🏊</div>
+    <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🏊</div>
     <div style="font-family:var(--fm);font-size:0.65rem;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:0.5rem">Tidelyne — Free Account</div>
     <h2 style="font-family:var(--fh);font-size:2rem;letter-spacing:1.5px;margin-bottom:1.5rem">CREATE YOUR<br><span style="color:var(--cyan)">ACCOUNT</span></h2>
     <div class="form-group" style="margin-bottom:0.9rem;text-align:left"><label>Choose a Username</label>
@@ -3322,7 +3331,7 @@ document.addEventListener('DOMContentLoaded', initSupabaseAuth);
   </div>
   <!-- FORGOT PASSWORD -->
   <div id="screen-forgot" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--r16);width:100%;text-align:center;box-shadow:0 0 80px rgba(0,212,255,0.1)" class="auth-card">
-    <div style="font-size:2.6rem;margin-bottom:1rem">🔑</div>
+    <div style="font-size:2.6rem;margin-bottom:1rem" aria-hidden="true">🔑</div>
     <h2 style="font-family:var(--fh);font-size:1.9rem;letter-spacing:1.5px;margin-bottom:1.25rem">RESET YOUR<br><span style="color:var(--cyan)">PASSWORD</span></h2>
     <div class="form-group" style="margin-bottom:1rem;text-align:left"><label>Email</label>
       <input id="forgot-email" type="email" autocomplete="email" class="form-input" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doForgotPassword()"></div>
@@ -3549,6 +3558,17 @@ function enhanceA11y(){
   document.querySelectorAll('.metric-card[onclick]').forEach(el=>{
     el.setAttribute('role','button'); el.setAttribute('tabindex','0');
     el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } });
+  });
+  // Enter in a calculator / generator field submits that panel (the site has
+  // no <form> elements): fires the panel's primary button unless the field
+  // already handled Enter itself (auth, AI and planner inputs do).
+  document.addEventListener('keydown',e=>{
+    if(e.key!=='Enter'||e.defaultPrevented||e.isComposing||e.shiftKey||e.altKey||e.ctrlKey||e.metaKey) return;
+    const t=e.target; if(!t||t.tagName!=='INPUT') return;
+    const type=(t.type||'text').toLowerCase(); if(/^(checkbox|radio|button|submit|file|range|color)$/.test(type)) return;
+    const panel=t.closest('.calc-panel,.gen-form'); if(!panel) return;
+    const btn=panel.querySelector('.calc-btn,#gen-btn'); if(!btn||btn.disabled) return;
+    e.preventDefault(); btn.click();
   });
   // Associate every form label with its control (add for/id where missing)
   let _fid=0;
@@ -4614,6 +4634,7 @@ function toggleForces3D(btn) {
   vizShowForces3D = !vizShowForces3D;
   if (btn) {
     btn.classList.toggle('active', vizShowForces3D);
+    btn.setAttribute('aria-pressed', vizShowForces3D ? 'true' : 'false');
     btn.textContent = vizShowForces3D ? 'Forces: On' : 'Forces: Off';
   }
 }
@@ -4713,9 +4734,9 @@ function setStroke3D(s, btn) {
   currentStroke = s; clockT = 0;
   if (viz3DInitialized) rebuildSwimmer(s);
   document.querySelectorAll('.viz-btn').forEach(b => {
-    if ((b.getAttribute('onclick')||'').includes('setStroke3D')) b.classList.remove('active');
+    if ((b.getAttribute('onclick')||'').includes('setStroke3D')) { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); }
   });
-  if (btn) btn.classList.add('active');
+  if (btn) { btn.classList.add('active'); btn.setAttribute('aria-pressed','true'); }
   buildPhaseBar3D(s);
   seedInfoPanel3D(s);
 }
@@ -4723,7 +4744,7 @@ function togglePlay3D() {
   playing = !playing;
   const btn = document.getElementById('vbtn-play');
   if (btn) {
-    btn.textContent = playing ? '⏸ Pause' : '▶ Play';
+    btn.innerHTML = playing ? '<span aria-hidden="true">⏸ </span>Pause' : '<span aria-hidden="true">▶ </span>Play'; // static markup; glyph hidden from AT
     btn.classList.toggle('active', playing);
   }
 }
@@ -4818,7 +4839,7 @@ function startViz3D() {
   // Respect the OS 'reduce motion' setting — start paused, user can play.
   try{ if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
     playing=false; const pb=document.getElementById('vbtn-play');
-    if(pb){pb.textContent='▶ Play';pb.classList.remove('active');}
+    if(pb){pb.innerHTML='<span aria-hidden="true">▶ </span>Play';pb.classList.remove('active');}
   } }catch(e){}
   buildForceArrows();
   if (window.TL_HumanMaterials && scene.environment) { try { TL_HumanMaterials.tameEnvironment(scene, 0.25); } catch (e) {} } // arrows exist only now
@@ -5216,7 +5237,8 @@ function createStreamBubble(){
   div.className='msg';
   // white-space:pre-wrap lets us stream with textContent (safe + cheap) and
   // still show line breaks — no per-token innerHTML/escape/<br> rebuild.
-  div.innerHTML='<div class="msg-avatar ai-av">AI</div><div class="msg-bubble streaming" id="stream-bubble-active" style="white-space:pre-wrap;word-break:break-word"></div>';
+  // aria-live="off" + aria-busy while streaming: the log announces the reply once, when it is complete
+  div.innerHTML='<div class="msg-avatar ai-av">AI</div><div class="msg-bubble streaming" id="stream-bubble-active" aria-live="off" aria-busy="true" style="white-space:pre-wrap;word-break:break-word"></div>';
   msgs.appendChild(div);
   msgs.scrollTop=msgs.scrollHeight;
   return document.getElementById('stream-bubble-active');
@@ -5245,6 +5267,8 @@ function finishStreamBubble(el,text){
   el.id='';
   el.classList.remove('streaming');
   el.style.whiteSpace='pre-wrap';
+  el.removeAttribute('aria-busy');
+  el.removeAttribute('aria-live'); // back inside the polite log before the final text lands, so it is announced exactly once
   el.textContent=text;
   const msgs=document.getElementById('ai-messages');
   msgs.scrollTop=msgs.scrollHeight;
@@ -5274,8 +5298,8 @@ function usePrompt(el){
 function clearChat(){
   conversationHistory=[];
   document.getElementById('ai-messages').innerHTML='<div class="msg"><div class="msg-avatar ai-av">AI</div><div class="msg-bubble">Chat cleared. What would you like to work on?</div></div>';
-  document.querySelectorAll('.ai-mode-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('mode-coach').classList.add('active');
+  document.querySelectorAll('.ai-mode-btn').forEach(b=>{ b.classList.remove('active'); if(b.hasAttribute('aria-pressed')) b.setAttribute('aria-pressed','false'); });
+  const coach=document.getElementById('mode-coach'); coach.classList.add('active'); coach.setAttribute('aria-pressed','true');
   currentMode='coach';
 }
 document.addEventListener('DOMContentLoaded',()=>{
@@ -5305,6 +5329,7 @@ async function _generateWorkoutInner(){
   output.classList.add('show');
   loading.style.display='flex';
   result.innerHTML='';
+  result.setAttribute('aria-busy','true');
   actions.style.display='none';
   // Volume density scales with the athlete level — 5,000 m in 60 min is an
   // elite session, not an age-group or masters one.
@@ -5334,7 +5359,7 @@ Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g.
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
-    if(!accessToken){ loading.style.display='none'; result.innerHTML='<p style="color:var(--red)">Your session expired -- please log in again.</p>'; return; }
+    if(!accessToken){ loading.style.display='none'; result.removeAttribute('aria-busy'); result.innerHTML='<p style="color:var(--red)">Your session expired -- please log in again.</p>'; tlAnnounce('Your session expired — please log in again.'); return; }
     const resp=await fetch(SUPABASE_URL + '/functions/v1/ask-ai',{
       method:'POST',
       headers:{
@@ -5350,13 +5375,16 @@ Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g.
     loading.style.display='none';
     if(!resp.ok){
       const err=await resp.json().catch(()=>({}));
-      result.innerHTML=`<p style="color:var(--red)">${escapeHTML(err.error || (resp.status===429 ? AI_LIMIT_MSG : `Error: HTTP ${resp.status}`))}</p>`;
+      const errMsg=err.error || (resp.status===429 ? AI_LIMIT_MSG : `Error: HTTP ${resp.status}`);
+      result.removeAttribute('aria-busy');
+      result.innerHTML=`<p style="color:var(--red)">${escapeHTML(errMsg)}</p>`;
+      tlAnnounce(errMsg);
       return;
     }
     const reader=resp.body.getReader();
     const decoder=new TextDecoder();
     let fullText='', buffer='';
-    result.innerHTML='<div id="gen-stream" role="status" aria-live="polite" style="color:var(--white2);line-height:1.8;white-space:pre-wrap;font-family:var(--fm);font-size:0.82rem"></div>';
+    result.innerHTML='<div id="gen-stream" aria-live="off" style="color:var(--white2);line-height:1.8;white-space:pre-wrap;font-family:var(--fm);font-size:0.82rem"></div>';
     const streamEl=document.getElementById('gen-stream');
     while(true){
       const {done,value}=await reader.read();
@@ -5379,10 +5407,14 @@ Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g.
     }
     // Format nicely after streaming
     result.innerHTML=formatWorkout(fullText);
+    result.removeAttribute('aria-busy');
     actions.style.display='flex';
+    tlAnnounce('Workout ready.');
   }catch(e){
     loading.style.display='none';
+    result.removeAttribute('aria-busy');
     result.innerHTML=`<p style="color:var(--red)">Connection error.</p>`;
+    tlAnnounce('Connection error.');
   }
 }
 function formatWorkout(text){
@@ -5393,7 +5425,7 @@ function formatWorkout(text){
     if(!t){if(inSec){html+='</div>';inSec=false;}continue;}
     if(/^(WARM-UP|PRE-MAIN|MAIN SET|COOL-DOWN|TOTAL|COACH NOTES)/i.test(t)){
       if(inSec) html+='</div>';
-      html+='<div class="workout-phase"><h4>'+t+'</h4><div>';
+      html+='<div class="workout-phase"><h2>'+t+'</h2><div>'; // h2: the page's only other heading is its h1
       inSec=true;
     } else if(inSec){
       html+='<div class="workout-set">'+t.replace(/^[-•]\s*/,'')+'</div>';
@@ -5430,7 +5462,7 @@ async function _generateVisualizationInner(){
   const custom=document.getElementById('viz-custom').value.trim();
   const detail=document.getElementById('viz-detail').value;
   const basePrompt=concept==='custom'?custom:(VIZ_CONCEPTS[concept]||'');
-  if(!basePrompt){tlNotice('viz-notice','Please describe the technique concept.');document.getElementById('viz-custom').focus();return;}
+  if(!basePrompt){tlNotice('viz-notice','Please describe the technique concept.',null,'viz-custom');document.getElementById('viz-custom').focus();return;}
   tlNotice('viz-notice','');
   const detailMap={
     beginner:'Simple language, 3-4 key points, analogies, no jargon.',
@@ -5455,12 +5487,14 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
   const contentDiv=document.getElementById('viz-content');
   resultDiv.innerHTML='<div style="display:flex;align-items:center;gap:12px;padding:2rem;color:var(--white3)"><div class="typing-indicator" style="padding:0"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div><span>Generating analysis…</span></div>';
   outputDiv.style.display='block';
-  contentDiv.innerHTML='<div id="viz-stream" role="status" aria-live="polite" style="font-size:0.88rem;color:var(--white2);line-height:1.8;white-space:pre-wrap"></div>';
+  contentDiv.innerHTML='<div id="viz-stream" aria-live="off" style="font-size:0.88rem;color:var(--white2);line-height:1.8;white-space:pre-wrap"></div>';
+  contentDiv.setAttribute('aria-busy','true');
+  tlAnnounce('Generating analysis…');
   const streamEl=document.getElementById('viz-stream');
   try{
     const { data: sessionData } = await sb.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
-    if(!accessToken){ contentDiv.innerHTML='<p style="color:var(--red)">Your session expired -- please log in again.</p>'; return; }
+    if(!accessToken){ contentDiv.removeAttribute('aria-busy'); contentDiv.innerHTML='<p style="color:var(--red)">Your session expired -- please log in again.</p>'; tlAnnounce('Your session expired — please log in again.'); return; }
     const resp=await fetch(SUPABASE_URL + '/functions/v1/ask-ai',{
       method:'POST',
       headers:{
@@ -5476,7 +5510,10 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
     resultDiv.innerHTML='<div style="padding:1.25rem;text-align:center"><div style="font-family:var(--fm);font-size:0.6rem;letter-spacing:3px;color:var(--green)">✓ STREAMING</div></div>';
     if(!resp.ok){
       const err=await resp.json().catch(()=>({}));
-      contentDiv.innerHTML=`<p style="color:var(--red)">${escapeHTML(err.error || (resp.status===429 ? AI_LIMIT_MSG : 'API error'))}</p>`;
+      const errMsg=err.error || (resp.status===429 ? AI_LIMIT_MSG : 'API error');
+      contentDiv.removeAttribute('aria-busy');
+      contentDiv.innerHTML=`<p style="color:var(--red)">${escapeHTML(errMsg)}</p>`;
+      tlAnnounce(errMsg);
       return;
     }
     const reader=resp.body.getReader();
@@ -5503,10 +5540,14 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
     }
     // Format after done
     contentDiv.innerHTML=formatVizOutput(fullText);
+    contentDiv.removeAttribute('aria-busy');
     resultDiv.innerHTML='<div style="padding:1.25rem;text-align:left"><div style="font-family:var(--fm);font-size:0.6rem;letter-spacing:3px;color:var(--cyan);margin-bottom:0.5rem">Analysis Complete ✓</div><p style="font-size:0.8rem;color:var(--white3)">Scroll down to read the full breakdown.</p></div>';
-    outputDiv.scrollIntoView({behavior:'smooth',block:'start'});
+    tlAnnounce('Analysis complete.');
+    outputDiv.scrollIntoView({behavior:reducedMotion()?'auto':'smooth',block:'start'});
   }catch(e){
+    contentDiv.removeAttribute('aria-busy');
     contentDiv.innerHTML=`<p style="color:var(--red)">Connection error.</p>`;
+    tlAnnounce('Connection error.');
   }
 }
 function formatVizOutput(text){
@@ -5517,7 +5558,7 @@ function formatVizOutput(text){
     const header=escapeHTML(lines[0]);
     const body=escapeHTML(lines.slice(1).join('\n').trim());
     return `<div style="margin-bottom:1.75rem;padding:1.5rem;background:var(--navy3);border-radius:var(--r12);border:1px solid var(--border2)">
-      <div style="font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;color:var(--cyan);margin-bottom:0.85rem">${header}</div>
+      <h3 style="font-family:var(--fh);font-weight:400;font-size:1.2rem;letter-spacing:1px;color:var(--cyan);margin-bottom:0.85rem">${header}</h3>
       <div style="font-size:0.88rem;color:var(--white2);line-height:1.85;white-space:pre-line;font-weight:300">${body}</div>
     </div>`;
   }).join('');
@@ -5549,28 +5590,29 @@ function formatTime(secs){
 function calcGolf(){
   const split=parseFloat(document.getElementById('golf-split').value);
   const strokes=parseFloat(document.getElementById('golf-strokes').value);
-  if(isNaN(split)||isNaN(strokes)){tlNotice('golf-notice','Enter both values.');document.getElementById(isNaN(split)?'golf-split':'golf-strokes').focus();return;}
-  if(split<15||split>120){tlNotice('golf-notice','50m split should be between 15 and 120 seconds.');document.getElementById('golf-split').focus();return;}
-  if(strokes<5||strokes>60){tlNotice('golf-notice','Stroke count should be between 5 and 60 per 50m.');document.getElementById('golf-strokes').focus();return;}
+  if(isNaN(split)||isNaN(strokes)){const f=isNaN(split)?'golf-split':'golf-strokes';tlNotice('golf-notice','Enter both values.',null,f);document.getElementById(f).focus();return;}
+  if(split<15||split>120){tlNotice('golf-notice','50m split should be between 15 and 120 seconds.',null,'golf-split');document.getElementById('golf-split').focus();return;}
+  if(strokes<5||strokes>60){tlNotice('golf-notice','Stroke count should be between 5 and 60 per 50m.',null,'golf-strokes');document.getElementById('golf-strokes').focus();return;}
   tlNotice('golf-notice','');
   const score=split+strokes;
   document.getElementById('golf-score').textContent=score.toFixed(0);
   const r=document.getElementById('golf-rating');
-  if(score<55) r.textContent='🌟 World-class efficiency. Elite national/international level.';
-  else if(score<62) r.textContent='✅ High performance. Senior national standard.';
-  else if(score<70) r.textContent='💪 Competitive. Strong age-group / senior club level.';
-  else if(score<80) r.textContent='📈 Developing. Significant improvement available.';
-  else r.textContent='🔧 Beginner level. Major DPS gains available immediately.';
+  const rating=score<55?['🌟','World-class efficiency. Elite national/international level.']
+    :score<62?['✅','High performance. Senior national standard.']
+    :score<70?['💪','Competitive. Strong age-group / senior club level.']
+    :score<80?['📈','Developing. Significant improvement available.']
+    :['🔧','Beginner level. Major DPS gains available immediately.'];
+  r.textContent=''; const glyph=document.createElement('span'); glyph.setAttribute('aria-hidden','true'); glyph.textContent=rating[0]+' '; r.appendChild(glyph); r.appendChild(document.createTextNode(rating[1]));
   document.getElementById('golf-result').classList.add('show');
 }
 function calcSplits(){
   const dist=parseInt(document.getElementById('split-dist').value);
   const totalSecs=parseTime(document.getElementById('split-time').value);
   const strategy=document.getElementById('split-strategy').value;
-  if(!totalSecs){tlNotice('split-notice','Enter a valid target time.');document.getElementById('split-time').focus();return;}
+  if(!totalSecs){tlNotice('split-notice','Enter a valid target time.',null,'split-time');document.getElementById('split-time').focus();return;}
   const n=dist/50, avg=totalSecs/n;
-  if(avg<15){tlNotice('split-notice','That works out to under 15 seconds per 50m — faster than the world record. Check the distance and time.');document.getElementById('split-time').focus();return;}
-  if(avg>120){tlNotice('split-notice','That works out to over 2 minutes per 50m — check the distance and time.');document.getElementById('split-time').focus();return;}
+  if(avg<15){tlNotice('split-notice','That works out to under 15 seconds per 50m — faster than the world record. Check the distance and time.',null,'split-time');document.getElementById('split-time').focus();return;}
+  if(avg>120){tlNotice('split-notice','That works out to over 2 minutes per 50m — check the distance and time.',null,'split-time');document.getElementById('split-time').focus();return;}
   tlNotice('split-notice','');
   // Splits come from the planner's buildSplits (one source of truth): the
   // negative/positive ramp is a ±2% half-difference scaled to the race, so a
@@ -5591,7 +5633,7 @@ function calcSplits(){
     if(r.error){tlNotice('split-notice',r.error);return;}
     splits=r.lengths;
   }
-  let html='<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Distance</th><th scope="col">50m Split</th><th scope="col">Cumulative</th></tr></thead><tbody>';
+  let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">Race splits</caption><thead><tr><th scope="col">Distance</th><th scope="col">50m Split</th><th scope="col">Cumulative</th></tr></thead><tbody>';
   let cum=0;
   splits.forEach((s,i)=>{cum+=s; html+=`<tr><td>${(i+1)*50}m</td><td>${formatTime(s)}</td><td>${formatTime(cum)}</td></tr>`;});
   html+=`</tbody></table></div><div class="info-box" style="margin-top:1rem">Target: <strong>${formatTime(totalSecs)}</strong> &nbsp;·&nbsp; Avg 50m: <strong>${formatTime(avg)}</strong> &nbsp;·&nbsp; First 50 includes the dive (−${bonus.toFixed(1)} s, long course)</div>`;
@@ -5600,8 +5642,8 @@ function calcSplits(){
 function calcPaceZones(){
   const rawPace=String(document.getElementById('pace-100').value||'').trim();
   const t=parseTime(rawPace);
-  if(!t){tlNotice('pace-notice',/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100m time as m:ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100m time (ss.ss or m:ss.ss).');document.getElementById('pace-100').focus();return;}
-  if(t<35||t>240){tlNotice('pace-notice','A 100m time between 35 s and 4:00 is expected — check the value (use m:ss for minutes).');document.getElementById('pace-100').focus();return;}
+  if(!t){tlNotice('pace-notice',/^\d\.\d{1,2}$/.test(rawPace)?'Enter the 100m time as m:ss — did you mean '+rawPace.replace('.',':')+'?':'Enter a valid 100m time (ss.ss or m:ss.ss).',null,'pace-100');document.getElementById('pace-100').focus();return;}
+  if(t<35||t>240){tlNotice('pace-notice','A 100m time between 35 s and 4:00 is expected — check the value (use m:ss for minutes).',null,'pace-100');document.getElementById('pace-100').focus();return;}
   tlNotice('pace-notice','');
   const zones=[
     {name:'Zone 1 — Recovery',pct:[1.35,1.50],color:'#00e599',desc:'HR <22 · <1.5 mmol'},
@@ -5610,7 +5652,7 @@ function calcPaceZones(){
     {name:'Zone 4 — VO2 Max',pct:[1.04,1.10],color:'#ff7043',desc:'HR 30–33 · 5–8 mmol'},
     {name:'Zone 5 — Sprint',pct:[0.90,1.02],color:'#ff5252',desc:'Max HR · 8+ mmol'}
   ];
-  let html='<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Zone</th><th scope="col">Per 100m</th><th scope="col">Per 50m</th><th scope="col">Notes</th></tr></thead><tbody>';
+  let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">Training pace zones</caption><thead><tr><th scope="col">Zone</th><th scope="col">Per 100m</th><th scope="col">Per 50m</th><th scope="col">Notes</th></tr></thead><tbody>';
   zones.forEach(z=>{
     const fast=t*z.pct[0], slow=t*z.pct[1];
     html+=`<tr><td style="color:${z.color}">${z.name}</td><td>${formatTime(fast)}–${formatTime(slow)}</td><td>${formatTime(fast/2)}–${formatTime(slow/2)}</td><td style="color:var(--white3);font-size:0.76rem">${z.desc}</td></tr>`;
@@ -5621,11 +5663,11 @@ function calcPaceZones(){
 function convertTime(){
   const t=parseTime(document.getElementById('conv-time').value);
   const from=document.getElementById('conv-from').value;
-  if(!t){tlNotice('conv-notice','Enter a valid time.');document.getElementById('conv-time').focus();return;}
+  if(!t){tlNotice('conv-notice','Enter a valid time.',null,'conv-time');document.getElementById('conv-time').focus();return;}
   tlNotice('conv-notice','');
   const factors={scy:1.00,scm:1.11,lcm:1.14};
   const labels={scy:'SCY — 25 yards',scm:'SCM — 25 meters',lcm:'LCM — 50 meters'};
-  let html='<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Pool Format</th><th scope="col">Equivalent Time</th><th scope="col">Difference</th></tr></thead><tbody>';
+  let html='<div class="table-wrap"><table class="data-table"><caption class="sr-only">Converted times by pool format</caption><thead><tr><th scope="col">Pool Format</th><th scope="col">Equivalent Time</th><th scope="col">Difference</th></tr></thead><tbody>';
   Object.keys(factors).forEach(to=>{
     const conv=t*(factors[to]/factors[from]);
     const diff=((conv-t)/t*100);
@@ -5667,12 +5709,31 @@ function lsRemove(k){ try{ localStorage.removeItem(k); }catch(e){} }
 // Inline form notices instead of blocking alert(): writes into the form's
 // <p class="form-notice" role="alert">; kind 'ok' styles a success message.
 // Falls back to alert() only when a form has no notice element.
-function tlNotice(id,msg,kind){
+// Optional 4th arg: the offending field (element or id). It gets aria-invalid
+// + aria-describedby=<notice id> so the message is read together with the
+// field when focus moves there; the flag is cleared on the next call for that notice.
+const _tlNoticeFields={};
+function tlNotice(id,msg,kind,field){
   const el=document.getElementById(id);
   if(!el){ if(msg) alert(msg); return; }
   el.textContent=msg||'';
   el.classList.toggle('is-ok',kind==='ok');
   el.hidden=!msg;
+  const prev=_tlNoticeFields[id];
+  if(prev){ prev.removeAttribute('aria-invalid'); if(prev.getAttribute('aria-describedby')===id) prev.removeAttribute('aria-describedby'); delete _tlNoticeFields[id]; }
+  const f=field?(typeof field==='string'?document.getElementById(field):field):null;
+  if(f&&msg&&kind!=='ok'){ f.setAttribute('aria-invalid','true'); f.setAttribute('aria-describedby',id); _tlNoticeFields[id]=f; }
+}
+// One shared sr-only polite region for one-shot announcements ("Workout
+// ready.", "Analysis complete.", AI errors). Streamed text itself is written
+// into aria-live="off" children so screen readers are not re-fed the growing
+// answer on every frame. Cleared first so the same message can repeat.
+let _tlAnnT=0;
+function tlAnnounce(msg){
+  const el=document.getElementById('tl-ai-status'); if(!el) return;
+  clearTimeout(_tlAnnT);
+  el.textContent='';
+  _tlAnnT=setTimeout(function(){ el.textContent=msg||''; },80);
 }
 // Only a parseable time is stored (ss.ss or m:ss.ss); anything else is flagged
 // inline and left unsaved, so the planner and predictor never see "fast" or "1:75".
@@ -5915,7 +5976,7 @@ function renderEliteRateTables(){
     const b = eliteRateBand(r), lo = b[0], hi = b[1];
     const sub = r.sub ? '<br><span class="tlt-td-sub">' + r.sub + '</span>' : '';
     const strokes = r.arms ? (lo * 2) + '–' + (hi * 2) : 'same as cycles';
-    return '<tr data-name="' + r.name + '" data-lo="' + lo + '" data-hi="' + hi + '"><td>' + r.name + sub + '</td><td>' + lo + '–' + hi + '</td><td>' + (60 / lo).toFixed(2) + '–' + (60 / hi).toFixed(2) + '</td><td>' + strokes + '</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)">Load</button></td></tr>';
+    return '<tr data-name="' + r.name + '" data-lo="' + lo + '" data-hi="' + hi + '"><td>' + r.name + sub + '</td><td>' + lo + '–' + hi + '</td><td>' + (60 / lo).toFixed(2) + '–' + (60 / hi).toFixed(2) + '</td><td>' + strokes + '</td><td><button type="button" class="btn-ghost-sm tlt-preset-btn" onclick="tlt_loadPreset(this)" aria-label="Load ' + r.name + ' race tempo">Load</button></td></tr>';
   }).join('');
   const ab = document.getElementById('an-ref-body');
   if (ab) ab.innerHTML = ELITE_RATES.filter(r => r.men).map(r =>
@@ -6604,6 +6665,12 @@ function onKey(e){
   if(!pageActive()) return;
   var t=e.target, tag=(t&&t.tagName)?t.tagName.toLowerCase():'';
   if(tag==='input'||tag==='select'||tag==='textarea'||tag==='button'||tag==='a'||(t&&t.isContentEditable)) return;
+  // Only act when focus is inside the active tab's timer card (they are
+  // focusable groups) or that timer is already running — Space and the
+  // arrows on the page body keep scrolling the page.
+  var card=$(TAB==='tempo'?'tlt-tempo-card':TAB==='interval'?'tlt-int-display':'tlt-split-card');
+  var running=TAB==='tempo'?TP.status==='running':TAB==='interval'?IT.status==='running':SP.status==='running';
+  if(!running&&!(card&&t&&t.nodeType===1&&card.contains(t))) return;
   if(e.key===' '||e.key==='Spacebar'){
     e.preventDefault();
     if(TAB==='tempo') window.tlt_tempoToggle(); else if(TAB==='interval') window.tlt_intToggle(); else window.tlt_spMain();
@@ -6784,23 +6851,25 @@ function goalStats(ev, prSec, goalSec){
 function renderGoalCard(ev, goals){
   var pr = readPR(ev), raw = goals[ev] || '', gs = parseT(raw);
   var st = goalStats(ev, pr, gs), id = goalId(ev);
-  var prHtml = pr ? 'PR <strong>' + esc(fmtT(pr)) + '</strong>' : '<a href="#profile" class="pl-nopr">No PR — add one</a>';
-  var quick = pr ? '<div class="pl-quick" role="group" aria-label="Quick-fill goal from PR">' +
-      [1, 2, 3].map(function(p){ return '<button type="button" class="btn-ghost-sm" data-fill="' + p + '" data-event="' + esc(ev) + '" aria-label="Set goal ' + p + ' percent faster than PR">−' + p + '%</button>'; }).join('') + '</div>' : '';
-  return '<div class="pl-goal-card' + (gs ? ' has-goal' : '') + '" data-event="' + esc(ev) + '">' +
-    '<div class="pl-goal-head"><span class="pl-goal-event">' + esc(ev) + '</span><span class="pl-goal-pr">' + prHtml + '</span></div>' +
-    '<label class="pl-goal-label" for="' + id + '">Goal time</label>' +
+  // Every control carries the event in its accessible name — 18 cards would
+  // otherwise all read "Goal time" / "Plan splits" in a form or links list.
+  var prHtml = pr ? 'PR <strong>' + esc(fmtT(pr)) + '</strong>' : '<a href="#profile" class="pl-nopr" aria-label="No PR for ' + esc(ev) + ' — add one">No PR — add one</a>';
+  var quick = pr ? '<div class="pl-quick" role="group" aria-label="Quick-fill ' + esc(ev) + ' goal from PR">' +
+      [1, 2, 3].map(function(p){ return '<button type="button" class="btn-ghost-sm" data-fill="' + p + '" data-event="' + esc(ev) + '" aria-label="Set ' + esc(ev) + ' goal ' + p + ' percent faster than PR">−' + p + '%</button>'; }).join('') + '</div>' : '';
+  return '<div class="pl-goal-card' + (gs ? ' has-goal' : '') + '" data-event="' + esc(ev) + '" role="group" aria-labelledby="' + id + '-ev">' +
+    '<div class="pl-goal-head"><span class="pl-goal-event" id="' + id + '-ev">' + esc(ev) + '</span><span class="pl-goal-pr">' + prHtml + '</span></div>' +
+    '<label class="pl-goal-label" for="' + id + '">Goal time<span class="sr-only"> for ' + esc(ev) + '</span></label>' +
     '<input class="pl-goal-input" id="' + id + '" inputmode="decimal" maxlength="10" placeholder="m:ss.ss" autocomplete="off" value="' + esc(raw) + '" aria-describedby="' + id + '-err" data-event="' + esc(ev) + '">' +
     '<div class="pl-err" id="' + id + '-err"></div>' + quick +
     '<dl class="pl-goal-stats"><div><dt>Gap</dt><dd class="' + st.gapClass + '" data-k="gap">' + esc(st.gapText) + '</dd></div>' +
     '<div><dt>Per 50</dt><dd data-k="p50">' + esc(st.per50) + '</dd></div><div><dt>Per 100</dt><dd data-k="p100">' + esc(st.per100) + '</dd></div></dl>' +
-    '<button type="button" class="btn-ghost-sm pl-to-splits" data-event="' + esc(ev) + '"' + (gs || pr ? '' : ' disabled') + '>Plan splits →</button></div>';
+    '<button type="button" class="btn-ghost-sm pl-to-splits" data-event="' + esc(ev) + '" aria-label="Plan splits for ' + esc(ev) + '"' + (gs || pr ? '' : ' disabled') + '>Plan splits →</button></div>';
 }
 function renderGoals(){
   var wrap = pl$('pl-goal-groups'); if (!wrap) return;
   var goals = readGoals(), all = events();
   wrap.innerHTML = STROKE_ORDER.filter(function(s){ return all[s]; }).map(function(s){
-    return '<div class="pl-group"><div class="section-eyebrow">' + esc(STROKE_NAMES[s]) + '</div><div class="pl-grid">' +
+    return '<div class="pl-group"><h2 class="section-eyebrow">' + esc(STROKE_NAMES[s]) + '</h2><div class="pl-grid">' +
       all[s].map(function(ev){ return renderGoalCard(ev, goals); }).join('') + '</div></div>';
   }).join('');
   renderGoalSummary();
@@ -7030,7 +7099,7 @@ function runPredict(){
   });
   var profileNote = delta ? '<span class="pl-tag info">Fitted profile Δ ' + (delta >= 0 ? '+' : '') + delta.toFixed(3) + '</span>' : '<span class="pl-tag dim">Typical profile</span>';
   var html = '<div class="pl-pred-head"><h4>FROM ' + esc(ev) + ' ' + esc(fmtT(t)) + '</h4>' + profileNote + '</div>' +
-    '<div class="table-wrap" style="margin-top:0.5rem"><table class="data-table"><thead><tr><th scope="col">Event</th><th scope="col">Fastest plausible</th><th scope="col">Typical</th><th scope="col">Conservative</th><th scope="col">Your PR</th><th scope="col">Confidence</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<div class="table-wrap" style="margin-top:0.5rem"><table class="data-table"><caption class="sr-only">Predicted times from ' + esc(ev) + '</caption><thead><tr><th scope="col">Event</th><th scope="col">Fastest plausible</th><th scope="col">Typical</th><th scope="col">Conservative</th><th scope="col">Your PR</th><th scope="col">Confidence</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
     '<p class="pl-hint" style="margin-top:0.5rem">Fastest plausible / conservative use the low and high exponent for every step. Confidence: High = one step on the event ladder, Medium = two, Low = three or more. Same course as the input time.</p>' +
     renderInterpretation(stroke, ev, d1, t, nearestUp, nearestDown, delta);
   out.innerHTML = html;
@@ -7103,7 +7172,7 @@ function renderExpTable(){
       rows += '<tr><td>' + esc(STROKE_NAMES[s]) + '</td><td class="num">' + a + ' → ' + b + '</td><td class="num typ">' + e[1].toFixed(3) + '</td><td class="num">' + e[0].toFixed(2) + '–' + e[2].toFixed(2) + '</td><td class="num">×' + Math.pow(ratio, e[1]).toFixed(3) + '</td><td class="num">×' + Math.pow(ratio, e[0]).toFixed(2) + '–' + Math.pow(ratio, e[2]).toFixed(2) + '</td></tr>';
     });
   });
-  el.innerHTML = '<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Stroke</th><th scope="col">Step</th><th scope="col">Typical b</th><th scope="col">Plausible b</th><th scope="col">Time multiplier</th><th scope="col">Multiplier range</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  el.innerHTML = '<div class="table-wrap"><table class="data-table"><caption class="sr-only">Exponent by stroke and distance step</caption><thead><tr><th scope="col">Stroke</th><th scope="col">Step</th><th scope="col">Typical b</th><th scope="col">Plausible b</th><th scope="col">Time multiplier</th><th scope="col">Multiplier range</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -7285,7 +7354,7 @@ function runSplits(){
   }
   var per100 = r.dist >= 100 ? fmtT(r.goal / (r.dist / 100)) : null;
   out.innerHTML = '<div class="pl-sp-meta"><span class="pl-tag info">' + esc(o.dist + ' ' + STROKE_ABBR[o.stroke]) + ' · ' + esc(r.course) + '</span><span class="pl-tag dim">' + esc(modeLabel) + '</span>' + (r.bonusApplied ? '<span class="pl-tag dim">Start bonus ' + r.bonus.toFixed(1) + ' s</span>' : '') + '</div>' +
-    '<div class="table-wrap" style="margin:0"><table class="data-table"><thead><tr><th scope="col">#</th><th scope="col">At</th>' + (r.strokeAt ? '<th scope="col">Stroke</th>' : '') + '<th scope="col">Split</th><th scope="col">Cumulative</th></tr></thead><tbody>' + rows + '</tbody></table></div>' + fifty +
+    '<div class="table-wrap" style="margin:0"><table class="data-table"><caption class="sr-only">Planned splits</caption><thead><tr><th scope="col">#</th><th scope="col">At</th>' + (r.strokeAt ? '<th scope="col">Stroke</th>' : '') + '<th scope="col">Split</th><th scope="col">Cumulative</th></tr></thead><tbody>' + rows + '</tbody></table></div>' + fifty +
     '<div class="pl-halves"><div><span class="k">Goal</span><span class="v">' + esc(fmtT(r.goal)) + '</span></div>' +
     (r.N > 1 ? '<div><span class="k">1st half</span><span class="v">' + esc(fmtT(r.halves[0])) + '</span></div><div><span class="k">2nd half</span><span class="v">' + esc(fmtT(r.halves[1])) + '</span></div><div><span class="k">2nd vs 1st</span><span class="v">' + (r.halfDiffPct >= 0 ? '+' : '') + pct(r.halfDiffPct, 1) + '%</span></div>' : '') +
     (per100 ? '<div><span class="k">Avg per 100</span><span class="v">' + esc(per100) + '</span></div>' : '') + '</div>';
@@ -7374,7 +7443,7 @@ function renderPatternTable(){
     var segLabel = p.legs ? 'By stroke leg' : (n === 2 ? 'By 50' : 'By ' + (dist / n));
     return '<tr><td>' + esc(k) + '</td><td>' + esc(segLabel) + '</td><td class="num">' + p.segs.map(function(v, i){ return (p.legs ? p.legs[i] + ' ' : '') + pct(v, 1) + '%'; }).join(' · ') + '</td><td class="num">±' + p.tol + '</td></tr>';
   }).join('');
-  el.innerHTML = '<div class="table-wrap"><table class="data-table"><thead><tr><th scope="col">Event</th><th scope="col">Segments</th><th scope="col">Share of race time</th><th scope="col">Band</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  el.innerHTML = '<div class="table-wrap"><table class="data-table"><caption class="sr-only">Elite split patterns by event</caption><thead><tr><th scope="col">Event</th><th scope="col">Segments</th><th scope="col">Share of race time</th><th scope="col">Band</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -9446,6 +9515,9 @@ window.tl_an_debug = {
     var tag = t.tagName;
     return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || !!t.isContentEditable;
   }
+  // WCAG 2.1.4: the single-character "/" shortcut can be switched off (palette footer); Cmd/Ctrl+K always works.
+  var SLASH_KEY = 'tl_pal_slash';
+  function slashEnabled(){ try { return localStorage.getItem(SLASH_KEY) !== '0'; } catch(e){ return true; } }
   function onGlobalKey(e){
     if (e.defaultPrevented || e.isComposing) return;
     var k = e.key;
@@ -9454,7 +9526,7 @@ window.tl_an_debug = {
       window.togglePalette();
       return;
     }
-    if (k === '/' && !e.metaKey && !e.ctrlKey && !e.altKey && !state.open && !isEditable(e.target) && !authGateOpen()){
+    if (k === '/' && slashEnabled() && !e.metaKey && !e.ctrlKey && !e.altKey && !state.open && !isEditable(e.target) && !authGateOpen()){
       e.preventDefault();
       window.openPalette();
     }
@@ -9472,11 +9544,12 @@ window.tl_an_debug = {
     }
     if (k === 'Enter'){ e.preventDefault(); if (state.active >= 0) select(state.active); return; }
     if (k === 'Tab'){
-      // Keep focus inside the dialog: input ⇄ close button.
-      var inp = $('tl-pal-input'), cls = $('tl-pal-close');
-      if (!inp || !cls) return;
+      // Keep focus inside the dialog: input → close button → "/" toggle (when shown) → input.
+      var stops = [$('tl-pal-input'), $('tl-pal-close'), $('tl-pal-slash')].filter(function(el){ return el && el.getClientRects().length > 0; });
+      if (stops.length < 2) return;
       e.preventDefault();
-      if (document.activeElement === inp) cls.focus(); else inp.focus();
+      var si = stops.indexOf(document.activeElement), sn = stops.length;
+      stops[si < 0 ? 0 : (si + (e.shiftKey ? sn - 1 : 1)) % sn].focus();
     }
   }
   function platformHints(){
@@ -9508,6 +9581,14 @@ window.tl_an_debug = {
     document.addEventListener('keydown', onGlobalKey);
     root.addEventListener('keydown', onDialogKey);
     inp.addEventListener('input', render);
+    var slash = $('tl-pal-slash');
+    if (slash){
+      slash.checked = slashEnabled();
+      slash.addEventListener('change', function(){
+        try { localStorage.setItem(SLASH_KEY, slash.checked ? '1' : '0'); } catch(e){}
+        announce(slash.checked ? 'Slash shortcut on' : 'Slash shortcut off');
+      });
+    }
     if (cls) cls.addEventListener('click', function(){ window.closePalette(); });
     root.addEventListener('click', function(e){
       if (e.target === root || (e.target.hasAttribute && e.target.hasAttribute('data-tl-pal-close'))) window.closePalette();
