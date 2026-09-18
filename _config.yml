@@ -1,0 +1,15 @@
+# GitHub Pages builds this branch with Jekyll. Nothing here needs Jekyll (index.html has
+# no front matter and is copied verbatim), but Jekyll is the only thing that can keep repo
+# files OUT of the published site: without this file the backend sources, maintenance
+# scripts and repo docs are served (supabase/README.md was even rendered as an indexable
+# HTML page). A project site cannot use robots.txt for that — crawlers only read it at the
+# origin root, which is not ours — so the exclusion has to happen at build time.
+#
+# Verify after a push:  curl -I https://danielswims101.github.io/JAC_Online/supabase/  -> 404
+exclude:
+  - supabase
+  - tools
+  - README.md
+  - LICENSE
+  - .gitignore
+  - .claude

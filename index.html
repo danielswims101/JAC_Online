@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tidelyne — Swimming Technique & Training Tools</title>
-<meta name="description" content="Free training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, pool-deck timers, race planner, training log and analytics — installable and works offline.">
+<!-- description / og:description / twitter:description stay ≤155 chars, differentiators first: search snippets cut at ~155 and chat link previews at ~200; the fuller feature list lives in the JSON-LD below. -->
+<meta name="description" content="Free swim training app that works offline: 3D stroke visualizer, technique library, AI coach, pace calculators, deck timers, race planner and training log.">
 <meta property="og:title" content="Tidelyne — Swimming Technique & Training Tools">
-<meta property="og:description" content="Free training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, pool-deck timers, race planner, training log and analytics — installable and works offline.">
+<meta property="og:description" content="Free swim training app that works offline: 3D stroke visualizer, technique library, AI coach, pace calculators, deck timers, race planner and training log.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://danielswims101.github.io/JAC_Online/">
 <link rel="canonical" href="https://danielswims101.github.io/JAC_Online/">
@@ -19,7 +20,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; connect-src 'self' https://gzqovsffnziumfbmqdes.supabase.co; frame-src https://www.youtube-nocookie.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tidelyne — Swimming Technique & Training Tools">
-<meta name="twitter:description" content="Free training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, pool-deck timers, race planner, training log and analytics — installable and works offline.">
+<meta name="twitter:description" content="Free swim training app that works offline: 3D stroke visualizer, technique library, AI coach, pace calculators, deck timers, race planner and training log.">
 <link rel="icon" href="favicon.ico" sizes="16x16 32x32">
 <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -43,9 +44,9 @@
 <link rel="preconnect" href="https://gzqovsffnziumfbmqdes.supabase.co" crossorigin>
 <link rel="dns-prefetch" href="https://i.ytimg.com">
 <link rel="dns-prefetch" href="https://www.youtube-nocookie.com">
-<!-- Fonts CSS is preloaded and promoted to a stylesheet once it arrives, so first paint never waits on the cross-origin request (display=swap covers the font files). -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap"></noscript>
+<!-- Fonts CSS is preloaded and promoted to a stylesheet once it arrives, so first paint never waits on the cross-origin request (display=swap covers the font files). crossorigin makes the response non-opaque so sw.js can cache it for offline typography. -->
+<link rel="preload" as="style" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap"></noscript>
 <!-- supabase-js is pinned (not the floating @2 tag) so an upstream release cannot change the auth path unseen; integrity is that file's sha384 — bump version and hash together.
      It loads async (not defer): a deferred script holds DOMContentLoaded, and with it the router's first paint of every page, until the CDN answers — the site must render with the
      library still in flight or blocked. onSupabaseScript() creates the client as soon as it lands (or on DOMContentLoaded, whichever is later); only sign-in and the AI features need it. -->
@@ -226,9 +227,8 @@ a{color:var(--cyan);text-decoration:none}
 main footer a{text-decoration:none}
 button{cursor:pointer;font-family:var(--fb)}
 input,textarea,select{font-family:var(--fb)}
-.noise{position:fixed;inset:0;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");z-index:9999}
 /* NAV */
-nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;gap:8px}
+nav{position:sticky;top:0;z-index:500;background:rgba(4,13,24,0.985);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;gap:8px}
 .nav-brand{font-family:var(--fh);font-size:1.45rem;letter-spacing:3px;color:var(--cyan);cursor:pointer;flex-shrink:0;white-space:nowrap;text-decoration:none}
 .nav-brand span{color:var(--white)}
 .nav-brand{display:flex;align-items:center;gap:9px}
@@ -331,10 +331,10 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 #viz3d-container{display:block;width:100%;height:520px;border-radius:var(--r16);overflow:hidden;cursor:grab}
 .viz-fallback{display:flex;align-items:center;justify-content:center;height:100%;padding:2rem;text-align:center;color:var(--white2);font-size:0.9rem;line-height:1.8}
 .viz-overlay-stats{position:absolute;top:12px;right:12px;display:grid;grid-template-columns:1fr 1fr;gap:6px;pointer-events:none}
-.vos-item{background:rgba(4,13,24,0.85);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center;backdrop-filter:blur(8px)}
+.vos-item{background:rgba(4,13,24,0.92);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center}
 .vos-val{font-family:var(--fm);font-size:1.1rem;color:var(--cyan);display:block;line-height:1;letter-spacing:0.5px}
 .vos-lbl{font-family:var(--fm);font-size:0.6rem;letter-spacing:1.5px;color:var(--white3);text-transform:uppercase;margin-top:3px;display:block}
-.viz-phase-bar{position:absolute;bottom:0;left:0;right:0;height:40px;background:rgba(4,13,24,0.85);border-top:1px solid var(--border);display:flex;align-items:stretch;gap:0;backdrop-filter:blur(8px)}
+.viz-phase-bar{position:absolute;bottom:0;left:0;right:0;height:40px;background:rgba(4,13,24,0.92);border-top:1px solid var(--border);display:flex;align-items:stretch;gap:0}
 .phase-step{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;background:none;border:0;border-right:1px solid var(--border2);border-radius:0;font-family:var(--fm);font-size:0.62rem;letter-spacing:0.5px;color:var(--white3);text-transform:uppercase;padding:0 4px;transition:color 0.3s,background 0.2s;cursor:pointer;line-height:1.3}
 .phase-step:last-child{border-right:none}
 .phase-step:hover{color:var(--white2);background:rgba(0,212,255,0.06)}
@@ -413,7 +413,7 @@ h2.section-eyebrow,h2.tlt-card-title,h2.an-empty-title{font-weight:400} /* secti
 .gen-form{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;margin-bottom:2rem}
 .gen-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:1rem;margin-bottom:1.25rem}.gen-row>*{min-width:0}
 .gen-output{background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:2rem;display:none}.gen-output.show{display:block}
-.workout-phase{margin-bottom:1.75rem}.workout-phase h2,.workout-phase h4{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;color:var(--cyan);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border2)}
+.workout-phase{margin-bottom:1.75rem}.workout-phase h2{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;color:var(--cyan);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border2)}
 .workout-set{background:var(--navy3);border-radius:var(--r8);padding:0.85rem 1rem;margin-bottom:0.5rem;border:1px solid var(--border2);font-size:0.85rem;color:var(--white2);line-height:1.75}
 .loading-state{display:flex;align-items:center;gap:12px;color:var(--white3);padding:2.5rem 0;font-size:0.88rem}
 /* FORM ELEMENTS */
@@ -473,6 +473,8 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .footer-bottom a{display:inline-block;padding:10px 4px;font-size:0.7rem;color:var(--white3);transition:color 0.2s}.footer-bottom a:hover{color:var(--cyan)}
 /* The legal-links line reads at the links' own size (separators included) instead of the 9.9px tracked uppercase of the brand line */
 .footer-bottom .footer-links{font-size:0.7rem;letter-spacing:0.5px;text-transform:none}
+/* "Install app" in the footer links (shown by the What's New module only while the browser holds an install prompt, or on iOS Safari outside the installed app) */
+.footer-bottom .footer-install{background:none;border:0;margin:0;padding:10px 4px;font:inherit;font-size:0.7rem;color:var(--white3);cursor:pointer;transition:color 0.2s}.footer-bottom .footer-install:hover{color:var(--cyan)}
 /* Sub-page footers carry one brand line and the legal links, so they do not need the home footer's 160px of padding */
 .page:not(#page-home) footer{padding:1.25rem 2rem}
 .page:not(#page-home) .footer-bottom{padding-top:0;border-top:0}
@@ -597,12 +599,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 /* PRINT — clean workout printouts, no dark theme ink waste */
 @media print{
-  nav,footer,.noise,.hero,#access-gate,.viz-controls,.quick-prompts,.ai-input-row,.gen-form,#gen-actions,.hero-particles{display:none!important}
+  nav,footer,.hero,#access-gate,.viz-controls,.quick-prompts,.ai-input-row,.gen-form,#gen-actions,.hero-particles{display:none!important}
   body{background:#fff!important;color:#000!important}
   .page{display:none}.page.active{display:block}
   .gen-output,.workout-set,.card,.content-block,.section-wrap{background:#fff!important;color:#000!important;border-color:#bbb!important;box-shadow:none!important}
   .workout-set,.card p,.content-block p,.section-intro{color:#000!important}
-  .workout-phase h2,.workout-phase h4,.section-title,.section-title span{color:#000!important}
+  .workout-phase h2,.section-title,.section-title span{color:#000!important}
 }
 /* ── timers ── */
 /* ============================================================
@@ -1383,8 +1385,9 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-burger[aria-expanded="true"] .nav-burger-bars span:nth-child(3){transform:rotate(-45deg)}
   /* Mirrors a badge appended inside #nav-updates (the link is out of sight in the closed drawer). */
   nav .nav-burger.has-badge::after{content:'';position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 2px var(--navy3)}
-  /* top/left/width/height are explicit (not inset:0) because the nav's backdrop-filter can make it,
-     rather than the viewport, the containing block for fixed children; the nav module re-anchors on open. */
+  /* top/left/width/height are explicit (not inset:0): a filter/transform on the nav would make it, rather
+     than the viewport, the containing block for fixed children (none today — the nav's backdrop-filter was
+     dropped for scroll performance); the nav module still measures and re-anchors on open as a guard. */
   nav .nav-scrim{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;background:rgba(4,13,24,0.62);opacity:0;pointer-events:none;transition:opacity 0.25s ease;z-index:4}
   nav .nav-scrim.open{opacity:1;pointer-events:auto}
   /* Three states, no visibility transition (a transitioned visibility only resolves when the
@@ -1554,7 +1557,6 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <noscript><style>#page-home{display:block}.reveal{opacity:1!important;transform:none!important}</style><p class="noscript-note">JavaScript is off in this browser, so Tidelyne's tools are unavailable and only the home page is shown.</p></noscript>
-<div class="noise"></div>
 <!-- NAV -->
 <nav aria-label="Primary">
   <a class="nav-brand" href="#home" aria-label="Tidelyne — home"><img src="logo-mark.svg" alt="" width="26" height="26" class="nav-mark">TIDE<span>LYNE</span></a>
@@ -1701,7 +1703,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="footer-col"><h4>Track</h4><ul><li><a href="#profile">My PRs</a></li><li><a href="#log">Training Log</a></li><li><a href="#analytics">Training Analytics</a></li></ul></div>
     <div class="footer-col"><h4>Compete</h4><ul><li><a href="#race">Race Strategy</a></li><li><a href="#taper">Taper Protocol</a></li><li><a href="#mental">Mental Performance</a></li><li><a href="#injury">Injury Prevention</a></li><li><a href="#season">Season Calendar</a></li></ul></div>
   </div>
-  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p class="footer-links"><a href="#ai">AI Coach</a> · <a href="#updates">What's New</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a></p><p>Educational information only — not medical advice</p></div>
+  <div class="footer-bottom"><p>Tidelyne — a Scarpline project</p><p class="footer-links"><a href="#ai">AI Coach</a> · <a href="#updates">What's New</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a><span id="tl-footer-install-wrap" hidden> · <button type="button" class="footer-install" id="tl-footer-install" onclick="tlFooterInstall()">Install app</button></span></p><p>Educational information only — not medical advice</p></div>
 </footer>
 </div>
 <!-- 3D VISUALIZER PAGE -->
@@ -5467,6 +5469,26 @@ function loadCustomMotion(motion, statusEl, prefix){
 const AI_LIMIT_MSG='You\'ve reached the limit of 20 AI messages per 5 hours. Take a break and come back soon.';
 const SESSION_EXPIRED_MSG='Your session expired — please log in again.';
 const AI_NETWORK_MSG='Connection error — check your network and try again.';
+// Copies text to the clipboard: the async Clipboard API first, then the hidden-textarea execCommand('copy')
+// fallback (older browsers, non-secure contexts). Resolves true on success, never rejects. Used by the timers'
+// copy buttons, the race planner's split table and the analytics summary, which used to carry this each.
+window.tlCopyText=function(text){
+  text=String(text==null?'':text);
+  const legacy=function(){
+    try{
+      const ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly',''); ta.setAttribute('aria-hidden','true');
+      ta.style.position='fixed'; ta.style.left='-9999px'; ta.style.top='0';
+      document.body.appendChild(ta); ta.select();
+      const ok=!!(document.execCommand&&document.execCommand('copy'));
+      ta.remove();
+      return ok;
+    }catch(e){ return false; }
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(text).then(function(){ return true; }, function(){ return legacy(); });
+  }
+  return Promise.resolve(legacy());
+};
 // One guard per AI stream (coach, generator, visualizer analysis, 3D reconstruction): an AbortController whose
 // idle timer aborts after AI_IDLE_MS without a chunk (touch() resets it per chunk), so a half-open mobile
 // connection or a never-closing stream cannot wedge the button until reload; stop() is the user's Stop control.
@@ -5480,6 +5502,36 @@ function aiStreamGuard(){
     end(){ clearTimeout(timer); } };
   g.touch();
   return g;
+}
+// Reads an ask-ai SSE body to the end (Anthropic framing: `data: {type:'content_block_delta', delta:{type:'text_delta', text}}`
+// lines, `[DONE]` sentinel). Touches the guard per chunk, calls onText(fullText) after every delta and resolves
+// with the full text; a stream that breaks, stalls or is stopped rejects from reader.read(), so a caller that
+// keeps partial answers must copy fullText out of onText. The four AI features used to carry this loop each.
+async function readAIStream(resp, guard, onText){
+  const reader=resp.body.getReader();
+  const decoder=new TextDecoder();
+  let fullText='', buffer='';
+  while(true){
+    const {done,value}=await reader.read();
+    if(done) break;
+    guard.touch();
+    buffer+=decoder.decode(value,{stream:true});
+    const lines=buffer.split('\n');
+    buffer=lines.pop()||''; // keep the incomplete line
+    for(const line of lines){
+      if(!line.startsWith('data: ')) continue;
+      const data=line.slice(6).trim();
+      if(data==='[DONE]') continue;
+      try{
+        const parsed=JSON.parse(data);
+        if(parsed.type==='content_block_delta'&&parsed.delta?.type==='text_delta'){
+          fullText+=parsed.delta.text;
+          if(onText) onText(fullText);
+        }
+      }catch(e){}
+    }
+  }
+  return fullText;
 }
 let _aiChatGuard=null; // the coach chat's running stream (Stop button)
 function stopAI(){ if(_aiChatGuard) _aiChatGuard.stop(); }
@@ -5525,25 +5577,7 @@ async function generateMotion(){
         :'Error: HTTP '+resp.status);
       btn.disabled=false; return;
     }
-    const reader=resp.body.getReader();
-    const decoder=new TextDecoder();
-    let fullText='', buffer='';
-    while(true){
-      const {done,value}=await reader.read();
-      if(done) break;
-      guard.touch();
-      buffer+=decoder.decode(value,{stream:true});
-      const lines=buffer.split('\n'); buffer=lines.pop()||'';
-      for(const line of lines){
-        if(!line.startsWith('data: ')) continue;
-        const data=line.slice(6).trim();
-        if(data==='[DONE]') continue;
-        try{
-          const parsed=JSON.parse(data);
-          if(parsed.type==='content_block_delta'&&parsed.delta?.type==='text_delta') fullText+=parsed.delta.text;
-        }catch(e){}
-      }
-    }
+    let fullText=await readAIStream(resp, guard);
     guard.end();
     // Strip markdown fences if the model added them, then extract the JSON
     fullText=fullText.replace(/```[a-zA-Z]*\n?/g,'');
@@ -5782,29 +5816,7 @@ async function sendToAI(){
       finishStreamBubble(streamBubble, err.error || (resp.status===429 ? AI_LIMIT_MSG : `Error: HTTP ${resp.status}`));
       setAIStreaming(false); return;
     }
-    const reader=resp.body.getReader();
-    const decoder=new TextDecoder();
-    let buffer='';
-    while(true){
-      const {done,value}=await reader.read();
-      if(done) break;
-      guard.touch();
-      buffer+=decoder.decode(value,{stream:true});
-      const lines=buffer.split('\n');
-      buffer=lines.pop()||''; // keep incomplete line
-      for(const line of lines){
-        if(!line.startsWith('data: ')) continue;
-        const data=line.slice(6).trim();
-        if(data==='[DONE]') continue;
-        try{
-          const parsed=JSON.parse(data);
-          if(parsed.type==='content_block_delta'&&parsed.delta?.type==='text_delta'){
-            fullText+=parsed.delta.text;
-            updateStreamBubble(streamBubble, fullText);
-          }
-        }catch(e){}
-      }
-    }
+    await readAIStream(resp, guard, function(text){ fullText=text; updateStreamBubble(streamBubble, fullText); });
     guard.end();
     finishStreamBubble(streamBubble, fullText||'No response.');
     if(fullText) conversationHistory.push({role:'assistant',content:fullText});
@@ -6008,31 +6020,9 @@ Every set needs interval, equipment, HR targets as a 10-second pulse count (e.g.
       tlAnnounce(errMsg);
       return;
     }
-    const reader=resp.body.getReader();
-    const decoder=new TextDecoder();
-    let buffer='';
     result.innerHTML='<div id="gen-stream" aria-live="off" style="color:var(--white2);line-height:1.8;white-space:pre-wrap;font-family:var(--fm);font-size:0.82rem"></div>';
     const streamEl=document.getElementById('gen-stream');
-    while(true){
-      const {done,value}=await reader.read();
-      if(done) break;
-      guard.touch();
-      buffer+=decoder.decode(value,{stream:true});
-      const lines=buffer.split('\n');
-      buffer=lines.pop()||'';
-      for(const line of lines){
-        if(!line.startsWith('data: ')) continue;
-        const data=line.slice(6).trim();
-        if(data==='[DONE]') continue;
-        try{
-          const parsed=JSON.parse(data);
-          if(parsed.type==='content_block_delta'&&parsed.delta?.type==='text_delta'){
-            fullText+=parsed.delta.text;
-            if(streamEl) streamEl.textContent=fullText;
-          }
-        }catch(e){}
-      }
-    }
+    await readAIStream(resp, guard, function(text){ fullText=text; if(streamEl) streamEl.textContent=fullText; });
     guard.end();
     // Format nicely after streaming
     result.innerHTML=formatWorkout(fullText);
@@ -6169,29 +6159,7 @@ Use specific numbers (angles, distances, timing). Premium coaching quality.`;
       tlAnnounce(errMsg);
       return;
     }
-    const reader=resp.body.getReader();
-    const decoder=new TextDecoder();
-    let fullText='', buffer='';
-    while(true){
-      const {done,value}=await reader.read();
-      if(done) break;
-      guard.touch();
-      buffer+=decoder.decode(value,{stream:true});
-      const lines=buffer.split('\n');
-      buffer=lines.pop()||'';
-      for(const line of lines){
-        if(!line.startsWith('data: ')) continue;
-        const data=line.slice(6).trim();
-        if(data==='[DONE]') continue;
-        try{
-          const parsed=JSON.parse(data);
-          if(parsed.type==='content_block_delta'&&parsed.delta?.type==='text_delta'){
-            fullText+=parsed.delta.text;
-            if(streamEl) streamEl.textContent=fullText;
-          }
-        }catch(e){}
-      }
-    }
+    const fullText=await readAIStream(resp, guard, function(text){ if(streamEl) streamEl.textContent=text; });
     guard.end();
     // Format after done
     contentDiv.innerHTML=formatVizOutput(fullText);
@@ -7474,10 +7442,11 @@ window.tlt_spReset=function(){
 window.tlt_copy=function(kind){
   var ta=$('tlt-'+kind+'-text'), st='tlt-'+kind+'-status'; if(!ta||!ta.value){ setStatus(st,'Nothing to copy yet.'); return; }
   var text=ta.value, ok=function(){ setStatus(st,'Copied to the clipboard.'); }, fail=function(){
+    // Last resort: leave the visible table selected so it can be copied by hand.
     try{ ta.setAttribute('aria-hidden','false'); ta.focus(); ta.select(); var r=document.execCommand&&document.execCommand('copy'); ta.setAttribute('aria-hidden','true'); if(r) ok(); else setStatus(st,'Copy is blocked here — select the table and copy it by hand.'); }
     catch(e){ setStatus(st,'Copy is blocked here — select the table and copy it by hand.'); }
   };
-  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(ok,fail); } else fail();
+  window.tlCopyText(text).then(function(done){ if(done) ok(); else fail(); });
 };
 
 /* ─── keyboard: Space toggles the timer on the active tab ─────────────── */
@@ -7560,7 +7529,7 @@ window.onPageChange=function(n){
   if(n!==PAGE_ID) stopAll();
 };
 
-// Pure helpers exposed for the node test harness (no DOM needed).
+// Pure helpers exposed for ad-hoc console/Node checks (no DOM needed; the page itself never reads this).
 window.tlt_internals={fmtMS:fmtMS,fmtCount:fmtCount,fmtSW:fmtSW,fmtClock:fmtClock,fmtDelta:fmtDelta,clockReading:clockReading,parseMSS:parseMSS,gcd:gcd,
   tpEquiv:tpEquiv,tapBpm:tapBpm,itNormalize:itNormalize,itBuildSchedule:itBuildSchedule,itCum:itCum,itSegAt:itSegAt,IT_PRESETS:IT_PRESETS,
   pcCall:pcCall,soCompute:soCompute,soPattern:soPattern,spStats:spStats};
@@ -7574,7 +7543,7 @@ document.addEventListener('DOMContentLoaded', initTimers);
 // them; the tiny fallbacks below only exist so the module can be unit-tested
 // in isolation. Exposes: window.initPlanner() (idempotent),
 // window.onShow_planner(), window.tlNextMeet(), and window.tlPlanner (the
-// pure model functions, used by test/run.js). Storage keys: tl_goals,
+// pure model functions, exposed for ad-hoc console/Node checks). Storage keys: tl_goals,
 // tl_meet, tl_pred_fit, tl_split_last. Every stored string that reaches
 // innerHTML goes through escapeHTML.
 (function(){
@@ -8219,14 +8188,7 @@ function splitsAsText(r){
 function copySplits(){
   var text = splitsAsText(lastSplit); if (!text) { plSetText('pl-sp-status', 'Generate a table first.'); return; }
   var done = function(ok){ plSetText('pl-sp-status', ok ? 'Copied to clipboard.' : 'Copy blocked by the browser — select the table and copy manually.'); };
-  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ fallbackCopy(text, done); }); }
-  else fallbackCopy(text, done);
-}
-function fallbackCopy(text, done){
-  try {
-    var ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.left = '-9999px';
-    document.body.appendChild(ta); ta.select(); var ok = document.execCommand && document.execCommand('copy'); ta.remove(); done(!!ok);
-  } catch (e) { done(false); }
+  window.tlCopyText(text).then(done);
 }
 function sendToSplits(ev){
   var stroke = strokeOfEvent(ev), dist = evDist(ev); if (!stroke) return;
@@ -8954,7 +8916,7 @@ function drawChart(){
   D.rolls.forEach(function(v){ if (v != null && v > maxV) maxV = v; });
   var empty = maxV <= 0;
   var scale = niceScale(empty ? 1 : maxV, 5);
-  var white = cssVar('--white', '#eef3f8'), white3 = cssVar('--white3', '#8ba5bd'), white4 = cssVar('--white4', '#6d879f');
+  var white = cssVar('--white', '#eef3f8'), white3 = cssVar('--white3', '#8ba5bd'), white4 = cssVar('--white4', '#7b95ad');
   var font = '10.5px "DM Mono", ui-monospace, Menlo, monospace';
   ctx.font = font;
 
@@ -9308,8 +9270,8 @@ function copyText(text, done){
     }
     done(!!ok);
   };
-  if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function(){ if (manual) manual.hidden = true; done(true); }, fallback);
+  if (typeof window.tlCopyText === 'function') {
+    window.tlCopyText(text).then(function(ok){ if (ok) { if (manual) manual.hidden = true; done(true); } else fallback(); });
   } else fallback();
 }
 window.tl_an_copySummary = function(){
@@ -9526,7 +9488,7 @@ if (typeof document !== 'undefined') {
   else anInit();
 }
 
-// Exposed for the node test harness only.
+// Exposed for ad-hoc console/Node checks only — the page never reads this.
 window.tl_an_debug = {
   buildModel:buildModel, normalizeEntries:normalizeEntries, buildInsights:buildInsights, niceScale:niceScale,
   weekStart:weekStart, localDate:localDate, streaks:streaks, zoneReading:zoneReading, buildSummaryText:buildSummaryText,
@@ -9749,6 +9711,10 @@ window.tl_an_debug = {
       after: function(){ focusField('ai-input'); } },
     { text: 'Open 3D visualizer', page: 'visualizer', keys: ['stroke lab', 'biomechanics', 'model', '3d'] },
     { text: "What's new", page: 'updates', keys: ['changelog', 'release notes', 'updates', 'version'] },
+    // Only while the browser holds an install prompt (window.__tlCanInstall, set by the What's New module):
+    // capturing beforeinstallprompt suppresses the browser's own banner, so the app must offer it somewhere reachable.
+    { text: 'Install Tidelyne as an app', fnName: 'tlPromptInstall', keys: ['install', 'app', 'home screen', 'add to home', 'pwa', 'desktop'],
+      when: function(){ return !!window.__tlCanInstall; } },
     { text: 'Plan race splits', page: 'planner', keys: ['race plan', 'splits', 'split planner', 'goal time', 'meet', 'strategy'],
       after: function(){ if (typeof window.showPageTab === 'function') window.showPageTab('planner', 'pl-splits'); focusField('pl-sp-goal'); } },
     { text: "See this week's volume", page: 'analytics', keys: ['charts', 'trends', 'stats', 'progress', 'volume', 'weekly numbers'],
@@ -9876,6 +9842,7 @@ window.tl_an_debug = {
     var out = [];
     for (var i = 0; i < index.length; i++){
       var it = index[i];
+      if (!available(it)) continue;
       var r = scoreItem(it, q, tokens, recent.indexOf(it.key));
       if (r) out.push(r);
     }
@@ -10069,7 +10036,7 @@ window.tl_an_debug = {
       if (!fn && !hasPage) return;
       items.push(makeItem({
         kind: 'action', page: a.page || '', text: a.text, crumb: hasPage ? pageLabel(a.page) : 'Runs immediately',
-        keys: (a.keys || []).concat(hasPage ? [pageLabel(a.page)] : []), fn: fn, after: a.after
+        keys: (a.keys || []).concat(hasPage ? [pageLabel(a.page)] : []), fn: fn, after: a.after, when: a.when
       }));
     });
     return items;
@@ -10087,6 +10054,8 @@ window.tl_an_debug = {
     for (var i = 0; i < ix.length; i++) if (ix[i].key === key) return ix[i];
     return null;
   }
+  // Conditional actions (an optional `when`) are decided at query time, not when the index is built.
+  function available(it){ try { return !it.when || !!it.when(); } catch(e){ return false; } }
 
   // ── DOM: rendering ──────────────────────────────────────────────────────
   function $(id){ return document.getElementById(id); }
@@ -10193,8 +10162,8 @@ window.tl_an_debug = {
     state.rawQuery = raw;
     var index = ensureIndex(), recent = readRecent(), labelFor = pageLabel;
     if (!raw){
-      var rec = recent.map(findByKey).filter(Boolean).map(function(it){ return { item: it, pos: null, snip: null }; });
-      var acts = index.filter(function(it){ return it.kind === 'action'; }).map(function(it){ return { item: it }; });
+      var rec = recent.map(findByKey).filter(function(it){ return it && available(it); }).map(function(it){ return { item: it, pos: null, snip: null }; });
+      var acts = index.filter(function(it){ return it.kind === 'action' && available(it); }).map(function(it){ return { item: it }; });
       var pgs = index.filter(function(it){ return it.kind === 'page'; }).map(function(it){ return { item: it }; });
       renderGroups([
         { label: 'Recent', items: rec },
@@ -10472,7 +10441,7 @@ window.tl_an_debug = {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ window.initPalette(); });
     else window.initPalette();
   }
-  // Pure logic exposed for the node test harness (no DOM needed).
+  // Pure logic exposed for ad-hoc console/Node checks (no DOM needed).
   window.TL_PALETTE = { _internals: { clean: clean, norm: norm, normQuery: normQuery, tokenMatch: tokenMatch, scoreItem: scoreItem, search: search, groupResults: groupResults, runs: runs, makeItem: makeItem, readRecent: readRecent, pushRecent: pushRecent, RECENT_KEY: RECENT_KEY } };
 })();
 // ─── UPDATES ───
@@ -10732,9 +10701,13 @@ function isStandalone(){
 }
 function isIOS(){
   const ua = navigator.userAgent || '';
+  const uad = navigator.userAgentData;
+  // A UA (or client hint) that names another platform is never iOS — device emulation, some Android
+  // webviews and platform-spoofing browsers report platform 'MacIntel' + touch points with an Android UA.
+  if (/Android/i.test(ua) || (uad && /Android|Windows|Linux|Chrome OS/i.test(uad.platform || ''))) return false;
   if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return true;
-  // iPadOS 13+ reports itself as a Mac but has a touch screen
-  return navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1;
+  // iPadOS 13+ reports itself as a Mac but has a touch screen (and only ever runs Safari's engine)
+  return navigator.platform === 'MacIntel' && (navigator.maxTouchPoints || 0) > 1 && /Safari/.test(ua) && !/Chrome|CriOS|Edg/.test(ua);
 }
 function setStatus(msg, kind){
   const el = $('tl-upd-status');
@@ -10787,7 +10760,25 @@ window.addEventListener('appinstalled', function(){
   setStatus('Tidelyne is installed. Launch it from your home screen or app list.', 'ok');
   renderInstall(); renderStatus();
 });
+// The captured prompt is only offered on this page, so the home footer and the command palette
+// (QUICK_ACTIONS reads window.__tlCanInstall) repeat the offer wherever the swimmer actually is.
+function renderFooterInstall(){
+  const canPrompt = !!deferredPrompt && !isStandalone();
+  window.__tlCanInstall = canPrompt;
+  const wrap = $('tl-footer-install-wrap'), ctl = $('tl-footer-install');
+  if (!wrap || !ctl) return;
+  const iosHint = !canPrompt && isIOS() && !isStandalone();
+  wrap.hidden = !(canPrompt || iosHint);
+  // iOS has no prompt API: the What's New card carries the Share → Add to Home Screen steps.
+  ctl.textContent = iosHint ? 'Add to Home Screen' : 'Install app';
+}
+window.tlFooterInstall = function(){
+  if (deferredPrompt) return window.tlPromptInstall();
+  if (typeof showPage === 'function') showPage('updates'); else location.hash = 'updates';
+  return Promise.resolve(false);
+};
 function renderInstall(){
+  renderFooterInstall();
   const btn = $('tl-upd-install-btn'), msg = $('tl-upd-install-msg');
   if (!btn || !msg) return;
   if (isStandalone()){
@@ -11199,9 +11190,11 @@ if (window.__TL_TEST__ === true){
     de.style.scrollBehavior = prev;
   }
   function fixOffset(){
-    // The nav's backdrop-filter makes it the containing block of its fixed children in
-    // Chrome/Firefox (Filter Effects Level 2) but not everywhere. Measure and re-anchor to
-    // the viewport top so the drawer is full-height regardless of engine or a banner above.
+    // A filter/transform on the nav makes it the containing block of its fixed children in
+    // Chrome/Firefox (Filter Effects Level 2). The nav carries none today (its backdrop-filter was
+    // dropped: a 97%-opaque strip re-blurred on every scroll frame for nothing), so this is a cheap
+    // guard: measure and re-anchor to the viewport top so the drawer stays full-height whatever
+    // a future rule or engine does.
     ['nav-drawer', 'tl-nav-scrim'].forEach(function(id){
       var el = byId(id); if (!el || !el.getBoundingClientRect) return;
       el.style.top = '';
