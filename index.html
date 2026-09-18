@@ -483,6 +483,7 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 .form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300d4ff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;min-width:0;max-width:100%}
 /* One height for every single-line control so date pickers, selects and number inputs align in a row (the ≤768 min-height:44px still wins on touch) */
 .form-select,.form-input{height:40px;line-height:18px}
+.form-select:disabled,.form-input:disabled{opacity:0.5;cursor:not-allowed} /* parked field (the log's distance and zone for a Dryland session) */
 .form-select:focus,.form-input:focus,.form-textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}.form-select option{background:var(--navy2)}.form-textarea{resize:vertical;min-height:80px;line-height:1.6}
 /* CALCULATOR */
 .calc-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
@@ -667,6 +668,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   nav,footer,.hero,#access-gate,.viz-controls,.quick-prompts,.ai-input-row,.gen-form,#gen-actions,.hero-particles{display:none!important}
   body{background:#fff!important;color:#000!important}
   .page{display:none}.page.active{display:block}
+  .reveal{opacity:1!important;transform:none!important;transition:none!important} /* scroll-in content (the Dryland grid, the Home cards) that has not been scrolled to yet must still print */
   .gen-output,.workout-set,.card,.content-block,.section-wrap{background:#fff!important;color:#000!important;border-color:#bbb!important;box-shadow:none!important}
   .workout-set,.card p,.content-block p,.section-intro{color:#000!important}
   .workout-phase h2,.section-title,.section-title span{color:#000!important}
@@ -1251,7 +1253,7 @@ html.tl-pal-lock{overflow:hidden}
 .tl-pal-ico{width:26px;height:26px;border-radius:6px;background:var(--navy3);border:1px solid var(--border2);color:var(--white3);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
 .tl-pal-opt[aria-selected="true"] .tl-pal-ico{color:var(--cyan);border-color:rgba(0,212,255,0.35)}
 .tl-pal-kind-action .tl-pal-ico{color:var(--gold)}
-.tl-pal-kind-page .tl-pal-ico{color:var(--cyan)}
+.tl-pal-kind-page .tl-pal-ico,.tl-pal-kind-link .tl-pal-ico{color:var(--cyan)}
 .tl-pal-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .tl-pal-title{font-family:var(--fh);font-size:1.08rem;letter-spacing:1px;line-height:1.15;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tl-pal-crumb{font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:0.5px;color:var(--white3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -2377,7 +2379,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="btn-ghost-sm" onclick="document.getElementById('import-file').click()"><span aria-hidden="true">⬆ </span>Import Backup</button>
     <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="importBackup(event)">
     <button class="btn-ghost-sm" onclick="clearAllPRs()">Clear All PR<span style="text-transform:none">s</span></button>
-    <button class="btn-sm" onclick="showPageTab('calculator','c-pace')">Calculate Pace Zones <span aria-hidden="true">→</span></button>
+    <button class="btn-sm" onclick="prsToPaceZones()">Calculate Pace Zones <span aria-hidden="true">→</span></button>
   </div>
   <p class="form-notice" id="profile-notice" role="status" hidden></p>
 </div>
@@ -3239,7 +3241,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <p id="an-chart-help" class="an-sr">Stacked bar chart of weekly training volume for the last 12 weeks with a four-week rolling average line. Focus the chart and use the left and right arrow keys to read each week, Home and End for the first and last week, and Escape to clear. The same data is available as a table with the Show as table button.</p>
       <div id="an-chart-live" class="an-sr" role="status" aria-live="polite"></div>
       <div class="an-legend" id="an-legend"></div>
-      <p class="an-hint">The current week is drawn lighter because it is still in progress. The rolling average uses the four most recent weeks (fewer at the very start of your log). Dryland sessions have no distance, so switch the measure to Minutes to see them.</p>
+      <p class="an-hint">The current week is drawn lighter because it is still in progress. The rolling average uses the four most recent weeks (fewer at the very start of your log); its dashed last point includes the week in progress, so it sits low until the week is complete. Dryland sessions have no distance, so switch the measure to Minutes to see them.</p>
       <div id="an-table-wrap" class="table-wrap an-table-wrap" hidden>
         <table class="data-table an-table" id="an-table">
           <caption class="an-sr">Weekly training volume, last 12 weeks</caption>
@@ -3523,6 +3525,7 @@ function openAuthGate(screen) {
   _authNoLib = !sb; // blocked or failed: the overlay markup needs no library, so explain there (no native alert)
   var g = document.getElementById('access-gate');
   if (!g) { document.addEventListener('DOMContentLoaded', function(){ openAuthGate(screen); }, { once: true }); return true; } // overlay markup not parsed yet
+  var wasVisible = authGateVisible();
   if (_authHideTimer) { clearTimeout(_authHideTimer); _authHideTimer = 0; }
   _authReturnFocus = document.activeElement; // restore focus here on close
   g.classList.remove('closing');
@@ -3531,6 +3534,9 @@ function openAuthGate(screen) {
   g.style.display = 'flex';
   g.style.opacity = '1';
   setAuthInert(true); // aria-modal alone is not enforced everywhere: the page behind really is inert while the dialog shows
+  // Back dismisses the dialog instead of walking the hash history underneath it (a phone's natural way out of a
+  // full-screen dialog): one history entry marks the open dialog, popped again by closeAuthGate so the stack stays clean.
+  if (!wasVisible) { try { if (!(history.state && history.state.tlAuth)) history.pushState({ tlAuth: 1 }, '', location.href); } catch(e){} }
   showAuthScreen(_authNoLib ? 'login' : (screen || 'login'));
   // Move focus into the dialog and trap Tab within it.
   setTimeout(function(){
@@ -3540,6 +3546,8 @@ function openAuthGate(screen) {
   }, 30);
   return true;
 }
+// No-argument entry for the command palette's "Log in or sign up" action (openAuthGate takes a screen name).
+window.tlOpenLogin = function(){ return openAuthGate('login'); };
 // Everything outside the sign-in dialog (the nav, the page, the update toast) is inert while it is open, so a
 // screen reader's virtual cursor or swipe navigation cannot wander behind it. Marked with data-tl-inert so an
 // element some other overlay made inert (the drawer uses the same marker) is not un-inerted by mistake.
@@ -3786,7 +3794,8 @@ async function onAuthSuccess(user) {
   if (_recoveryPending) return; // the new-password screen is open (or about to open): keep the overlay
   closeAuthGate();
 }
-function closeAuthGate() {
+// fromHistory: the close comes from Back / a route change, so the dialog's own history entry is already gone.
+function closeAuthGate(fromHistory) {
   var g = document.getElementById('access-gate');
   if (g.style.display === 'none' || g.classList.contains('closing')) return;
   // The overlay is logically closed at once: it stops taking clicks, the Tab
@@ -3796,6 +3805,7 @@ function closeAuthGate() {
   g.style.transition = 'opacity 0.4s ease';
   g.style.opacity = '0';
   setAuthInert(false); // before focus returns to the page
+  _recoveryPending = false; // a dismissed new-password screen must not keep a later log-in from closing the dialog
   if (_authHideTimer) clearTimeout(_authHideTimer);
   _authHideTimer = setTimeout(function(){
     _authHideTimer = 0;
@@ -3804,7 +3814,16 @@ function closeAuthGate() {
   }, 450);
   if (_authReturnFocus && _authReturnFocus.focus) { try { _authReturnFocus.focus(); } catch(e){} }
   _authReturnFocus = null;
+  if (fromHistory !== true) { try { if (history.state && history.state.tlAuth) history.back(); } catch(e){} } // drop the dialog's entry (same URL, no page change)
 }
+// Back (or any history move) while the dialog is open closes it in place; a route change that closed it
+// already is finished by the hashchange router. A stranded dialog entry (closed by a route change, reached again
+// with Back or Forward) is skipped so Back never needs pressing twice. The new-password screen (recovery link)
+// is the exception: supabase-js cleans the callback hash while it is open, and that must not dismiss it.
+window.addEventListener('popstate', function(){
+  if (authGateVisible()) { if (!_recoveryPending) closeAuthGate(true); return; }
+  try { if (history.state && history.state.tlAuth) history.back(); } catch(e){}
+});
 // On load: check if there's already a valid Supabase session (so users don't
 // have to log in every visit). Content is public either way.
 async function initSupabaseAuth(){
@@ -4017,7 +4036,12 @@ function showPageTab(page, tabId, elId){
     const f=hdr?(hdr.querySelector('.acc-btn')||hdr):el; try{ f.focus({preventScroll:true}); }catch(e){}
   },80);
 }
-window.addEventListener('hashchange', function(){ activatePage(location.hash.slice(1)||'home'); });
+window.addEventListener('hashchange', function(){
+  // A route change closes the sign-in dialog first: the new view must not sit inert under a dialog that still
+  // traps focus (the popstate hook has usually done this already; the new-password screen is excluded there too).
+  if (typeof authGateVisible === 'function' && authGateVisible() && !(typeof _recoveryPending !== 'undefined' && _recoveryPending)) closeAuthGate(true);
+  activatePage(location.hash.slice(1)||'home');
+});
 document.addEventListener('DOMContentLoaded', function(){ activatePage(location.hash.slice(1)||'home',{focus:false}); }); // initial load: leave focus at the top so the skip link and nav come first
 // Every title + ' — Tidelyne' stays ≤ 60 characters (the brand suffix is what tab strips and search snippets drop
 // first) — the README release check verifies it.
@@ -4286,6 +4310,9 @@ function initReveal(){
   els.forEach(el=>_revealObs.observe(el));
 }
 document.addEventListener('DOMContentLoaded',initReveal);
+// Printing neither scrolls nor runs the observer: reveal everything first (the print stylesheet also forces it,
+// this keeps the DOM state honest for browsers that print from a cached layout).
+window.addEventListener('beforeprint',function(){ document.querySelectorAll('.reveal:not(.visible)').forEach(function(el){ el.classList.add('visible'); if(_revealObs) _revealObs.unobserve(el); }); });
 // Hero particles
 (function(){
   const c=document.getElementById('hero-particles'); if(!c)return;
@@ -5808,6 +5835,15 @@ const FALLBACK_MOTIONS = [
     { name:'Breaststroke Kick to Breakout', dur:0.16, drag:70, thrust:60, lift:8, vel:1.4, eff:48, desc:'Heels draw up narrow as the arms finish extending — the one breaststroke kick sweeps out, around and together to drive the breakout.', L:{sh:[150,0,6],el:[30],hi:[35,0,8],kn:[120]}, R:{sh:[150,0,-6],el:[30],hi:[35,0,-8],kn:[120]} },
     { name:'Breakout Reach', dur:0.20, drag:28, thrust:92, lift:10, vel:1.75, eff:66, desc:'Legs snap together into streamline off the kick as the first arm stroke begins toward the surface.', L:{sh:[168,0,5],el:[6],hi:[8,0,0],kn:[10]}, R:{sh:[168,0,-5],el:[6],hi:[8,0,0],kn:[10]} }
   ] } },
+  // The status hint's second example: the part of a backstroke start the lab can show — from the hands-first
+  // entry to the first pinky entry. Supine, so the shoulder x sign is the backstroke stroke's (overhead ≈ −170).
+  { match:/back(stroke)?[ -]?(start|push[ -]?off)|start(ing)?( on)?( my| the| your)? back/i, motion:{ name:'Backstroke Start', rollAmp:0, undulate:true, supine:true, hold:true, phases:[
+    { name:'Entry Streamline', dur:0.20, drag:30, thrust:8, lift:4, vel:2.6, eff:90, desc:'Hands in first and the body arches over the water into one hole: the instant the feet leave the wall the arms squeeze the ears, the head stays neutral and the hips ride high — the fastest you will move in the race.', L:{sh:[-172,0,4],el:[4],hi:[2,0,0],kn:[2]}, R:{sh:[-172,0,-4],el:[4],hi:[2,0,0],kn:[2]} },
+    { name:'Underwater Dolphin Kicks', dur:0.25, drag:34, thrust:60, lift:14, vel:2.2, eff:84, desc:'On the back, kicking from the hips with the upper body still: small, fast kicks that get quicker as the push-off speed decays. The 15 m mark is the limit — the head must break the surface by then.', L:{sh:[-172,0,4],el:[4],hi:[22,0,0],kn:[34]}, R:{sh:[-172,0,-4],el:[4],hi:[22,0,0],kn:[34]} },
+    { name:'Rise to the Surface', dur:0.18, drag:40, thrust:46, lift:22, vel:2.0, eff:76, desc:'The kick angles the body up as speed falls toward race pace; the breakout is timed so the first pull starts as the head surfaces — no glide, no pause.', L:{sh:[-168,0,6],el:[6],hi:[14,0,0],kn:[20]}, R:{sh:[-168,0,-6],el:[6],hi:[14,0,0],kn:[20]} },
+    { name:'Breakout — First Pinky Entry', dur:0.18, drag:40, thrust:34, lift:12, vel:1.86, eff:62, desc:'One arm pulls straight into the catch as the head breaks the surface while the other is already entering pinky-first above the shoulder: the stroke starts at full speed and the hips stay high.', L:{sh:[-170,0,8],el:[6],hi:[18,0,0],kn:[8]}, R:{sh:[-30,5,-15],el:[20],hi:[16,0,0],kn:[12]} },
+    { name:'Catch & Lat Load', dur:0.13, drag:38, thrust:24, lift:20, vel:1.76, eff:58, desc:'The lat engages as the arm extends and the elbow begins to bend, loading the pulling side as the hips counter-rotate — the race has begun.', L:{sh:[-145,10,35],el:[35],hi:[22,0,0],kn:[10]}, R:{sh:[5,-5,0],el:[10],hi:[10,0,0],kn:[8]} }
+  ] } },
   { match:/streamline|glide/i, motion:{ name:'Streamline Glide', rollAmp:0, undulate:true, supine:false, phases:[
     { name:'Peak Streamline', dur:0.5, drag:18, thrust:8, lift:4, vel:2.5, eff:90, desc:'Hands stacked, arms squeezing the ears, core rigid — the lowest-drag shape a human can make.', L:{sh:[172,0,4],el:[4],hi:[2,0,0],kn:[2]}, R:{sh:[172,0,-4],el:[4],hi:[2,0,0],kn:[2]} },
     { name:'Micro Dolphin', dur:0.5, drag:24, thrust:46, lift:12, vel:2.4, eff:84, desc:'A small hip-driven ripple maintains speed without breaking the line.', L:{sh:[172,0,4],el:[4],hi:[14,0,0],kn:[16]}, R:{sh:[172,0,-4],el:[4],hi:[14,0,0],kn:[16]} }
@@ -5841,6 +5877,9 @@ function aiServerText(v){
 }
 const SESSION_EXPIRED_MSG='Your session expired — please log in again.';
 const AI_NETWORK_MSG='Connection error — check your network and try again.';
+// Every AI entry point asks this BEFORE its account gate: offline, the sign-in dialog can only fail
+// ("Could not reach the sign-in service"), so the feature says it is offline in its own place instead.
+function tlIsOffline(){ return typeof navigator.onLine==='boolean' && !navigator.onLine; }
 // Copies text to the clipboard: the async Clipboard API first, then the hidden-textarea execCommand('copy')
 // fallback (older browsers, non-secure contexts). Resolves true on success, never rejects. Used by the timers'
 // copy buttons, the race planner's split table and the analytics summary, which used to carry this each.
@@ -5924,6 +5963,12 @@ async function generateMotion(){
   const desc=(inp.value||'').trim();
   if(tlIsBusy(btn)) return;  // a reconstruction is already in flight (Enter in the input or a second tap reaches here too)
   if(!desc){ statusEl.textContent='Describe a movement first — e.g. "breaststroke pullout off the wall".'; return; }
+  if(tlIsOffline()){ // before the gate (the sign-in dialog cannot succeed offline): a known cue still gets its built-in reconstruction
+    const fbOff=tryFallbackMotion(desc);
+    if(fbOff){ ensureViz3DReady(); loadCustomMotion(fbOff, statusEl, '⚠ No connection — built-in reconstruction: '); }
+    else statusEl.textContent='No connection — AI reconstruction needs to be online. The stroke buttons still work offline.';
+    return;
+  }
   if(!currentUser){
     if(authUnavailable()){ statusEl.textContent=AUTH_DOWN_MSG; return; }
     statusEl.textContent='AI 3D reconstruction needs a free account — log in or sign up to continue.'; openAuthGate('login'); return;
@@ -6116,6 +6161,24 @@ function renderSeasonPage(now) {
   }
   renderSeasonTBA();
 }
+// The page is "today is …", the phase and "In N days": an installed app or a pinned tab left on it must not
+// show yesterday. Re-render when the tab comes back (visibilitychange) and just after local midnight while the
+// page is active — the same two hooks the Training Log and the Race Planner use.
+let _seasonMidnightTimer=0;
+function seasonPageActive(){ const p=document.getElementById('page-season'); return !!(p&&p.classList.contains('active')); }
+function clearSeasonMidnight(){ if(_seasonMidnightTimer){ clearTimeout(_seasonMidnightTimer); _seasonMidnightTimer=0; } }
+function refreshSeasonPage(){ renderSeasonPage(); if(typeof markNewTabLinks==='function') markNewTabLinks(document.getElementById('page-season')); } // same pair activatePage runs
+function scheduleSeasonMidnight(){
+  clearSeasonMidnight();
+  const n=new Date(), next=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1,0,0,5);
+  _seasonMidnightTimer=setTimeout(function(){ _seasonMidnightTimer=0; if(!seasonPageActive()) return; refreshSeasonPage(); scheduleSeasonMidnight(); },Math.max(1000,next-n));
+}
+window.onShow_season=function(){ scheduleSeasonMidnight(); }; // activatePage has already rendered
+(function(){ const prev=window.onPageChange; window.onPageChange=function(n){ if(typeof prev==='function'){ try{ prev(n); }catch(e){ console.error(e); } } if(n!=='season') clearSeasonMidnight(); }; })();
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden){ clearSeasonMidnight(); return; }
+  if(seasonPageActive()){ refreshSeasonPage(); scheduleSeasonMidnight(); }
+});
 // ─── AI COACH — STREAMING ─────────────────────
 // System prompts live server-side in the ask-ai Edge Function. The client
 // only sends a mode name. The server also enforces the rate limit
@@ -6140,6 +6203,11 @@ async function sendToAI(){
   const input=document.getElementById('ai-input');
   const msg=input.value.trim();
   if(!msg) return;
+  if(tlIsOffline()){ // before the account gate (logging in cannot succeed offline either): say so at once, keep the text
+    const offMsg='You are offline — the coach needs a connection.';
+    if(lastAIBubbleText()!==offMsg) addMsg(offMsg,'ai');
+    return;
+  }
   if(!currentUser){
     // Library failed to load: say so in the chat instead of "log in to continue" plus a native alert saying the opposite.
     const down=authUnavailable();
@@ -6151,11 +6219,6 @@ async function sendToAI(){
   }
   const btn=document.getElementById('ai-send-btn');
   if(tlIsBusy(btn)) return; // a stream is already running
-  if(typeof navigator.onLine==='boolean' && !navigator.onLine){ // no point opening a stream: say so at once, keep the text
-    const offMsg='You are offline — the coach needs a connection.';
-    if(lastAIBubbleText()!==offMsg) addMsg(offMsg,'ai');
-    return;
-  }
   addMsg(msg,'user'); input.value=''; setAIStreaming(true);
   conversationHistory.push({role:'user',content:msg});
   // Cap history — otherwise every message re-uploads the whole conversation.
@@ -6171,11 +6234,14 @@ async function sendToAI(){
   const guard=aiStreamGuard(); _aiChatGuard=guard;
   const gen=_chatGen; // Clear bumps this and aborts the stream; after every await, a stale gen means "abandon quietly"
   let fullText=''; // outside the try: a stream that breaks mid-answer keeps what arrived
+  // Whenever the user turn is rolled back unanswered (rate limit, HTTP error, expired session, empty reply,
+  // timeout, Stop, network failure) the question goes back into the box — never retyped after the limit window or a log-in.
+  const giveBack=()=>{ if(!input.value) input.value=msg; };
   try{
     const { data: sessionData } = await sb.auth.getSession();
     if(gen!==_chatGen){ guard.end(); return; }
     const accessToken = sessionData?.session?.access_token;
-    if(!accessToken){ conversationHistory.pop(); finishStreamBubble(streamBubble, SESSION_EXPIRED_MSG); setAIStreaming(false); return; }
+    if(!accessToken){ conversationHistory.pop(); finishStreamBubble(streamBubble, SESSION_EXPIRED_MSG); giveBack(); setAIStreaming(false); return; }
     const resp=await fetch(SUPABASE_URL + '/functions/v1/ask-ai',{
       method:'POST',
       headers:{
@@ -6195,6 +6261,7 @@ async function sendToAI(){
       const err=await resp.json().catch(()=>({}));
       if(gen!==_chatGen){ guard.end(); return; }
       finishStreamBubble(streamBubble, aiServerText(err.error) || (resp.status===429 ? AI_LIMIT_MSG : `Error: HTTP ${resp.status}`));
+      giveBack();
       setAIStreaming(false); return;
     }
     await readAIStream(resp, guard, function(text){ fullText=text; updateStreamBubble(streamBubble, fullText); }, function(){ return gen!==_chatGen; });
@@ -6202,7 +6269,7 @@ async function sendToAI(){
     guard.end();
     finishStreamBubble(streamBubble, fullText||'No response.');
     if(fullText) conversationHistory.push({role:'assistant',content:fullText});
-    else conversationHistory.pop(); // empty reply — drop the user turn so history stays valid
+    else { conversationHistory.pop(); giveBack(); } // empty reply — drop the user turn so history stays valid
   }catch(e){
     guard.end();
     if(gen!==_chatGen) return; // the chat was cleared mid-reply: nothing to keep, and the Send button already belongs to the new chat
@@ -6215,7 +6282,7 @@ async function sendToAI(){
     } else {
       conversationHistory.pop(); // roll back the user turn on timeout / stop / network failure
       finishStreamBubble(streamBubble, guard.timedOut?AI_TIMEOUT_MSG:(guard.stopped?'Stopped.':AI_NETWORK_MSG));
-      if(!input.value) input.value=msg; // the question is not lost — it is back in the box to retry
+      giveBack(); // the question is not lost — it is back in the box to retry
     }
   }
   setAIStreaming(false);
@@ -6307,6 +6374,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 // ─── WORKOUT GENERATOR — STREAMING ────────────
 async function generateWorkout(){
+  if(tlIsOffline()){ tlNotice('gen-notice','You are offline — the workout generator needs a connection. The Sets library works offline.'); return; } // before the gate: no sign-in dialog that cannot succeed
   if(!currentUser){
     const out=document.getElementById('gen-output'), res=document.getElementById('gen-result');
     if(authUnavailable()){ // say it where the workout would appear, not in a native alert
@@ -6476,6 +6544,7 @@ async function generateVisualization(){
   const vCustom=document.getElementById('viz-custom').value.trim().slice(0,300);
   if(!(vConcept==='custom'?vCustom:((VIZ_CONCEPTS[vConcept]||'')+vCustom))){ tlNotice('viz-notice','Please describe the technique concept.',null,'viz-custom'); document.getElementById('viz-custom').focus(); return; }
   tlNotice('viz-notice','');
+  if(tlIsOffline()){ tlNotice('viz-notice','You are offline — Ask the Visualizer needs a connection. The stroke buttons and the Technique Library work offline.'); return; } // before the gate
   if(!currentUser){
     if(authUnavailable()){ tlNotice('viz-notice',AUTH_DOWN_MSG); return; } // in the page, not a native alert
     const gateMsg='Ask the Visualizer needs a free account — log in or sign up to continue.';
@@ -6762,6 +6831,25 @@ function buildPRGrid(stroke){
 }
 // "52.30" / "1:52.30" — the input form (no trailing s) for a stored PR.
 function prFmt(sec){ const cs=Math.round(sec*100), m=Math.floor(cs/6000), s=((cs%6000)/100).toFixed(2).padStart(5,'0'); return m>0?m+':'+s:s; }
+// Pace Zones needs the best 100 FR — the number My PRs already holds. Opening the calculator fills an empty
+// box from it (the planner's predictor does the same) and says so; a typed value is never overwritten.
+window.onShow_calculator=function(){
+  const inp=document.getElementById('pace-100'); if(!inp||inp.value) return;
+  const t=parseTime(String(lsGet('pr_100_FR')||'').slice(0,12));
+  if(t&&t>=40&&t<=240){ inp.value=prFmt(t); tlNotice('pace-notice','Filled from My PRs (100 FR) — edit it to test another time.','ok'); }
+};
+// "Calculate Pace Zones →" on My PRs: land on the tab and, once the hop has filled the box, show the table at once.
+function prsToPaceZones(){
+  showPageTab('calculator','c-pace');
+  setTimeout(function(){ // activatePage runs on the (async) hashchange, so the fill above has landed by now
+    const inp=document.getElementById('pace-100'), pg=document.getElementById('page-calculator');
+    if(!(inp&&inp.value&&pg&&pg.classList.contains('active'))) return;
+    const pr=parseTime(String(lsGet('pr_100_FR')||'').slice(0,12)), filled=pr!==null&&inp.value===prFmt(pr);
+    calcPaceZones(); // a valid time clears the notice: put the provenance back so the table says where the number came from
+    const n=document.getElementById('pace-notice');
+    if(filled&&n&&!n.textContent) tlNotice('pace-notice','Zones from your 100 FR on My PRs — edit the time to test another.','ok');
+  },120);
+}
 function prHint(msg){ const h=document.getElementById('pr-hint'); if(h) h.textContent=msg||''; }
 // Guarded localStorage access: a full quota or a privacy-mode block must
 // never throw and break the page. The feature modules below reuse these
@@ -6992,7 +7080,11 @@ function coerceLogFields(e){
   const num=(v,max)=>{ const n=Math.round(Number(v)); return (isFinite(n)&&n>0)?Math.min(n,max):0; };
   const str=(v,max)=>typeof v==='string'?v.slice(0,max):''; // an object or array here would print "[object Object]"
   const eff=Math.round(Number(e.effort));
-  return { type:str(e.type,40), dist:num(e.dist,LOG_MAX_DIST), dur:num(e.dur,LOG_MAX_DUR), zone:str(e.zone,40),
+  // A Dryland session has no swim distance and no swim zone (Analytics says so and excludes it from the zone
+  // share): a number typed into the distance box for a gym session or a run would otherwise be summed into the
+  // weekly swim volume, and the form's default zone would ride along. Older entries and backups get the same rule.
+  const type=str(e.type,40), dry=type==='Dryland';
+  return { type:type, dist:dry?0:num(e.dist,LOG_MAX_DIST), dur:num(e.dur,LOG_MAX_DUR), zone:dry?'':str(e.zone,40),
     effort:(eff>=1&&eff<=10)?eff:0, mainset:str(e.mainset,200), notes:str(e.notes,1000) };
 }
 function readLog(){
@@ -7070,9 +7162,9 @@ function saveLogEntry(){
     id:Date.now(),
     date,
     type:logType,
-    dist:Math.round(dist),
+    dist:logType==='Dryland'?0:Math.round(dist),   // no swim distance for a gym session (the box is disabled for it, but Enter in another field still lands here)
     dur:Math.round(dur),
-    zone:document.getElementById('log-zone').value,
+    zone:logType==='Dryland'?'':document.getElementById('log-zone').value,
     effort:effort,
     mainset:document.getElementById('log-mainset').value,
     notes:document.getElementById('log-notes').value
@@ -7254,9 +7346,25 @@ function setLogDateToday(){
   el.setAttribute('max',logTodayISO(1));
 }
 setLogDateToday();
+// Dryland has no swim distance and no swim zone: while that type is chosen the two boxes are cleared and
+// disabled (the placeholder says why), and they come back — with the zone the swimmer had picked — for a
+// pool type. Runs on change and on show (a browser can restore the select without firing change).
+function syncLogTypeFields(){
+  const t=document.getElementById('log-type'), d=document.getElementById('log-distance'), z=document.getElementById('log-zone');
+  if(!t||!d||!z) return;
+  const dry=t.value==='Dryland';
+  if(dry){
+    if(!d.disabled){ d.setAttribute('data-tl-ph',d.getAttribute('placeholder')||''); d.value=''; d.placeholder='— no swim distance for dryland'; d.disabled=true; }
+    if(!z.disabled){ if(z.selectedIndex>=0) z.setAttribute('data-tl-prev',z.value); z.selectedIndex=-1; z.disabled=true; }
+  } else {
+    if(d.disabled){ d.disabled=false; d.placeholder=d.getAttribute('data-tl-ph')||''; }
+    if(z.disabled){ z.disabled=false; if(z.selectedIndex<0){ z.value=z.getAttribute('data-tl-prev')||'Z2 AeT'; if(z.selectedIndex<0) z.selectedIndex=0; } }
+  }
+}
+(function(){ const t=document.getElementById('log-type'); if(!t) return; t.addEventListener('change',syncLogTypeFields); syncLogTypeFields(); })();
 // Re-read storage whenever the page is shown: the installed app and a browser tab (or two tabs) share the
 // log, and a session saved in one must be there — and deletable — in the other without a reload.
-window.onShow_log=function(){ setLogDateToday(); renderLog(); };
+window.onShow_log=function(){ setLogDateToday(); syncLogTypeFields(); renderLog(); };
 // Leaving the page ends the delete-undo window, so a stale "deleted" notice never greets the return.
 (function(){ const prev=window.onPageChange; window.onPageChange=function(n){ if(typeof prev==='function'){ try{ prev(n); }catch(e){ console.error(e); } } if(n!=='log') clearLogUndo(); }; })();
 document.addEventListener('visibilitychange',function(){ if(!document.hidden) setLogDateToday(); });
@@ -7478,10 +7586,12 @@ function tpSave(){ storeSet('tl_tempo',{mode:TP.mode,bpm:TP.bpm,accent:TP.accent
 function tpLoad(){
   var o=storeGet('tl_tempo'); if(!o) return;
   if(o.mode==='cpm'||o.mode==='spm') TP.mode=o.mode;
-  var ll=tpLimits(TP.mode); TP.bpm=Math.round(clamp(o.bpm,ll.min,ll.max))||60;
+  // clamp() turns a non-number into the LOWER bound (20 strokes/min), so a hand-edited or half-written backup
+  // ("abc", null, missing) must fall back to the documented default explicitly: 60 strokes/min = 30 cycles/min.
+  var ll=tpLimits(TP.mode), b=Number(o.bpm); TP.bpm=(o.bpm!=null&&o.bpm!==''&&isFinite(b))?Math.round(clamp(b,ll.min,ll.max)):(TP.mode==='cpm'?30:60);
   TP.accent=([0,2,3,4,5,6,8].indexOf(Number(o.accent))>=0)?Number(o.accent):0;
   TP.countIn=o.countIn!==false;
-  if(o.vol!=null) AU.vol=clamp(o.vol,0,100)/100;
+  var v=Number(o.vol); if(o.vol!=null&&o.vol!==''&&isFinite(v)) AU.vol=clamp(v,0,100)/100;
 }
 // seconds per beep and the equivalent in the other unit (free/back: 2 strokes per cycle)
 function tpEquiv(bpm,mode){ var other=(mode==='spm')?bpm/2:bpm*2; return {sec:60/bpm,other:other,otherSec:60/other}; }
@@ -8779,10 +8889,13 @@ function useGoalOrPR(){
   var ev = evName(stroke, dist);
   if (!ev) { if (src) src.textContent = 'No ' + STROKE_ABBR[stroke] + ' ' + dist + ' event in My PRs — enter a time.'; return; }
   var g = goalSeconds(ev), pr = readPR(ev);
-  if (g) { inp.value = fmtPlain(g, false); if (src) src.textContent = 'Goal from Goal Times (' + ev + ').' + (course === 'SCY' ? ' Goals are course-agnostic — check it matches yards.' : ''); }
-  else if (pr) { inp.value = fmtPlain(pr, false); if (src) src.textContent = 'No goal set — using your PR (' + ev + ').'; }
+  if (g) { inp.value = fmtPlain(g, false); if (src) src.textContent = 'Goal from Goal Times (' + ev + ').' + courseNote(course); }
+  else if (pr) { inp.value = fmtPlain(pr, false); if (src) src.textContent = 'No goal set — using your PR (' + ev + ').' + courseNote(course); }
   else if (src) src.textContent = 'No goal or PR for ' + ev + ' yet.';
 }
+// My PRs and Goal Times store one time per event with no course: a long-course PR dropped into a yards plan
+// gives 25-yd splits ~10% too slow, so both sources and both entry points (the button and "Plan splits →") say so.
+function courseNote(course){ return course === 'SCY' ? ' PRs and goals carry no course — check this time is a yards swim (the Pool Converter on the Calculator page converts LCM/SCM to SCY).' : ''; }
 function runSplits(){
   var out = pl$('pl-sp-out'), cmp = pl$('pl-sp-compare'), copy = pl$('pl-sp-copy'); if (!out) return;
   // Raw strings first: +'' is 0, which would quietly plan four identical 50s with no dive bonus (and remember the zeros).
@@ -8872,7 +8985,7 @@ function sendToSplits(ev){
   var fd = pl$('pl-sp-fade'); if (fd) fd.removeAttribute('data-user');
   syncStrategyUI();
   var g = goalSeconds(ev) || readPR(ev); if (g) gi.value = fmtPlain(g, false);
-  var src = pl$('pl-sp-goalsrc'); if (src) src.textContent = goalSeconds(ev) ? 'Goal from Goal Times (' + ev + ').' : 'No goal set — using your PR (' + ev + ').';
+  var src = pl$('pl-sp-goalsrc'); if (src) src.textContent = (goalSeconds(ev) ? 'Goal from Goal Times (' + ev + ').' : 'No goal set — using your PR (' + ev + ').') + courseNote(cs.value);
   var tab = pl$('pl-tab-splits'); if (tab && typeof window.switchTab === 'function') window.switchTab(tab, 'pl-splits');
   runSplits();
   var h = pl$('pl-sp-heading'); if (h) { try { h.focus({ preventScroll:false }); } catch (e) {} }
@@ -9521,8 +9634,11 @@ function renderSummary(m){
   if (!per || !met) return;
   var w0 = m.thisWeek, w1 = m.lastWeek, w2 = m.weeks[2], a = m.avg4, lb = m.lastWeekByToday;
   var dayName = anFmtDate(m.today, { weekday:'short' });
+  // ref null = no history to compare with (a dash); a real zero (last week's sessions all fell later in the week,
+  // a meet weekend) prints as 0 with no percentage — 0 → 17,500 is not a percentage, but it is not missing data.
   var deltaRow = function(label, cur, ref){
-    if (!(ref > 0)) return '<div><span>' + label + '</span><strong>—</strong></div>';
+    if (ref == null || !isFinite(ref)) return '<div><span>' + label + '</span><strong>—</strong></div>';
+    if (!(ref > 0)) return '<div><span>' + label + '</span><strong>' + fmtInt(ref) + '</strong></div>';
     var p = (cur - ref) / ref * 100, r = Math.round(p) || 0, cls = r > 0 ? 'up' : (r < 0 ? 'down' : '');  // colour from the rounded figure: a flat week is not a decline
     return '<div><span>' + label + '</span><strong class="' + cls + '">' + fmtInt(ref) + ' (' + fmtSigned(p) + ')</strong></div>';
   };
@@ -9534,15 +9650,15 @@ function renderSummary(m){
   html += card('This week', fmtDay(w0.start) + ' – today (' + dayName + ')', fmtInt(w0.dist),
     '<div><span>Minutes</span><strong>' + fmtInt(w0.dur) + '</strong></div>' +
     '<div><span>Sessions</span><strong>' + w0.sessions + '</strong></div>' +
-    deltaRow('Last week by ' + dayName, w0.dist, lb.dist));
+    deltaRow('Last week by ' + dayName, w0.dist, m.hasHistory(1) ? lb.dist : null));
   html += card('Last week', fmtDay(w1.start) + ' – ' + fmtDay(w1.end), fmtInt(w1.dist),
     '<div><span>Minutes</span><strong>' + fmtInt(w1.dur) + '</strong></div>' +
     '<div><span>Sessions</span><strong>' + w1.sessions + '</strong></div>' +
-    (m.hasHistory(2) ? deltaRow('Week before', w1.dist, w2.dist) : '<div><span>Week before</span><strong>—</strong></div>'));
+    deltaRow('Week before', w1.dist, m.hasHistory(2) ? w2.dist : null));
   html += card('4-week average', a ? ('prior ' + a.n + ' complete week' + (a.n === 1 ? '' : 's')) : 'no complete weeks yet', a ? fmtInt(a.dist) : '—',
     '<div><span>Minutes</span><strong>' + (a ? fmtInt(a.dur) : '—') + '</strong></div>' +
     '<div><span>Sessions</span><strong>' + (a ? fmtDec(a.sessions, 1) : '—') + '</strong></div>' +
-    (a ? deltaRow('Last week vs avg', w1.dist, a.dist) : '<div><span>Last week vs avg</span><strong>—</strong></div>'));
+    deltaRow('Last week vs avg', w1.dist, a ? a.dist : null));
   per.innerHTML = html;
 
   var ef = m.effort4, st = m.streak;
@@ -9700,9 +9816,11 @@ function updateChartAria(D){
   var best = -1, bi = -1;
   D.totals.forEach(function(t, i){ if (t > best) { best = t; bi = i; } });
   var lastFull = data.length >= 2 ? D.totals[data.length - 2] : 0;
-  var roll = D.rolls[data.length - 1];
+  // The headline average is the last complete week's point (the same four complete weeks as the summary card);
+  // the in-progress week's point is dragged down by a partial week and is described as such in its tooltip.
+  var roll = data.length >= 2 ? D.rolls[data.length - 2] : null;
   canvas.setAttribute('aria-label', 'Weekly ' + unit + ', last 12 weeks, stacked by ' + (state.stack === 'zone' ? 'training zone' : 'session type') +
-    '. Latest complete week ' + fmtInt(lastFull) + (roll != null ? '; four-week rolling average ' + fmtInt(roll) : '') +
+    '. Latest complete week ' + fmtInt(lastFull) + (roll != null ? '; four-week rolling average to that week ' + fmtInt(roll) : '') +
     (best > 0 ? '; highest week ' + fmtInt(best) + ' starting ' + anFmtDate(data[bi].week.start) : '; no volume logged') + '.');
 }
 function renderLegend(){
@@ -9756,7 +9874,7 @@ function weekSummaryParts(i){
   return {
     title: 'Week of ' + anFmtDate(w.start) + (c.current ? ' · in progress' : ''),
     total: fmtInt(D.totals[i]), unit: D.measure === 'dist' ? 'm/yd' : 'min', rows: rows,
-    foot: w.sessions + ' session' + (w.sessions === 1 ? '' : 's') + (ef ? ' · Avg effort ' + ef : '') + (D.rolls[i] != null ? ' · 4-wk avg ' + fmtInt(D.rolls[i]) : '')
+    foot: w.sessions + ' session' + (w.sessions === 1 ? '' : 's') + (ef ? ' · Avg effort ' + ef : '') + (D.rolls[i] != null ? (c.current ? ' · 4-wk avg incl. this partial week ' : ' · 4-wk avg ') + fmtInt(D.rolls[i]) : '')
   };
 }
 function showTooltip(i, py){
@@ -10405,8 +10523,15 @@ window.tl_an_debug = {
   // Live regions / outputs are dynamic by definition (contract rule 4), so any
   // bundle's result boxes are skipped without having to list their ids here.
   var EXCLUDE = 'footer, nav, #ai-messages, #gen-result, #gen-output, #viz-content, #viz-output, #log-entries, #log-stats, #split-result, #pace-result, #conv-result, #profile-name-display, #access-gate, .tl-pal, [aria-live], [role="status"], [role="log"], [role="alert"], output';
-  var KIND_PRIOR = { page: 6, action: 5, tab: 2, section: 0, video: 0, keypoint: -2 };
-  var KIND_LABEL = { page: 'Page', action: 'Action', tab: 'Tab', section: 'Section', video: 'Video', keypoint: 'Key point' };
+  var KIND_PRIOR = { page: 6, action: 5, link: 4, tab: 2, section: 0, video: 0, keypoint: -2 };
+  var KIND_LABEL = { page: 'Page', action: 'Action', link: 'Page', tab: 'Tab', section: 'Section', video: 'Video', keypoint: 'Key point' };
+  // The legal pages are separate .html files (reachable only from the footer and the sign-up card), so the
+  // heading walk below never sees them: indexed here as `link` items that open in the same tab, like the footer.
+  var LEGAL_LINKS = [
+    { text: 'Privacy Policy', href: 'privacy.html', keys: ['privacy', 'policy', 'data', 'gdpr', 'legal', 'account', 'cookies'] },
+    { text: 'Terms of Use', href: 'terms.html', keys: ['terms', 'conditions', 'legal', 'age', 'agreement', 'rules'] },
+    { text: 'Medical Disclaimer', href: 'disclaimer.html', keys: ['medical', 'disclaimer', 'health', 'safety', 'legal', 'advice', 'doctor'] }
+  ];
   // Extra search terms per page so the words swimmers actually type resolve
   // to the right view even when the nav label is terse ("3D Viz", "Log").
   var PAGE_ALIASES = {
@@ -10460,7 +10585,12 @@ window.tl_an_debug = {
     { text: 'Plan race splits', page: 'planner', keys: ['race plan', 'splits', 'split planner', 'goal time', 'meet', 'strategy'],
       after: function(){ if (typeof window.showPageTab === 'function') window.showPageTab('planner', 'pl-splits'); focusField('pl-sp-goal'); } },
     { text: "See this week's volume", page: 'analytics', keys: ['charts', 'trends', 'stats', 'progress', 'volume', 'weekly numbers'],
-      after: function(){ var el = $('an-periods'); if (el) scrollHighlight(el, el); } }
+      after: function(){ var el = $('an-periods'); if (el) scrollHighlight(el, el); } },
+    // Account: one of the two is offered depending on the sign-in state (decided at query time, like Install).
+    { text: 'Log in or sign up', fnName: 'tlOpenLogin', keys: ['login', 'log in', 'sign in', 'sign up', 'signup', 'account', 'register', 'password', 'create account'],
+      when: function(){ return !window.currentUser; } },
+    { text: 'Log out', fnName: 'doLogout', keys: ['logout', 'log out', 'sign out', 'account'],
+      when: function(){ return !!window.currentUser; } }
   ];
   var ICONS = {
     page: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6.5h12"/></svg>',
@@ -10597,9 +10727,9 @@ window.tl_an_debug = {
   function groupResults(scored, labelFor){
     var groups = [], byKey = {}, total = 0;
     for (var i = 0; i < scored.length && total < MAX_TOTAL; i++){
-      var r = scored[i], gk = r.item.kind === 'action' ? '__actions' : r.item.page;
+      var r = scored[i], gk = r.item.kind === 'action' ? '__actions' : (r.item.kind === 'link' ? '__legal' : r.item.page);
       var g = byKey[gk];
-      if (!g){ g = { key: gk, label: gk === '__actions' ? 'Actions' : labelFor(gk), items: [] }; byKey[gk] = g; groups.push(g); }
+      if (!g){ g = { key: gk, label: gk === '__actions' ? 'Actions' : (gk === '__legal' ? 'Legal' : labelFor(gk)), items: [] }; byKey[gk] = g; groups.push(g); }
       if (g.items.length < MAX_PER_GROUP){ g.items.push(r); total++; }
     }
     return groups;
@@ -10772,6 +10902,9 @@ window.tl_an_debug = {
         seen[item.key] = 1;
         items.push(item);
       }
+    });
+    LEGAL_LINKS.forEach(function(l){
+      items.push(makeItem({ kind: 'link', icon: 'page', page: '', text: l.text, crumb: 'Legal page', keys: l.keys, href: l.href }));
     });
     QUICK_ACTIONS.forEach(function(a){
       var fn = a.fnName && typeof window[a.fnName] === 'function' ? window[a.fnName] : null;
@@ -11010,6 +11143,7 @@ window.tl_an_debug = {
   }
   function run(item){
     if (item.kind === 'action' && item.fn){ try { item.fn(); } catch(e){ console.error(e); } return; }
+    if (item.kind === 'link'){ if (item.href) location.href = item.href; return; } // a separate page (legal), same tab as the footer link
     if (!item.page || !$('page-' + item.page)) return;
     if (typeof showPage === 'function') showPage(item.page); else location.hash = item.page;
     waitActive(item.page, function(){ reveal(item); });
