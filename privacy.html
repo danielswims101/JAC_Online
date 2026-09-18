@@ -59,7 +59,7 @@ td:first-child{color:var(--white)}
   td:first-child::before{display:none}
 }
 .back{display:inline-block;margin-bottom:2rem;font-size:0.85rem;padding:8px 0;margin-top:-8px}
-footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--white3)}
+footer{max-width:760px;margin:3rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--white3)}
 /* The footer links and the back link are the only navigation on these pages: 40px tap targets without changing the visual rhythm */
 footer p{margin-bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:0 6px}
 footer a{display:inline-block;padding:10px 4px;margin:-6px 0}
@@ -67,7 +67,7 @@ footer a{display:inline-block;padding:10px 4px;margin:-6px 0}
 </head>
 <body>
 <main>
-<nav aria-label="Back"><a class="back" href="index.html">← Back to Tidelyne</a></nav>
+<nav aria-label="Back"><a class="back" href="index.html"><span aria-hidden="true">← </span>Back to Tidelyne</a></nav>
 <h1>Privacy Policy</h1>
 <p class="updated">Last updated: September 18, 2026</p>
 
@@ -153,9 +153,9 @@ the account and deleted with it.</p>
 <p>If this policy changes materially, the "Last updated" date at the top of this page will
 change. Please check back periodically.</p>
 
+</main>
 <footer>
 <p><a href="index.html">Home</a> · <a href="terms.html">Terms</a> · <a href="disclaimer.html">Medical Disclaimer</a></p>
 </footer>
-</main>
 </body>
 </html>
