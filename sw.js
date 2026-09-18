@@ -183,7 +183,7 @@ function networkFirst(event, req){
         return cached;
       });
     });
-  });
+  }).catch(function(){ return storageBroken(event, req); });
 }
 
 function staleWhileRevalidate(event, req){
@@ -202,7 +202,20 @@ function staleWhileRevalidate(event, req){
       return network.then(function(res){ return res || cache.match(key, { ignoreSearch: true }); })
         .then(function(res){ return res || offlineResponse(); });
     });
-  });
+  }).catch(function(){ return storageBroken(event, req); });
+}
+
+// CacheStorage can fail while a worker is already in control (Chrome's "Internal error opening backing
+// store", a corrupted profile, a quota sweep). respondWith() must still get a response, so the request
+// goes straight to the network — through the navigation preload when the browser already started it —
+// and the worker unregisters itself once so the next load runs without it and re-registers cleanly.
+let storageFailed = false;
+function storageBroken(event, req){
+  if (!storageFailed){
+    storageFailed = true;
+    try { self.registration.unregister().catch(function(){}); } catch(e){}
+  }
+  return Promise.resolve(event && event.preloadResponse || null).then(function(pre){ return pre || fetch(req); }, function(){ return fetch(req); });
 }
 
 // Three.js is pinned and immutable, so a cached copy is always right: serve it first and only fetch

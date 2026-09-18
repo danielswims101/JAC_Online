@@ -4,7 +4,7 @@
   "id": "/JAC_Online/",
   "lang": "en",
   "dir": "ltr",
-  "description": "Free training platform for competitive swimmers: AI coaching, 3D stroke visualizer, technique library, workout generator, pace calculators, pool-deck timers, race planner, training log and analytics — installable and works offline.",
+  "description": "Free swim training app that works offline: 3D stroke visualizer, technique library, AI coach, pace calculators, deck timers, race planner and training log.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -51,9 +51,9 @@
       "label": "Tidelyne — 3D stroke lab, technique library and pace tools for competitive swimmers"
     },
     {
-      "src": "screenshot-phone.png",
+      "src": "screenshot-phone.jpg",
       "sizes": "750x1334",
-      "type": "image/png",
+      "type": "image/jpeg",
       "form_factor": "narrow",
       "label": "Tidelyne on a phone: the pool-deck tempo trainer, interval timer and pace clock"
     }

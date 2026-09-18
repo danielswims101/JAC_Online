@@ -48,9 +48,34 @@
 <link rel="preload" as="style" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" crossorigin href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap"></noscript>
 <!-- supabase-js is pinned (not the floating @2 tag) so an upstream release cannot change the auth path unseen; integrity is that file's sha384 — bump version and hash together.
-     It loads async (not defer): a deferred script holds DOMContentLoaded, and with it the router's first paint of every page, until the CDN answers — the site must render with the
-     library still in flight or blocked. onSupabaseScript() creates the client as soon as it lands (or on DOMContentLoaded, whichever is later); only sign-in and the AI features need it. -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js" integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP" crossorigin="anonymous" async onload="if(typeof onSupabaseScript==='function')onSupabaseScript('done')" onerror="if(typeof onSupabaseScript==='function')onSupabaseScript('failed');else window.__sbScriptFailed=true"></script>
+     It is injected on demand (loadSupabase below), async and never render-blocking: only a stored session, an auth-callback link, a Log In click or an AI feature needs the
+     218 KB library, so the logged-out majority never downloads or compiles it. At boot it starts here — before the body streams — when a session may exist; otherwise
+     the auth block (openAuthGate / authUnavailable) and the AI Coach and Workout Generator pages request it. onSupabaseScript() creates the client when it lands (or on
+     DOMContentLoaded, whichever is later). -->
+<script>
+function loadSupabase(){
+  if (window.__sbScriptRequested) return;
+  window.__sbScriptRequested = true;
+  if (typeof sbScriptState === 'string' && sbScriptState === 'idle') sbScriptState = 'loading'; // the auth block has parsed: its waiters (openAuthGate) rely on this
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js';
+  s.integrity = 'sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP';
+  s.crossOrigin = 'anonymous'; s.async = true;
+  s.onload = function(){ if (typeof onSupabaseScript === 'function') onSupabaseScript('done'); };
+  s.onerror = function(){ if (typeof onSupabaseScript === 'function') onSupabaseScript('failed'); else window.__sbScriptFailed = true; };
+  document.head.appendChild(s);
+}
+// True for the hashes supabase-js consumes (#access_token=…, #error_description=…): the
+// router must leave them in place until the library has read them (activatePage).
+function isAuthCallbackHash(h) {
+  return /(^|[#&])(access_token|refresh_token|error|error_code|error_description|type)=/.test(h || '');
+}
+(function(){
+  var stored = false;
+  try { for (var i = 0; i < localStorage.length; i++){ var k = localStorage.key(i); if (k && k.indexOf('sb-') === 0 && k.indexOf('-auth-token') > 0){ stored = true; break; } } } catch(e){}
+  if (stored || isAuthCallbackHash(location.hash)) loadSupabase();
+})();
+</script>
 <script>
 // Minimal OrbitControls implementation compatible with THREE r128 (UMD global build).
 // Supports: left-drag orbit, scroll-wheel zoom, damping. No pan (not needed here).
@@ -499,9 +524,6 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2
 .tl-actions{display:flex;gap:10px;flex-wrap:wrap}
 /* Pressed feedback: touch has no hover, so a tap acknowledges itself before the page changes (the timers already did this) */
 .btn-sm:active,.btn-ghost-sm:active,.btn-hero:active,.btn-hero-ghost:active,.viz-btn:active,.tab-btn:active,.qp:active,.ai-mode-btn:active,.calc-btn:active,.ai-send:active,.phase-step:active,nav .nav-menu a:active,nav .nav-links>li>a:active,nav .nav-group-btn:active{transform:scale(0.97);filter:brightness(1.15);transition-duration:60ms}
-@media(prefers-reduced-motion:reduce){
-  .btn-sm:active,.btn-ghost-sm:active,.btn-hero:active,.btn-hero-ghost:active,.viz-btn:active,.tab-btn:active,.qp:active,.ai-mode-btn:active,.calc-btn:active,.ai-send:active,.phase-step:active,nav .nav-menu a:active,nav .nav-links>li>a:active,nav .nav-group-btn:active{transform:none}
-}
 /* RESPONSIVE */
 @media(max-width:768px){
   nav{height:52px}
@@ -564,12 +586,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 /* Inside overflow:hidden/auto parents (accordion, canvas wrap, the .tabs and .ai-mode-btns scroll strips, the chat log) an outside ring is clipped — draw it inset */
 .acc-header:focus-visible,#viz3d-container:focus-visible,.phase-step:focus-visible,.tabs .tab-btn:focus-visible,.ai-mode-btns .ai-mode-btn:focus-visible,.ai-messages[tabindex]:focus-visible{outline-offset:-3px} /* tabs and the chat log carry a tabindex, so these selectors must outrank [tabindex]:not(.page):focus-visible above */
 .sr-only{position:absolute;left:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-@media (prefers-reduced-motion: reduce){
-  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
-  html{scroll-behavior:auto}
-  .ai-messages{scroll-behavior:auto} /* every streamed chunk scrolls the pane — no animation for reduced motion */
-  .particle{display:none}
-}
 
 /* ===== REVIEW FIXES: touch targets, a11y, print ===== */
 /* Skip link — first tab stop on every page */
@@ -599,8 +615,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .phase-step{scroll-snap-align:start}
   .phase-step{font-size:0.62rem;letter-spacing:0;min-width:74px;flex:0 0 auto}
 }
-/* Reduced motion: also stop the WebGL stroke loop, not just CSS particles */
-@media (prefers-reduced-motion: reduce){ .ai-dot{animation:none} }
 /* Print: hide the rest of the app chrome so a workout prints clean */
 @media print{
   #tl-upd-toast,.tl-upd-toast,#tl-palette,#nav-drawer,.nav-scrim,.tl-pal-navbtn,
@@ -791,12 +805,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #page-timers .tlt-preset-table th br{display:none}
   #page-timers .tlt-th-sub{position:absolute;width:1px;height:1px;margin:0;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 }
-@media(prefers-reduced-motion:reduce){
-  #page-timers .tlt-pulse{transition:none}
-  #page-timers .tlt-pulse.on{transform:none}
-  #page-timers .tlt-bar-fill{transition:none}
-  #page-timers .tlt-int-display{transition:none}
-}
 @media print{
   #page-timers .tlt-soundbar,#page-timers .tlt-transport,#page-timers .tlt-adjust,#page-timers .tlt-sp-main{display:none!important}
 }
@@ -960,9 +968,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #page-planner .pl-summary>:last-child:nth-child(odd){grid-column:1/-1}
   #page-planner .pl-bar-row{grid-template-columns:1fr;gap:3px}
   #page-planner .pl-bar-lbl{text-align:left}
-}
-@media (prefers-reduced-motion: reduce){
-  #page-planner .pl-goal-card,#page-planner .pl-goal-input{transition:none}
 }
 @media print{
   #page-planner .pl-quick,#page-planner .pl-to-splits,#page-planner .pl-actions,#page-planner .calc-btn{display:none}
@@ -1149,10 +1154,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 iframe.yt-lite-player{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
 .video-embed>iframe.yt-lite-player{position:absolute;top:0;left:0;height:100%;aspect-ratio:auto}
 @media(max-width:480px){.yt-lite-play{width:64px;height:64px;margin:-32px 0 0 -32px;font-size:1.5rem}}
-@media (prefers-reduced-motion:reduce){
-  .yt-lite>img,.yt-lite-play{transition:none}
-  .yt-lite:hover>img,.yt-lite:focus-within>img,.yt-lite:hover .yt-lite-play,.yt-lite-play:hover,.yt-lite-play:focus-visible,.yt-lite-play:active{transform:none}
-}
 @media print{.yt-lite-play{display:none}}
 /* Offline (html.tl-offline, set by the updates bundle): a video facade cannot start and the coach cannot answer — say so in place. */
 html.tl-offline .yt-lite::after{content:"Offline — videos need a connection";position:absolute;left:50%;bottom:10px;transform:translateX(-50%);max-width:calc(100% - 20px);padding:5px 12px;border-radius:999px;background:rgba(4,13,24,.85);color:var(--white2);font-family:var(--fm);font-size:0.62rem;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;pointer-events:none}
@@ -1236,10 +1237,6 @@ html.tl-pal-lock{overflow:hidden}
   nav.tl-pal-nav{padding:0 12px;gap:6px}
   .tl-pal-navright{gap:3px}
   .tl-pal-navbtn{min-width:36px;min-height:40px;padding:6px 4px}
-}
-@media(prefers-reduced-motion:reduce){
-  .tl-pal-dialog{animation:none}
-  .tl-pal-hit{animation:none}
 }
 @media print{
   .tl-pal,.tl-pal-navbtn{display:none!important}
@@ -1326,10 +1323,6 @@ html.tl-pal-lock{overflow:hidden}
 .tl-upd-toast-x{background:none;border:none;color:var(--white3);font-size:1.05rem;line-height:1;cursor:pointer;min-width:44px;min-height:44px;border-radius:6px;transition:color 0.2s,background 0.2s}
 .tl-upd-toast-x:hover{color:var(--white);background:var(--navy3)}
 .tl-upd-toast .btn-sm{min-height:44px;display:inline-flex;align-items:center}
-@media (prefers-reduced-motion: reduce){
-  .tl-upd-toast{animation:none}
-  #page-updates .tl-upd-rel,#page-updates .tl-upd-items a,.tl-upd-toast-x{transition:none}
-}
 
 /* ── Responsive ─────────────────────────────────────────────── */
 @media(max-width:768px){
@@ -1476,10 +1469,6 @@ nav #nav-search-btn[hidden]{display:none}
   nav .nav-drawer{width:min(340px,90vw)}
   nav .nav-drawer-head{padding-right:12px}
 }
-@media (prefers-reduced-motion: reduce){
-  nav .nav-drawer,nav .nav-drawer.open,nav .nav-scrim,nav .nav-burger-bars span,nav .nav-caret{transition:none}
-  nav .nav-group-btn[aria-expanded="true"]+.nav-menu{animation:none}
-}
 /* Body scroll lock while the drawer is open (the nav module also fixes the body for iOS). Keeps the
    scrollbar gutter so desktop-width narrow windows do not shift when the page stops scrolling. */
 html.tl-nav-lock{overflow-y:scroll}
@@ -1587,6 +1576,36 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   .data-table.tl-stack td::before{content:attr(data-label);display:block;font-family:var(--fm);font-size:var(--fs-micro);letter-spacing:1.5px;text-transform:uppercase;color:var(--white3);line-height:1.4;margin-bottom:2px}
   .data-table.tl-stack td:first-child{font-size:0.95rem;line-height:1.4;padding-bottom:8px}
   .data-table.tl-stack td:first-child::before{display:none}
+}
+/* Reduced motion — the one block for the whole stylesheet (the JS side is tlReducedMotion(): the WebGL stroke loop
+   starts paused, view tweens and smooth scrolls are skipped). Kept last so nothing above can re-enable a transition. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
+  html{scroll-behavior:auto}
+  .ai-messages{scroll-behavior:auto} /* every streamed chunk scrolls the pane — no animation for reduced motion */
+  .particle{display:none}
+  .ai-dot{animation:none}
+  /* pressed feedback */
+  .btn-sm:active,.btn-ghost-sm:active,.btn-hero:active,.btn-hero-ghost:active,.viz-btn:active,.tab-btn:active,.qp:active,.ai-mode-btn:active,.calc-btn:active,.ai-send:active,.phase-step:active,nav .nav-menu a:active,nav .nav-links>li>a:active,nav .nav-group-btn:active{transform:none}
+  /* timers */
+  #page-timers .tlt-pulse{transition:none}
+  #page-timers .tlt-pulse.on{transform:none}
+  #page-timers .tlt-bar-fill{transition:none}
+  #page-timers .tlt-int-display{transition:none}
+  /* planner */
+  #page-planner .pl-goal-card,#page-planner .pl-goal-input{transition:none}
+  /* video facades */
+  .yt-lite>img,.yt-lite-play{transition:none}
+  .yt-lite:hover>img,.yt-lite:focus-within>img,.yt-lite:hover .yt-lite-play,.yt-lite-play:hover,.yt-lite-play:focus-visible,.yt-lite-play:active{transform:none}
+  /* command palette */
+  .tl-pal-dialog{animation:none}
+  .tl-pal-hit{animation:none}
+  /* What's New */
+  .tl-upd-toast{animation:none}
+  #page-updates .tl-upd-rel,#page-updates .tl-upd-items a,.tl-upd-toast-x{transition:none}
+  /* nav drawer and group menus */
+  nav .nav-drawer,nav .nav-drawer.open,nav .nav-scrim,nav .nav-burger-bars span,nav .nav-caret{transition:none}
+  nav .nav-group-btn[aria-expanded="true"]+.nav-menu{animation:none}
 }
 </style>
 </head>
@@ -1783,7 +1802,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <button class="viz-btn" aria-pressed="false" onclick="setStroke3D('dolphin',this)"><span aria-hidden="true">🌊 </span>Dolphin Kick</button>
   </div>
   <div class="viz-controls" style="margin-top:10px;align-items:stretch">
-    <input class="form-input" id="motion-prompt" maxlength="300" aria-label="Describe a swimming movement to reconstruct in 3D" placeholder='✦ Describe a movement, e.g. "flip turn"' style="flex:1;min-width:230px" onkeydown="if(event.key==='Enter')generateMotion()">
+    <input class="form-input" id="motion-prompt" maxlength="300" aria-label="Describe a swimming movement to reconstruct in 3D" placeholder='✦ Describe a movement, e.g. "flip turn"' style="flex:1;min-width:230px">
     <button class="viz-btn" id="motion-btn" onclick="generateMotion()" style="border-color:rgba(168,85,247,0.5);color:var(--purple-text);font-weight:600"><span aria-hidden="true">✦ </span>AI Reconstruct</button>
   </div>
   <div id="motion-status" role="status" aria-live="polite" style="font-family:var(--fm);font-size:0.68rem;color:var(--white3);margin-top:6px;letter-spacing:0.3px">Try "breaststroke pullout off the wall" or "backstroke start" — the lab rebuilds it joint by joint.</div>
@@ -3338,9 +3357,9 @@ var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 // parse time. Until then sb is null and the site is fully usable —
 // only account/AI features need it.
 var sb = null;
-// 'loading' | 'done' | 'failed' — a Log In click while the library is still
-// in flight waits for it (openAuthGate) instead of reporting an outage.
-var sbScriptState = window.__sbScriptFailed ? 'failed' : (window.supabase ? 'done' : 'loading');
+// 'idle' | 'loading' | 'done' | 'failed' — idle until loadSupabase() (head) is asked for the library;
+// a Log In click while it is in flight waits for it (openAuthGate) instead of reporting an outage.
+var sbScriptState = window.__sbScriptFailed ? 'failed' : (window.supabase ? 'done' : (window.__sbScriptRequested ? 'loading' : 'idle'));
 var _sbScriptWaiters = [];
 function onSupabaseScript(state){
   sbScriptState = state === 'failed' ? 'failed' : 'done';
@@ -3377,14 +3396,14 @@ var _authHideTimer = 0; // closeAuthGate's pending display:none — cancelled by
 // native alert() that steals focus and contradicts the "log in to continue" copy next to it.
 var AUTH_DOWN_MSG = 'Account features are unavailable right now — the sign-in service could not load (no connection or a blocked script). Everything else on Tidelyne still works; reload to try again.';
 function authUnavailable() {
-  if (!sb) initSupabaseAuth(); // creates the client synchronously when the library is already here
+  if (!sb) { loadSupabase(); initSupabaseAuth(); } // first need: request the library; creates the client synchronously when it is already here
   return !sb && sbScriptState !== 'loading';
 }
 var AUTH_NOLIB_MSG = 'The sign-in service could not be loaded (your network may block cdn.jsdelivr.net). Everything except accounts and the AI features still works.';
 var _authNoLib = false; // the overlay is open without supabase-js: its buttons are disabled and every screen carries AUTH_NOLIB_MSG
 function openAuthGate(screen) {
   if (!sb) {
-    initSupabaseAuth();
+    loadSupabase(); initSupabaseAuth();
     if (!sb && sbScriptState === 'loading') { // library still downloading: open as soon as it lands
       _sbScriptWaiters.push(function(){ openAuthGate(screen); });
       return true;
@@ -3608,11 +3627,6 @@ async function doForgotPassword() {
 // #access_token=…&type=recovery. supabase-js turns it into a session and
 // fires PASSWORD_RECOVERY; the new-password screen then calls updateUser.
 var _recoveryPending = /(^|[#&])type=recovery(&|$)/.test(location.hash);
-// True for the hashes supabase-js consumes (#access_token=…, #error_description=…): the
-// router must leave them in place until the library has read them (activatePage).
-function isAuthCallbackHash(h) {
-  return /(^|[#&])(access_token|refresh_token|error|error_code|error_description|type)=/.test(h || '');
-}
 async function doSetNewPassword() {
   if (!sb) { showAuthError('newpass', AUTH_NOLIB_MSG); return; } // Enter in a field bypasses the disabled button
   var p1 = document.getElementById('newpass-password').value;
@@ -3788,13 +3802,17 @@ function escapeHTML(s){
 // showPage(), which sets the hash (or re-activates on a same-page click).
 // This makes every section keyboard-reachable, deep-linkable, Back-button
 // friendly, and gives each view its own crawlable title.
+// The one reduced-motion query for page-level code (the router's scroll, the 3D lab's view tweens and start state).
+// Top-level twin of the Timers block's private reducedMotion() — page-level code cannot see that one.
+function tlReducedMotion(){ try{ return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches); }catch(e){ return false; } }
 function activatePage(name,opts){
   // Routes are case-insensitive (phones capitalise the first letter of a typed link: #Zones, #TIMERS) and
   // tolerate a stray query (#technique?x=1): normalise before the lookup and put the canonical hash in the
   // address bar, so a shared link lands on the page it meant instead of Home with the hash erased.
   const rawName=String(name||'');
   if(rawName && !(typeof isAuthCallbackHash==='function' && isAuthCallbackHash(rawName))){
-    const norm=rawName.split('?')[0].toLowerCase();
+    let norm=rawName.split('?')[0].toLowerCase();
+    if(norm.indexOf('page-')===0 && document.getElementById(norm)) norm=norm.slice(5); // #page-log is the view's element id: route to the view
     if(norm!==rawName && document.getElementById('page-'+norm)){
       name=norm;
       if(location.hash.slice(1)===rawName){ try{ history.replaceState(null,'',location.pathname+location.search+'#'+norm); }catch(e){} }
@@ -3805,9 +3823,14 @@ function activatePage(name,opts){
     // a keyboard user to Home: focus it and put the current view's hash back.
     const anchor=name?document.getElementById(name):null, cur=document.querySelector('.page.active');
     if(anchor&&cur&&cur.id.indexOf('page-')===0){
-      try{ history.replaceState(null,'',location.pathname+location.search+'#'+cur.id.slice(5)); }catch(e){}
+      // An element inside another view (#log-date opened from Home) shows that view first — otherwise the
+      // link is silently lost: a display:none element cannot take focus and the hash would name the old view.
+      const host=anchor.closest('.page'), cross=!!(host&&host!==cur&&host.id.indexOf('page-')===0);
+      if(cross) activatePage(host.id.slice(5),opts);
+      try{ history.replaceState(null,'',location.pathname+location.search+'#'+(cross?host:cur).id.slice(5)); }catch(e){}
       if(!anchor.hasAttribute('tabindex')) anchor.setAttribute('tabindex','-1');
-      try{ anchor.focus({preventScroll:true}); }catch(e){ anchor.focus(); }
+      if(cross){ try{ anchor.scrollIntoView({block:'center'}); }catch(e){} }
+      try{ anchor.focus({preventScroll:!cross}); }catch(e){ anchor.focus(); }
       return;
     }
     // Unknown hash: show Home and clean the address bar so bookmarks and Back reflect the view —
@@ -3828,7 +3851,7 @@ function activatePage(name,opts){
   const aiBtn=document.getElementById('nav-ai-coach-btn');
   if(aiBtn){ aiBtn.classList.toggle('active',name==='ai'); if(name==='ai') aiBtn.setAttribute('aria-current','page'); else aiBtn.removeAttribute('aria-current'); }
   if(!alreadyActive){
-    const smooth=!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const smooth=!tlReducedMotion();
     window.scrollTo({top:0,behavior:smooth?'smooth':'auto'});
     // Move focus to the new view for screen-reader/keyboard users. The view is named (a labelled
     // region) so the focus move itself says where they are, and the change is also announced —
@@ -3851,6 +3874,8 @@ function activatePage(name,opts){
     renderSeasonPage();
     if (typeof markNewTabLinks === 'function') markNewTabLinks(page);
   }
+  // AI Coach and Workout Generator: every action needs supabase-js, so start it now rather than on the first click.
+  if ((name === 'ai' || name === 'workouts') && typeof loadSupabase === 'function') loadSupabase();
   // Feature pages register window.onShow_<page> to refresh when activated.
   const hook=window['onShow_'+name]; if(typeof hook==='function'){ try{ hook(); }catch(e){ console.error(e); } }
   const off=window.onPageChange; if(typeof off==='function'){ try{ off(name); }catch(e){ console.error(e); } }
@@ -3861,8 +3886,6 @@ function showPage(name){
 }
 // Open a page on a specific tab, e.g. showPageTab('calculator','c-pace'). The tab
 // button is found next to the panel, so a renamed tab never leaves a dead link.
-// Top-level twin of the Timers block's private reducedMotion() — page-level code cannot see that one.
-function tlReducedMotion(){ try{ return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches); }catch(e){ return false; } }
 function showPageTab(page, tabId, elId){
   showPage(page);
   const panel=document.getElementById(tabId);
@@ -4046,12 +4069,6 @@ function enhanceA11y(){
   document.querySelectorAll('.form-group').forEach(g=>{
     const label=g.querySelector('label'); const ctrl=g.querySelector('input,select,textarea');
     if(label&&ctrl){ if(!ctrl.id) ctrl.id='fld'+(++_fid); if(!label.getAttribute('for')) label.setAttribute('for',ctrl.id); }
-  });
-  // Give every video iframe a unique title from its card heading
-  document.querySelectorAll('.video-embed iframe').forEach(f=>{
-    const card=f.closest('.video-card');
-    const h=card&&(card.querySelector('h4')||card.querySelector('.video-tag'));
-    if(h) f.setAttribute('title', h.textContent.trim());
   });
   // Name icon-only buttons for assistive tech (use their title, hide the glyph)
   document.querySelectorAll('button[title]:not([aria-label])').forEach(b=>{
@@ -5078,9 +5095,7 @@ function markView3D(name) {
 function zoomView3D(dir) {
   if (!viz3DInitialized || !controls) return;
   cancelViewTween3D(true); markView3D(null);
-  let reduced = false;
-  try { reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch(e){}
-  controls.dolly(dir > 0 ? 0.8 : 1.25, reduced || document.hidden);
+  controls.dolly(dir > 0 ? 0.8 : 1.25, tlReducedMotion() || document.hidden);
 }
 let viewClearBound = false;
 function bindViewClear3D() {
@@ -5109,9 +5124,7 @@ function setView3D(name) {
   const startTarget = controls.target.clone();
   const endPos = new THREE.Vector3(...v.pos);
   const endTarget = new THREE.Vector3(...v.target);
-  let reduced = false;
-  try { reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch(e){}
-  if (document.hidden || reduced) { camera.position.copy(endPos); controls.target.copy(endTarget); controls.enabled = true; return; }
+  if (document.hidden || tlReducedMotion()) { camera.position.copy(endPos); controls.target.copy(endTarget); controls.enabled = true; return; }
   const tw = { raf: 0, endPos, endTarget, t0: performance.now() };
   _viewTween3D = tw;
   controls.enabled = false;
@@ -5390,10 +5403,10 @@ function startViz3D() {
   _axPosY = new THREE.Vector3(0, 1, 0);
   _netDir = new THREE.Vector3();
   // Respect the OS 'reduce motion' setting — start paused, user can play.
-  try{ if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  if(tlReducedMotion()){
     playing=false; const pb=document.getElementById('vbtn-play');
     if(pb){pb.innerHTML='<span aria-hidden="true">▶ </span>Play';pb.classList.remove('active');}
-  } }catch(e){}
+  }
   buildForceArrows();
   if (window.TL_HumanMaterials && scene.environment) { try { TL_HumanMaterials.tameEnvironment(scene, 0.25); } catch (e) {} } // arrows exist only now
   applyStrokePatches();          // measured keyframe corrections, once (before the phase bar: names may change)
@@ -5464,16 +5477,6 @@ function vizLabRetry(){
 // Connectivity came back while the lab is open: retry whichever download failed (Three.js or viz-human.js).
 // A showing fallback goes through vizLabRetry so the container gets its role, tabindex and label back.
 window.addEventListener('online', function(){ if (!vizLabActive()) return; if (document.getElementById('viz-retry-btn')) vizLabRetry(); else ensureViz3DReady(); });
-// A11y: give every video iframe a title (screen readers announce these),
-// derived from its own card heading so it never goes stale.
-document.addEventListener('DOMContentLoaded', function(){
-  document.querySelectorAll('.video-embed iframe').forEach(function(f){
-    if (f.title) return;
-    const card = f.closest('.video-card');
-    const h = card && (card.querySelector('h4') || card.querySelector('.video-tag'));
-    f.title = h ? h.textContent : 'Swimming technique video';
-  });
-});
 // ─── AI MOTION DIRECTOR — text prompt → reconstructed 3D animation ──────
 // The AI returns joint keyframes in the same schema as the built-in strokes;
 // they're validated/clamped here, then played by the existing engine.
@@ -5548,7 +5551,8 @@ const AI_LIMIT_MSG='You\'ve reached the limit of 20 AI messages per 5 hours. Tak
 // showing it. Non-strings fall through to the local fallback text.
 function aiServerText(v){
   if(typeof v!=='string') return '';
-  return v.replace(/\b(\d+) (hour|minute)\(s\)/g,(m,n,u)=>n+' '+u+(n==='1'?'':'s'));
+  // One status line, never a dump: a server message is a sentence, so anything longer is clipped.
+  return v.slice(0,300).replace(/\b(\d+) (hour|minute)\(s\)/g,(m,n,u)=>n+' '+u+(n==='1'?'':'s'));
 }
 const SESSION_EXPIRED_MSG='Your session expired — please log in again.';
 const AI_NETWORK_MSG='Connection error — check your network and try again.';
@@ -5633,6 +5637,7 @@ async function generateMotion(){
   const statusEl=document.getElementById('motion-status');
   const btn=document.getElementById('motion-btn');
   const desc=(inp.value||'').trim();
+  if(btn.disabled) return;   // a reconstruction is already in flight (Enter in the input reaches here too)
   if(!desc){ statusEl.textContent='Describe a movement first — e.g. "breaststroke pullout off the wall".'; return; }
   if(!currentUser){
     if(authUnavailable()){ statusEl.textContent=AUTH_DOWN_MSG; return; }
@@ -5660,7 +5665,7 @@ async function generateMotion(){
       if(resp.status===401||resp.status===403){ if(fb) loadCustomMotion(fb, statusEl, '⚠ Session expired — log in again. Built-in reconstruction: '); else statusEl.textContent='Session expired — please log in again.'; btn.disabled=false; return; }
       if(resp.status===429){ const limitMsg=aiServerText(err.error)||AI_LIMIT_MSG; if(fb) loadCustomMotion(fb, statusEl, '⚠ '+limitMsg+' Built-in reconstruction: '); else statusEl.textContent=limitMsg; btn.disabled=false; return; }
       if(fb){ loadCustomMotion(fb, statusEl, '⚠ AI backend unavailable — built-in reconstruction: '); btn.disabled=false; return; }
-      statusEl.textContent=err.error||(resp.status===404?'AI 3D reconstruction is temporarily unavailable — try a built-in stroke, or the stroke buttons.'
+      statusEl.textContent=aiServerText(err.error)||(resp.status===404?'AI 3D reconstruction is temporarily unavailable — try a built-in stroke, or the stroke buttons.'
         :'Error: HTTP '+resp.status);
       btn.disabled=false; return;
     }
@@ -6011,6 +6016,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   const inp=document.getElementById('ai-input');
   // Plain Enter sends; an IME candidate confirm (isComposing) or a modified Enter must not.
   if(inp) inp.addEventListener('keydown',e=>{ if(e.key!=='Enter'||e.isComposing||e.shiftKey||e.altKey||e.ctrlKey||e.metaKey) return; e.preventDefault(); sendToAI(); });
+  // 3D lab motion director: same rule (plain Enter only); generateMotion() itself ignores a press while one is in flight.
+  const mp=document.getElementById('motion-prompt');
+  if(mp) mp.addEventListener('keydown',e=>{ if(!tlPlainEnter(e)) return; e.preventDefault(); generateMotion(); });
 });
 // ─── WORKOUT GENERATOR — STREAMING ────────────
 async function generateWorkout(){
@@ -6306,7 +6314,9 @@ function parseTime(str){
   return (isFinite(v) && v>0 && v<3600) ? v : null;
 }
 function formatTime(secs){
-  if(isNaN(secs)||secs<=0) return '--';
+  // Non-finite (a zero distance or zero difference upstream) and anything under half a centisecond read as
+  // the em-dash the rest of the UI uses, never 'Infinity:NaN' or '00.00s'.
+  if(!isFinite(secs)||secs<0.005) return '--';
   // Round to centiseconds FIRST so a value like 59.999 carries to 1:00.00
   // instead of printing the invalid "60.00".
   const cs=Math.round(secs*100);
@@ -6520,6 +6530,9 @@ function savePR(key,value,el,normalize){
   };
   if(normalize) commit(); else prErrTimers[key]=setTimeout(commit,800);
 }
+// The one reader for the stored name: trimmed and capped like saveName()/import write it, so a name saved
+// by a pre-cap version (or written into storage) can never fill the My PRs heading or the analytics summary.
+function readSwimmerName(){ return String(lsGet('swimmer_name')||'').trim().slice(0,30); }
 function saveName(){
   const n=String(document.getElementById('profile-name').value||'').trim().slice(0,30); // Import trims and caps the same way
   if(n) lsSet('swimmer_name',n); else lsRemove('swimmer_name'); // spaces alone are no name — show "Swimmer", store nothing
@@ -6542,7 +6555,7 @@ function exportBackup(){
   // some webviews) the button must say so instead of silently doing nothing.
   try{
     const data={ app:'Tidelyne', version:2, exported:new Date().toISOString(),
-      name:lsGet('swimmer_name')||'', prs:{}, log:readLog(), tl:{} };
+      name:readSwimmerName(), prs:{}, log:readLog(), tl:{} };
     Object.keys(PR_EVENTS).forEach(s=>PR_EVENTS[s].forEach(e=>{
       const k='pr_'+e.replace(/ /g,'_'); const v=lsGet(k); if(v) data.prs[k]=v;
     }));
@@ -6557,6 +6570,9 @@ function exportBackup(){
 }
 function importBackup(ev){
   const f=ev.target.files&&ev.target.files[0]; if(!f){return;}
+  // A real backup (2,000 sessions, every PR, the settings) is well under 1 MB: a wrong file is refused here
+  // instead of being read and JSON-parsed whole, which would freeze the tab on a large one.
+  if(f.size>2*1024*1024){ tlNotice('profile-notice','That file is too large to be a Tidelyne backup (backups are well under 1 MB).'); ev.target.value=''; return; }
   const r=new FileReader();
   r.onload=function(){
     try{
@@ -6587,7 +6603,8 @@ function importBackup(ev){
       const hasName=typeof d.name==='string'&&d.name.trim()!=='';
       if(hasName) lsSet('swimmer_name', d.name.trim().slice(0,30)); // an empty name in the file never blanks the saved one
       if(Array.isArray(d.log)){ const clean=sanitizeLogEntries(d.log); skipped+=Math.max(0,d.log.length-clean.length); lsSet('swimiq_log', JSON.stringify(clean)); nLog=clean.length; }
-      if(d.tl&&typeof d.tl==='object') BACKUP_TL_KEYS.forEach(k=>{ const v=d.tl[k]; if(v&&typeof v==='object'&&!Array.isArray(v)&&lsSet(k, JSON.stringify(v))) nSet++; });
+      // Each settings object is a few hundred bytes: one over 64 KB would eat the ~5 MB quota and make the next log save fail.
+      if(d.tl&&typeof d.tl==='object') BACKUP_TL_KEYS.forEach(k=>{ const v=d.tl[k]; if(!v||typeof v!=='object'||Array.isArray(v)) return; const json=JSON.stringify(v); if(json.length>65536){ skipped++; return; } if(lsSet(k, json)) nSet++; });
       initProfile(); if(typeof renderLog==='function') renderLog();
       tlNotice('profile-notice','Backup imported — '+nPR+' PR'+(nPR===1?'':'s')+', '+nLog+' session'+(nLog===1?'':'s')+(hasName?', your name':'')+(nSet?' and '+nSet+' saved setting'+(nSet===1?'':'s'):'')+' restored.'
         +(skipped?' '+skipped+' unreadable item'+(skipped===1?' was':'s were')+' skipped.':'')
@@ -6599,7 +6616,8 @@ function importBackup(ev){
   ev.target.value=''; // allow re-importing the same file
 }
 function initProfile(){
-  const name=lsGet('swimmer_name')||'';
+  const name=readSwimmerName();
+  if(name!==(lsGet('swimmer_name')||'')){ if(name) lsSet('swimmer_name',name); else lsRemove('swimmer_name'); } // write the capped value back once
   const ni=document.getElementById('profile-name'); if(ni) ni.value=name;
   const nd=document.getElementById('profile-name-display'); if(nd) nd.textContent=name||'Swimmer';
   Object.keys(PR_EVENTS).forEach(s=>buildPRGrid(s));
@@ -6635,12 +6653,23 @@ function readLog(){
     // backup can hold null/number entries) and normalise ids to numbers so
     // renderLog/deleteLogEntry can never throw on stored data.
     let dirty=false, seq=Date.now(); const seen=new Set();
+    // Every field is coerced to the shape saveLogEntry writes (the import path does the same in
+    // sanitizeLogEntries): a v1 backup with no zone, a hand-edited or partly corrupt entry would
+    // otherwise reach renderLog as undefined / null / an object and print those words.
+    const str=(v,max)=>typeof v==='string'?v.slice(0,max):'';
+    const num=(v,max)=>{ const n=Math.round(Number(v)); return (isFinite(n)&&n>0)?Math.min(n,max):0; };
+    const fix=(e,k,val)=>{ if(e[k]!==val){ e[k]=val; dirty=true; } };
     const out=v.filter(e=>e&&typeof e==='object'&&!Array.isArray(e)).map(e=>{
       const n=Number(e.id);
       // Ids must be unique too: delete works by id, so two sessions sharing one
       // (a backup merged from two devices) would vanish together on one tap.
       if(!(isFinite(n)&&n>0)||seen.has(n)){ e.id=seq++; dirty=true; } else if(e.id!==n){ e.id=n; dirty=true; }
       seen.add(e.id);
+      fix(e,'date',(typeof e.date==='string'||typeof e.date==='number')?String(e.date).slice(0,10):'');
+      fix(e,'type',str(e.type,40)); fix(e,'zone',str(e.zone,40));
+      fix(e,'dist',num(e.dist,LOG_MAX_DIST)); fix(e,'dur',num(e.dur,LOG_MAX_DUR));
+      const eff=Math.round(Number(e.effort)); fix(e,'effort',(eff>=1&&eff<=10)?eff:0);
+      fix(e,'mainset',str(e.mainset,200)); fix(e,'notes',str(e.notes,1000));
       return e;
     });
     if(dirty||out.length!==v.length) lsSet('swimiq_log',JSON.stringify(out));
@@ -6727,16 +6756,17 @@ function renderLog(){
   container.innerHTML='<ul class="log-list" aria-label="Logged sessions">'+entries.map(e=>{
     const dist=Number(e.dist)||0, dur=Number(e.dur)||0, effort=Number(e.effort)||0, id=Number(e.id)||0;
     const isoDate=/^\d{4}-\d{2}-\d{2}$/.test(String(e.date||'')), shownDate=fmtLogDate(e.date);
+    const type=e.type||'Swim', zone=e.zone||''; // readLog() coerces both to strings; an older entry may have neither
     return `
     <li class="log-entry">
       <div class="log-date">${isoDate?`<time datetime="${escapeHTML(e.date)}">${escapeHTML(shownDate)}</time>`:escapeHTML(e.date)}</div>
       <div class="log-content">
-        <h3 class="log-title">${escapeHTML(e.type)}<span class="sr-only"> — ${escapeHTML(shownDate)}</span></h3>
-        <div class="log-meta">${dist>0?dist.toLocaleString()+' m/yd · ':''}${dur>0?dur+' min · ':''}${escapeHTML(e.zone)} · ${effort>0?'Effort '+effort+'/10':'Effort —'}</div>
+        <h3 class="log-title">${escapeHTML(type)}<span class="sr-only"> — ${escapeHTML(shownDate)}</span></h3>
+        <div class="log-meta">${dist>0?dist.toLocaleString()+' m/yd · ':''}${dur>0?dur+' min · ':''}${zone?escapeHTML(zone)+' · ':''}${effort>0?'Effort '+effort+'/10':'Effort —'}</div>
         ${e.mainset?`<div class="log-notes" style="color:var(--cyan)">${escapeHTML(e.mainset)}</div>`:''}
         ${e.notes?`<div class="log-notes">${escapeHTML(e.notes)}</div>`:''}
       </div>
-      <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(shownDate)} ${escapeHTML(e.type)}" title="Delete session"><span aria-hidden="true">✕</span></button>
+      <button type="button" class="log-del" data-del-id="${id}" aria-label="Delete session ${escapeHTML(shownDate)} ${escapeHTML(type)}" title="Delete session"><span aria-hidden="true">✕</span></button>
     </li>`;}).join('')+'</ul>';
   const now=new Date(), thirtyAgo=new Date(now-30*24*60*60*1000), todayISO=logTodayISO(0);
   // The form accepts tomorrow (a session logged the night before): a future date is not "last 30 days",
@@ -6913,7 +6943,7 @@ function fmtMS(sec){
 function fmtCount(sec){ sec=Math.max(0,Math.ceil(sec-1e-6)); return sec>=60?fmtMS(sec):String(sec); }
 // stopwatch "m:ss.d…" with a fixed number of decimals
 function fmtSW(sec,dec){
-  dec=(dec==null)?2:dec; if(!(sec>=0)) sec=0;
+  dec=(dec==null)?2:dec; sec=Number(sec); if(!isFinite(sec)||sec<0) sec=0;
   var f=Math.pow(10,dec), t=Math.round(sec*f)/f, h=Math.floor(t/3600), m=Math.floor((t%3600)/60), s=t-h*3600-m*60, ss=s.toFixed(dec);
   if(s<10) ss='0'+ss; return h?(h+':'+(m<10?'0':'')+m+':'+ss):(m+':'+ss); // an hour reads 1:00:00.0, not 60:00.0
 }
@@ -7664,8 +7694,8 @@ document.addEventListener('DOMContentLoaded', initTimers);
 // escapeHTML, lsSet, lsRemove, PR_EVENTS, switchTab) and never redefines
 // them; the tiny fallbacks below only exist so the module can be unit-tested
 // in isolation. Exposes: window.initPlanner() (idempotent),
-// window.onShow_planner(), window.tlNextMeet(), and window.tlPlanner (the
-// pure model functions, exposed for ad-hoc console/Node checks). Storage keys: tl_goals,
+// window.onShow_planner(), and window.tlPlanner (the pure model functions,
+// exposed for ad-hoc console/Node checks). Storage keys: tl_goals,
 // tl_meet, tl_pred_fit, tl_split_last. Every stored string that reaches
 // innerHTML goes through escapeHTML.
 (function(){
@@ -8566,7 +8596,6 @@ window['onShow_' + PAGE_ID] = function(){
 };
 var prevPageChange = window.onPageChange;
 window.onPageChange = function(n){ if (typeof prevPageChange === 'function') { try { prevPageChange(n); } catch (e) {} } if (n !== PAGE_ID) clearMidnight(); };
-window.tlNextMeet = function(){ return nextMeet(); };
 // Pure model surface (tests + other pages)
 window.tlPlanner = { EXP:EXP, PATTERNS:PATTERNS, predict:predict, fitExponent:fitExponent, typicalExponent:typicalExponent, profileOf:profileOf, chainSegs:chainSegs,
   buildSplits:buildSplits, START_BONUS:START_BONUS, patternKey:patternKey, splitsAsText:splitsAsText, defaultFade:defaultFade, daysUntil:daysUntil, taperWindow:taperWindow, parseISODate:parseISODate,
@@ -9343,7 +9372,7 @@ function renderInsights(m){
 // ─── copy summary ─────────────────────────────────────────────────────────
 function buildSummaryText(m){
   var L = [];
-  var name = anLsGet('swimmer_name') || '';
+  var name = typeof readSwimmerName === 'function' ? readSwimmerName() : (anLsGet('swimmer_name') || '');
   var w0 = m.thisWeek, w1 = m.lastWeek, a = m.avg4;
   var ef = function(w){ return w.effortN ? ' · avg effort ' + fmtDec(w.effortSum / w.effortN, 1) : ''; };
   var byType = function(w){
@@ -9801,7 +9830,6 @@ window.tl_an_debug = {
 //   window.openPalette(opts)      — opts.query pre-fills the box
 //   window.closePalette()         — returns focus to the element that opened it
 //   window.togglePalette()
-//   window.rebuildPaletteIndex()  — drop the cached index (call after injecting new pages)
 // Storage: tl_recent_search (JSON array of the last 8 selected result keys).
 (function(){
   'use strict';
@@ -10481,7 +10509,6 @@ window.tl_an_debug = {
     }
   };
   window.togglePalette = function(){ if (state.open) window.closePalette(); else window.openPalette(); };
-  window.rebuildPaletteIndex = function(){ state.index = null; state.indexedPages = 0; if (state.open) render(); };
 
   // ── Events ──────────────────────────────────────────────────────────────
   function isEditable(t){
@@ -10613,7 +10640,7 @@ window.tl_an_debug = {
    - Service-worker registration (./sw.js) + "updated — Reload" toast
    - Install prompt (beforeinstallprompt), iOS hint, standalone detection
    Public API on window: initUpdates(), onShow_updates(), tlPromptInstall(),
-   tlCheckForUpdates(), tlRefreshUpdateBadge(), tlShowAllUpdates().
+   tlCheckForUpdates(), tlShowAllUpdates().
    Plain ES2019 — no modules, no top-level await.
    ============================================================ */
 (function(){
@@ -10835,12 +10862,6 @@ function clearBadge(){
   document.querySelectorAll('.tl-upd-dot').forEach(function(d){ if (d.parentNode) d.parentNode.removeChild(d); });
   document.querySelectorAll('.tl-has-badge').forEach(function(el){ el.classList.remove('tl-has-badge'); });
 }
-// Call after injecting nav markup (e.g. a mobile menu) so late [data-tl-badge]
-// elements get their dot.
-window.tlRefreshUpdateBadge = function(){
-  if (lsGet(SEEN_KEY) !== window.TL_VERSION) showBadge(); else clearBadge();
-};
-
 // ─── STATUS CARD ──────────────────────────────────────────────────────────
 let swReg = null, swSupported = false, swVersion = null;
 let swFailed = false;   // registration was attempted on a supported host but failed (blocked worker, sw.js fetch error)
@@ -10994,6 +11015,15 @@ function registerSW(){
     navigator.serviceWorker.addEventListener('controllerchange', function(){ askSWVersion(); renderStatus(); });
     navigator.serviceWorker.register('./sw.js', { scope: './' }).then(function(reg){
       swReg = reg; swFailed = false;
+      // Hash routes are not navigations, so the browser's own update check never runs for a standalone window
+      // or a pinned tab that is simply re-focused day after day: check at most once an hour when the tab comes
+      // back into view — the existing updatefound → TL_UPDATED → toast path does the rest.
+      let lastCheck = Date.now();
+      document.addEventListener('visibilitychange', function(){
+        if (document.hidden || !swReg || navigator.onLine === false || Date.now() - lastCheck < 3600e3) return;
+        lastCheck = Date.now();
+        try { Promise.resolve(swReg.update()).catch(function(){}); } catch(e){}
+      });
       reg.addEventListener('updatefound', function(){
         // On the very first install there is no controller yet — say nothing.
         if (!navigator.serviceWorker.controller) return;
@@ -11174,7 +11204,7 @@ if (window.__TL_TEST__ === true){
    Pattern: WAI-ARIA APG "Disclosure Navigation Menu" — button[aria-expanded]
    controlling a plain list of links. No role="menu" anywhere.
    Exposes: window.initNav() (idempotent), window.openNavDrawer(),
-   window.closeNavDrawer(), window.closeNavMenus(). Chains window.onPageChange. */
+   window.closeNavDrawer(). Chains window.onPageChange. */
 (function(){
   'use strict';
   if (window.__tlNavLoaded) return;
@@ -11542,7 +11572,6 @@ if (window.__TL_TEST__ === true){
   window.initNav = initNav;
   window.openNavDrawer = openDrawer;
   window.closeNavDrawer = function(){ closeDrawer(true); };
-  window.closeNavMenus = closeAllMenus;
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initNav);
   else initNav();
