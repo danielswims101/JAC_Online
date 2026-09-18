@@ -492,6 +492,7 @@ button[aria-busy="true"]{opacity:0.45;cursor:progress}
 .workout-phase{margin-bottom:1.75rem}.workout-phase h2{font-family:var(--fh);font-size:1.2rem;letter-spacing:1px;color:var(--cyan);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border2)}
 .workout-set{background:var(--navy3);border-radius:var(--r8);padding:0.85rem 1rem;margin-bottom:0.5rem;border:1px solid var(--border2);font-size:0.85rem;color:var(--white2);line-height:1.75}
 .workout-set,.gen-output p,#viz-content{overflow-wrap:anywhere}
+.gen-caution{font-size:0.76rem;color:var(--white3);line-height:1.65;margin-top:1rem;padding-top:0.75rem;border-top:1px solid var(--border2)}
 .loading-state{display:flex;align-items:center;gap:12px;color:var(--white3);padding:2.5rem 0;font-size:0.88rem}
 /* FORM ELEMENTS */
 .form-group{display:flex;flex-direction:column;gap:6px;min-width:0}.form-group label{font-family:var(--fm);font-size:0.62rem;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}
@@ -704,7 +705,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   body{background:#fff!important;color:#000!important}
   .page{display:none}.page.active{display:block}
   .gen-output,.workout-set,.card,.content-block,.section-wrap{background:#fff!important;color:#000!important;border-color:#bbb!important;box-shadow:none!important}
-  .workout-set,.card p,.content-block p,.section-intro{color:#000!important}
+  .workout-set,.card p,.content-block p,.section-intro,.gen-caution{color:#000!important}
   .workout-phase h2,.section-title,.section-title span{color:#000!important}
   /* Whole-page print reset: the dark theme's table, box, badge and accordion colours printed at
      1.1–1.8:1 on paper and closed accordions / inactive tabs never printed at all (Sets, Race plans,
@@ -2004,10 +2005,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="force-legend">
     <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>Drag</div>
     <div class="legend-item"><div class="legend-dot" style="background:#00ff88"></div>Thrust / Propulsion</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#4488ff"></div>Lift</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4488ff"></div>Lift (vertical support)</div>
     <div class="legend-item"><div class="legend-dot" style="background:#ffaa00"></div>Net Force (+ accelerating / − decelerating)</div>
   </div>
-  <p style="font-size:0.7rem;color:var(--white4);margin-top:0.5rem;font-family:var(--fm)">Force and velocity values are illustrative teaching approximations, not measured data — glide-phase drag in particular is shown well below measured passive drag (about 50–70 N at 2 m/s) so the propulsive phases stay readable. Efficiency is an illustrative economy index — the share of a phase's effort that becomes forward motion, so a passive streamline reads highest — not measured propelling efficiency.</p>
+  <p style="font-size:0.7rem;color:var(--white4);margin-top:0.5rem;font-family:var(--fm)">Force and velocity values are illustrative teaching approximations, not measured data — glide-phase drag in particular is shown well below measured passive drag (about 50–70 N at 2 m/s) so the propulsive phases stay readable. Efficiency is an illustrative economy index — the share of a phase's effort that becomes forward motion, so a passive streamline reads highest — not measured propelling efficiency. Lift here is the vertical support the stroke and kick give the body (it keeps the hips high), shown separately from thrust — not the lift component of the hand force that propulsion papers describe.</p>
   <div id="viz-info-panel" style="margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r12)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
       <h3 id="viz-phase-name" style="font-family:var(--fh);font-weight:400;font-size:1.4rem;letter-spacing:1px;color:var(--cyan)">Select a stroke</h3>
@@ -2092,10 +2093,10 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
       <div class="key-point"><dt class="kp-label">Entry angle</dt><dd>10–15° below horizontal.</dd></div>
       <div class="key-point"><dt class="kp-label">Elbow height</dt><dd>Always above wrist through catch.</dd></div>
       <div class="key-point"><dt class="kp-label">Catch depth</dt><dd>Forearm vertical, hand below the elbow — about 40–50 cm deep at the catch and ~55 cm at its deepest mid-pull (what the 3D lab shows).</dd></div>
-      <div class="key-point"><dt class="kp-label">Elite catch</dt><dd>Entry to a locked catch is very quick — roughly a fifth of a second.</dd></div>
+      <div class="key-point"><dt class="kp-label">Elite catch</dt><dd>From entry to a locked catch takes about 0.3–0.45 s at race rate (the lab shows ~0.45 s at 48 cycles/min) — quick, but never rushed past the extension.</dd></div>
     </dl></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>PULL PATH & HAND ACCELERATION</h4><span class="chevron">▾</span></div>
-    <div class="acc-body"><p>The pull follows a slight S-curve. Hand accelerates throughout — slowest at catch, fastest at exit. The hand must push all the way past the hip — thumb brushing the thigh.</p>
+    <div class="acc-body"><p>The hand path is nearly straight back under the body — the slight S you see on film comes from the body roll, not from sweeping the hand. Hand accelerates throughout — slowest at catch, fastest at exit. The hand must push all the way past the hip — thumb brushing the thigh.</p>
     <div class="cue-box"><span aria-hidden="true">🎯 </span>Cue: "Slow in, fast out." The catch should feel controlled. The finish should feel like a snap.</div></div></div>
     <div class="accordion"><div class="acc-header" onclick="toggleAcc(this)"><h4>BODY ROTATION & HEAD POSITION</h4><span class="chevron">▾</span></div>
     <div class="acc-body"><p>Shoulder roll: about 45–60° each side at distance pace, less (30–40°) in the 50/100 where turnover is higher; the hips roll roughly half as much. Head position: hairline at the surface, eyes at the pool floor. Even a 5 cm head lift forces the hips down.</p></div></div>
@@ -2223,9 +2224,9 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel active" id="s-aet">
     <div class="info-box">AeT sets are the backbone of Meso I and the majority of Meso II. <strong>Zones 1–2 together carry 80%+ of all training volume.</strong></div>
     <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Set</th><th scope="col" role="columnheader">Details</th><th scope="col" role="columnheader">Purpose & Notes</th></tr></thead><tbody role="rowgroup">
-      <tr role="row"><td role="cell" data-label="Set">20×50 FR @ :55</td><td role="cell" data-label="Details">Rd 1: steady aerobic (HR 25–27) · Rd 2: AeT ceiling (HR 28)<br>Benchmark check on Rd 2</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Aerobic Base Benchmark</span>Primary testing set — the Rd 2 ceiling is the benchmark.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">2 rounds: 20×50 FR @ :55</td><td role="cell" data-label="Details">Rd 1: steady aerobic (HR 25–27) · Rd 2: AeT ceiling (HR 28)<br>60 s between rounds · 2,000 m · Benchmark check on Rd 2</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Aerobic Base Benchmark</span>Primary testing set — the Rd 2 ceiling is the benchmark.</td></tr>
       <tr role="row"><td role="cell" data-label="Set">12×200 FR @ 3:00</td><td role="cell" data-label="Details">Reps 1–2: Cruise · 3–12: AeT<br>HR 24–28 · 2,400 m</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Volume Load</span>Flagship Meso II aerobic set.</td></tr>
-      <tr role="row"><td role="cell" data-label="Set">5 rounds: 5×100 BK @ 1:25</td><td role="cell" data-label="Details">60–90 s between rounds · 2,500 m<br>Rd 1 with the Duck drill (Technique › Backstroke)</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Stroke-Specific AeT</span>Backstroke aerobic maintenance.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">5 rounds: 5×100 BK</td><td role="cell" data-label="Details">Rd 1: Duck drill @ 2:00 · Rd 2–5: swim @ 1:25 (Technique › Backstroke)<br>60–90 s between rounds · 2,500 m</td><td role="cell" data-label="Purpose &amp; Notes"><span class="ptag">Stroke-Specific AeT</span>Backstroke aerobic maintenance.</td></tr>
     </tbody></table></div>
   </div>
   <div class="tab-panel" id="s-thresh">
@@ -2245,7 +2246,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   <div class="tab-panel" id="s-tech">
     <div class="info-box">Tech sets require <strong>maximum awareness over maximum effort.</strong></div>
     <div class="table-wrap"><table class="data-table tl-stack" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Set</th><th scope="col" role="columnheader">Details</th><th scope="col" role="columnheader">Purpose</th></tr></thead><tbody role="rowgroup">
-      <tr role="row"><td role="cell" data-label="Set">10×50 FR Paddles + snorkel</td><td role="cell" data-label="Details">Reps 1–5: descend to your best-average Golf Score · 6–10: hold it</td><td role="cell" data-label="Purpose"><span class="ptag">Golf Score Tech</span>Technique under a number: once you find your best average, hold it — a faster split bought with extra strokes does not lower the score.</td></tr>
+      <tr role="row"><td role="cell" data-label="Set">10×50 FR Paddles + snorkel</td><td role="cell" data-label="Details">Reps 1–5: descend to your best-average Golf Score · 6–10: hold it<br>Paddles lower the count — track this set against itself, not against the Golf Score bands (or swim the last 2 reps without equipment for a true score)</td><td role="cell" data-label="Purpose"><span class="ptag">Golf Score Tech</span>Technique under a number: once you find your best average, hold it — a faster split bought with extra strokes does not lower the score.</td></tr>
       <tr role="row"><td role="cell" data-label="Set">UW 15 m IM Drill @ 1:00</td><td role="cell" data-label="Details">Race depth (0.5–0.6 m) · tight streamline · fly, back and free; a legal pullout on the breaststroke length · every session</td><td role="cell" data-label="Purpose"><span class="ptag">Underwater Dev</span>Single most consequential drill.</td></tr>
     </tbody></table></div>
   </div>
@@ -2293,7 +2294,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
 <div class="section-wrap narrow">
   <div class="section-eyebrow">AI-Powered · Streaming</div>
   <h1 class="section-title">WORKOUT <span>GENERATOR</span></h1>
-  <p class="section-intro">Configure your session and the AI builds a complete, printable workout — streaming in real time as it writes. Free account required.</p>
+  <p class="section-intro">Configure your session and the AI builds a complete, printable workout — streaming in real time as it writes. The session is AI-generated from general coaching knowledge — treat it as a draft for your coach to adjust, not a prescription. Free account required.</p>
   <div class="gen-form">
     <div class="gen-row">
       <div class="form-group"><label>Session Focus</label><select class="form-select" id="gen-focus"><option value="aerobic">Aerobic Threshold (AeT)</option><option value="threshold">Threshold</option><option value="technique">Technique & Drill</option><option value="kick">Kick Focus</option><option value="speed">Speed & Sprint</option><option value="recovery">Recovery / Easy</option><option value="race-prep">Race Preparation</option><option value="im">Individual Medley (IM)</option></select></div>
@@ -2323,7 +2324,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
   </div>
 </div>
-<footer><div class="footer-bottom"><p>Tidelyne</p></div></footer>
+<footer><div class="footer-bottom"><p>Tidelyne</p><p>Informational only — not coaching advice. AI-generated sessions can be wrong; adapt every set to your own level and your coach's programme.</p></div></footer>
 </div>
 <!-- CALCULATOR PAGE -->
 <div class="page" id="page-calculator">
@@ -2512,7 +2513,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel active" id="n-daily"><div class="nutr-grid">
     <div class="nutr-card"><div class="nutr-time">Pre-AM Session (60–90 min before)</div><h4>MORNING FUEL</h4><ul><li>1–2 slices white toast + jam (fast carbs)</li><li>Banana or 200 ml orange juice</li><li>250 ml water on waking</li><li>Avoid high-fat, high-fiber foods</li></ul></div>
-    <div class="nutr-card"><div class="nutr-time">Recovery Window</div><h4>POST-SESSION</h4><ul><li>Within 30 min: ~1 g/kg carbs (60–80 g for most swimmers) + 20–30 g protein</li><li>Chocolate milk, Greek yogurt + banana</li><li>1–1.5 L water over the next 2 hours</li></ul></div>
+    <div class="nutr-card"><div class="nutr-time">Recovery Window</div><h4>POST-SESSION</h4><ul><li>Within 30 min: ~1 g/kg carbs (45–60 g for a 45–60 kg swimmer, 60–80 g at 60–80 kg) + 0.3 g/kg protein (15–25 g)</li><li>Chocolate milk, Greek yogurt + banana</li><li>1–1.5 L water over the next 2 hours</li></ul></div>
     <div class="nutr-card"><div class="nutr-time">Pre-PM Session (2–3 h before)</div><h4>AFTERNOON FUEL</h4><ul><li>80–100 g carbs, 30 g protein, low fat</li><li>Chicken + rice + vegetables</li><li>500 ml water in the 2 hours before</li></ul></div>
   </div>
   <div class="divider"></div>
@@ -2585,7 +2586,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
   </div>
   <div class="tab-panel" id="r-pacing">
     <div class="content-block"><h4>PACING SCIENCE</h4><p><strong>100 m:</strong> the first 50 is normally faster than the second — by about 4% of the race time in free and back (≈2 s at 50 s, 2.8 s at 1:10) and about 6% in fly and breast (3–4 s) — the dive and the underwater do that for you, so the job is to minimize the fade, not to negative split. A freestyle second 50 more than ~10% slower than the first (the normal pattern is ~8%) means you went out too hard.</p>
-    <p><strong>200 m:</strong> the second 100 is normally 2–3% (2–3 s) slower than the first in every elite final, so the target is to hold the third 50 at the pace of the second; butterfly and breaststroke 200s fade more — the second 100 is typically 5–6% slower in breaststroke and 8–10% slower in butterfly, so holding the third 50 is a stretch target there.</p>
+    <p><strong>200 m:</strong> the second 100 is normally 2–4% (2–3 s) slower than the first in every elite final — about 3% in freestyle, 4% in backstroke — so the target is to hold the third 50 at the pace of the second; butterfly and breaststroke 200s fade more — the second 100 is typically 5–6% slower in breaststroke and 8–10% slower in butterfly, so holding the third 50 is a stretch target there.</p>
     <p><strong>400 m and up:</strong> even 100s, with the lift coming at the end. The championship-final split patterns behind these targets are in the <a href="#planner" onclick="showPageTab('planner','pl-splits','pl-sp-ref');return false;">Race Planner's split reference</a>.</p></div>
   </div>
 </div>
@@ -2788,7 +2789,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     </div>
   </div>
   <div class="tab-panel" id="i-prevention">
-    <div class="success-box"><strong>Load management is #1.</strong> Volume increases of no more than 10% per week.</div>
+    <div class="success-box"><strong>Load management is #1.</strong> A common heuristic is to add no more than about 10% of volume per week — a rule of thumb from running, not swim-tested evidence — with a lighter week every 3–4 and no sudden jumps after time off.</div>
     <div class="content-block"><h4>DAILY PREVENTION ROUTINE (10 MIN)</h4><ul>
       <li>Ankle plantarflexion loading: 2 min (the same daily dose as the <a href="#dryland">Dryland mobility routine</a>)</li><li>Serratus punches: 2×15</li><li>External rotation: 1×15 each side</li>
       <li>Hip 90/90 switches: 1 min</li><li>Copenhagen plank: 3×20 s</li><li>Dead bug: 3×30 s</li>
@@ -2828,7 +2829,7 @@ html.tl-nav-lock.tl-nav-lock-nogutter{overflow-y:hidden}
     <div class="card">
       <div class="card-tag" style="color:var(--gold)">National (Zoned) Meet</div>
       <h3>FUTURES</h3>
-      <p>Entry point to the national meet pipeline — between Sectionals and Speedo Junior Nationals. One national time standard; you swim at the site for your zone. Sectional cuts, by contrast, vary by zone and LSC.</p>
+      <p>Entry point to the national meet pipeline — between Sectionals and Speedo Junior Nationals. One national time standard; you swim at the site for your zone. Sectional cuts, by contrast, are set per Sectionals meet — each zone's sites publish their own standards.</p>
       <a href="https://www.usaswimming.org/times/time-standards" target="_blank" rel="noopener" class="btn-ghost-sm" style="display:inline-block;text-decoration:none">View official Futures standards <span aria-hidden="true">→</span></a>
     </div>
     <div class="card">
@@ -4818,12 +4819,14 @@ const STROKES = {
   freestyle: {
     color: 0x00d4ff, rollAmp: 24, flutter: true, rate: 1.45,   // tempo multiplier on the 0.55 Hz clock (48 cycles/min); the motion module's patch overrides it for the human rig
     breath: { type:'side', start:0.62, dur:0.30 },
-    // TRUE OPPOSITION TIMING: R runs the same pose sequence as L, exactly
-    // half a cycle behind (R[i] = mirror of L[i+3]) — when one hand enters,
-    // the other is finishing at the hip. No catch-up pause.
+    // OPPOSITION IN TIME: R runs the same pose sequence as L, exactly half a
+    // cycle behind (R[i] = mirror of L[i+3]). Because the arm spends most of
+    // the cycle under water this is front-quadrant timing in space: a hand
+    // enters while the other is mid-pull, and finishes past the hip about a
+    // third of a second later (R7-DOMAIN-01) — the descs say so.
     phases: [
       { name:'Entry & Extension', dur:0.16, drag:52, thrust:56, lift:16, vel:1.94, eff:66,
-        desc:'Hand enters narrow at 10–15° and extends overhead while the OTHER hand finishes its push past the hip — true opposition timing, never catch-up. Shoulder roll ~30–60° depending on distance — less in a sprint, more at distance pace (the model shows a compact ~22° whole-body roll).',
+        desc:'Hand enters narrow at 10–15° and extends overhead while the OTHER hand drives through the middle of its pull; that hand finishes past the hip about a third of a second later — front-quadrant timing, not a windmill. Shoulder roll ~30–60° depending on distance — less in a sprint, more at distance pace (the model shows a compact ~22° whole-body roll).',
         L:{ sh:[170,0,8],   el:[8],   hi:[8,0,0], kn:[8] },
         R:{ sh:[-12,0,-2],  el:[20],  hi:[8,0,0], kn:[8] } },
       { name:'Catch', dur:0.14, drag:46, thrust:28, lift:24, vel:1.84, eff:62,
@@ -4831,11 +4834,11 @@ const STROKES = {
         L:{ sh:[125,10,10],  el:[58],  hi:[8,0,0], kn:[8] },
         R:{ sh:[-95,-55,70], el:[105], hi:[8,0,0], kn:[8] } },
       { name:'Pull', dur:0.20, drag:66, thrust:80, lift:40, vel:1.80, eff:74,
-        desc:'The hand accelerates from catch to hip along a gentle S-curve while the opposite arm reaches forward over the water. Hand speed at exit is 3–4× catch speed.',
+        desc:'The hand accelerates from catch to hip, passing under the shoulder with the palm facing back, while the opposite arm reaches forward over the water. Hand speed at exit is 3–4× catch speed.',
         L:{ sh:[55,5,4],     el:[95],  hi:[8,0,0], kn:[8] },
         R:{ sh:[150,20,15],  el:[70],  hi:[8,0,0], kn:[8] } },
       { name:'Push & Finish', dur:0.16, drag:52, thrust:56, lift:16, vel:1.94, eff:66,
-        desc:'The hand pushes past the hip, thumb brushing the thigh, exactly as the opposite hand enters overhead — the propulsive engine never stops.',
+        desc:'The hand pushes past the hip, thumb brushing the thigh, while the opposite arm — in the water since this one was mid-pull — holds its extension out in front: the propulsive engine hands over, it never stops.',
         L:{ sh:[-12,0,2],    el:[20],  hi:[8,0,0], kn:[8] },
         R:{ sh:[170,0,-8],   el:[8],   hi:[8,0,0], kn:[8] } },
       { name:'Recovery & Breath', dur:0.14, drag:46, thrust:28, lift:24, vel:1.84, eff:62,
@@ -4856,11 +4859,11 @@ const STROKES = {
         L:{ sh:[-170, 0, 8], el:[6], hi:[18, 0, 0], kn:[8] },
         R:{ sh:[-30, 5, -15], el:[20], hi:[16, 0, 0], kn:[12] } },
       { name:'Catch & Lat Load', dur:0.13, drag:38, thrust:24, lift:20, vel:1.76, eff:58,
-        desc:'The lat engages as the arm extends and the elbow begins to bend, loading the pulling side as the hips counter-rotate.',
+        desc:'The lat engages as the arm extends and the elbow begins to bend, loading the pulling side as the hips counter-rotate — the hand sweeps out to its widest point as the elbow bends and drops.',
         L:{ sh:[-145, 10, 35], el:[35], hi:[22, 0, 0], kn:[10] },
         R:{ sh:[5, -5, 0], el:[10], hi:[10, 0, 0], kn:[8] } },
-      { name:'Out-Sweep', dur:0.19, drag:56, thrust:78, lift:30, vel:1.72, eff:68,
-        desc:'The hand sweeps OUT to the side, well clear of the shoulder line, catching undisturbed water — the first half of the backstroke S-curve.',
+      { name:'Bent-Arm Pull', dur:0.19, drag:56, thrust:78, lift:30, vel:1.78, eff:68,
+        desc:'The elbow bends to ~90° and points to the bottom while the hand — now at its widest, about half a metre outside the shoulder line — presses back toward the hip under the shoulder; the upper arm stays close to the body.',
         L:{ sh:[-100, 30, 85], el:[80], hi:[18, 0, 0], kn:[34] },
         R:{ sh:[-160, -10, 8], el:[8], hi:[20, 0, 0], kn:[10] } },
       { name:'In-Sweep to Hip', dur:0.18, drag:40, thrust:34, lift:12, vel:1.86, eff:62,
@@ -4871,7 +4874,7 @@ const STROKES = {
         desc:'The hand finishes past the hip toward the feet, thumb leading, at the swimmer\'s point of maximum rotation.',
         L:{ sh:[5, -5, 0], el:[10], hi:[10, 0, 0], kn:[8] },
         R:{ sh:[-145, 10, -35], el:[35], hi:[22, 0, 0], kn:[10] } },
-      { name:'Recovery Arc', dur:0.19, drag:56, thrust:78, lift:30, vel:1.72, eff:68,
+      { name:'Recovery Arc', dur:0.19, drag:56, thrust:78, lift:30, vel:1.78, eff:68,
         desc:'A straight-arm recovery passes over the water with hips held high while the kick maintains momentum and sets up the rotation for the next entry.',
         L:{ sh:[-160, -10, -8], el:[8], hi:[20, 0, 0], kn:[10] },
         R:{ sh:[-100, 30, -85], el:[80], hi:[18, 0, 0], kn:[34] } }
@@ -4889,15 +4892,15 @@ const STROKES = {
         desc:'Hands press outward to shoulder width with elbows held high, setting the catch depth that the in-sweep will drive forward.',
         L:{ sh:[110,0,40], el:[35], hi:[4,0,0], kn:[4] },
         R:{ sh:[110,0,-40], el:[35], hi:[4,0,0], kn:[4] } },
-      { name:'In-Sweep & Breath', dur:0.18, drag:64, thrust:100, lift:30, vel:1.58, eff:57,
+      { name:'In-Sweep & Breath', dur:0.18, drag:64, thrust:100, lift:30, vel:1.72, eff:57,
         desc:'Hands sweep powerfully inward as the elbows tuck — the body\'s own lift carries the head up to breathe, never a separate neck lift.',
         L:{ sh:[55,0,18], el:[100], hi:[6,0,0], kn:[6] },
         R:{ sh:[55,0,-18], el:[100], hi:[6,0,0], kn:[6] } },
-      { name:'Kick Recovery', dur:0.20, drag:92, thrust:22, lift:7, vel:1.70, eff:34,
+      { name:'Kick Recovery', dur:0.20, drag:92, thrust:22, lift:7, vel:1.40, eff:34,
         desc:'Heels draw up narrow, never wide — wide recovery spikes drag dramatically. This is the highest-drag moment of the entire stroke.',
         L:{ sh:[165,0,6], el:[6], hi:[35,0,8], kn:[125] },
         R:{ sh:[165,0,-6], el:[6], hi:[35,0,-8], kn:[125] } },
-      { name:'Kick & Drive', dur:0.21, drag:46, thrust:120, lift:24, vel:1.30, eff:74,
+      { name:'Kick & Drive', dur:0.21, drag:46, thrust:120, lift:24, vel:1.42, eff:74,
         desc:'Feet sweep out, around, and together in a circular arc, generating 60–70% of total breaststroke propulsion. Symmetry between the two legs is critical.',
         L:{ sh:[172,0,4], el:[4], hi:[8,0,18], kn:[20] },
         R:{ sh:[172,0,-4], el:[4], hi:[8,0,-18], kn:[20] } }
@@ -4952,8 +4955,8 @@ const STROKES = {
         desc:'The hips rise as the glutes and hamstrings fire — roughly 30% of total kick propulsion comes from this upbeat, a phase most swimmers underuse.',
         L:{ sh:[172,0,5], el:[4], hi:[-8,0,0], kn:[10] },
         R:{ sh:[172,0,-5], el:[4], hi:[-8,0,0], kn:[10] } },
-      { name:'Upbeat Peak', dur:0.25, drag:48, thrust:18, lift:26, vel:2.26, eff:85,
-        desc:'The foot returns to neutral as the body reaches its highest streamline point — velocity peaks here just before the next downbeat begins loading.',
+      { name:'Upbeat Peak', dur:0.25, drag:48, thrust:18, lift:26, vel:2.20, eff:85,
+        desc:'The foot returns to neutral as the body reaches its highest streamline point — velocity is still near its peak here just before the next downbeat begins loading.',
         L:{ sh:[172,0,5], el:[4], hi:[-15,0,0], kn:[5] },
         R:{ sh:[172,0,-5], el:[4], hi:[-15,0,0], kn:[5] } }
     ]
@@ -5942,16 +5945,16 @@ function validateMotion(obj){
 // even before the ask-ai edge function's "motion" mode is deployed.
 const FALLBACK_MOTIONS = [
   { match:/pull ?-?out/i, motion:{ name:'Breaststroke Pullout', rollAmp:0, undulate:false, supine:false, hold:true, phases:[
-    { name:'Push-off Streamline', dur:0.22, drag:64, thrust:10, lift:3, vel:2.2, eff:88, desc:'Tight streamline off the wall — hands stacked, core rigid, riding wall speed. Drag rises with the square of speed, so the glide decays fastest here — start the pull the instant velocity starts to fall.', L:{sh:[172,0,4],el:[4],hi:[2,0,0],kn:[2]}, R:{sh:[172,0,-4],el:[4],hi:[2,0,0],kn:[2]} },
-    { name:'Underwater Pull to Thighs', dur:0.18, drag:62, thrust:100, lift:20, vel:2.1, eff:74, desc:'One full pull all the way past the hips — the fastest swum part of the stroke, riding the wall\'s speed.', L:{sh:[-15,0,6],el:[10],hi:[4,0,0],kn:[4]}, R:{sh:[-15,0,-6],el:[10],hi:[4,0,0],kn:[4]} },
-    { name:'Glide + Dolphin Kick', dur:0.18, drag:60, thrust:40, lift:14, vel:2.3, eff:78, desc:'Arms at the thighs; the single dolphin kick is shown here for clarity — since 2014 it may be taken any time before the breaststroke kick, and most elite swimmers fire it just before or as the pull starts.', L:{sh:[-15,0,4],el:[8],hi:[26,0,0],kn:[38]}, R:{sh:[-15,0,-4],el:[8],hi:[26,0,0],kn:[38]} },
+    { name:'Push-off Streamline', dur:0.22, drag:64, thrust:10, lift:3, vel:2.5, eff:88, desc:'Tight streamline off the wall — hands stacked, core rigid, riding wall speed. Drag rises with the square of speed, so the glide decays fastest here — start the pull the instant velocity starts to fall.', L:{sh:[172,0,4],el:[4],hi:[2,0,0],kn:[2]}, R:{sh:[172,0,-4],el:[4],hi:[2,0,0],kn:[2]} },
+    { name:'Underwater Pull to Thighs', dur:0.18, drag:62, thrust:100, lift:20, vel:2.4, eff:74, desc:'One full pull all the way past the hips — the fastest pull of the race, riding the wall\'s speed.', L:{sh:[-15,0,6],el:[10],hi:[4,0,0],kn:[4]}, R:{sh:[-15,0,-6],el:[10],hi:[4,0,0],kn:[4]} },
+    { name:'Glide + Dolphin Kick', dur:0.18, drag:60, thrust:40, lift:14, vel:2.45, eff:78, desc:'Arms at the thighs; the single dolphin kick is shown here for clarity — since 2014 it may be taken any time before the breaststroke kick, and most elite swimmers fire it just before or as the pull starts.', L:{sh:[-15,0,4],el:[8],hi:[26,0,0],kn:[38]}, R:{sh:[-15,0,-4],el:[8],hi:[26,0,0],kn:[38]} },
     { name:'Sneak Recovery', dur:0.18, drag:44, thrust:20, lift:6, vel:1.5, eff:55, desc:'Hands sneak forward tight to the body to minimize frontal drag.', L:{sh:[80,0,8],el:[95],hi:[6,0,0],kn:[8]}, R:{sh:[80,0,-8],el:[95],hi:[6,0,0],kn:[8]} },
     { name:'Breaststroke Kick to Breakout', dur:0.16, drag:70, thrust:60, lift:8, vel:1.4, eff:48, desc:'Heels draw up narrow as the arms finish extending — the one breaststroke kick sweeps out, around and together to drive the breakout.', L:{sh:[150,0,6],el:[30],hi:[35,0,8],kn:[120]}, R:{sh:[150,0,-6],el:[30],hi:[35,0,-8],kn:[120]} },
     { name:'Breakout Reach', dur:0.20, drag:28, thrust:92, lift:10, vel:1.75, eff:66, desc:'Legs snap together into streamline off the kick as the first arm stroke begins toward the surface.', L:{sh:[168,0,5],el:[6],hi:[8,0,0],kn:[10]}, R:{sh:[168,0,-5],el:[6],hi:[8,0,0],kn:[10]} }
   ] } },
   { match:/streamline|glide/i, motion:{ name:'Streamline Glide', rollAmp:0, undulate:true, supine:false, phases:[
-    { name:'Peak Streamline', dur:0.5, drag:18, thrust:8, lift:4, vel:2.5, eff:90, desc:'Hands stacked, arms squeezing the ears, core rigid — the lowest-drag shape a human can make.', L:{sh:[172,0,4],el:[4],hi:[2,0,0],kn:[2]}, R:{sh:[172,0,-4],el:[4],hi:[2,0,0],kn:[2]} },
-    { name:'Micro Dolphin', dur:0.5, drag:24, thrust:46, lift:12, vel:2.4, eff:84, desc:'A small hip-driven ripple maintains speed without breaking the line.', L:{sh:[172,0,4],el:[4],hi:[14,0,0],kn:[16]}, R:{sh:[172,0,-4],el:[4],hi:[14,0,0],kn:[16]} }
+    { name:'Peak Streamline', dur:0.5, drag:30, thrust:8, lift:4, vel:2.45, eff:90, desc:'Hands stacked, arms squeezing the ears, core rigid — the lowest-drag shape a human can make.', L:{sh:[172,0,4],el:[4],hi:[2,0,0],kn:[2]}, R:{sh:[172,0,-4],el:[4],hi:[2,0,0],kn:[2]} },
+    { name:'Micro Dolphin', dur:0.5, drag:24, thrust:46, lift:12, vel:2.45, eff:84, desc:'A small hip-driven ripple maintains speed without breaking the line.', L:{sh:[172,0,4],el:[4],hi:[14,0,0],kn:[16]}, R:{sh:[172,0,-4],el:[4],hi:[14,0,0],kn:[16]} }
   ] } }
 ];
 function tryFallbackMotion(desc){
@@ -6628,7 +6631,9 @@ function formatWorkout(text){
     }
   }
   if(inSec) html+='</div></div>';
-  return html||'<p>'+escapeHTML(text)+'</p>';
+  if(!html) html='<p>'+escapeHTML(text)+'</p>';
+  // Printed with the session (the page footer is hidden in print): the generator is the one AI feature that hands out loads and intervals.
+  return html+'<p class="gen-caution">AI-generated draft — check intervals and loads with your coach before swimming it.</p>';
 }
 // ─── VISUALIZER AI ANALYSIS — STREAMING ───────
 const VIZ_CONCEPTS={
@@ -8219,7 +8224,7 @@ window.tlt_sendoff=function(){
   }
   // Faster than the 50 m freestyle world-record average (2.39 m/s from a dive): no repeat from a push is swum at 2.2 m/s.
   var distM=soDistMetres(dist), swimT=(pace&&pace<interval)?pace:interval, swimLbl=(pace&&pace<interval)?'pace':'interval';
-  if(distM&&distM/swimT>2.2) warns.push('That '+swimLbl+' is faster than world-record pace for '+dist+' — check the distance or the '+swimLbl+'.');
+  if(distM&&distM/swimT>2.2) warns.push('That '+swimLbl+' needs more than 2.2 m/s for '+dist+' — faster than any repeat is swum from a push. Check the distance or the '+swimLbl+'.');
   var sum=$('tlt-so-summary');
   if(sum){
     sum.textContent='';
@@ -8892,7 +8897,7 @@ var DISTS = { SCY:[50,100,200,400,500,1000,1650], SCM:[50,100,200,400,800,1500],
 // ladder, form strokes stop at 200, IM is 200/400 plus the short-course 100.
 function distsFor(course, stroke){
   var all = DISTS[course in DISTS ? course : 'LCM'];
-  if (stroke === 'fr') return all;
+  if (stroke === 'fr') return course === 'SCY' ? all.filter(function(d){ return d !== 400; }) : all;   // no 400 yd freestyle event — 400 exists in yards only as the 400 IM
   if (stroke === 'im') return all.filter(function(d){ return d === 200 || d === 400 || (d === 100 && course !== 'LCM'); });
   return all.filter(function(d){ return d <= 200; });
 }

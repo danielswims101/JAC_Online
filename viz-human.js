@@ -2133,7 +2133,7 @@
       depth: 0.0,
       phasesAnatomical: {
         0: { L: { sh: [-176, 0, 12], el: [6] }, R: { sh: [37, 0, -20], el: [10] } },
-        1: { desc: 'The hand sinks and the elbow bends straight away — the elbow drops toward the bottom while the hand stays above it, setting up the deep-elbow catch.',
+        1: { desc: 'The hand sinks and the elbow bends straight away — the elbow drops toward the bottom while the hand stays above it, setting up the deep-elbow catch; from there the hand sweeps out to its widest point as the elbow keeps dropping.',
              L: { sh: [-90, -10, 90], el: [80] }, R: { sh: [8, 0, -12], el: [8] } },
         2: { L: { sh: [22, 22, 54], el: [80] }, R: { sh: [-100, 4, -12], el: [8] } },
         3: { L: { sh: [37, 0, 20], el: [10] }, R: { sh: [-176, 0, -12], el: [6] } },
