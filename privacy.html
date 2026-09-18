@@ -75,7 +75,7 @@ footer a{display:inline-block;padding:10px 4px;margin:-6px 0}
 <strong>The short version.</strong> Almost everything you type into this site — your PRs and
 training log — never leaves your own device. What is sent to a server is your email, password,
 and chosen username when you make an account, plus whatever you type into the AI features
-(coach messages, workout-generator settings and notes, visualizer prompts).
+(coach messages, workout-generator settings and notes, visualizer prompts, 3D-reconstruction cues).
 Nothing is sold, and there is no advertising or tracking.
 </div>
 
@@ -94,6 +94,8 @@ Export Backup button (and an Import to restore it on another device).</p>
 <li>Your Race Planner goals and meet dates, timer settings, analytics chart preferences, recent
 searches, the last release you read on the What's New page, and small interface preferences such
 as the search shortcut</li>
+<li>If you log in, your sign-in session (a token, not your password) is kept in the browser so you
+stay logged in; Log out removes it</li>
 </ul>
 
 <h2>3. What is sent to a server</h2>
@@ -125,7 +127,7 @@ its scripts and any cookies — loads only after you press play on a video.</li>
 
 <h2>5. Please do not send us health information</h2>
 <p>Do not type medical details, injuries, diagnoses, or anything you would not want stored into
-the AI coach. It is a general coaching tool, not a confidential medical service.</p>
+any of the AI features. They are general coaching tools, not a confidential medical service.</p>
 
 <h2>6. Children</h2>
 <p>Accounts are for users aged 13 and over. We do not knowingly collect personal information
@@ -143,8 +145,9 @@ buttons in the app. Depending on where you live, you may have additional rights 
 as the GDPR or CCPA; we honor those requests regardless of location.</p>
 
 <h2>8. Retention</h2>
-<p>Account records are kept until you ask us to delete them. AI usage counter rows are
-short-lived and exist only to enforce the rate limit.</p>
+<p>Account records are kept until you ask us to delete them. The AI usage counter stores only
+the time of each request; rows older than the 5-hour window are no longer used but are kept with
+the account and deleted with it.</p>
 
 <h2>9. Changes</h2>
 <p>If this policy changes materially, the "Last updated" date at the top of this page will

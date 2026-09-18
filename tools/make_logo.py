@@ -195,9 +195,9 @@ def make_og(path):
     d.text((x + 4, 300), "3D stroke lab for competitive swimmers", font=f_tag, fill=MUTED)
 
     d.line([(92, 452), (1108, 452)], fill=(0, 212, 255, 90), width=2)
-    d.text((92, 486), "Technique  ·  3D visualizer  ·  Pace tools  ·  AI coach",
+    d.text((92, 486), "Technique  ·  3D visualizer  ·  Deck tools  ·  AI coach",
            font=f_url, fill=MUTED)
-    d.text((92, 526), "Free — no app to install", font=f_url, fill=CYAN)
+    d.text((92, 526), "Free · installable · works offline", font=f_url, fill=CYAN)
 
     img.save(path, "PNG", optimize=True)
 
