@@ -14,19 +14,25 @@ h1{color:#eef3f8;font-size:3.5rem;letter-spacing:2px;margin-bottom:0.5rem}
 p{font-size:1rem;margin-bottom:1.5rem}
 a.btn{display:inline-block;background:#00d4ff;color:#040d18;text-decoration:none;font-weight:700;letter-spacing:1px;padding:12px 26px;border-radius:8px;text-transform:uppercase;font-size:0.8rem}
 a.btn:hover{background:#00b0d8}
-.small{font-size:0.8rem;color:#607a92;margin-top:1.25rem}
+.small{font-size:0.8rem;color:#8ba5bd;margin-top:1.25rem}
+button.stay{background:none;border:1px solid #8ba5bd;color:#eef3f8;border-radius:6px;padding:6px 12px;font:inherit;font-size:0.8rem;cursor:pointer;margin-left:6px}
+button.stay:hover,button.stay:focus-visible{border-color:#00d4ff;color:#00d4ff}
 </style>
 </head>
 <body>
-<div class="wrap">
+<main class="wrap">
 <h1>404</h1>
 <p>That page isn't here. Tidelyne is a single app — its sections live at the home page.</p>
 <a class="btn" href="./">Go to Tidelyne →</a>
-<p class="small">Redirecting you home in a moment…</p>
-</div>
+<p class="small" id="redirect-note" role="status">Taking you home in 20 seconds. <button type="button" class="stay" id="stay-btn">Stay on this page</button></p>
+</main>
 <script>
-// Send mistyped/old deep links back into the app after a short pause.
-setTimeout(function(){ location.replace('./'); }, 2500);
+// Send mistyped/old deep links back into the app after a pause that can be cancelled (WCAG 2.2.1).
+var redirectTimer = setTimeout(function(){ location.replace('./'); }, 20000);
+document.getElementById('stay-btn').addEventListener('click', function(){
+  clearTimeout(redirectTimer);
+  document.getElementById('redirect-note').textContent = 'Redirect cancelled — use the button above whenever you are ready.';
+});
 </script>
 </body>
 </html>
